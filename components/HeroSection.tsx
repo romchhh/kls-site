@@ -10,9 +10,18 @@ export function HeroSection() {
     if (video) {
       video.setAttribute("webkit-playsinline", "true");
       video.setAttribute("playsinline", "true");
-      video.play().catch((error) => {
-        console.log("Autoplay prevented:", error);
-      });
+      video.muted = true; // Ensure muted for autoplay
+      video.defaultMuted = true;
+      
+      // Try to play with a slight delay for better mobile support
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.log("Autoplay prevented:", error);
+          // If autoplay fails, ensure controls are visible
+          video.setAttribute("controls", "true");
+        });
+      }
     }
   }, []);
 
@@ -20,7 +29,7 @@ export function HeroSection() {
     <section id="home" className="relative flex min-h-screen items-center overflow-hidden">
       <video
         ref={videoRef}
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 z-0 h-full w-full object-cover"
         src="/clideo_editor_1cb1efe9996b44ff9b86c9e1efe15542.webm"
         autoPlay
         muted
@@ -29,6 +38,9 @@ export function HeroSection() {
         preload="auto"
         aria-hidden="true"
       />
+
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 z-[5] bg-black/30" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-32 pt-40 lg:px-8">
         <div className="max-w-4xl">
