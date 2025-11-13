@@ -54,18 +54,18 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row">
-            <button className="group relative overflow-hidden rounded-xl px-8 py-4 text-base font-semibold shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-105">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/15 to-white/10 transition-all duration-500 group-hover:from-white/30 group-hover:via-white/20 group-hover:to-white/15"></div>
+            <button className="group relative overflow-hidden rounded-xl border border-white/5 px-8 py-4 text-base font-semibold shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:border-white/15">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/3 via-white/2 to-white/1 transition-all duration-500 group-hover:from-white/8 group-hover:via-white/5 group-hover:to-white/3"></div>
               <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent blur-xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent blur-xl"></div>
               </div>
               <span className="relative z-10 text-white drop-shadow-lg">Discover More</span>
             </button>
 
-            <button className="group relative overflow-hidden rounded-xl border border-white/20 px-8 py-4 text-base font-semibold shadow-2xl backdrop-blur-md transition-all duration-500 hover:scale-105">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-white/3 to-transparent transition-all duration-500 group-hover:from-white/15 group-hover:via-white/8 group-hover:to-white/3"></div>
+            <button className="group relative overflow-hidden rounded-xl border border-white/5 px-8 py-4 text-base font-semibold shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:border-white/10">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/1 via-transparent to-transparent transition-all duration-500 group-hover:from-white/4 group-hover:via-white/2 group-hover:to-transparent"></div>
               <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent blur-xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent blur-xl"></div>
               </div>
               <span className="relative z-10 text-white drop-shadow-lg">Contact Us</span>
             </button>
