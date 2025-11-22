@@ -1,135 +1,203 @@
+"use client";
+
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { ArrowUpRight, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Mail, Phone, MapPin } from "lucide-react";
+import { Locale, getTranslations } from "../lib/translations";
 
-const quickLinks = ["Home", "About", "Services", "Blogs & News", "Events", "FAQ", "Contact"];
+type SiteFooterProps = {
+  locale: Locale;
+};
 
-const offices = [
-  {
-    city: "Dubai",
-    address: ["Dubai Silicon Oasis", "IFZA Properties, DSO-IFZA"],
-  },
-  {
-    city: "London",
-    address: ["Mayfair, City of Westminster", "Private Client Wing"],
-  },
-  {
-    city: "Zurich",
-    address: ["Paradeplatz 6", "Private Banking Centre"],
-  },
-];
+export function SiteFooter({ locale }: SiteFooterProps) {
+  const t = getTranslations(locale);
+  const content = t.footer;
+  const nav = content.navLinks;
+  const services = content.serviceLinks;
+  const support = content.supportLinks;
+  const [isVisible, setIsVisible] = useState(false);
+  const footerRef = useRef<HTMLElement>(null);
 
-const contactOptions = [
-  {
-    label: "info@thevaultpartners.com",
-    href: "mailto:info@thevaultpartners.com",
-    icon: Mail,
-  },
-  {
-    label: "+971 4 555 0123",
-    href: "tel:+97145550123",
-    icon: Phone,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/company/vault-partners",
-    icon: Linkedin,
-  },
-];
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
 
-export function SiteFooter() {
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => {
+      if (footerRef.current) {
+        observer.unobserve(footerRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <footer id="contact" className="relative overflow-hidden bg-slate-950 py-20 text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18)_0%,_rgba(2,6,23,0)_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(140deg,rgba(56,189,248,0.12)_0%,rgba(56,189,248,0)_55%),linear-gradient(320deg,rgba(129,140,248,0.2)_0%,rgba(129,140,248,0)_60%)]" />
+    <footer ref={footerRef} id="contact" className="relative overflow-hidden bg-slate-950 py-20 text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(20,184,166,0.18)_0%,_rgba(2,6,23,0)_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(140deg,rgba(20,184,166,0.12)_0%,_rgba(20,184,166,0)_55%),linear-gradient(320deg,rgba(20,184,166,0.2)_0%,_rgba(20,184,166,0)_60%)]" />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[2fr_1fr_1.5fr]">
-          <div className="space-y-6">
-            <a href="#home" className="flex items-center" aria-label="Vault Partners home">
+        <div className="grid gap-12 lg:grid-cols-[2fr_1fr_1fr_1.5fr_1.5fr]">
+          <div className={`space-y-6 ${
+            isVisible ? 'animate-slide-in-left' : ''
+          }`}
+          style={isVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
+          >
+            <Link href={`/${locale}`} className="flex items-center" aria-label="KLS home">
               <Image
-                src="/Vault-new-logo.png"
-                alt="Vault Partners"
-                width={180}
-                height={56}
-                className="h-12 w-auto"
+                src="/бірюза на прозорому2x.png"
+                alt="KLS"
+                width={240}
+                height={75}
+                className="h-16 w-auto"
                 priority
               />
-            </a>
+            </Link>
             <p className="max-w-md text-sm leading-relaxed text-white/70">
-              Vault Partners engineers governance, finance, and advisory solutions for growth-driven
-              firms and family offices across EMEA. Precision, discretion, and pace in every mandate.
+              {content.description}
             </p>
-            <button className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-white/20 px-6 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-transform duration-500 hover:scale-105 hover:border-white/35">
-              <span className="relative z-10">Arrange a briefing</span>
-              <ArrowUpRight
-                size={16}
-                className="relative z-10 transition-transform duration-500 group-hover:-translate-y-[2px] group-hover:translate-x-[2px]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-white/25 via-transparent to-white/25 opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
-            </button>
+            <p className="text-xs text-white/60">{content.copyright}</p>
           </div>
 
-          <div>
-            <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">Navigation</h4>
-            <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-white/75">
-              {quickLinks.map((item) => {
-                const hash = item.toLowerCase().replace(/\s+/g, "-");
-                return (
-                  <a
-                    key={item}
-                    href={`#${hash}`}
-                    className="transition-colors duration-300 hover:text-white"
-                  >
-                    {item}
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="space-y-8 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
-            <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">Offices</h4>
-            <div className="space-y-6 text-sm text-white/75">
-              {offices.map((office) => (
-                <div key={office.city}>
-                  <p className="mb-1 flex items-center gap-2 text-white">
-                    <MapPin size={14} /> {office.city}
-                  </p>
-                  {office.address.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
-                </div>
-              ))}
-            </div>
-
-            <div className="h-px w-full bg-white/10" />
-
-            <div className="space-y-3 text-sm text-white/80">
-              {contactOptions.map((contact) => (
-                <a
-                  key={contact.label}
-                  href={contact.href}
-                  className="flex items-center gap-2 transition-colors duration-300 hover:text-white"
-                  target={contact.href.startsWith("http") ? "_blank" : undefined}
-                  rel={contact.href.startsWith("http") ? "noreferrer" : undefined}
+          <div className={isVisible ? 'animate-slide-in-bottom' : ''}
+            style={isVisible ? { animationDelay: '0.2s' } : { opacity: 0 }}
+          >
+            <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">
+              {content.navigation}
+            </h4>
+            <div className="mt-6 space-y-3 text-sm text-white/75">
+              {nav.map((link, index) => (
+                <Link
+                  key={`nav-${link.href}-${index}`}
+                  href={link.href}
+                  className="block transition-colors duration-300 hover:text-teal-400"
                 >
-                  <contact.icon size={16} />
-                  {contact.label}
-                </a>
+                  {link.label}
+                </Link>
               ))}
+            </div>
+          </div>
+
+          <div className={isVisible ? 'animate-slide-in-bottom' : ''}
+            style={isVisible ? { animationDelay: '0.3s' } : { opacity: 0 }}
+          >
+            <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">
+              {content.services}
+            </h4>
+            <div className="mt-6 space-y-3 text-sm text-white/75">
+              {services.map((link, index) => (
+                <Link
+                  key={`service-${link.href}-${index}`}
+                  href={link.href}
+                  className="block transition-colors duration-300 hover:text-teal-400"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className={isVisible ? 'animate-slide-in-bottom' : ''}
+            style={isVisible ? { animationDelay: '0.4s' } : { opacity: 0 }}
+          >
+            <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">
+              {content.support}
+            </h4>
+            <div className="mt-6 space-y-3 text-sm text-white/75">
+              {support.map((link, index) => (
+                <Link
+                  key={`support-${link.href}-${index}`}
+                  href={link.href}
+                  className="block transition-colors duration-300 hover:text-teal-400"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className={`space-y-8 ${
+            isVisible ? 'animate-slide-in-right' : ''
+          }`}
+          style={isVisible ? { animationDelay: '0.5s' } : { opacity: 0 }}
+          >
+            <div>
+              <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">
+                {content.addresses}
+              </h4>
+              <div className="mt-6 space-y-6 text-sm text-white/75">
+                <div>
+                  <p className="mb-2 flex items-center gap-2 font-medium text-white">
+                    <MapPin size={14} /> {content.china}
+                  </p>
+                  <p className="mb-1">
+                    Room 1203, Tower A, Jin Mao Building, 88 Century Avenue, Pudong New Area,
+                    Shanghai, 200120, China
+                  </p>
+                  <a
+                    href="tel:+862155551234"
+                    className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                  >
+                    <Phone size={14} /> +86 21 5555 1234
+                  </a>
+                  <a
+                    href="mailto:info@klslogistics.cn"
+                    className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                  >
+                    <Mail size={14} /> info@klslogistics.cn
+                  </a>
+                </div>
+
+                <div>
+                  <p className="mb-2 flex items-center gap-2 font-medium text-white">
+                    <MapPin size={14} /> {content.ukraine}
+                  </p>
+                  <p className="mb-1">
+                    Office 402, Business Center "Optima Plaza", 38 Naukova Street, Lviv, 79060,
+                    Ukraine
+                  </p>
+                  <a
+                    href="tel:+380322294567"
+                    className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                  >
+                    <Phone size={14} /> +380 32 229 4567
+                  </a>
+                  <a
+                    href="mailto:support@klslogistics.ua"
+                    className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                  >
+                    <Mail size={14} /> support@klslogistics.ua
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col-reverse gap-4 border-t border-white/10 pt-8 text-xs text-white/60 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Vault Partners. All rights reserved.</p>
-          <p className="flex items-center gap-2">
-            Developed by
+        <div className={`mt-16 border-t border-white/10 pt-8 text-center ${
+          isVisible ? 'animate-slide-in-top' : ''
+        }`}
+        style={isVisible ? { animationDelay: '0.6s' } : { opacity: 0 }}
+        >
+          <p className="mb-4 text-sm text-white/60">{content.tagline}</p>
+          <p className="text-xs text-white/50">
+            {content.developedBy}{" "}
             <a
               href="https://telebots.site/"
               target="_blank"
-              rel="noreferrer"
-              className="font-semibold text-white/80 transition-colors duration-300 hover:text-white"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-teal-400"
             >
               TeleBots
             </a>
@@ -139,4 +207,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-
