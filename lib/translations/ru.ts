@@ -16,29 +16,90 @@ export const ru = {
     getInTouch: "Связаться",
     trusted: "Нам доверяют 500+ бизнесов по всему миру",
   },
-  statistics: {
-    title: "KLS в цифрах",
-    subtitle: "Доверьтесь цифрам, которые говорят сами за себя",
-    stats: [
+  deliveryTypes: {
+    title: "Виды доставки",
+    subtitle: "Выберите для себя наиболее удобный способ доставки, или спросите у нас. Мы обязательно посоветуем вам лучший.",
+    learnMore: "Узнать больше",
+    types: [
       {
-        number: "500+",
-        label: "Доверенных клиентов",
-        description: "Бизнесы по всему миру",
+        key: "air",
+        title: "Авиадоставка",
+        icon: "air",
+        image: "https://www.cargosupport.com.ua/wp-content/uploads/2020/08/avia-delivery.jpg",
+        features: [
+          {
+            icon: "clock",
+            text: "Самая быстрая доставка",
+          },
+          {
+            icon: "mapPin",
+            text: "Доставка в любую точку мира",
+          },
+          {
+            icon: "package",
+            text: "Идеально для грузов, требующих быстрой доставки",
+          },
+        ],
       },
       {
-        number: "50+",
-        label: "Стран охвата",
-        description: "Глобальная сеть доставки",
+        key: "sea",
+        title: "Морская доставка",
+        icon: "sea",
+        image: "https://ukr-china.com/wp-content/themes/ukr_chi/img/dostavka-morem-iz-kitaya-porti.jpg",
+        features: [
+          {
+            icon: "handCoins",
+            text: "Самая экономичная доставка",
+          },
+          {
+            icon: "warehouse",
+            text: "Возможность отправки сборных грузов",
+          },
+          {
+            icon: "package",
+            text: "Доставка всех типов грузов",
+          },
+        ],
       },
       {
-        number: "99.8%",
-        label: "Успешных доставок",
-        description: "Гарантия надежности",
+        key: "rail",
+        title: "Железнодорожные грузоперевозки",
+        icon: "rail",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOnGN4EJBCzRAa1JdcUM8TL345eYPqLA7d6g&s",
+        features: [
+          {
+            icon: "dollar",
+            text: "Идеальное сочетание цены и скорости",
+          },
+          {
+            icon: "mapPin",
+            text: "Прямые маршруты",
+          },
+          {
+            icon: "clock",
+            text: "Точность графика поездов",
+          },
+        ],
       },
       {
-        number: "24/7",
-        label: "Поддержка",
-        description: "Всегда на связи",
+        key: "multimodal",
+        title: "Мультимодальная перевозка",
+        icon: "multimodal",
+        image: "https://fialan.ua/images/news/2021/multymod.jpg",
+        features: [
+          {
+            icon: "scale",
+            text: "Преимущества всех типов доставки в одном",
+          },
+          {
+            icon: "home",
+            text: "Доставка от двери до двери",
+          },
+          {
+            icon: "users",
+            text: "Индивидуальный подбор комбинаций",
+          },
+        ],
       },
     ],
   },
@@ -46,11 +107,6 @@ export const ru = {
     title: "Почему выбирают KLS?",
     subtitle: "Мы предлагаем лучшие логистические решения для вашего бизнеса",
     features: [
-      {
-        title: "Быстрая доставка",
-        description:
-          "Гарантируем быструю доставку ваших грузов из Китая в Украину и другие страны",
-      },
       {
         title: "Надежность",
         description:
@@ -61,14 +117,37 @@ export const ru = {
         description: "Отслеживайте ваши отправления в режиме реального времени",
       },
       {
+        title: "Быстрая доставка",
+        description:
+          "Гарантируем быструю доставку ваших грузов из Китая в Украину и другие страны",
+      },
+      {
         title: "Доступные цены",
         description: "Конкурентные тарифы на все виды логистических услуг",
+      },
+      {
+        title: "Таможенное оформление",
+        description: "Полное сопровождение и оформление всей необходимой документации",
+      },
+      {
+        title: "Персональный подход",
+        description: "Индивидуальные решения для каждого клиента и его потребностей",
+      },
+      {
+        title: "Поддержка 24/7",
+        description: "Наша команда всегда на связи для решения любых вопросов",
+      },
+      {
+        title: "Глобальная сеть",
+        description: "Широкая география доставки по всему миру",
       },
     ],
     imageLabels: {
       international: "Международные перевозки",
       reliable: "Надежная логистика",
     },
+    cardText: "Быстро, управлять своими логистическими операциями легко",
+    contactButton: "Связаться с нами",
   },
   services: {
     title: "Услуги",
@@ -83,16 +162,10 @@ export const ru = {
     local: "Локальная доставка",
     items: [
       {
-        title: "Международная доставка",
+        title: "Денежные операции",
         description:
-          "Бесшовная морская, авиа и наземная транспортировка глобальными маршрутами — от порта до порта или от дверей до дверей.",
-        href: "/ru/delivery",
-      },
-      {
-        title: "Грузоперевозки",
-        description:
-          "Мы координируем каждый участок вашего груза, обеспечивая плавные переходы и оптимизированное время доставки.",
-        href: "/ru/delivery",
+          "Безопасные и быстрые финансовые операции для ваших логистических потребностей. Разнообразные способы оплаты и валютные операции.",
+        href: "/ru/services",
       },
       {
         title: "Складские услуги",
@@ -101,21 +174,21 @@ export const ru = {
         href: "/ru/services/warehousing",
       },
       {
-        title: "Таможенное оформление",
+        title: "Сервис поиска/закупки",
         description:
-          "Навигация через таможню с уверенностью — мы обрабатываем всю документацию, соответствие и процедуры очистки.",
+          "Профессиональный поиск и закупка товаров в Китае и других странах. Контроль качества и проверка поставщиков.",
         href: "/ru/services",
       },
       {
-        title: "E-commerce выполнение",
+        title: "Страхование груза",
         description:
-          "От обработки заказов до доставки последней мили, мы помогаем вашему онлайн-бизнесу масштабироваться через границы.",
+          "Полное страхование ваших грузов на всем пути доставки. Защита от непредвиденных ситуаций и рисков.",
         href: "/ru/services",
       },
       {
-        title: "Отслеживание в реальном времени",
+        title: "Локальная доставка",
         description:
-          "Отслеживайте ваши отправления на каждом этапе с живыми обновлениями, уведомлениями и полной прозрачностью маршрута.",
+          "Быстрая и надежная доставка по Украине и другим странам. Логистические решения для последней мили.",
         href: "/ru/services",
       },
     ],
@@ -175,39 +248,66 @@ export const ru = {
     ],
   },
   partners: {
-    title: "Нам доверяют",
-    subtitle: "Партнерство с ведущими компаниями по всему миру",
+    title: "Международные направления",
+    subtitle: "Доставляем по всему миру",
     partners: [
       {
-        name: "Amazon",
-        logo: "https://logos-world.net/wp-content/uploads/2021/02/Amazon-Logo.png",
-        url: "https://www.amazon.com/ref=nav_logo",
+        name: "Китай",
+        logo: "https://flagcdn.com/w320/cn.png",
+        url: undefined,
       },
       {
-        name: "AliExpress",
-        logo: "https://logos-world.net/wp-content/uploads/2021/03/AliExpress-Logo.png",
-        url: "https://www.aliexpress.com/?spm=a2g0o.home.logo.1.5eb46278hjE6W7",
+        name: "Украина",
+        logo: "https://flagcdn.com/w320/ua.png",
+        url: undefined,
       },
       {
-        name: "FedEx",
-        logo: "https://logos-world.net/wp-content/uploads/2020/06/FedEx-Logo.png",
+        name: "Гонконг",
+        logo: "https://flagcdn.com/w320/hk.png",
+        url: undefined,
       },
       {
-        name: "DHL",
-        logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-        url: "https://www.dhl.com",
+        name: "Европейский Союз",
+        logo: "https://flagcdn.com/w320/eu.png",
+        url: undefined,
       },
       {
-        name: "UPS",
-        logo: "https://www.ups.com/webassets/icons/logo.svg",
-        url: "https://www.ups.com",
+        name: "США",
+        logo: "https://flagcdn.com/w320/us.png",
+        url: undefined,
       },
       {
-        name: "Alibaba",
-        logo: "https://graincomshipping.com/wp-content/uploads/2023/04/alibaba_1.jpg",
-        url: "https://www.alibaba.com",
+        name: "ОАЭ",
+        logo: "https://flagcdn.com/w320/ae.png",
+        url: undefined,
+      },
+      {
+        name: "Великобритания",
+        logo: "https://flagcdn.com/w320/gb.png",
+        url: undefined,
+      },
+      {
+        name: "Катар",
+        logo: "https://flagcdn.com/w320/qa.png",
+        url: undefined,
+      },
+      {
+        name: "Канада",
+        logo: "https://flagcdn.com/w320/ca.png",
+        url: undefined,
       },
     ],
+  },
+  contactQuick: {
+    title: "Связаться с нами",
+    subtitle: "Выберите удобный способ связи",
+    chooseMessenger: "Выберите мессенджер:",
+    or: "или",
+    phoneLabel: "Ваш телефон",
+    phonePlaceholder: "+380 XX XXX XX XX",
+    submit: "Оставить заявку",
+    submitting: "Отправка...",
+    success: "Спасибо! Мы свяжемся с вами в ближайшее время.",
   },
   contactModal: {
     title: "Свяжитесь с нами",

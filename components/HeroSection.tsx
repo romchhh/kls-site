@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { Locale, getTranslations } from "../lib/translations/index";
 import { LiquidGlassButton } from "./LiquidGlassButton";
+import { ContactQuickModal } from "./ContactQuickModal";
 
 type HeroSectionProps = {
   locale: Locale;
@@ -13,6 +13,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
   const t = getTranslations(locale);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -88,21 +89,30 @@ export function HeroSection({ locale }: HeroSectionProps) {
             }`}
             style={isVisible ? { animationDelay: '0.5s' } : { opacity: 0 }}
           >
-            <Link
-              href={`/${locale}/contacts`}
+            <button
+              onClick={() => setIsContactModalOpen(true)}
               className="group relative overflow-hidden rounded-xl bg-teal-600 px-4 py-4 text-sm font-semibold text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-teal-700 btn-primary sm:px-8 sm:text-base flex-1 sm:flex-none text-center flex items-center justify-center"
             >
-              <span className="relative z-10">{t.hero.calculateCost}</span>
-            </Link>
+              <span className="relative z-10">{t.hero.getInTouch}</span>
+            </button>
 
-            <div className="flex-1 sm:flex-none flex items-center">
-              <LiquidGlassButton 
-                href={`/${locale}/contacts`}
-                variant="transparent"
-              >
-                {t.hero.getInTouch}
-              </LiquidGlassButton>
-            </div>
+            <button
+              onClick={() => {
+                const element = document.getElementById('cost-calculation');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+              className="group relative overflow-hidden rounded-xl border border-white/30 bg-white/10 backdrop-blur-sm px-4 py-4 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white/20 hover:border-white/40 sm:px-8 sm:text-base flex-1 sm:flex-none text-center flex items-center justify-center"
+              style={{
+                background: "rgba(255, 255, 255, 0.1)",
+                backdropFilter: "blur(20px) saturate(180%)",
+                WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.3)",
+              }}
+            >
+              <span className="relative z-10">{t.hero.calculateCost}</span>
+            </button>
           </div>
 
           <p 
@@ -115,6 +125,12 @@ export function HeroSection({ locale }: HeroSectionProps) {
           </p>
         </div>
       </div>
+
+      <ContactQuickModal
+        locale={locale}
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </section>
   );
 }

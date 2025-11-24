@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { Locale, getTranslations } from "../lib/translations";
 import { ContactModal } from "./ContactModal";
 import { Loader2, CheckCircle2, ArrowRight } from "lucide-react";
@@ -177,7 +178,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
 
   return (
     <>
-      <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-teal-50/20 to-white py-24">
+      <section id="cost-calculation" ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-teal-50/20 to-white py-24">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(20,184,166,0.08)_0%,_rgba(20,184,166,0)_70%)]" />
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
@@ -191,9 +192,27 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
             <h2 className="mb-6 text-5xl font-bold tracking-tight text-slate-900 md:text-6xl lg:text-7xl">
               {t.costCalculation.title}
             </h2>
-            <p className="text-xl leading-relaxed text-slate-600/80 md:text-2xl">
+            <p className="mb-6 text-xl leading-relaxed text-slate-600/80 md:text-2xl">
               {t.costCalculation.subtitle}
             </p>
+            
+            {/* Arrow */}
+            <div className="mt-6 flex justify-end pr-8">
+              <div
+                className={`transition-all duration-700 ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
+                style={isVisible ? { animationDelay: "0.3s" } : {}}
+              >
+                <Image
+                  src="/Arrow 06.png"
+                  alt=""
+                  width={100}
+                  height={100}
+                  className="opacity-40 rotate-180"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Calculator Form */}

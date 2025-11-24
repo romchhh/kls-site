@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Locale, getTranslations } from "../lib/translations";
@@ -54,14 +55,14 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
             // Запускаємо послідовну анімацію карток після появи заголовка
             services.forEach((_, index) => {
               setTimeout(() => {
-                setVisibleStates((prev) => {
-                  if (prev[index]) {
-                    return prev;
-                  }
-                  const next = [...prev];
-                  next[index] = true;
-                  return next;
-                });
+              setVisibleStates((prev) => {
+                if (prev[index]) {
+                  return prev;
+                }
+                const next = [...prev];
+                next[index] = true;
+                return next;
+              });
               }, 500 + index * 150); // Затримка 500ms для заголовка + 150ms між картками
             });
           }
@@ -73,7 +74,7 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
     // Спостерігаємо за секцією
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
-    }
+      }
 
     return () => {
       if (sectionRef.current) {
@@ -107,10 +108,65 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
     };
   }, []);
 
+  // Color schemes for different service cards
+  const colorSchemes = [
+    { // Грошові операції - зелені відтінки
+      border: "border-emerald-200/30",
+      badge: "border-emerald-200/30 text-emerald-700/80",
+      button: "border-emerald-200/40 text-emerald-700 hover:border-emerald-300/60",
+      glow: "rgba(16, 185, 129, 0.25)",
+      glowBlur: "bg-emerald-200/20",
+      glowBlurHover: "bg-emerald-300/30",
+      buttonGradient: "from-emerald-100/20 via-emerald-100/15",
+      buttonGradientHover: "via-emerald-100/20",
+    },
+    { // Складські послуги - блакитні відтінки
+      border: "border-blue-200/30",
+      badge: "border-blue-200/30 text-blue-700/80",
+      button: "border-blue-200/40 text-blue-700 hover:border-blue-300/60",
+      glow: "rgba(59, 130, 246, 0.25)",
+      glowBlur: "bg-blue-200/20",
+      glowBlurHover: "bg-blue-300/30",
+      buttonGradient: "from-blue-100/20 via-blue-100/15",
+      buttonGradientHover: "via-blue-100/20",
+    },
+    { // Сервіс пошуку/закупівлі - фіолетові відтінки
+      border: "border-purple-200/30",
+      badge: "border-purple-200/30 text-purple-700/80",
+      button: "border-purple-200/40 text-purple-700 hover:border-purple-300/60",
+      glow: "rgba(168, 85, 247, 0.25)",
+      glowBlur: "bg-purple-200/20",
+      glowBlurHover: "bg-purple-300/30",
+      buttonGradient: "from-purple-100/20 via-purple-100/15",
+      buttonGradientHover: "via-purple-100/20",
+    },
+    { // Страхування вантажу - помаранчеві відтінки
+      border: "border-orange-200/30",
+      badge: "border-orange-200/30 text-orange-700/80",
+      button: "border-orange-200/40 text-orange-700 hover:border-orange-300/60",
+      glow: "rgba(249, 115, 22, 0.25)",
+      glowBlur: "bg-orange-200/20",
+      glowBlurHover: "bg-orange-300/30",
+      buttonGradient: "from-orange-100/20 via-orange-100/15",
+      buttonGradientHover: "via-orange-100/20",
+    },
+    { // Локальна доставка - рожеві відтінки
+      border: "border-pink-200/30",
+      badge: "border-pink-200/30 text-pink-700/80",
+      button: "border-pink-200/40 text-pink-700 hover:border-pink-300/60",
+      glow: "rgba(236, 72, 153, 0.25)",
+      glowBlur: "bg-pink-200/20",
+      glowBlurHover: "bg-pink-300/30",
+      buttonGradient: "from-pink-100/20 via-pink-100/15",
+      buttonGradientHover: "via-pink-100/20",
+    },
+  ];
+
   const serviceCards = useMemo(
     () =>
       services.map((service, index) => {
         const isVisible = visibleStates[index];
+        const colors = colorSchemes[index % colorSchemes.length];
         const hoverStyle = hoverStyles[index] ?? {
           glowX: 50,
           glowY: 50,
@@ -123,7 +179,11 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
             ref={(node) => {
               cardRefs.current[index] = node;
             }}
-            className={`group relative overflow-hidden rounded-3xl border-2 border-white/30 bg-white/15 p-[2px] shadow-2xl backdrop-blur-xl card-hover ${
+            className={`group relative overflow-hidden rounded-3xl border-2 ${colors.border} bg-white/15 p-[2px] shadow-2xl backdrop-blur-xl card-hover ${
+              index === 0 
+                ? "min-h-[400px] lg:row-span-2 lg:min-h-full" 
+                : "min-h-[200px]"
+            } ${
               isVisible
                 ? "opacity-100 blur-0 scale-100 translate-y-0"
                 : "translate-y-20 opacity-0 blur-sm scale-95"
@@ -135,7 +195,7 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
             }}
           >
             <div
-              className="relative h-full rounded-[calc(1.5rem-2px)] bg-gradient-to-br from-white/60 via-white/40 to-white/20 p-10 transition-all duration-500 group-hover:from-white/70 group-hover:via-white/50 group-hover:to-white/30"
+              className="relative h-full rounded-[calc(1.5rem-2px)] bg-gradient-to-br from-white/60 via-white/40 to-white/20 p-8 transition-all duration-500 group-hover:from-white/70 group-hover:via-white/50 group-hover:to-white/30 md:p-10"
               onMouseMove={(event) => {
                 const bounds = event.currentTarget.getBoundingClientRect();
                 const glowX = ((event.clientX - bounds.left) / bounds.width) * 100;
@@ -165,29 +225,49 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
               <div
                 className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 style={{
-                  background: `radial-gradient(circle at ${hoverStyle.glowX}% ${hoverStyle.glowY}%, rgba(20,184,166,0.25), transparent 60%)`,
+                  background: `radial-gradient(circle at ${hoverStyle.glowX}% ${hoverStyle.glowY}%, ${colors.glow}, transparent 60%)`,
                 }}
               />
-              <div className="pointer-events-none absolute -left-10 top-1/2 h-32 w-32 -translate-y-1/2 rounded-full bg-teal-200/20 mix-blend-overlay blur-3xl transition-all duration-700 group-hover:translate-x-[6rem] group-hover:bg-teal-300/30" />
+              <div 
+                className="pointer-events-none absolute -left-10 top-1/2 h-32 w-32 -translate-y-1/2 rounded-full mix-blend-overlay blur-3xl transition-all duration-700 group-hover:translate-x-[6rem]"
+                style={{
+                  backgroundColor: index === 0 ? "rgba(16, 185, 129, 0.2)" : 
+                                  index === 1 ? "rgba(59, 130, 246, 0.2)" :
+                                  index === 2 ? "rgba(168, 85, 247, 0.2)" :
+                                  index === 3 ? "rgba(249, 115, 22, 0.2)" :
+                                  "rgba(236, 72, 153, 0.2)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = index === 0 ? "rgba(16, 185, 129, 0.3)" : 
+                                                          index === 1 ? "rgba(59, 130, 246, 0.3)" :
+                                                          index === 2 ? "rgba(168, 85, 247, 0.3)" :
+                                                          index === 3 ? "rgba(249, 115, 22, 0.3)" :
+                                                          "rgba(236, 72, 153, 0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = index === 0 ? "rgba(16, 185, 129, 0.2)" : 
+                                                          index === 1 ? "rgba(59, 130, 246, 0.2)" :
+                                                          index === 2 ? "rgba(168, 85, 247, 0.2)" :
+                                                          index === 3 ? "rgba(249, 115, 22, 0.2)" :
+                                                          "rgba(236, 72, 153, 0.2)";
+                }}
+              />
               <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45)_0%,_rgba(255,255,255,0)_55%)]" />
                 <div className="absolute -inset-[120%] animate-[spin_12s_linear_infinite] bg-[conic-gradient(from_0deg,_rgba(255,255,255,0)_0deg,_rgba(255,255,255,0.65)_90deg,_rgba(255,255,255,0)_180deg)] opacity-30 blur-3xl" />
               </div>
               <div className="flex h-full flex-col justify-between gap-6">
                 <div>
-                  <span className="mb-3 inline-flex items-center rounded-full border border-teal-200/30 px-3 py-1 text-xs uppercase tracking-[0.3em] text-teal-700/80">
+                  <span className={`mb-3 inline-flex items-center rounded-full border ${colors.badge} px-3 py-1 text-xs uppercase tracking-[0.3em]`}>
                     {t.services.title}
                   </span>
-                  <h3 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl mb-4">
+                  <h3 className="text-2xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-4xl break-words">
                     {service.title}
                   </h3>
                 </div>
-                <p className="text-lg leading-relaxed text-slate-600/90 mb-6">
-                  {service.description}
-                </p>
                 <Link
                   href={service.href}
-                  className="group/read relative inline-flex items-center gap-2 self-start overflow-hidden rounded-full border border-teal-200/40 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-teal-700 transition-all duration-500 hover:scale-105 hover:border-teal-300/60"
+                  className={`group/read relative inline-flex items-center gap-3 self-start overflow-hidden rounded-full border ${colors.button} px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] transition-all duration-500 hover:scale-105`}
                 >
                   <span className="relative z-10">
                     {t.services.readMore}
@@ -196,9 +276,27 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
                     size={18}
                     className="relative z-10 transition-transform duration-500 group-hover/read:translate-x-1 group-hover/read:-translate-y-1"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-teal-100/20 via-teal-100/15 to-transparent opacity-60 transition-opacity duration-500 group-hover/read:opacity-80" />
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-r to-transparent opacity-60 transition-opacity duration-500 group-hover/read:opacity-80"
+                    style={{
+                      background: index === 0 ? "linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.15), transparent)" :
+                                  index === 1 ? "linear-gradient(to right, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.15), transparent)" :
+                                  index === 2 ? "linear-gradient(to right, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.15), transparent)" :
+                                  index === 3 ? "linear-gradient(to right, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.15), transparent)" :
+                                  "linear-gradient(to right, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.15), transparent)",
+                    }}
+                  />
                   <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/read:opacity-100">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-teal-100/20 to-transparent blur-sm" />
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent blur-sm"
+                      style={{
+                        background: index === 0 ? "linear-gradient(to right, transparent, rgba(16, 185, 129, 0.2), transparent)" :
+                                        index === 1 ? "linear-gradient(to right, transparent, rgba(59, 130, 246, 0.2), transparent)" :
+                                        index === 2 ? "linear-gradient(to right, transparent, rgba(168, 85, 247, 0.2), transparent)" :
+                                        index === 3 ? "linear-gradient(to right, transparent, rgba(249, 115, 22, 0.2), transparent)" :
+                                        "linear-gradient(to right, transparent, rgba(236, 72, 153, 0.2), transparent)",
+                      }}
+                    />
                   </div>
                 </Link>
               </div>
@@ -250,9 +348,27 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
           >
             {t.services.mainDescription}
           </p>
+          
+          {/* Arrow */}
+          <div className="mt-8 flex justify-start pl-8">
+            <div
+              className={`transition-all duration-700 ${
+                isHeaderVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+              style={isHeaderVisible ? { animationDelay: "0.4s" } : {}}
+            >
+              <Image
+                src="/Arrow 05.png"
+                alt=""
+                width={100}
+                height={100}
+                className="opacity-40 rotate-180"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="grid gap-10 sm:gap-12 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2">
           {serviceCards}
         </div>
       </div>

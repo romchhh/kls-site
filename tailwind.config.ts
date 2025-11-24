@@ -10,7 +10,12 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["Mont", "system-ui", "sans-serif"],
+      },
+      fontWeight: {
+        normal: '400', // Mont Regular
+        semibold: '600', // Mont SemiBold
+        black: '900', // Mont Black
       },
     },
   },

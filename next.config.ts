@@ -53,6 +53,31 @@ const nextConfig: NextConfig = {
         hostname: "www.fedex.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "flagcdn.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.cargosupport.com.ua",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "ukr-china.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "fialan.ua",
+        pathname: "/**",
+      },
     ],
   },
   // Дозволяємо обробку відео файлів

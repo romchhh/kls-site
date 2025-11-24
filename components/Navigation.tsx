@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
-import { Menu, X, ChevronDown, Globe, Plus, Minus } from "lucide-react";
+import { Menu, X, ChevronDown, Globe, Plus, Minus, User } from "lucide-react";
 import { Locale, getTranslations, locales } from "../lib/translations";
 
 type NavigationProps = {
@@ -141,7 +141,7 @@ export function Navigation({ locale }: NavigationProps) {
         <div className="flex items-center">
           <Link href={`/${locale}`} aria-label="KLS home">
             <Image
-              src="/бірюза на прозорому2x.png"
+              src="/turquoise-transparent-2x.png"
               alt="KLS"
               width={280}
               height={84}
@@ -156,28 +156,13 @@ export function Navigation({ locale }: NavigationProps) {
         </div>
 
         <div className="hidden items-center space-x-6 lg:flex">
-          <Link
-            href={`/${locale}`}
-            className={`rounded-xl px-4 py-2 text-base font-semibold transition-all duration-300 ${
-              isHomePage && scrollY <= 50
-                ? pathname === `/${locale}`
-                  ? "bg-white/20 text-white backdrop-blur-sm"
-                  : "text-white/90 hover:bg-white/10 hover:text-white"
-                : pathname === `/${locale}`
-                ? "bg-teal-100 text-teal-700 shadow-sm"
-                : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
-            }`}
-          >
-            {t.nav.home}
-          </Link>
-
           <div
             className="relative"
             onMouseEnter={handleDeliveryMouseEnter}
             onMouseLeave={handleDeliveryMouseLeave}
           >
             <button
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-base font-semibold transition-all duration-300 ${
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
                 isHomePage && scrollY <= 50
                   ? pathname?.includes("/delivery")
                     ? "bg-white/20 text-white backdrop-blur-sm"
@@ -205,7 +190,7 @@ export function Navigation({ locale }: NavigationProps) {
                     <Link
                       key={subpage.key}
                       href={subpage.href}
-                      className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-teal-50/80 hover:text-teal-700 rounded-lg mx-2 transition-all duration-200"
+                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-teal-50/80 hover:text-teal-700 rounded-lg mx-2 transition-all duration-200"
                     >
                       {typeof deliveryText === 'string' ? deliveryText : subpage.key}
                     </Link>
@@ -221,7 +206,7 @@ export function Navigation({ locale }: NavigationProps) {
             onMouseLeave={handleServicesMouseLeave}
           >
             <button
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-base font-semibold transition-all duration-300 ${
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
                 isHomePage && scrollY <= 50
                   ? pathname?.includes("/services")
                     ? "bg-white/20 text-white backdrop-blur-sm"
@@ -249,7 +234,7 @@ export function Navigation({ locale }: NavigationProps) {
                     <Link
                       key={subpage.key}
                       href={subpage.href}
-                      className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-teal-50/80 hover:text-teal-700 rounded-lg mx-2 transition-all duration-200"
+                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-teal-50/80 hover:text-teal-700 rounded-lg mx-2 transition-all duration-200"
                     >
                       {typeof serviceText === 'string' ? serviceText : subpage.key}
                     </Link>
@@ -261,7 +246,7 @@ export function Navigation({ locale }: NavigationProps) {
 
           <Link
             href={`/${locale}/about`}
-            className={`rounded-xl px-4 py-2 text-base font-semibold transition-all duration-300 ${
+            className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
               isHomePage && scrollY <= 50
                 ? pathname === `/${locale}/about`
                   ? "bg-white/20 text-white backdrop-blur-sm"
@@ -276,7 +261,7 @@ export function Navigation({ locale }: NavigationProps) {
 
           <Link
             href={`/${locale}/contacts`}
-            className={`rounded-xl px-4 py-2 text-base font-semibold transition-all duration-300 ${
+            className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
               isHomePage && scrollY <= 50
                 ? pathname === `/${locale}/contacts`
                   ? "bg-white/20 text-white backdrop-blur-sm"
@@ -297,10 +282,10 @@ export function Navigation({ locale }: NavigationProps) {
             onMouseLeave={handleLangMouseLeave}
           >
             <button
-              className={`flex items-center gap-2 rounded-xl px-4 py-3.5 text-base font-semibold transition-all duration-300 backdrop-blur-sm ${
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
                 isHomePage && scrollY <= 50
-                  ? "text-white hover:bg-white/20 border border-white/30 bg-white/10"
-                  : "text-gray-700 hover:bg-gray-100/80 border border-gray-200/50 bg-white/50"
+                  ? "text-white/90 hover:text-white"
+                  : "text-gray-700 hover:text-gray-900"
               }`}
             >
               <Globe size={18} />
@@ -320,7 +305,7 @@ export function Navigation({ locale }: NavigationProps) {
                   <Link
                     key={loc}
                     href={getLocalizedPath(loc)}
-                    className={`block px-4 py-2.5 text-sm rounded-lg mx-2 transition-all duration-200 ${
+                    className={`block px-4 py-2.5 text-base rounded-lg mx-2 transition-all duration-200 ${
                       loc === locale
                         ? "bg-teal-50/80 text-teal-700 font-medium"
                         : "text-gray-700 hover:bg-teal-50/80 hover:text-teal-700"
@@ -335,12 +320,9 @@ export function Navigation({ locale }: NavigationProps) {
 
           <Link
             href={`/${locale}/cabinet`}
-            className={`group relative overflow-hidden rounded-xl border px-6 py-3.5 text-base font-semibold shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 ${
-              isHomePage && scrollY <= 50
-                ? "border-white/30 bg-white/15 text-white hover:bg-white/25 hover:border-white/40"
-                : "border-teal-200/50 bg-teal-50/80 text-teal-700 hover:bg-teal-100/90 hover:border-teal-300/70"
-            }`}
+            className="group relative overflow-hidden flex items-center gap-2 rounded-xl bg-gray-800 px-6 py-3.5 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:bg-gray-700 hover:scale-105"
           >
+            <User size={18} className="relative z-10" />
             <span className="relative z-10">{t.nav.cabinet}</span>
           </Link>
         </div>
@@ -371,7 +353,7 @@ export function Navigation({ locale }: NavigationProps) {
           <div className="fixed top-4 left-4 lg:hidden z-50 flex items-center" style={{ height: '96px' }}>
             <Link href={`/${locale}`} aria-label="KLS home" onClick={() => setIsMenuOpen(false)}>
               <Image
-                src="/бірюза на прозорому2x.png"
+                src="/turquoise-transparent-2x.png"
                 alt="KLS"
                 width={280}
                 height={84}
@@ -399,15 +381,6 @@ export function Navigation({ locale }: NavigationProps) {
           
           <div className="fixed inset-0 flex items-center justify-center lg:hidden px-6" style={{ zIndex: 50, pointerEvents: 'none' }}>
             <div className="space-y-4 px-8 py-8 w-full max-w-md" style={{ pointerEvents: 'auto' }}>
-              {/* Головна */}
-              <Link
-                href={`/${locale}`}
-                className="block py-3 text-base font-semibold text-white transition-colors hover:text-teal-300"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t.nav.home}
-              </Link>
-
               {/* Доставка з підсекціями */}
               <div className="space-y-2">
                 <button
@@ -418,7 +391,7 @@ export function Navigation({ locale }: NavigationProps) {
                       setIsMobileLangOpen(false);
                     }
                   }}
-                  className="flex w-full items-center justify-between py-3 text-base font-semibold text-white transition-colors hover:text-teal-300"
+                  className="flex w-full items-center justify-between py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
                 >
                   <span>{t.nav.delivery}</span>
                   {isMobileDeliveryOpen ? (
@@ -433,7 +406,7 @@ export function Navigation({ locale }: NavigationProps) {
                       <Link
                         key={subpage.key}
                         href={subpage.href}
-                        className="block py-2.5 text-sm text-white/80 transition-colors hover:text-teal-300"
+                        className="block py-2.5 text-base text-white/80 transition-colors hover:text-teal-300"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         {t.delivery[subpage.key as keyof typeof t.delivery]}
@@ -453,7 +426,7 @@ export function Navigation({ locale }: NavigationProps) {
                       setIsMobileLangOpen(false);
                     }
                   }}
-                  className="flex w-full items-center justify-between py-3 text-base font-semibold text-white transition-colors hover:text-teal-300"
+                  className="flex w-full items-center justify-between py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
                 >
                   <span>{t.nav.services}</span>
                   {isMobileServicesOpen ? (
@@ -470,7 +443,7 @@ export function Navigation({ locale }: NavigationProps) {
                         <Link
                           key={subpage.key}
                           href={subpage.href}
-                          className="block py-2.5 text-sm text-white/80 transition-colors hover:text-teal-300"
+                          className="block py-2.5 text-base text-white/80 transition-colors hover:text-teal-300"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {typeof serviceText === 'string' ? serviceText : subpage.key}
@@ -484,7 +457,7 @@ export function Navigation({ locale }: NavigationProps) {
               {/* Про нас */}
               <Link
                 href={`/${locale}/about`}
-                className="block py-3 text-base font-semibold text-white transition-colors hover:text-teal-300"
+                className="block py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t.nav.about}
@@ -493,7 +466,7 @@ export function Navigation({ locale }: NavigationProps) {
               {/* Контакти */}
               <Link
                 href={`/${locale}/contacts`}
-                className="block py-3 text-base font-semibold text-white transition-colors hover:text-teal-300"
+                className="block py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t.nav.contacts}
@@ -503,10 +476,11 @@ export function Navigation({ locale }: NavigationProps) {
               <div className="pt-4">
                 <Link
                   href={`/${locale}/cabinet`}
-                  className="group relative overflow-hidden block w-full text-center py-3.5 rounded-xl border border-white/30 bg-white/10 backdrop-blur-sm text-white font-semibold shadow-lg transition-all duration-500 hover:scale-105 hover:bg-white/20 hover:border-white/40"
+                  className="group relative overflow-hidden flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gray-800 text-white font-semibold shadow-lg transition-all duration-300 hover:bg-gray-700 hover:scale-105"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <span className="relative z-10 text-base">{t.nav.cabinet}</span>
+                  <User size={18} className="relative z-10" />
+                  <span className="relative z-10 text-lg">{t.nav.cabinet}</span>
                 </Link>
               </div>
 
@@ -520,7 +494,7 @@ export function Navigation({ locale }: NavigationProps) {
                       setIsMobileServicesOpen(false);
                     }
                   }}
-                  className="flex w-full items-center justify-between py-3 text-base font-semibold text-white transition-colors hover:text-teal-300"
+                  className="flex w-full items-center justify-between py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
                 >
                   <span className="flex items-center gap-2">
                     <Globe size={18} />
@@ -538,7 +512,7 @@ export function Navigation({ locale }: NavigationProps) {
                       <Link
                         key={loc}
                         href={getLocalizedPath(loc)}
-                        className={`block py-2.5 text-sm transition-colors ${
+                        className={`block py-2.5 text-base transition-colors ${
                           loc === locale
                             ? "text-teal-300 font-semibold"
                             : "text-white/80 hover:text-teal-300"

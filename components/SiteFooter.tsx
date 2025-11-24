@@ -27,7 +27,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
             setIsVisible(true);
           }
         });
-      },
+  },
       { threshold: 0.1 }
     );
 
@@ -56,7 +56,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
           >
             <Link href={`/${locale}`} className="flex items-center" aria-label="KLS home">
               <Image
-                src="/бірюза на прозорому2x.png"
+                src="/turquoise-transparent-2x.png"
                 alt="KLS"
                 width={240}
                 height={75}
@@ -82,7 +82,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                   key={`nav-${link.href}-${index}`}
                   href={link.href}
                   className="block transition-colors duration-300 hover:text-teal-400"
-                >
+                  >
                   {link.label}
                 </Link>
               ))}
@@ -104,9 +104,9 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                 >
                   {link.label}
                 </Link>
-              ))}
+                  ))}
+                </div>
             </div>
-          </div>
 
           <div className={isVisible ? 'animate-slide-in-bottom' : ''}
             style={isVisible ? { animationDelay: '0.4s' } : { opacity: 0 }}

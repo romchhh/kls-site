@@ -55,10 +55,10 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
           </p>
         </div>
 
-        <div className="relative mx-auto max-w-6xl overflow-hidden">
+        <div className="relative mx-auto max-w-7xl overflow-hidden">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white via-white/95 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white via-white/95 to-transparent" />
-          <div className="flex min-w-full animate-[partners-marquee_26s_linear_infinite] gap-12">
+          <div className="flex min-w-full animate-[partners-marquee_12s_linear_infinite] gap-8 md:gap-12">
             {marqueePartners.map((partner, index) => {
               const PartnerWrapper = partner.url 
                 ? ({ children }: { children: ReactNode }) => (
@@ -76,18 +76,18 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
               return (
                 <div
                   key={`${partner.name}-${index}`}
-                  className="group relative flex w-60 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-200/60 bg-white/80 px-8 py-6 shadow-md backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:border-teal-200 hover:shadow-lg"
+                  className="group relative flex w-56 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-200/60 bg-white/80 px-3 py-4 shadow-md backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:border-teal-200 hover:shadow-lg md:w-72 md:px-4 md:py-6"
                 >
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-teal-50/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   <PartnerWrapper>
                     <Image
                       src={partner.logo}
-                      alt={`${partner.name} logo`}
-                      width={200}
-                      height={80}
-                      className="relative z-10 h-12 w-auto object-contain opacity-70 grayscale transition-all duration-500 group-hover:opacity-100 group-hover:grayscale-0"
+                      alt={`${partner.name} flag`}
+                      width={160}
+                      height={120}
+                      className="relative z-10 h-10 w-auto object-cover rounded-md shadow-sm transition-all duration-500 group-hover:shadow-md md:h-16"
                       priority={index === 0}
-                      unoptimized={partner.logo.includes('.svg') || partner.logo.includes('.jpg')}
+                      unoptimized={true}
                     />
                   </PartnerWrapper>
                 </div>

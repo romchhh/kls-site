@@ -16,29 +16,90 @@ export const en = {
     getInTouch: "Get in Touch",
     trusted: "Trusted by 500+ businesses worldwide",
   },
-  statistics: {
-    title: "KLS by the Numbers",
-    subtitle: "Trust the numbers that speak for themselves",
-    stats: [
+  deliveryTypes: {
+    title: "Types of Delivery",
+    subtitle: "Choose the most convenient delivery method for yourself, or ask us. We will definitely advise you on the best one.",
+    learnMore: "Learn More",
+    types: [
       {
-        number: "500+",
-        label: "Trusted Clients",
-        description: "Businesses worldwide",
+        key: "air",
+        title: "Air Delivery",
+        icon: "air",
+        image: "https://www.cargosupport.com.ua/wp-content/uploads/2020/08/avia-delivery.jpg",
+        features: [
+          {
+            icon: "clock",
+            text: "Fastest delivery",
+          },
+          {
+            icon: "mapPin",
+            text: "Delivery to any point in the world",
+          },
+          {
+            icon: "package",
+            text: "Ideal for cargo requiring fast delivery",
+          },
+        ],
       },
       {
-        number: "50+",
-        label: "Countries Covered",
-        description: "Global delivery network",
+        key: "sea",
+        title: "Sea Transportation",
+        icon: "sea",
+        image: "https://ukr-china.com/wp-content/themes/ukr_chi/img/dostavka-morem-iz-kitaya-porti.jpg",
+        features: [
+          {
+            icon: "handCoins",
+            text: "Most economical delivery",
+          },
+          {
+            icon: "warehouse",
+            text: "Possibility of sending consolidated cargo",
+          },
+          {
+            icon: "package",
+            text: "Delivery of all types of cargo",
+          },
+        ],
       },
       {
-        number: "99.8%",
-        label: "Success Rate",
-        description: "Reliability guaranteed",
+        key: "rail",
+        title: "Rail Freight",
+        icon: "rail",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOnGN4EJBCzRAa1JdcUM8TL345eYPqLA7d6g&s",
+        features: [
+          {
+            icon: "dollar",
+            text: "Ideal combination of price and speed",
+          },
+          {
+            icon: "mapPin",
+            text: "Direct routes",
+          },
+          {
+            icon: "clock",
+            text: "Punctuality of train schedules",
+          },
+        ],
       },
       {
-        number: "24/7",
-        label: "Support",
-        description: "Always available",
+        key: "multimodal",
+        title: "Multimodal Transportation",
+        icon: "multimodal",
+        image: "https://fialan.ua/images/news/2021/multymod.jpg",
+        features: [
+          {
+            icon: "scale",
+            text: "Advantages of all types of delivery in one",
+          },
+          {
+            icon: "home",
+            text: "Door-to-door delivery",
+          },
+          {
+            icon: "users",
+            text: "Individual selection of combinations",
+          },
+        ],
       },
     ],
   },
@@ -46,11 +107,6 @@ export const en = {
     title: "Why Choose KLS?",
     subtitle: "We offer the best logistics solutions for your business",
     features: [
-      {
-        title: "Fast Delivery",
-        description:
-          "We guarantee fast delivery of your cargo from China to Ukraine and other countries",
-      },
       {
         title: "Reliability",
         description:
@@ -61,14 +117,37 @@ export const en = {
         description: "Track your shipments in real time",
       },
       {
+        title: "Fast Delivery",
+        description:
+          "We guarantee fast delivery of your cargo from China to Ukraine and other countries",
+      },
+      {
         title: "Affordable Prices",
         description: "Competitive rates for all types of logistics services",
+      },
+      {
+        title: "Customs Clearance",
+        description: "Full support and processing of all necessary documentation",
+      },
+      {
+        title: "Personal Approach",
+        description: "Individual solutions for each client and their needs",
+      },
+      {
+        title: "24/7 Support",
+        description: "Our team is always available to solve any questions",
+      },
+      {
+        title: "Global Network",
+        description: "Wide delivery geography worldwide",
       },
     ],
     imageLabels: {
       international: "International Shipping",
       reliable: "Reliable Logistics",
     },
+    cardText: "Quickly, manage your logistics operations easily",
+    contactButton: "Contact Us",
   },
   services: {
     title: "Services",
@@ -83,39 +162,33 @@ export const en = {
     local: "Local Delivery",
     items: [
       {
-        title: "International Shipping",
+        title: "Payment Operations",
         description:
-          "Seamless ocean, air, and land transport across global routes — from port to port or door to door.",
-        href: "/en/delivery",
+          "Secure and fast financial operations for your logistics needs. Various payment methods and currency operations.",
+        href: "/en/services",
       },
       {
-        title: "Freight Forwarding",
-        description:
-          "We coordinate every leg of your shipment, ensuring smooth transitions and optimized delivery times.",
-        href: "/en/delivery",
-      },
-      {
-        title: "Warehousing",
+        title: "Warehousing Services",
         description:
           "Secure, scalable storage solutions with smart inventory handling and flexible distribution options.",
         href: "/en/services/warehousing",
       },
       {
-        title: "Customs Clearance",
+        title: "Sourcing/Purchasing Service",
         description:
-          "Navigate customs with confidence — we handle all documentation, compliance, and clearance procedures.",
+          "Professional search and procurement of goods in China and other countries. Quality control and supplier verification.",
         href: "/en/services",
       },
       {
-        title: "E-commerce Fulfillment",
+        title: "Cargo Insurance",
         description:
-          "From order processing to last-mile delivery, we empower your online business to scale across borders.",
+          "Complete insurance coverage for your cargo throughout the delivery route. Protection from unforeseen situations and risks.",
         href: "/en/services",
       },
       {
-        title: "Real-time Tracking",
+        title: "Local Delivery",
         description:
-          "Track your shipments every step of the way with live updates, notifications, and full route transparency.",
+          "Fast and reliable delivery across Ukraine and other countries. Logistics solutions for the last mile.",
         href: "/en/services",
       },
     ],
@@ -175,39 +248,66 @@ export const en = {
     ],
   },
   partners: {
-    title: "Trusted By",
-    subtitle: "Partnering with leading companies worldwide",
+    title: "International Directions",
+    subtitle: "Delivering worldwide",
     partners: [
       {
-        name: "Amazon",
-        logo: "https://logos-world.net/wp-content/uploads/2021/02/Amazon-Logo.png",
-        url: "https://www.amazon.com/ref=nav_logo",
+        name: "China",
+        logo: "https://flagcdn.com/w320/cn.png",
+        url: undefined,
       },
       {
-        name: "AliExpress",
-        logo: "https://logos-world.net/wp-content/uploads/2021/03/AliExpress-Logo.png",
-        url: "https://www.aliexpress.com/?spm=a2g0o.home.logo.1.5eb46278hjE6W7",
+        name: "Ukraine",
+        logo: "https://flagcdn.com/w320/ua.png",
+        url: undefined,
       },
       {
-        name: "FedEx",
-        logo: "https://logos-world.net/wp-content/uploads/2020/06/FedEx-Logo.png",
+        name: "Hong Kong",
+        logo: "https://flagcdn.com/w320/hk.png",
+        url: undefined,
       },
       {
-        name: "DHL",
-        logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-        url: "https://www.dhl.com",
+        name: "European Union",
+        logo: "https://flagcdn.com/w320/eu.png",
+        url: undefined,
       },
       {
-        name: "UPS",
-        logo: "https://www.ups.com/webassets/icons/logo.svg",
-        url: "https://www.ups.com",
+        name: "United States",
+        logo: "https://flagcdn.com/w320/us.png",
+        url: undefined,
       },
       {
-        name: "Alibaba",
-        logo: "https://graincomshipping.com/wp-content/uploads/2023/04/alibaba_1.jpg",
-        url: "https://www.alibaba.com",
+        name: "UAE",
+        logo: "https://flagcdn.com/w320/ae.png",
+        url: undefined,
+      },
+      {
+        name: "United Kingdom",
+        logo: "https://flagcdn.com/w320/gb.png",
+        url: undefined,
+      },
+      {
+        name: "Qatar",
+        logo: "https://flagcdn.com/w320/qa.png",
+        url: undefined,
+      },
+      {
+        name: "Canada",
+        logo: "https://flagcdn.com/w320/ca.png",
+        url: undefined,
       },
     ],
+  },
+  contactQuick: {
+    title: "Get in Touch",
+    subtitle: "Choose a convenient way to contact us",
+    chooseMessenger: "Choose a messenger:",
+    or: "or",
+    phoneLabel: "Your phone",
+    phonePlaceholder: "+1 XXX XXX XXXX",
+    submit: "Submit request",
+    submitting: "Submitting...",
+    success: "Thank you! We will contact you soon.",
   },
   contactModal: {
     title: "Contact Us",

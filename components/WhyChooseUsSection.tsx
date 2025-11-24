@@ -2,20 +2,37 @@
 
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { Shield, Eye, Zap, DollarSign, FileText, User, Headphones, Globe } from "lucide-react";
 import { Locale, getTranslations } from "../lib/translations";
 
 type WhyChooseUsSectionProps = {
   locale: Locale;
 };
 
+// Icon mapping for features
+const featureIcons = [
+  Shield,      // Надійність
+  Eye,         // Прозорість
+  Zap,         // Швидка доставка
+  DollarSign,  // Доступні ціни
+  FileText,    // Митне оформлення
+  User,        // Персональний підхід
+  Headphones,  // 24/7 Підтримка
+  Globe,       // Глобальна мережа
+];
+
 export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
   const t = getTranslations(locale);
   const content = t.whyChooseUs;
+  // Use all features for rotation
+  const features = content.features;
+  // Each card starts with a different feature index
   const [isVisible, setIsVisible] = useState(false);
-  const [currentFeatureIndexes, setCurrentFeatureIndexes] = useState<number[]>([0, 1, 2, 3]);
-  const [isFlipping, setIsFlipping] = useState<boolean[]>([false, false, false, false]);
+  const [currentFeatureIndexes, setCurrentFeatureIndexes] = useState<number[]>([0, 1, 2]);
+  const [isFlipping, setIsFlipping] = useState<boolean[]>([false, false, false]);
   const sectionRef = useRef<HTMLElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRefs = useRef<(NodeJS.Timeout | null)[]>([null, null, null]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -43,7 +60,6 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
   useEffect(() => {
     if (!isVisible) return;
 
-    let blockIndex = 0;
     const flipFeature = (blockIdx: number) => {
       setIsFlipping((prev) => {
         const newFlipping = [...prev];
@@ -54,8 +70,8 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
       setTimeout(() => {
         setCurrentFeatureIndexes((prev) => {
           const newIndexes = [...prev];
-          // Change to next feature, cycling through all features
-          newIndexes[blockIdx] = (prev[blockIdx] + 1) % content.features.length;
+          // Each card cycles through all features independently
+          newIndexes[blockIdx] = (prev[blockIdx] + 1) % features.length;
           return newIndexes;
         });
         
@@ -67,132 +83,186 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
       }, 300); // Half of flip animation duration
     };
 
-    const changeNextBlock = () => {
-      flipFeature(blockIndex);
-      blockIndex = (blockIndex + 1) % content.features.length;
-    };
+    // Each card flips independently with different intervals
+    const intervals = [3500, 4000, 4500]; // Different intervals for each card
 
-    // Initial delay before starting
-    const initialTimeout = setTimeout(() => {
-      // Start flipping blocks sequentially with delay - every 5 seconds
-      intervalRef.current = setInterval(changeNextBlock, 5000);
-    }, 2000);
+    const initialTimeouts = intervals.map((interval, index) => {
+      return setTimeout(() => {
+        const changeFeature = () => {
+          flipFeature(index);
+        };
+        intervalRefs.current[index] = setInterval(changeFeature, interval);
+      }, 2000 + index * 500); // Stagger initial delays
+    });
 
     return () => {
-      clearTimeout(initialTimeout);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      initialTimeouts.forEach(timeout => clearTimeout(timeout));
+      intervalRefs.current.forEach(interval => {
+        if (interval) {
+          clearInterval(interval);
+        }
+      });
     };
-  }, [isVisible, content.features.length]);
+  }, [isVisible, features.length]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white to-slate-50 py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+        {/* Header */}
         <div
-          className={`mx-auto mb-20 max-w-4xl text-center ${
+          className={`mx-auto mb-16 max-w-3xl text-center ${
             isVisible ? "animate-slide-in-top" : ""
           }`}
-          style={isVisible ? { animationDelay: "0.3s" } : { opacity: 0 }}
+          style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
         >
-          <h2 className="mb-6 text-5xl font-semibold tracking-tight text-slate-900 md:text-6xl lg:text-7xl">
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
             {content.title}
           </h2>
-          <p className="text-xl leading-relaxed text-slate-600/80 md:text-2xl">
+          <p className="mb-6 text-base font-normal leading-relaxed text-slate-600 md:text-lg">
             {content.subtitle}
           </p>
+          
+          {/* Arrow */}
+          <div className="mt-6 flex justify-center">
+            <div
+              className={`transition-all duration-700 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+              style={isVisible ? { animationDelay: "0.3s" } : {}}
+            >
+              <Image
+                src="/Arrow 01.png"
+                alt=""
+                width={100}
+                height={100}
+                className="opacity-40"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-2">
-          {/* Left side - Images */}
-          <div className="grid gap-6">
-            <div
-              className={`relative h-96 overflow-hidden rounded-3xl shadow-2xl transition-all duration-700 hover:scale-105 card-hover ${
-                isVisible ? "animate-slide-in-left" : ""
-              }`}
-              style={isVisible ? { animationDelay: "0.4s" } : { opacity: 0 }}
-            >
-              <Image
-                src="/hero-image-1.jpg"
-                alt="KLS Logistics - Global shipping"
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <p className="text-lg font-semibold text-white">
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-stretch">
+          {/* Left side - Single large image block */}
+          <div
+            className={`relative flex flex-col ${
+              isVisible ? "animate-slide-in-left" : ""
+            }`}
+            style={isVisible ? { animationDelay: "0.3s" } : { opacity: 0 }}
+          >
+            <div className="group relative flex h-full min-h-[600px] overflow-hidden rounded-3xl bg-gradient-to-br from-amber-100 via-yellow-50 to-amber-50 shadow-2xl transition-all duration-500 hover:shadow-3xl">
+              {/* Blurred background image */}
+              <div className="absolute inset-0">
+                <Image
+                  src="/hero-image-1.jpg"
+                  alt="KLS Logistics"
+                  fill
+                  className="object-cover transition-all duration-700 group-hover:scale-110"
+                  style={{
+                    filter: "blur(10px) brightness(0.65) saturate(0.9)",
+                    transform: "scale(1.1)",
+                  }}
+                />
+              </div>
+              
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10 transition-opacity duration-500 group-hover:from-black/80 group-hover:via-black/40" />
+              
+              {/* Content overlay */}
+              <div className="relative z-10 flex h-full flex-col justify-center p-10">
+                <h3 className="mb-3 text-4xl font-black tracking-tight text-white md:text-5xl">
+                  KLS Logistics
+                </h3>
+                <p className="mb-2 text-lg font-normal leading-relaxed text-white/95 md:text-xl">
                   {content.imageLabels.international}
                 </p>
-              </div>
-            </div>
-            <div
-              className={`relative h-80 overflow-hidden rounded-3xl shadow-2xl transition-all duration-700 hover:scale-105 card-hover ${
-                isVisible ? "animate-slide-in-left" : ""
-              }`}
-              style={isVisible ? { animationDelay: "0.6s" } : { opacity: 0 }}
-            >
-              <Image
-                src="/hero-image-2.jpg"
-                alt="KLS Logistics - Reliable delivery"
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <p className="text-lg font-semibold text-white">
-                  {content.imageLabels.reliable}
+                <p className="mb-8 text-base font-normal text-white/90 md:text-lg">
+                  {content.cardText}
                 </p>
+                
+                {/* Contact button */}
+                <Link
+                  href={`/${locale}/contacts`}
+                  className="inline-block w-fit rounded-2xl bg-slate-900 px-8 py-3.5 text-base font-semibold text-white transition-all duration-300 hover:bg-slate-800 hover:scale-[1.02] hover:shadow-2xl md:px-10 md:py-4"
+                >
+                  {content.contactButton}
+                </Link>
               </div>
             </div>
           </div>
 
-          {/* Right side - Features with flip animation */}
-          <div className="flex flex-col justify-center space-y-6">
-            {content.features.map((feature, index) => {
-              const currentIndex = currentFeatureIndexes[index];
-              const currentFeature = content.features[currentIndex];
-              const nextIndex = (currentIndex + 1) % content.features.length;
-              const nextFeature = content.features[nextIndex];
-              const flipping = isFlipping[index];
+          {/* Right side - Three feature cards with dynamic change */}
+          <div className="flex h-full flex-col justify-center space-y-4">
+            {[0, 1, 2].map((cardIndex) => {
+              const currentIndex = currentFeatureIndexes[cardIndex];
+              const currentFeature = features[currentIndex];
+              const nextIndex = (currentIndex + 1) % features.length;
+              const nextFeature = features[nextIndex];
+              const flipping = isFlipping[cardIndex];
 
               return (
                 <div
-                  key={index}
-                  className={`group rounded-3xl border-2 border-gray-200/60 bg-white/90 backdrop-blur-sm p-8 shadow-lg transition-all duration-500 hover:scale-105 hover:border-teal-300 hover:shadow-2xl card-hover ${
+                  key={cardIndex}
+                  className={`group relative overflow-hidden rounded-3xl bg-white p-8 shadow-md transition-all duration-500 hover:shadow-xl hover:-translate-y-1 ${
                     isVisible ? "animate-slide-in-right" : ""
                   }`}
                   style={
                     isVisible
-                      ? { animationDelay: `${0.5 + index * 0.15}s` }
+                      ? { animationDelay: `${0.4 + cardIndex * 0.1}s` }
                       : { opacity: 0 }
                   }
                 >
-                  <div className="flex items-start gap-6">
-                    <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-100 to-teal-50 text-teal-600 transition-all duration-300 group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-teal-600 group-hover:to-teal-500 group-hover:text-white shadow-md">
-                      <span className="text-2xl font-bold">{index + 1}</span>
+                  {/* Accent line on left */}
+                  <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-teal-500 to-teal-600 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  
+                  {/* Icon in top right with flip animation */}
+                  <div className="absolute top-6 right-6">
+                    <div
+                      className={`flip-container ${
+                        flipping ? "flip" : ""
+                      }`}
+                      style={{ width: "64px", height: "64px" }}
+                    >
+                      <div className="flip-front">
+                        <div className="flex h-16 w-16 items-center justify-center text-teal-600 transition-all duration-300 group-hover:text-teal-700 group-hover:scale-110">
+                          {(() => {
+                            const CurrentIcon = featureIcons[currentIndex % featureIcons.length];
+                            return <CurrentIcon size={40} strokeWidth={2} />;
+                          })()}
+                        </div>
+                      </div>
+                      <div className="flip-back">
+                        <div className="flex h-16 w-16 items-center justify-center text-teal-600 transition-all duration-300 group-hover:text-teal-700 group-hover:scale-110">
+                          {(() => {
+                            const NextIcon = featureIcons[nextIndex % featureIcons.length];
+                            return <NextIcon size={40} strokeWidth={2} />;
+                          })()}
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex-1 min-h-[120px] relative overflow-hidden">
-                      <div
-                        className={`flip-container ${
-                          flipping ? "flip" : ""
-                        }`}
-                      >
-                        <div className="flip-front">
-                          <h3 className="mb-3 text-2xl font-semibold text-gray-900">
-                            {currentFeature.title}
-                          </h3>
-                          <p className="text-lg text-gray-600 leading-relaxed">
-                            {currentFeature.description}
-                          </p>
-                        </div>
-                        <div className="flip-back">
-                          <h3 className="mb-3 text-2xl font-semibold text-gray-900">
-                            {nextFeature.title}
-                          </h3>
-                          <p className="text-lg text-gray-600 leading-relaxed">
-                            {nextFeature.description}
-                          </p>
-                        </div>
+                  </div>
+
+                  {/* Content with smooth flip animation */}
+                  <div className="relative min-h-[140px] pr-20">
+                    <div
+                      className={`flip-container ${
+                        flipping ? "flip" : ""
+                      }`}
+                    >
+                      <div className="flip-front">
+                        <h3 className="mb-4 text-2xl font-black tracking-tight text-slate-900 md:text-3xl">
+                          {currentFeature.title}
+                        </h3>
+                        <p className="text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+                          {currentFeature.description}
+                        </p>
+                      </div>
+                      <div className="flip-back">
+                        <h3 className="mb-4 text-2xl font-black tracking-tight text-slate-900 md:text-3xl">
+                          {nextFeature.title}
+                        </h3>
+                        <p className="text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+                          {nextFeature.description}
+                        </p>
                       </div>
                     </div>
                   </div>
