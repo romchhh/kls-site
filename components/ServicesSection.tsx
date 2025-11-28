@@ -179,10 +179,10 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
             ref={(node) => {
               cardRefs.current[index] = node;
             }}
-            className={`group relative overflow-hidden rounded-3xl border-2 ${colors.border} bg-white/15 p-[2px] shadow-2xl backdrop-blur-xl card-hover ${
+            className={`group relative overflow-hidden rounded-3xl border-2 ${colors.border} bg-white/15 p-[2px] shadow-2xl backdrop-blur-xl card-hover min-h-[200px] ${
               index === 0 
-                ? "min-h-[400px] lg:row-span-2 lg:min-h-full" 
-                : "min-h-[200px]"
+                ? "lg:row-span-2 lg:min-h-full" 
+                : ""
             } ${
               isVisible
                 ? "opacity-100 blur-0 scale-100 translate-y-0"

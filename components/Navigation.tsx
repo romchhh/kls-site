@@ -5,7 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { Menu, X, ChevronDown, Globe, Plus, Minus, User } from "lucide-react";
-import { Locale, getTranslations, locales } from "../lib/translations";
+import {
+  Locale,
+  getTranslations,
+  locales,
+  defaultLocale,
+  translations,
+} from "../lib/translations";
 
 type NavigationProps = {
   locale: Locale;
@@ -21,7 +27,7 @@ export function Navigation({ locale }: NavigationProps) {
   const [isMobileLangOpen, setIsMobileLangOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const pathname = usePathname();
-  const t = getTranslations(locale);
+  const t = getTranslations(locale) ?? translations[defaultLocale];
   
   // Визначаємо, чи ми на головній сторінці
   const isHomePage = pathname === `/${locale}`;

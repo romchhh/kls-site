@@ -58,7 +58,7 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
         <div className="relative mx-auto max-w-7xl overflow-hidden">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white via-white/95 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white via-white/95 to-transparent" />
-          <div className="flex min-w-full animate-[partners-marquee_12s_linear_infinite] gap-8 md:gap-12">
+          <div className="flex animate-[partners-marquee_10s_linear_infinite] gap-4 md:gap-12" style={{ display: 'inline-flex', width: 'max-content' }}>
             {marqueePartners.map((partner, index) => {
               const PartnerWrapper = partner.url 
                 ? ({ children }: { children: ReactNode }) => (
@@ -76,7 +76,7 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
               return (
                 <div
                   key={`${partner.name}-${index}`}
-                  className="group relative flex w-56 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-200/60 bg-white/80 px-3 py-4 shadow-md backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:border-teal-200 hover:shadow-lg md:w-72 md:px-4 md:py-6"
+                  className="group relative flex w-[45vw] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-slate-200/60 bg-white/80 px-2 py-3 shadow-md backdrop-blur-sm transition-all duration-500 hover:scale-105 hover:border-teal-200 hover:shadow-lg md:w-72 md:px-4 md:py-6"
                 >
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-teal-50/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   <PartnerWrapper>

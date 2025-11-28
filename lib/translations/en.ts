@@ -10,6 +10,7 @@ export const en = {
   },
   hero: {
     title: "Global Shipping. Local Expertise.",
+    titleShort: "Your cargo. Your cabinet. Your control.",
     description:
       "From China to Ukraine and beyond — reliable freight forwarding, seamless customs, and real-time tracking. Let us simplify your logistics so you can focus on growing your business.",
     calculateCost: "Calculate Cost",
@@ -427,6 +428,64 @@ export const en = {
   },
   contacts: {
     title: "Contacts",
+  },
+  cabinet: {
+    loginTitle: "Login to Cabinet",
+    loginDescription: "Enter your client code and password",
+    login: "Log In",
+    loggingIn: "Logging in...",
+    password: "Password",
+    loginError: "Invalid code or password",
+    main: "Main",
+    shipments: "Shipments",
+    invoices: "Invoices",
+    finances: "Finances",
+    warehouses: "Warehouses",
+    settings: "Settings",
+    profile: "Profile",
+    clientCode: "Client Code",
+    heroDescription:
+      "Log in to your personal cabinet to track shipments, invoices and finances in one place 24/7.",
+    heroFooter:
+      "Secure client cabinet · Encrypted connection · Daily support",
+    noProfileQuestion: "Don't have a profile?",
+    registration: "Registration",
+    forgotPassword: "I don't remember the password",
+    passwordPlaceholder: "Enter password",
+    clientCodePlaceholder: "E.g. 1234",
+    notRobotLabel: "I am not a robot",
+    recaptchaTitle: "reCAPTCHA",
+    recaptchaPrivacy: "Privacy · Terms",
+    helpAria: "How to log in to the cabinet",
+    managerInfo:
+      "New client registration, password recovery and data changes are handled via your personal KLS manager.",
+    quickContact: "Quick contact with manager",
+    contactTelegram: "Contact via Telegram",
+    welcome: "Welcome",
+    yourCode: "Your client code",
+    noShipments: "No shipments",
+    noInvoices: "No invoices",
+    noTransactions: "No transactions",
+    totalAvailableTitle: "Total available:",
+    totalReservedLabel: "Total reserved:",
+    comingSoon: "Balance dynamics will appear here soon",
+    ratesWidgetTitle: "Exchange rates",
+    ratesWidgetHint: "Rates are updated automatically in real time",
+    ratesWidgetLoading: "Updating rates…",
+    shipmentsEmptyHint:
+      "As soon as you have shipments, their status and movement will appear here.",
+    shipmentsSideInfo:
+      "Message your manager to create the first shipment or learn more about delivery terms.",
+    invoicesEmptyHint:
+      "Once invoices appear, you'll see their status, amounts and due dates here.",
+    financesEmptyHint:
+      "This area will show the history of payments and financial operations for your cabinet.",
+    loadingShipments: "Loading shipments...",
+    changePassword: "Change password",
+    changeEmail: "Change email",
+    save: "Save",
+    cancel: "Cancel",
+    logout: "Log out",
   },
 };
 

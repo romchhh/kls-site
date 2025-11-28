@@ -4,6 +4,16 @@ import { locales, defaultLocale } from './lib/translations';
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  
+  // Skip middleware for admin routes, API routes, and static files
+  if (
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next')
+  ) {
+    return NextResponse.next();
+  }
+  
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );

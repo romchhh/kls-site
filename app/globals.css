@@ -641,3 +641,13 @@ html {
   backdrop-filter: blur(8px);
 }
 
+/* Shimmer animation for shine effect */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(12deg);
+  }
+}
+

@@ -8,6 +8,7 @@ import { CostCalculationSection } from "../../components/CostCalculationSection"
 import { CTASection } from "../../components/CTASection";
 import { SiteFooter } from "../../components/SiteFooter";
 import { ScrollToTop } from "../../components/ScrollToTop";
+import { ContactButton } from "../../components/ContactButton";
 import { Locale } from "../../lib/translations";
 
 // Дозволяємо динамічний рендеринг для правильної роботи відео
@@ -32,6 +33,7 @@ export default async function HomePage({
       <CTASection locale={locale} />
       <SiteFooter locale={locale} />
       <ScrollToTop />
+      <ContactButton locale={locale} />
     </div>
   );
 }

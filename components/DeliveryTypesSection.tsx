@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Locale, getTranslations } from "../lib/translations";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -14,7 +14,11 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
   const t = getTranslations(locale);
   const content = t.deliveryTypes;
   const [isVisible, setIsVisible] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,6 +42,82 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
       }
     };
   }, []);
+
+  // Handle scroll position and navigation buttons
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const cards = container.querySelectorAll("a");
+    
+    const updateScrollState = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+      
+      // Find the card that is most visible in the viewport
+      let maxVisible = 0;
+      let maxIndex = 0;
+      
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        
+        // Calculate how much of the card is visible
+        const cardLeft = rect.left;
+        const cardRight = rect.right;
+        const containerLeft = containerRect.left;
+        const containerRight = containerRect.right;
+        
+        const visibleLeft = Math.max(0, cardLeft - containerLeft);
+        const visibleRight = Math.max(0, containerRight - cardRight);
+        const visibleWidth = Math.min(rect.width, containerRect.width) - visibleLeft - visibleRight;
+        
+        if (visibleWidth > maxVisible) {
+          maxVisible = visibleWidth;
+          maxIndex = index;
+        }
+      });
+      
+      setCurrentIndex(maxIndex);
+    };
+
+    // Use requestAnimationFrame for smoother updates
+    let rafId: number;
+    const handleScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateScrollState);
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    updateScrollState(); // Initial check
+
+    // Update on resize
+    const handleResize = () => {
+      updateScrollState();
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [content.types.length]);
+
+  const scrollTo = (direction: "left" | "right") => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const cardWidth = container.querySelector("a")?.offsetWidth || 0;
+    const gap = 24;
+    const scrollAmount = cardWidth + gap;
+
+    container.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section
@@ -78,70 +158,130 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           </div>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
-          {content.types.map((type, index) => (
-            <Link
-              key={type.key}
-              href={`/${locale}/delivery/${type.key}`}
-              className={`group relative flex min-h-[380px] flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl ${
-                isVisible ? "animate-slide-in-bottom" : ""
-              }`}
-              style={
-                isVisible ? { animationDelay: `${0.4 + index * 0.1}s` } : { opacity: 0 }
-              }
-            >
-              {/* Background Image */}
-              <div className="absolute inset-0">
-                <Image
-                  src={type.image}
-                  alt={type.title}
-                  fill
-                  className="object-cover transition-all duration-500 group-hover:scale-110"
-                  style={{
-                    filter: "brightness(0.85)",
-                  }}
-                />
-                {/* Blur overlay on hover */}
-                <div className="absolute inset-0 delivery-card-blur" />
-                {/* Dark gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-              </div>
+        {/* Cards Container with Navigation */}
+        <div className="relative">
+          {/* Left Arrow - Mobile only */}
+          <button
+            onClick={() => scrollTo("left")}
+            disabled={!canScrollLeft}
+            className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed md:hidden"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft size={24} className="text-teal-600" />
+          </button>
 
-              {/* Content */}
-              <div className="relative z-10 flex h-full flex-col justify-between p-6">
-                {/* Title */}
-                <div>
-                  <h3 className="mb-6 text-2xl font-black leading-tight text-white md:text-3xl lg:text-4xl">
-                    {type.title}
-                  </h3>
+          {/* Right Arrow - Mobile only */}
+          <button
+            onClick={() => scrollTo("right")}
+            disabled={!canScrollRight}
+            className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed md:hidden"
+            aria-label="Scroll right"
+          >
+            <ChevronRight size={24} className="text-teal-600" />
+          </button>
 
-                  {/* Features List */}
-                  <div className="space-y-4">
-                    {type.features.map((feature, featureIndex) => (
-                      <div
-                        key={featureIndex}
-                        className="flex items-start gap-3"
-                      >
-                        <div className="mt-2 flex h-2.5 w-2.5 flex-shrink-0 rounded-full bg-white" />
-                        <p className="text-base font-normal leading-relaxed text-white/95 md:text-lg">
-                          {feature.text}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+          {/* Cards Grid - Horizontal scroll on mobile, grid on desktop */}
+          <div
+            ref={scrollContainerRef}
+            className="flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-2 md:overflow-x-visible md:pb-0 md:snap-none scrollbar-hide -mx-4 md:mx-0"
+          >
+            {content.types.map((type, index) => (
+              <Link
+                key={type.key}
+                href={`/${locale}/delivery/${type.key}`}
+                className={`group relative flex min-h-[380px] w-[78vw] flex-shrink-0 snap-start flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl md:min-w-0 md:w-auto md:snap-none ${
+                  index === 0 ? "ml-6" : ""
+                } ${
+                  index === content.types.length - 1 ? "mr-4" : ""
+                } ${
+                  isVisible ? "animate-slide-in-bottom" : ""
+                }`}
+                style={
+                  isVisible ? { animationDelay: `${0.4 + index * 0.1}s` } : { opacity: 0 }
+                }
+              >
+                {/* Background Image */}
+                <div className="absolute inset-0">
+                  <Image
+                    src={type.image}
+                    alt={type.title}
+                    fill
+                    className="object-cover transition-all duration-500 group-hover:scale-110"
+                    style={{
+                      filter: "brightness(0.85)",
+                    }}
+                  />
+                  {/* Blur overlay on hover */}
+                  <div className="absolute inset-0 delivery-card-blur" />
+                  {/* Dark gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
                 </div>
 
-                {/* Learn More Button - appears on hover */}
-                <div className="mt-6 opacity-0 transition-all duration-500 group-hover:opacity-100">
-                  <div className="flex items-center gap-3 rounded-2xl bg-white/95 px-6 py-3.5 text-base font-semibold text-slate-900 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:gap-4 md:text-lg md:px-8 md:py-4">
-                    <span>{content.learnMore}</span>
-                    <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1 md:w-5 md:h-5" />
+                {/* Content */}
+                <div className="relative z-10 flex h-full flex-col justify-between p-4 md:p-6">
+                  {/* Title */}
+                  <div>
+                    <h3 className="mb-4 break-words text-xl font-black leading-tight text-white md:mb-6 md:text-3xl lg:text-4xl">
+                      {type.title}
+                    </h3>
+
+                    {/* Features List */}
+                    <div className="space-y-4">
+                      {type.features.map((feature, featureIndex) => (
+                        <div
+                          key={featureIndex}
+                          className="flex items-start gap-3"
+                        >
+                          <div className="mt-2 flex h-2.5 w-2.5 flex-shrink-0 rounded-full bg-white" />
+                          <p className="text-base font-normal leading-relaxed text-white/95 md:text-lg">
+                            {feature.text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Learn More Button - appears on hover */}
+                  <div className="mt-6 opacity-0 transition-all duration-500 group-hover:opacity-100">
+                    <div className="flex items-center gap-3 rounded-2xl bg-white/95 px-6 py-3.5 text-base font-semibold text-slate-900 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:gap-4 md:text-lg md:px-8 md:py-4">
+                      <span>{content.learnMore}</span>
+                      <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1 md:w-5 md:h-5" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
+
+          {/* Indicators (Dots) - Mobile only */}
+          <div className="mt-6 flex justify-center gap-2 md:hidden">
+            {content.types.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  const container = scrollContainerRef.current;
+                  if (!container) return;
+                  const firstCard = container.querySelector("a") as HTMLElement;
+                  if (!firstCard) return;
+                  
+                  const cardWidth = firstCard.offsetWidth;
+                  const gap = 24;
+                  const scrollPosition = index * (cardWidth + gap);
+                  
+                  container.scrollTo({
+                    left: scrollPosition,
+                    behavior: "smooth",
+                  });
+                }}
+                className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
+                  index === currentIndex
+                    ? "bg-teal-600 scale-125"
+                    : "bg-slate-300 hover:bg-slate-400"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
