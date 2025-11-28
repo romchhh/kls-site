@@ -71,9 +71,9 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                     {t.cabinet?.shipments || "Вантаж"}
                   </p>
                   <p className="text-sm text-slate-600">
-                    {t.cabinet?.noShipments || "Немає відправлень"}
-                  </p>
-                </div>
+          {t.cabinet?.noShipments || "Немає відправлень"}
+        </p>
+      </div>
               </div>
               <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-white/70 px-4 py-8 text-center text-sm text-slate-500">
                 {t.cabinet?.shipmentsEmptyHint ||

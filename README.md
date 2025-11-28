@@ -1,155 +1,70 @@
-# KLS Site - Система управління вантажоперевезеннями
+# Getting Started with Create React App
 
-Next.js додаток для управління вантажоперевезеннями з адмін-панеллю та особистим кабінетом користувача.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## 🚀 Швидкий старт (Development)
+## Available Scripts
 
-### Встановлення
+In the project directory, you can run:
 
-```bash
-# Клонуйте репозиторій
-git clone <repo-url>
-cd KlsSite
+### `npm start`
 
-# Встановіть залежності
-npm install
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-# Налаштуйте .env файл
-cp .env.example .env
-# Відредагуйте .env та вкажіть DATABASE_URL та NEXTAUTH_SECRET
-```
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-### Налаштування бази даних
+### `npm test`
 
-1. Створіть PostgreSQL базу даних
-2. Вкажіть `DATABASE_URL` в `.env` файлі
-3. Запустіть міграції:
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-```bash
-npx prisma generate
-npx prisma migrate dev
-```
+### `npm run build`
 
-### Створення суперадміна
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-```bash
-# Інтерактивний режим (рекомендовано)
-npx tsx scripts/init-db.ts
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-# Або швидкий режим з дефолтними значеннями
-npx tsx scripts/create-superadmin.ts
-```
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### Запуск
+### `npm run eject`
 
-```bash
-npm run dev
-```
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-Відкрийте [http://localhost:3000](http://localhost:3000)
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-## 📋 Production Деплой
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-Детальні інструкції з деплою на сервер дивіться в [DEPLOY.md](./DEPLOY.md)
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-Короткий варіант:
+## Learn More
 
-```bash
-# Використайте скрипт деплою
-chmod +x scripts/deploy.sh
-./scripts/deploy.sh
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-# Або вручну:
-npm ci
-npx prisma generate
-npx prisma migrate deploy
-npm run build
-npm start
-```
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-## 🛠️ Доступні скрипти
+### Code Splitting
 
-- `npm run dev` - запуск development сервера
-- `npm run build` - збірка для production
-- `npm start` - запуск production сервера
-- `npm run db:generate` - генерація Prisma Client
-- `npm run db:migrate` - запуск міграцій (dev)
-- `npm run db:studio` - відкрити Prisma Studio
-- `npm run generate:secret` - згенерувати NEXTAUTH_SECRET
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-## 📁 Структура проєкту
+### Analyzing the Bundle Size
 
-```
-├── app/                    # Next.js App Router
-│   ├── [locale]/          # Локалізовані сторінки
-│   ├── admin/             # Адмін панель
-│   └── api/               # API routes
-├── components/            # React компоненти
-├── lib/                   # Утиліти та конфігурація
-│   ├── auth.ts           # NextAuth конфігурація
-│   ├── prisma.ts         # Prisma Client
-│   └── translations/     # Переклади (UA/RU/EN)
-├── prisma/               # Prisma схема та міграції
-├── scripts/              # Допоміжні скрипти
-└── types/                # TypeScript типи
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-## 🔐 Ролі користувачів
+### Making a Progressive Web App
 
-- **SUPERADMIN** - повний доступ, може створювати адмінів
-- **ADMIN** - управління користувачами та вантажами
-- **USER** - доступ до особистого кабінету
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-## 🌍 Локалізація
+### Advanced Configuration
 
-Проєкт підтримує 3 мови:
-- Українська (ua) - за замовчуванням
-- Російська (ru)
-- Англійська (en)
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-Переклади знаходяться в `lib/translations/`
+### Deployment
 
-## 🗄️ База даних
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-Використовується PostgreSQL з Prisma ORM.
+### `npm run build` fails to minify
 
-Основні моделі:
-- `User` - користувачі (USER, ADMIN, SUPERADMIN)
-- `Shipment` - вантажі
-- `ShipmentItem` - позиції вантажу
-- `ShipmentStatusHistory` - історія статусів
-- `Invoice` - рахунки
-- `Transaction` - транзакції
-- `AdminAction` - лог дій адмінів
-
-## 📝 Змінні оточення
-
-Створіть `.env` файл на основі `.env.example`:
-
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/kls_site"
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key"
-NODE_ENV="production"
-```
-
-## 🔧 Технології
-
-- **Next.js 15** - React framework
-- **TypeScript** - типізація
-- **Prisma** - ORM для PostgreSQL
-- **NextAuth.js** - аутентифікація
-- **Tailwind CSS** - стилізація
-- **Lucide React** - іконки
-
-## 📞 Підтримка
-
-При виникненні проблем:
-1. Перевірте логи
-2. Перевірте налаштування `.env`
-3. Перевірте статус бази даних
-4. Дивіться [DEPLOY.md](./DEPLOY.md) для production проблем
-
-## 📄 Ліцензія
-
-Приватний проєкт
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

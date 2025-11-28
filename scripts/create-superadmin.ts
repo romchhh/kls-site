@@ -4,12 +4,10 @@ import * as bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function createSuperAdmin() {
-  // Для production використовуйте init-db.ts з інтерактивним вводом
-  // Цей скрипт для швидкого створення тестового суперадміна
-  const email = process.env.SUPERADMIN_EMAIL || "superadmin@gmail.com";
-  const password = process.env.SUPERADMIN_PASSWORD || "superadmin";
-  const name = process.env.SUPERADMIN_NAME || "Super Admin";
-  const phone = process.env.SUPERADMIN_PHONE || "+380000000000";
+  const email = "superadmin@gmail.com";
+  const password = "superadmin";
+  const name = "Roman";
+  const phone = "+380960908006";
 
   try {
     // Check if superadmin already exists

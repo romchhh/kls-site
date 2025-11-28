@@ -25,8 +25,8 @@ export function CabinetFinances({ locale }: CabinetFinancesProps) {
               {t.cabinet?.finances || "Фінанси"}
             </p>
             <p className="text-sm text-slate-700">
-              {t.cabinet?.noTransactions || "Немає транзакцій"}
-            </p>
+          {t.cabinet?.noTransactions || "Немає транзакцій"}
+        </p>
           </div>
         </div>
         <div className="mt-4 rounded-xl border border-dashed border-emerald-300 bg-white/80 px-4 py-8 text-center text-sm text-slate-600">

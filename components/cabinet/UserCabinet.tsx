@@ -158,8 +158,8 @@ export function UserCabinet({ locale }: UserCabinetProps) {
                     <span
                       className={`flex h-9 w-9 items-center justify-center rounded-xl ${
                         isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-800"
-                      }`}
-                    >
+                    }`}
+                  >
                       <Icon className="h-4 w-4" />
                     </span>
                     <span>{tab.label}</span>

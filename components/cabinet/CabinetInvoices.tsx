@@ -25,8 +25,8 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
               {t.cabinet?.invoices || "Рахунки"}
             </p>
             <p className="text-sm text-slate-600">
-              {t.cabinet?.noInvoices || "Немає рахунків"}
-            </p>
+          {t.cabinet?.noInvoices || "Немає рахунків"}
+        </p>
           </div>
         </div>
         <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-white/70 px-4 py-8 text-center text-sm text-slate-500">

@@ -133,14 +133,14 @@ export function CabinetMain({ locale }: CabinetMainProps) {
                   <Package className="h-5 w-5" />
                 </div>
                 <h3 className="text-lg font-semibold text-slate-900">
-                  {t.cabinet?.shipments || "Вантаж"}
-                </h3>
+            {t.cabinet?.shipments || "Вантаж"}
+          </h3>
               </div>
             </div>
-            <p className="text-sm text-slate-600">
-              {t.cabinet?.noShipments || "Немає відправлень"}
-            </p>
-          </div>
+          <p className="text-sm text-slate-600">
+            {t.cabinet?.noShipments || "Немає відправлень"}
+          </p>
+        </div>
 
           {/* Invoices */}
           <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-blue-100/70 p-6 shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -148,16 +148,16 @@ export function CabinetMain({ locale }: CabinetMainProps) {
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500 text-white shadow-md">
                   <FileText className="h-5 w-5" />
-                </div>
+          </div>
                 <h3 className="text-lg font-semibold text-slate-900">
-                  {t.cabinet?.invoices || "Рахунки"}
-                </h3>
+            {t.cabinet?.invoices || "Рахунки"}
+          </h3>
               </div>
             </div>
-            <p className="text-sm text-slate-600">
-              {t.cabinet?.noInvoices || "Немає рахунків"}
-            </p>
-          </div>
+          <p className="text-sm text-slate-600">
+            {t.cabinet?.noInvoices || "Немає рахунків"}
+          </p>
+        </div>
 
           {/* Finances */}
           <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-emerald-50 via-white to-emerald-100/70 p-6 shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -165,15 +165,15 @@ export function CabinetMain({ locale }: CabinetMainProps) {
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-md">
                   <DollarSign className="h-5 w-5" />
-                </div>
+          </div>
                 <h3 className="text-lg font-semibold text-slate-900">
-                  {t.cabinet?.finances || "Фінанси"}
-                </h3>
+            {t.cabinet?.finances || "Фінанси"}
+          </h3>
               </div>
             </div>
-            <p className="text-sm text-slate-600">
-              {t.cabinet?.noTransactions || "Немає транзакцій"}
-            </p>
+          <p className="text-sm text-slate-600">
+            {t.cabinet?.noTransactions || "Немає транзакцій"}
+          </p>
           </div>
         </div>
       </div>
