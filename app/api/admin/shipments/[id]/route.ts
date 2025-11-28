@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 export async function PUT(
   req: NextRequest,
@@ -58,6 +59,15 @@ export async function PUT(
       localDeliveryToDepot,
     } = body;
 
+    // Helper function to convert to Decimal
+    const toDecimal = (value: any): Prisma.Decimal | null => {
+      if (value === null || value === undefined || value === "") {
+        return null;
+      }
+      const num = typeof value === "string" ? parseFloat(value) : Number(value);
+      return isNaN(num) ? null : new Prisma.Decimal(num);
+    };
+
     let computedEta: Date | null = null;
     const nextStatus = status ?? existing.status;
     const nextDeliveryType = deliveryType ?? existing.deliveryType;
@@ -96,11 +106,10 @@ export async function PUT(
         localTrackingDestination:
           localTrackingDestination ?? existing.localTrackingDestination,
         description: description ?? existing.description,
+        mainPhotoUrl: body.mainPhotoUrl !== undefined ? (body.mainPhotoUrl || null) : existing.mainPhotoUrl,
         insuranceTotal:
           insuranceTotal !== undefined
-            ? insuranceTotal
-              ? String(insuranceTotal)
-              : null
+            ? toDecimal(insuranceTotal)
             : existing.insuranceTotal,
         insurancePercentTotal:
           insurancePercentTotal !== undefined
@@ -112,46 +121,32 @@ export async function PUT(
             : existing.insurancePerPlacePercent,
         weightKg:
           weightKg !== undefined
-            ? weightKg
-              ? String(weightKg)
-              : null
+            ? toDecimal(weightKg)
             : existing.weightKg,
         volumeM3:
           volumeM3 !== undefined
-            ? volumeM3
-              ? String(volumeM3)
-              : null
+            ? toDecimal(volumeM3)
             : existing.volumeM3,
         density:
           density !== undefined
-            ? density
-              ? String(density)
-              : null
+            ? toDecimal(density)
             : existing.density,
         tariffType: tariffType ?? existing.tariffType,
         tariffValue:
           tariffValue !== undefined
-            ? tariffValue
-              ? String(tariffValue)
-              : null
+            ? toDecimal(tariffValue)
             : existing.tariffValue,
         deliveryCost:
           deliveryCost !== undefined
-            ? deliveryCost
-              ? String(deliveryCost)
-              : null
+            ? toDecimal(deliveryCost)
             : existing.deliveryCost,
         deliveryCostPerPlace:
           deliveryCostPerPlace !== undefined
-            ? deliveryCostPerPlace
-              ? String(deliveryCostPerPlace)
-              : null
+            ? toDecimal(deliveryCostPerPlace)
             : existing.deliveryCostPerPlace,
         totalCost:
           totalCost !== undefined
-            ? totalCost
-              ? String(totalCost)
-              : null
+            ? toDecimal(totalCost)
             : existing.totalCost,
         receivedAtWarehouse:
           receivedAtWarehouse !== undefined
@@ -194,9 +189,20 @@ export async function PUT(
     });
 
     return NextResponse.json({ shipment }, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Error updating shipment", error);
+    console.error("Error details:", {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      stack: error.stack,
+    });
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        message: error.message || "Unknown error",
+        code: error.code || "UNKNOWN",
+      },
       { status: 500 },
     );
   }
@@ -239,9 +245,13 @@ export async function DELETE(
       { message: "Shipment deleted successfully" },
       { status: 200 },
     );
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Error deleting shipment", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        message: error.message || "Unknown error",
+      },
       { status: 500 },
     );
   }

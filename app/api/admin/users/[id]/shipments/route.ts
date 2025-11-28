@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 export async function GET(
   _req: NextRequest,
@@ -172,6 +173,15 @@ export async function POST(
         ? null
         : Number(insurancePerPlacePercent);
 
+    // Helper function to convert to Decimal
+    const toDecimal = (value: any): Prisma.Decimal | null => {
+      if (value === null || value === undefined || value === "") {
+        return null;
+      }
+      const num = typeof value === "string" ? parseFloat(value) : Number(value);
+      return isNaN(num) ? null : new Prisma.Decimal(num);
+    };
+
     const shipment = await prisma.shipment.create({
       data: {
         userId,
@@ -188,19 +198,17 @@ export async function POST(
         localTrackingDestination: localTrackingDestination || null,
         description: description || null,
         mainPhotoUrl: body.mainPhotoUrl || null,
-        insuranceTotal: insuranceTotal ? String(insuranceTotal) : null,
+        insuranceTotal: toDecimal(insuranceTotal),
         insurancePercentTotal: percentTotal,
         insurancePerPlacePercent: percentPerPlace,
-        weightKg: weightKg ? String(weightKg) : null,
-        volumeM3: volumeM3 ? String(volumeM3) : null,
-        density: density ? String(density) : null,
+        weightKg: toDecimal(weightKg),
+        volumeM3: toDecimal(volumeM3),
+        density: toDecimal(density),
         tariffType: tariffType || null,
-        tariffValue: tariffValue ? String(tariffValue) : null,
-        deliveryCost: deliveryCost ? String(deliveryCost) : null,
-        deliveryCostPerPlace: deliveryCostPerPlace
-          ? String(deliveryCostPerPlace)
-          : null,
-        totalCost: totalCost ? String(totalCost) : null,
+        tariffValue: toDecimal(tariffValue),
+        deliveryCost: toDecimal(deliveryCost),
+        deliveryCostPerPlace: toDecimal(deliveryCostPerPlace),
+        totalCost: toDecimal(totalCost),
         receivedAtWarehouse: receivedAtWarehouse
           ? new Date(receivedAtWarehouse)
           : null,
@@ -230,6 +238,12 @@ export async function POST(
     return NextResponse.json({ shipment }, { status: 201 });
   } catch (error: any) {
     console.error("Error creating shipment for user", error);
+    console.error("Error details:", {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      stack: error.stack,
+    });
     if (error.code === "P2002") {
       return NextResponse.json(
         { error: "Вантаж з таким трек-номером вже існує" },
@@ -237,7 +251,11 @@ export async function POST(
       );
     }
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        message: error.message || "Unknown error",
+        code: error.code || "UNKNOWN",
+      },
       { status: 500 },
     );
   }
