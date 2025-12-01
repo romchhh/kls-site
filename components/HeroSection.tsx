@@ -10,7 +10,8 @@ type HeroSectionProps = {
 };
 
 export function HeroSection({ locale }: HeroSectionProps) {
-  const t = getTranslations(locale);
+  const t = getTranslations(locale) as any;
+  const hero = t?.hero || {};
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -71,7 +72,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             }`}
             style={isVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
           >
-            {t.hero.title}
+            {hero.title ?? "Міжнародна логістика для вашого бізнесу"}
           </h1>
 
           <p 
@@ -80,7 +81,8 @@ export function HeroSection({ locale }: HeroSectionProps) {
             }`}
             style={isVisible ? { animationDelay: '0.3s' } : { opacity: 0 }}
           >
-            {t.hero.description}
+            {hero.description ??
+              "Організуємо доставку вантажів з Китаю та інших країн з повним супроводом і прозорими умовами."}
           </p>
 
           <div 
@@ -93,7 +95,9 @@ export function HeroSection({ locale }: HeroSectionProps) {
               onClick={() => setIsContactModalOpen(true)}
               className="group relative overflow-hidden rounded-xl bg-teal-600 px-4 py-4 text-sm font-semibold text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-teal-700 btn-primary sm:px-8 sm:text-base flex-1 sm:flex-none text-center flex items-center justify-center"
             >
-              <span className="relative z-10">{t.hero.getInTouch}</span>
+              <span className="relative z-10">
+                {hero.getInTouch ?? "Звʼязатися з менеджером"}
+              </span>
             </button>
 
             <button
@@ -111,7 +115,9 @@ export function HeroSection({ locale }: HeroSectionProps) {
                 boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.3)",
               }}
             >
-              <span className="relative z-10">{t.hero.calculateCost}</span>
+              <span className="relative z-10">
+                {hero.calculateCost ?? "Розрахувати вартість"}
+              </span>
             </button>
           </div>
 
@@ -121,7 +127,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             }`}
             style={isVisible ? { animationDelay: '0.7s' } : { opacity: 0 }}
           >
-            {t.hero.trusted}
+            {hero.trusted ?? "Нам довіряють компанії з України, ЄС та США."}
           </p>
         </div>
       </div>

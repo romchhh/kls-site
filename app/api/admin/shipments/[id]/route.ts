@@ -57,6 +57,7 @@ export async function PUT(
       deliveryReference,
       packing,
       localDeliveryToDepot,
+      additionalFiles,
     } = body;
 
     // Helper function to convert to Decimal
@@ -106,7 +107,10 @@ export async function PUT(
         localTrackingDestination:
           localTrackingDestination ?? existing.localTrackingDestination,
         description: description ?? existing.description,
-        mainPhotoUrl: body.mainPhotoUrl !== undefined ? (body.mainPhotoUrl || null) : existing.mainPhotoUrl,
+        mainPhotoUrl: body.mainPhotoUrl !== undefined 
+          ? (body.mainPhotoUrl || (additionalFiles && Array.isArray(additionalFiles) && additionalFiles.length > 0 ? additionalFiles[0] : null))
+          : (additionalFiles && Array.isArray(additionalFiles) && additionalFiles.length > 0 && !existing.mainPhotoUrl ? additionalFiles[0] : existing.mainPhotoUrl),
+        additionalFilesUrls: additionalFiles !== undefined ? (additionalFiles && Array.isArray(additionalFiles) ? JSON.stringify(additionalFiles) : null) : existing.additionalFilesUrls,
         insuranceTotal:
           insuranceTotal !== undefined
             ? toDecimal(insuranceTotal)

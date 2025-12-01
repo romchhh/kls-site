@@ -48,3 +48,8 @@ export const contactsTranslations = {
   en: en.contacts,
 };
 
+export function getShipmentStatusTranslation(status: string, locale: Locale): string {
+  const t = getTranslations(locale);
+  const shipmentStatuses = (t.cabinet as any)?.shipmentStatuses || {};
+  return shipmentStatuses[status] || status.replace(/_/g, " ");
+}

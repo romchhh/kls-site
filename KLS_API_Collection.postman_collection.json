@@ -1,0 +1,190 @@
+{
+  "info": {
+    "name": "KLS API Collection",
+    "description": "API колекція для KLS International",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Client Authentication",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{api_token}}",
+            "description": "Bearer token отриманий з адмін панелі"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"client_code\": \"1234\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/public/client-auth",
+          "host": ["{{base_url}}"],
+          "path": ["api", "public", "client-auth"]
+        },
+        "description": "Авторизація клієнта за кодом клієнта та паролем"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_code\": \"1234\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/public/client-auth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "public", "client-auth"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"is_client\": true,\n  \"client_data\": {\n    \"id\": \"cmig06let0003btso5b7tmkel\",\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"phone\": \"+380123456789\"\n  }\n}"
+        },
+        {
+          "name": "Error Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_code\": \"wrong_code\",\n  \"password\": \"wrong_password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/public/client-auth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "public", "client-auth"]
+            }
+          },
+          "status": "Unauthorized",
+          "code": 401,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"is_client\": false,\n  \"message\": \"Невірний код клієнта або пароль\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Shipment by Internal Track",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{api_token}}",
+            "description": "Bearer token отриманий з адмін панелі"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/public/shipment/:track",
+          "host": ["{{base_url}}"],
+          "path": ["api", "public", "shipment", ":track"],
+          "variable": [
+            {
+              "key": "track",
+              "value": "123",
+              "description": "Внутрішній трек номер замовлення (internalTrack)"
+            }
+          ]
+        },
+        "description": "Отримання повної інформації про замовлення за внутрішнім трек номером"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/public/shipment/123",
+              "host": ["{{base_url}}"],
+              "path": ["api", "public", "shipment", "123"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"id\": \"cmig06let0003btso5b7tmkel\",\n  \"internalTrack\": \"123\",\n  \"status\": \"IN_TRANSIT\",\n  \"pieces\": 1,\n  \"weightKg\": \"12\",\n  \"volumeM3\": \"321\",\n  \"totalCost\": \"3000\",\n  \"client\": {\n    \"id\": \"user_id\",\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"phone\": \"+380123456789\",\n    \"clientCode\": \"1234\"\n  },\n  \"items\": [\n    {\n      \"id\": \"item_id\",\n      \"description\": \"Item description\",\n      \"quantity\": 1,\n      \"weightKg\": \"10\",\n      \"volumeM3\": \"0.5\"\n    }\n  ],\n  \"statusHistory\": [\n    {\n      \"id\": \"history_id\",\n      \"status\": \"CREATED\",\n      \"location\": \"Guangzhou\",\n      \"createdAt\": \"2025-11-26T12:00:00.000Z\"\n    }\n  ],\n  \"invoices\": []\n}"
+        },
+        {
+          "name": "Not Found Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/public/shipment/wrong_track",
+              "host": ["{{base_url}}"],
+              "path": ["api", "public", "shipment", "wrong_track"]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"error\": \"Замовлення з трек номером \\\"wrong_track\\\" не знайдено\"\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "api_token",
+      "value": "kls_your_token_here",
+      "type": "string",
+      "description": "Bearer token отриманий з адмін панелі (розділ API Токени)"
+    }
+  ]
+}
+

@@ -7,7 +7,9 @@ import {
   Shield, 
   LogOut, 
   Activity,
-  TrendingUp
+  TrendingUp,
+  Download,
+  FileSpreadsheet
 } from "lucide-react";
 
 interface Admin {
@@ -68,6 +70,34 @@ export function AdminDashboardHome() {
 
   const totalActions = admins.reduce((sum, admin) => sum + (admin.actionsCount || 0), 0);
   const activeAdmins = admins.filter(admin => admin.lastLogin).length;
+  const [exporting, setExporting] = useState(false);
+
+  const handleExportToExcel = async () => {
+    if (!isSuperAdmin) return;
+    
+    setExporting(true);
+    try {
+      const response = await fetch("/api/admin/export/excel");
+      if (!response.ok) {
+        throw new Error("Failed to export");
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `kls_database_export_${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Error exporting:", error);
+      alert("Помилка при вигрузці даних. Спробуйте пізніше.");
+    } finally {
+      setExporting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -171,12 +201,37 @@ export function AdminDashboardHome() {
               </p>
             </div>
             {isSuperAdmin && (
+              <>
               <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
                 <h3 className="mb-2 font-semibold text-slate-900">Адміни</h3>
                 <p className="text-sm text-slate-600">
                   Управління адміністраторами, створення нових адмінів та перегляд статистики.
                 </p>
               </div>
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                  <h3 className="mb-2 font-semibold text-slate-900">Вигрузка даних</h3>
+                  <p className="mb-3 text-sm text-slate-600">
+                    Вигрузка всієї бази даних в Excel файл для резервного копіювання.
+                  </p>
+                  <button
+                    onClick={handleExportToExcel}
+                    disabled={exporting}
+                    className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {exporting ? (
+                      <>
+                        <Activity className="h-4 w-4 animate-spin" />
+                        Вигрузка...
+                      </>
+                    ) : (
+                      <>
+                        <FileSpreadsheet className="h-4 w-4" />
+                        Вигрузити в Excel
+                      </>
+                    )}
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </div>

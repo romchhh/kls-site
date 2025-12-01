@@ -38,11 +38,14 @@ export async function POST(req: NextRequest) {
 
     const updated = await prisma.user.update({
       where: { id: session.user.id },
-      data: { email: newEmail },
+      data: { email: newEmail.trim() },
       select: {
         id: true,
         email: true,
         name: true,
+        phone: true,
+        role: true,
+        clientCode: true,
       },
     });
 
@@ -51,6 +54,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error: any) {
+    console.error("Error updating email:", error);
     if (error.code === "P2002") {
       return NextResponse.json(
         { error: "Email already exists" },
@@ -58,7 +62,7 @@ export async function POST(req: NextRequest) {
       );
     }
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: error.message || "Internal server error" },
       { status: 500 }
     );
   }

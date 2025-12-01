@@ -83,11 +83,27 @@ export async function POST(
       deliveryReference,
       packing,
       localDeliveryToDepot,
+      additionalFiles,
     } = body;
 
+    // Validate required fields
     if (!internalTrack || !status) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing required fields: internalTrack and status are required" },
+        { status: 400 },
+      );
+    }
+
+    if (!routeFrom || !routeTo) {
+      return NextResponse.json(
+        { error: "Missing required fields: routeFrom and routeTo are required" },
+        { status: 400 },
+      );
+    }
+
+    if (!deliveryType) {
+      return NextResponse.json(
+        { error: "Missing required field: deliveryType is required" },
         { status: 400 },
       );
     }
@@ -114,7 +130,7 @@ export async function POST(
 
     // Validate deliveryType enum
     const validDeliveryTypes = ["AIR", "SEA", "RAIL", "MULTIMODAL"];
-    if (deliveryType && !validDeliveryTypes.includes(deliveryType)) {
+    if (!validDeliveryTypes.includes(deliveryType)) {
       return NextResponse.json(
         {
           error: `Invalid deliveryType. Must be one of: ${validDeliveryTypes.join(", ")}`,
@@ -191,13 +207,14 @@ export async function POST(
         status,
         location: location || null,
         pieces: pieces ?? 1,
-        routeFrom: routeFrom || "",
-        routeTo: routeTo || "",
-        deliveryType: deliveryType || "AIR",
+        routeFrom: routeFrom,
+        routeTo: routeTo,
+        deliveryType: deliveryType,
         localTrackingOrigin: localTrackingOrigin || null,
         localTrackingDestination: localTrackingDestination || null,
         description: description || null,
-        mainPhotoUrl: body.mainPhotoUrl || null,
+        mainPhotoUrl: body.mainPhotoUrl || (additionalFiles && Array.isArray(additionalFiles) && additionalFiles.length > 0 ? additionalFiles[0] : null),
+        additionalFilesUrls: additionalFiles && Array.isArray(additionalFiles) ? JSON.stringify(additionalFiles) : null,
         insuranceTotal: toDecimal(insuranceTotal),
         insurancePercentTotal: percentTotal,
         insurancePerPlacePercent: percentPerPlace,
@@ -225,15 +242,21 @@ export async function POST(
       },
     });
 
-    await prisma.adminAction.create({
-      data: {
-        adminId: session.user.id,
-        actionType: "CREATE_SHIPMENT",
-        targetType: "SHIPMENT",
-        targetId: shipment.id,
-        description: `Created shipment ${shipment.internalTrack} for user ${user.clientCode}`,
-      },
-    });
+    // Log admin action (non-blocking, don't fail if this fails)
+    try {
+      await prisma.adminAction.create({
+        data: {
+          adminId: session.user.id,
+          actionType: "CREATE_SHIPMENT",
+          targetType: "SHIPMENT",
+          targetId: shipment.id,
+          description: `Created shipment ${shipment.internalTrack} for user ${user.clientCode}`,
+        },
+      });
+    } catch (actionError) {
+      console.error("Failed to log admin action (non-critical):", actionError);
+      // Continue anyway - the shipment was created successfully
+    }
 
     return NextResponse.json({ shipment }, { status: 201 });
   } catch (error: any) {

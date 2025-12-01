@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import {
-  Home,
   Package,
   FileText,
   DollarSign,
@@ -15,37 +15,46 @@ import {
   LogOut,
   Globe,
   ChevronDown,
+  Info,
 } from "lucide-react";
 import { SiteFooter } from "../SiteFooter";
 import { Locale, getTranslations, locales } from "@/lib/translations";
-import { CabinetMain } from "./CabinetMain";
 import { CabinetShipments } from "./CabinetShipments";
 import { CabinetInvoices } from "./CabinetInvoices";
 import { CabinetFinances } from "./CabinetFinances";
 import { CabinetWarehouses } from "./CabinetWarehouses";
 import { CabinetSettings } from "./CabinetSettings";
+import { CabinetInfo } from "./CabinetInfo";
 
 type UserCabinetProps = {
   locale: Locale;
 };
 
-type TabType = "main" | "shipments" | "invoices" | "finances" | "warehouses" | "settings";
+type TabType =
+  | "shipments"
+  | "invoices"
+  | "finances"
+  | "warehouses"
+  | "settings"
+  | "info";
 
 export function UserCabinet({ locale }: UserCabinetProps) {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState<TabType>("main");
+  const searchParams = useSearchParams();
+  const initialTab = (searchParams.get("tab") as TabType) || "shipments";
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const t = getTranslations(locale);
 
   const tabs = [
-    { id: "main" as TabType, label: t.cabinet?.main || "Головна", icon: Home },
     { id: "shipments" as TabType, label: t.cabinet?.shipments || "Вантаж", icon: Package },
     { id: "invoices" as TabType, label: t.cabinet?.invoices || "Рахунки", icon: FileText },
     { id: "finances" as TabType, label: t.cabinet?.finances || "Фінанси", icon: DollarSign },
     { id: "warehouses" as TabType, label: t.cabinet?.warehouses || "Склади", icon: Warehouse },
     { id: "settings" as TabType, label: t.cabinet?.settings || "Налаштування", icon: Settings },
+    { id: "info" as TabType, label: t.cabinet?.info || "Інфо", icon: Info },
   ];
 
   const handleLogout = async () => {
@@ -57,37 +66,77 @@ export function UserCabinet({ locale }: UserCabinetProps) {
       return;
     }
 
-    const segments = pathname.split("/");
-    if (segments.length > 1) {
-      segments[1] = nextLocale;
-      const nextPath = segments.join("/") || `/${nextLocale}/cabinet`;
+    const segments = pathname.split("?");
+    const basePath = segments[0];
+    const query = segments[1];
+    const pathParts = basePath.split("/");
+    if (pathParts.length > 1) {
+      pathParts[1] = nextLocale;
+      const base = pathParts.join("/") || `/${nextLocale}/cabinet`;
+      const tabParam = `tab=${activeTab}`;
+      const nextPath = query ? `${base}?${tabParam}` : `${base}?${tabParam}`;
       router.push(nextPath);
     } else {
-      router.push(`/${nextLocale}/cabinet`);
+      router.push(`/${nextLocale}/cabinet?tab=${activeTab}`);
     }
 
     setIsLangOpen(false);
   };
 
+  const [managerLink, setManagerLink] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadManagerLink = async () => {
+      try {
+        const res = await fetch(`/api/user/site-settings?locale=${locale}`);
+        if (res.ok) {
+          const data = await res.json();
+          setManagerLink(data.managerLink);
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    loadManagerLink();
+  }, [locale]);
+
   const handleTelegramContact = () => {
-    window.open("https://t.me/klslogistics", "_blank");
+    if (managerLink) {
+      window.open(managerLink, "_blank");
+    } else {
+      window.open("https://t.me/klslogistics", "_blank");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-10 rounded-2xl border border-slate-200 bg-white px-6 py-8 shadow-md lg:px-9 lg:py-9">
+        <div className="mb-10 rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-md lg:px-10 lg:py-10">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-black text-slate-900 lg:text-[2.1rem]">
-                {t.cabinet?.welcome || "Ласкаво просимо"}, {session?.user?.name}
-              </h1>
-              <div className="mt-3 flex items-center gap-2 text-sm text-slate-600 lg:text-base">
-                <Hash className="h-4 w-4" />
-                <span className="font-semibold text-teal-600">
-                  {t.cabinet?.yourCode || "Ваш код клієнта"}: {session?.user?.clientCode}
-                </span>
+            <div className="flex items-center gap-4">
+              {/* Logo */}
+              <div className="relative h-16 w-16 flex-shrink-0 lg:h-20 lg:w-20">
+                <Image
+                  src="/turquoise-transparent-2x.png"
+                  alt="KLS Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <div>
+                <h1 className="text-3xl font-black text-slate-900 lg:text-[2.2rem]">
+                  {t.cabinet?.welcome || "Ласкаво просимо"}, {session?.user?.name}
+                </h1>
+                <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-teal-50 px-4 py-2 text-sm text-teal-700 shadow-sm lg:text-base">
+                  <Hash className="h-4 w-4" />
+                  <span className="font-extrabold tracking-wide">
+                    {t.cabinet?.yourCode || "Ваш код клієнта"}:{" "}
+                    <span className="text-lg lg:text-xl">{session?.user?.clientCode}</span>
+                  </span>
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -148,7 +197,14 @@ export function UserCabinet({ locale }: UserCabinetProps) {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                      if (pathname) {
+                        const basePath = pathname.split("?")[0];
+                        const nextPath = `${basePath}?tab=${tab.id}`;
+                        router.push(nextPath);
+                      }
+                    }}
                     className={`relative flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-sm font-semibold transition-all duration-200 ${
                       isActive
                         ? "bg-teal-600 text-white shadow-lg"
@@ -192,13 +248,13 @@ export function UserCabinet({ locale }: UserCabinetProps) {
 
           {/* Main Content */}
           <main className="lg:col-span-3">
-            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-              {activeTab === "main" && <CabinetMain locale={locale} />}
+            <div className="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm lg:p-8">
               {activeTab === "shipments" && <CabinetShipments locale={locale} />}
               {activeTab === "invoices" && <CabinetInvoices locale={locale} />}
               {activeTab === "finances" && <CabinetFinances locale={locale} />}
               {activeTab === "warehouses" && <CabinetWarehouses locale={locale} />}
               {activeTab === "settings" && <CabinetSettings locale={locale} />}
+              {activeTab === "info" && <CabinetInfo locale={locale} />}
             </div>
           </main>
         </div>

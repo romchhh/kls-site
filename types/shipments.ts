@@ -54,6 +54,7 @@ export type Shipment = {
   localTrackingDestination: string | null;
   description: string | null;
   mainPhotoUrl: string | null;
+  additionalFilesUrls: string | null;
   insuranceTotal: string | null;
   insurancePercentTotal: number | null;
   insurancePerPlacePercent: number | null;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Locale, getTranslations } from "@/lib/translations";
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User, Phone } from "lucide-react";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 
 type CabinetSettingsProps = {
@@ -15,7 +15,11 @@ export function CabinetSettings({ locale }: CabinetSettingsProps) {
   const t = getTranslations(locale);
   const [showChangeEmail, setShowChangeEmail] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showChangePhone, setShowChangePhone] = useState(false);
+  const [showChangeName, setShowChangeName] = useState(false);
   const [newEmail, setNewEmail] = useState("");
+  const [newPhone, setNewPhone] = useState("");
+  const [newName, setNewName] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -42,12 +46,74 @@ export function CabinetSettings({ locale }: CabinetSettingsProps) {
         setSuccess("Email успішно змінено");
         setShowChangeEmail(false);
         setNewEmail("");
-        // Refresh session to get updated email
-        window.location.reload();
+        // Wait a bit before reloading to ensure DB update is complete
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
         setError(data.error || "Помилка зміни email");
       }
     } catch (error) {
+      setError("Сталася помилка. Спробуйте ще раз.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangePhone = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/user/update-phone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newPhone }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccess("Телефон успішно змінено");
+        setShowChangePhone(false);
+        setNewPhone("");
+        window.location.reload();
+      } else {
+        setError(data.error || "Помилка зміни телефону");
+      }
+    } catch {
+      setError("Сталася помилка. Спробуйте ще раз.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangeName = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/user/update-name", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ newName }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccess("Ім'я успішно змінено");
+        setShowChangeName(false);
+        setNewName("");
+        window.location.reload();
+      } else {
+        setError(data.error || "Помилка зміни імені");
+      }
+    } catch {
       setError("Сталася помилка. Спробуйте ще раз.");
     } finally {
       setLoading(false);
@@ -127,6 +193,73 @@ export function CabinetSettings({ locale }: CabinetSettingsProps) {
           </div>
         </div>
 
+        {/* Change Name */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <User className="h-5 w-5 text-slate-600" />
+              <div>
+                <h3 className="font-semibold text-slate-900">
+                  {t.cabinet?.changeName || "Змінити ім'я та прізвище"}
+                </h3>
+                <p className="text-sm text-slate-600">
+                  Поточне ім'я: {session?.user?.name}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowChangeName(!showChangeName)}
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+            >
+              {showChangeName ? t.cabinet?.cancel : t.cabinet?.changeName || "Змінити ім'я"}
+            </button>
+          </div>
+
+          {showChangeName && (
+            <form onSubmit={handleChangeName} className="mt-4 space-y-4">
+              {error && (
+                <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-600">
+                  {error}
+                </div>
+              )}
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Нове ім'я та прізвище
+                </label>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  required
+                  minLength={2}
+                  placeholder="Введіть ім'я та прізвище"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                />
+              </div>
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="rounded-lg bg-teal-600 px-6 py-2 font-semibold text-white transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {t.cabinet?.save || "Зберегти"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowChangeName(false);
+                    setNewName("");
+                    setError("");
+                  }}
+                  className="rounded-lg border border-slate-300 bg-white px-6 py-2 font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                >
+                  {t.cabinet?.cancel || "Скасувати"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+
         {/* Change Email */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6">
           <div className="mb-4 flex items-center justify-between">
@@ -181,6 +314,66 @@ export function CabinetSettings({ locale }: CabinetSettingsProps) {
                   className="rounded-lg border border-slate-300 bg-white px-6 py-2 font-semibold text-slate-700 transition-colors hover:bg-slate-50"
                 >
                   {t.cabinet?.cancel || "Скасувати"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+
+        {/* Change Phone */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Phone className="h-5 w-5 text-slate-600" />
+              <div>
+                <h3 className="font-semibold text-slate-900">
+                  Змінити номер телефону
+                </h3>
+                <p className="text-sm text-slate-600">
+                  Поточний телефон: {session?.user?.phone || "не вказано"}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowChangePhone(!showChangePhone)}
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+            >
+              {showChangePhone ? "Скасувати" : "Змінити телефон"}
+            </button>
+          </div>
+
+          {showChangePhone && (
+            <form onSubmit={handleChangePhone} className="mt-4 space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Новий номер телефону
+                </label>
+                <input
+                  type="tel"
+                  value={newPhone}
+                  onChange={(e) => setNewPhone(e.target.value)}
+                  required
+                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                />
+              </div>
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="rounded-lg bg-teal-600 px-6 py-2 font-semibold text-white transition-colors hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Зберегти
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowChangePhone(false);
+                    setNewPhone("");
+                    setError("");
+                  }}
+                  className="rounded-lg border border-slate-300 bg-white px-6 py-2 font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                >
+                  Скасувати
                 </button>
               </div>
             </form>
