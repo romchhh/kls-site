@@ -294,20 +294,18 @@ export async function POST(
     });
 
     // Generate internal track: batchId-clientCode-cargoType-number
-    // Format: 00010-2661A-0001
+    // Format: 00010-2661A0001 (без дефісу перед номером)
     const cargoTypeCode = cargoType ? cargoType.substring(0, 1).toUpperCase() : "X";
     const shipmentNumber = String(existingShipmentsInBatch + 1).padStart(4, "0");
-    const internalTrack = `${batchId}-${user.clientCode}${cargoTypeCode}-${shipmentNumber}`;
+    const internalTrack = `${batchId}-${user.clientCode}${cargoTypeCode}${shipmentNumber}`;
 
     // Auto-generate trackNumber for items if not provided
     // Format: 00010-2661A0001-1, 00010-2661A0001-2, etc.
-    // Convert internalTrack from "00010-2661A-0001" to "00010-2661A0001-1"
+    // internalTrack: "00010-2661A0001" -> "00010-2661A0001-1"
     const processedItemsWithTracks = processedItems.map((item: any, index: number) => {
       if (!item.trackNumber || item.trackNumber.trim() === "") {
-        // Remove the last dash before number, then add place number
-        // internalTrack: "00010-2661A-0001" -> "00010-2661A0001-1"
-        const trackBase = internalTrack.replace(/-(\d+)$/, '$1'); // Remove last dash, keep number
-        item.trackNumber = `${trackBase}-${index + 1}`;
+        // Add place number to internalTrack
+        item.trackNumber = `${internalTrack}-${index + 1}`;
       }
       return item;
     });

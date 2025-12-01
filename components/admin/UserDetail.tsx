@@ -161,6 +161,7 @@ export function UserDetail({ userId }: UserDetailProps) {
   const [shipments, setShipments] = useState<ShipmentRow[]>([]);
   const [loadingShipments, setLoadingShipments] = useState(false);
   const [showAddShipment, setShowAddShipment] = useState(false);
+  const [batches, setBatches] = useState<Array<{ id: string; batchId: string; description: string | null }>>([]);
   const [shipmentForm, setShipmentForm] = useState({
     cargoLabel: "",
     status: "",
@@ -296,18 +297,35 @@ export function UserDetail({ userId }: UserDetailProps) {
     "Інше",
   ];
 
+  // Helper function to generate internal track number for shipment
+  const generateInternalTrack = (batchId: string, clientCode: string, cargoType: string): string => {
+    if (!batchId || batchId.trim() === "" || !clientCode) {
+      return "";
+    }
+    // Count existing shipments in this batch for this client
+    // Use user.clientCode if available, otherwise count all shipments in batch
+    const currentClientCode = user?.clientCode || clientCode;
+    const existingShipmentsInBatch = shipments.filter(
+      (s) => s.batchId === batchId
+    ).length;
+    
+    // Generate internal track: batchId-clientCode-cargoType-number
+    // Format: 00010-2661A0001 (без дефісу перед номером)
+    const cargoTypeCode = cargoType ? cargoType.substring(0, 1).toUpperCase() : "X";
+    const shipmentNumber = String(existingShipmentsInBatch + 1).padStart(4, "0");
+    return `${batchId}-${currentClientCode}${cargoTypeCode}${shipmentNumber}`;
+  };
+
   // Helper function to generate track number for item
   const generateItemTrackNumber = (batchId: string, clientCode: string, cargoType: string, placeNumber: number): string => {
     if (!batchId || batchId.trim() === "" || !clientCode) {
       return "";
     }
-    // Generate track base similar to internalTrack format
-    // Format: batchId-clientCode-cargoType-0001 -> 00010-2661A0001-1
-    const cargoTypeCode = cargoType ? cargoType.substring(0, 1).toUpperCase() : "X";
-    // For preview, we'll use "0001" as shipment number (will be replaced on server)
-    const shipmentNumber = "0001";
-    const trackBase = `${batchId}-${clientCode}${cargoTypeCode}${shipmentNumber}`;
-    return `${trackBase}-${placeNumber}`;
+    // Generate internal track first
+    const internalTrack = generateInternalTrack(batchId, clientCode, cargoType);
+    if (!internalTrack) return "";
+    // Add place number: 00010-2661A0001-1
+    return `${internalTrack}-${placeNumber}`;
   };
 
   // Helper functions for items
@@ -496,7 +514,20 @@ export function UserDetail({ userId }: UserDetailProps) {
     fetchBalance();
     fetchTransactions();
     fetchInvoices();
+    fetchBatches();
   }, [userId]);
+
+  const fetchBatches = async () => {
+    try {
+      const res = await fetch("/api/admin/batches");
+      if (res.ok) {
+        const data = await res.json();
+        setBatches(data.batches || []);
+      }
+    } catch (error) {
+      console.error("Error fetching batches:", error);
+    }
+  };
 
   const fetchUser = async () => {
     setLoading(true);
@@ -1682,7 +1713,9 @@ export function UserDetail({ userId }: UserDetailProps) {
             </h2>
             <button
               type="button"
-              onClick={() => setShowAddShipment((prev) => !prev)}
+              onClick={() => {
+                setShowAddShipment((prev) => !prev);
+              }}
               className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
             >
               {showAddShipment ? (
@@ -1702,24 +1735,61 @@ export function UserDetail({ userId }: UserDetailProps) {
               onSubmit={handleCreateShipment}
               className="mb-6 grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 md:grid-cols-3"
             >
-              {/* Перший рядок: ID партії *, Маркування, Маршрут: З */}
+              {/* Перший рядок: ID партії *, Трек номер вантажу (автозаповнений), Маркування */}
               <div className="md:col-span-1">
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
                   ID партії *
                 </label>
+                <select
+                  value={shipmentForm.batchId}
+                  onChange={(e) => {
+                    setShipmentForm({ 
+                      ...shipmentForm, 
+                      batchId: e.target.value 
+                    });
+                  }}
+                  required
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                >
+                  <option value="">Оберіть партію</option>
+                  {batches.map((batch) => (
+                    <option key={batch.id} value={batch.batchId}>
+                      {batch.batchId} {batch.description ? `- ${batch.description}` : ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="md:col-span-1">
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                  Трек номер вантажу (автоматично)
+                </label>
                 <input
                   type="text"
-                  value={shipmentForm.batchId}
-                  onChange={(e) =>
-                    setShipmentForm({ ...shipmentForm, batchId: e.target.value })
-                  }
-                  required
-                  placeholder="00010"
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                  value={generateInternalTrack(
+                    shipmentForm.batchId,
+                    user?.clientCode || "",
+                    shipmentForm.cargoType || shipmentForm.cargoTypeCustom || ""
+                  )}
+                  readOnly
+                  className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-mono text-slate-700 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                  placeholder="Оберіть партію та тип вантажу"
                 />
                 <p className="mt-1 text-[10px] text-slate-500">
-                  Трек номер буде згенеровано автоматично
+                  Формат: ID_партії-Код_клієнтаТипНомер
                 </p>
+              </div>
+              <div className="md:col-span-1">
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                  Маркування
+                </label>
+                <input
+                  type="text"
+                  value={shipmentForm.cargoLabel}
+                  onChange={(e) =>
+                    setShipmentForm({ ...shipmentForm, cargoLabel: e.target.value })
+                  }
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                />
               </div>
               <div className="md:col-span-1">
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
@@ -2921,14 +2991,20 @@ export function UserDetail({ userId }: UserDetailProps) {
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
                   ID партії
                 </label>
-                <input
-                  type="text"
+                <select
                   value={editingShipmentForm.batchId}
                   onChange={(e) =>
                     setEditingShipmentForm({ ...editingShipmentForm, batchId: e.target.value })
                   }
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
+                >
+                  <option value="">Оберіть партію</option>
+                  {batches.map((batch) => (
+                    <option key={batch.id} value={batch.batchId}>
+                      {batch.batchId} {batch.description ? `- ${batch.description}` : ""}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">

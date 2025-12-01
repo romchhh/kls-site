@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Users, Shield, LayoutDashboard, BarChart3, Key } from "lucide-react";
+import { Users, Shield, LayoutDashboard, BarChart3, Key, Package } from "lucide-react";
 
 interface AdminSidebarProps {
   isSuperAdmin: boolean;
@@ -31,6 +31,11 @@ export function AdminSidebar({ isSuperAdmin }: AdminSidebarProps) {
       href: "/admin/dashboard/api-tokens",
       label: "API Токени",
       icon: Key,
+    },
+    {
+      href: "/admin/dashboard/batches",
+      label: "Партії",
+      icon: Package,
     },
     ...(isSuperAdmin
       ? [
