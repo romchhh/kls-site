@@ -132,38 +132,37 @@ Authorization: Bearer kls_your_token_here
 ```
 
 ### Path Parameters
-- `track` (string, required) - Внутрішній трек номер замовлення (internalTrack)
+- `track` (string, required) - Внутрішній трек номер замовлення (internalTrack). Формат: `ID_партії-Код_клієнтаТип-Номер`, наприклад `00100-2491Е-0001`
+
+**Приклади:**
+- `00100-2491Е-0001`
+- `00010-2661A-0001`
 
 ### Success Response (200)
 ```json
 {
   "id": "string",
-  "internalTrack": "string",
+  "internalTrack": "00100-2491Е-0001",
   "cargoLabel": "string",
   "status": "CREATED | RECEIVED_CN | IN_TRANSIT | ARRIVED_UA | ON_UA_WAREHOUSE | DELIVERED | ARCHIVED",
   "description": "string",
   "location": "string",
-  "pieces": 1,
-  "weightKg": "12",
-  "volumeM3": "321",
-  "density": "12",
-  "routeFrom": "string",
-  "routeTo": "string",
+  "pieces": 2,
+  "weightKg": "3.00",
+  "volumeM3": "4.00",
+  "routeFrom": "CN",
+  "routeTo": "UA",
   "deliveryType": "AIR | SEA | RAIL | MULTIMODAL",
   "deliveryFormat": "NOVA_POSHTA | SELF_PICKUP | CARGO",
   "deliveryReference": "string",
   "packing": true,
+  "packingCost": "100.00",
   "localDeliveryToDepot": true,
-  "localTrackingOrigin": "string",
-  "localTrackingDestination": "string",
-  "deliveryCost": "3123",
-  "deliveryCostPerPlace": "312",
-  "totalCost": "3000",
-  "insuranceTotal": "1000",
-  "insurancePercentTotal": 5,
-  "insurancePerPlacePercent": 3,
-  "tariffType": "string",
-  "tariffValue": "10.5",
+  "localDeliveryCost": "50.00",
+  "batchId": "00100",
+  "cargoType": "Електроніка",
+  "cargoTypeCustom": null,
+  "totalCost": "720.00",
   "receivedAtWarehouse": "2025-11-28T00:00:00.000Z",
   "sentAt": "2025-11-30T00:00:00.000Z",
   "deliveredAt": "2025-12-03T00:00:00.000Z",
@@ -177,24 +176,55 @@ Authorization: Bearer kls_your_token_here
     "name": "string",
     "email": "string",
     "phone": "string",
-    "clientCode": "string",
+    "clientCode": "2491",
     "companyName": "string"
   },
   "items": [
     {
       "id": "string",
-      "itemCode": "string",
-      "description": "string",
-      "quantity": 1,
-      "weightKg": "10",
-      "volumeM3": "0.5",
-      "density": "20",
-      "localTracking": "string",
-      "photoUrl": "string",
-      "clientTariff": "100",
-      "insuranceValue": "500",
-      "deliveryCost": "200",
-      "totalCost": "800"
+      "placeNumber": 1,
+      "trackNumber": "00100-2491Е0001-1",
+      "localTracking": "123123",
+      "description": "test",
+      "quantity": 4,
+      "insuranceValue": "1000.00",
+      "insurancePercent": "10",
+      "lengthCm": "20.00",
+      "widthCm": "50.00",
+      "heightCm": "60.00",
+      "weightKg": "1.00",
+      "volumeM3": "2.00",
+      "density": "480.00",
+      "tariffType": "kg",
+      "tariffValue": "10.00",
+      "deliveryCost": "240.00",
+      "cargoType": "Електроніка",
+      "cargoTypeCustom": null,
+      "note": "testes",
+      "photoUrl": "string"
+    },
+    {
+      "id": "string",
+      "placeNumber": 2,
+      "trackNumber": "00100-2491Е0001-2",
+      "localTracking": "12321",
+      "description": "еуіе2",
+      "quantity": 14,
+      "insuranceValue": "100.00",
+      "insurancePercent": "5",
+      "lengthCm": "22.00",
+      "widthCm": "21.94",
+      "heightCm": "50.00",
+      "weightKg": "2.00",
+      "volumeM3": "2.00",
+      "density": "480.00",
+      "tariffType": "kg",
+      "tariffValue": "10.00",
+      "deliveryCost": "123.00",
+      "cargoType": "Електроніка",
+      "cargoTypeCustom": null,
+      "note": "цггнйцу",
+      "photoUrl": "string"
     }
   ],
   "statusHistory": [
@@ -202,7 +232,7 @@ Authorization: Bearer kls_your_token_here
       "id": "string",
       "status": "CREATED",
       "location": "Guangzhou",
-      "description": "string",
+      "description": "Вантаж створено",
       "createdAt": "2025-11-26T12:00:00.000Z"
     }
   ],
@@ -210,7 +240,7 @@ Authorization: Bearer kls_your_token_here
     {
       "id": "string",
       "invoiceNumber": "string",
-      "amount": "3000",
+      "amount": "720.00",
       "status": "UNPAID | PAID | ARCHIVED",
       "dueDate": "2025-12-15T00:00:00.000Z",
       "createdAt": "2025-11-26T14:50:58.000Z",
@@ -237,20 +267,20 @@ Authorization: Bearer kls_your_token_here
 ### Error Response (404)
 ```json
 {
-  "error": "Замовлення з трек номером \"123\" не знайдено"
+  "error": "Замовлення з трек номером \"00100-2491Е-0001\" не знайдено"
 }
 ```
 
 ### Example Request (cURL)
 ```bash
-curl -X GET http://localhost:3000/api/public/shipment/123 \
+curl -X GET "http://localhost:3000/api/public/shipment/00100-2491Е-0001" \
   -H "Authorization: Bearer kls_your_token_here"
 ```
 
 ### Example Request (JavaScript)
 ```javascript
-const internalTrack = '123';
-const response = await fetch(`http://localhost:3000/api/public/shipment/${internalTrack}`, {
+const internalTrack = '00100-2491Е-0001';
+const response = await fetch(`http://localhost:3000/api/public/shipment/${encodeURIComponent(internalTrack)}`, {
   headers: {
     'Authorization': 'Bearer kls_your_token_here'
   }
@@ -258,6 +288,8 @@ const response = await fetch(`http://localhost:3000/api/public/shipment/${intern
 const data = await response.json();
 console.log(data);
 ```
+
+**Примітка:** Оскільки `internalTrack` може містити спеціальні символи (наприклад, дефіси), рекомендується використовувати `encodeURIComponent()` для безпечного кодування URL.
 
 ---
 

@@ -211,34 +211,34 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
         {haveShipments && (
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
             <div className="overflow-x-auto">
-              <table className="min-w-full">
+              <table className="w-full">
                 <thead>
                   <tr className="border-b-2 border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100">
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       ID
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       Статус
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       Місцезнаходження
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       Місць
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       Код
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       Кг
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       m³
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       Вартість
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-slate-700">
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       ETA
                     </th>
                   </tr>
@@ -247,6 +247,19 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                   {shipments.map((s) => {
                     const latestStatus = s.statusHistory[0];
                     const statusColor = getStatusColorClass(s.status);
+                    
+                    // Calculate values from items
+                    const pieces = s.items?.length || 0;
+                    const totalWeight = s.items?.reduce((sum, item) => {
+                      const weight = typeof item.weightKg === 'string' ? parseFloat(item.weightKg) : (item.weightKg ? Number(item.weightKg) : 0);
+                      return sum + (isNaN(weight) ? 0 : weight);
+                    }, 0) || 0;
+                    const totalVolume = s.items?.reduce((sum, item) => {
+                      const volume = typeof item.volumeM3 === 'string' ? parseFloat(item.volumeM3) : (item.volumeM3 ? Number(item.volumeM3) : 0);
+                      return sum + (isNaN(volume) ? 0 : volume);
+                    }, 0) || 0;
+                    const totalCost = s.totalCost ? (typeof s.totalCost === 'string' ? parseFloat(s.totalCost) : Number(s.totalCost)) : null;
+                    
                     return (
                       <tr
                         key={s.id}
@@ -254,44 +267,44 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                         onClick={() => setSelectedShipment(s)}
                         className="cursor-pointer bg-white transition-all duration-200 hover:bg-gradient-to-r hover:from-teal-50 hover:to-emerald-50 hover:shadow-md"
                       >
-                        <td className="whitespace-nowrap px-6 py-5">
-                          <span className="text-base font-black text-slate-900">
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className="text-sm font-black text-slate-900 lg:text-base">
                             {s.internalTrack}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-5">
-                          <span className={`inline-flex items-center rounded-full bg-gradient-to-r ${statusColor} px-4 py-2 text-xs font-bold text-white shadow-md`}>
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className={`inline-flex items-center rounded-full bg-gradient-to-r ${statusColor} px-2 py-1 text-[10px] font-bold text-white shadow-md lg:px-3 lg:py-1.5 lg:text-xs`}>
                             {getShipmentStatusTranslation(s.status, locale)}
                           </span>
                         </td>
-                        <td className="px-6 py-5">
-                          <span className="text-sm font-medium text-slate-900">
+                        <td className="px-3 py-4 lg:px-4">
+                          <span className="text-xs font-medium text-slate-900 lg:text-sm">
                             {s.location || latestStatus?.location || "-"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-5">
-                          <span className="text-sm font-semibold text-slate-700">{s.pieces}</span>
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className="text-xs font-semibold text-slate-700 lg:text-sm">{pieces}</span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-5">
-                          <span className="font-mono text-xs text-slate-600">{s.cargoLabel || "-"}</span>
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className="font-mono text-[10px] text-slate-600 lg:text-xs">{s.cargoLabel || "-"}</span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-5">
-                          <span className="text-sm text-slate-700">
-                            {s.weightKg?.toString() || "-"}
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className="text-xs text-slate-700 lg:text-sm">
+                            {totalWeight > 0 ? totalWeight.toFixed(2) : "-"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-5">
-                          <span className="text-sm text-slate-700">
-                            {s.volumeM3?.toString() || "-"}
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className="text-xs text-slate-700 lg:text-sm">
+                            {totalVolume > 0 ? totalVolume.toFixed(2) : "-"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-5">
-                          <span className="text-base font-black text-slate-900">
-                            {s.totalCost ? `${s.totalCost.toString()} $` : "-"}
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className="text-sm font-black text-slate-900 lg:text-base">
+                            {totalCost ? `${totalCost.toFixed(2)} $` : "-"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-5">
-                          <span className="text-sm font-medium text-slate-700">
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className="text-xs font-medium text-slate-700 lg:text-sm">
                             {formatDate(s.eta as Date | null)}
                           </span>
                         </td>
@@ -308,7 +321,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
       {/* Modal */}
       {selectedShipment && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
+          <div className="relative max-h-[90vh] w-full max-w-7xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
             {/* Header */}
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
               <div>
@@ -434,218 +447,209 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
 
             {/* Content */}
             <div className="p-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                {/* Left Column */}
-                <div className="space-y-6">
-                  {/* Status & Route */}
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                      <Package2 className="h-4 w-4" />
-                      {(t.cabinet as any)?.shipmentModal?.statusAndRoute || "Статус та маршрут"}
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.status || "Статус"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {getShipmentStatusTranslation(selectedShipment.status, locale)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.route || "Маршрут"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {selectedShipment.routeFrom} → {selectedShipment.routeTo}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.deliveryType || "Тип доставки"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {selectedShipment.deliveryType}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.location || "Місцезнаходження"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {selectedShipment.location || selectedShipment.statusHistory[0]?.location || "-"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Dates */}
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                      <Calendar className="h-4 w-4" />
-                      {(t.cabinet as any)?.shipmentModal?.dates || "Дати"}
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.receivedAtWarehouse || "Отримано на складі"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {formatDate(selectedShipment.receivedAtWarehouse as Date | null)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.sent || "Відправлено"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {formatDate(selectedShipment.sentAt as Date | null)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.delivered || "Доставлено"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {formatDate(selectedShipment.deliveredAt as Date | null)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.expectedDate || "Очікувана дата"}:</span>
-                        <span className="font-semibold text-teal-600">
-                          {formatDate(selectedShipment.eta as Date | null)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Weight & Volume */}
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                      {(t.cabinet as any)?.shipmentModal?.weightAndVolume || "Вага та об'єм"}
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.weight || "Вага"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {selectedShipment.weightKg || "-"} кг
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.volume || "Об'єм"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {selectedShipment.volumeM3 || "-"} m³
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.density || "Плотність"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {selectedShipment.density || "-"}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.pieces || "Місць"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {selectedShipment.pieces}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Insurance */}
-                  {selectedShipment.insuranceTotal && (
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                      <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                        {(t.cabinet as any)?.shipmentModal?.insurance || "Страхування"}
-                      </h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.insuranceAmount || "Сума страхування"}:</span>
-                          <span className="font-semibold text-slate-900">
-                            {selectedShipment.insuranceTotal} $
-                          </span>
-                        </div>
-                        {selectedShipment.insurancePercentTotal && (
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.insurancePercentTotal || "% загальний"}:</span>
-                            <span className="font-semibold text-slate-900">
-                              {selectedShipment.insurancePercentTotal}%
-                            </span>
-                          </div>
-                        )}
-                        {selectedShipment.insurancePerPlacePercent && (
-                          <div className="flex justify-between">
-                            <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.insurancePercentPerPlace || "% за місце"}:</span>
-                            <span className="font-semibold text-slate-900">
-                              {selectedShipment.insurancePerPlacePercent}%
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+              {/* Main Info Grid */}
+              <div className="mb-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {/* Внутрішній трек */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Внутрішній трек
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">{selectedShipment.internalTrack}</p>
                 </div>
 
-                {/* Right Column */}
-                <div className="space-y-6">
-                  {/* Cost */}
-                  <div className="rounded-xl border border-slate-200 bg-gradient-to-br from-teal-50 to-blue-50 p-4">
-                    <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                      <DollarSign className="h-4 w-4" />
-                      {(t.cabinet as any)?.shipmentModal?.cost || "Вартість"}
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      {selectedShipment.deliveryCost && (
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.deliveryCost || "Доставка"}:</span>
-                          <span className="font-semibold text-slate-900">
-                            {selectedShipment.deliveryCost} $
-                          </span>
-                        </div>
-                      )}
-                      {selectedShipment.deliveryCostPerPlace && (
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.costPerPlace || "За місце"}:</span>
-                          <span className="font-semibold text-slate-900">
-                            {selectedShipment.deliveryCostPerPlace} $
-                          </span>
-                        </div>
-                      )}
-                      {selectedShipment.totalCost && (
-                        <div className="mt-3 flex justify-between border-t border-slate-200 pt-2">
-                          <span className="text-base font-semibold text-slate-900">
-                            {(t.cabinet as any)?.shipmentModal?.totalCost || "Загальна вартість"}:
-                          </span>
-                          <span className="text-lg font-bold text-teal-600">
-                            {selectedShipment.totalCost} $
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                {/* Маркування */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Маркування
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">{selectedShipment.cargoLabel || "-"}</p>
+                </div>
 
-                  {/* Delivery Format */}
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                      {(t.cabinet as any)?.shipmentModal?.deliveryFormat || "Формат видачі"}
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.format || "Формат"}:</span>
-                        <span className="font-semibold text-slate-900">
-                          {selectedShipment.deliveryFormat?.replace(/_/g, " ") || "-"}
-                        </span>
-                      </div>
-                      {selectedShipment.deliveryReference && (
-                        <div className="mt-2 rounded-lg bg-white p-2 text-xs text-slate-600">
-                          {selectedShipment.deliveryReference}
-                        </div>
-                      )}
-                      <div className="mt-2 space-y-1 text-xs text-slate-500">
-                        <div className="flex items-center gap-2">
-                          <span>{(t.cabinet as any)?.shipmentModal?.packing || "Пакування"}:</span>
-                          <span className="font-medium">
-                            {selectedShipment.packing ? ((t.cabinet as any)?.shipmentModal?.yes || "Так") : ((t.cabinet as any)?.shipmentModal?.no || "Ні")}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span>{(t.cabinet as any)?.shipmentModal?.localDeliveryToDepot || "Локальна доставка до складу"}:</span>
-                          <span className="font-medium">
-                            {selectedShipment.localDeliveryToDepot ? ((t.cabinet as any)?.shipmentModal?.yes || "Так") : ((t.cabinet as any)?.shipmentModal?.no || "Ні")}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                {/* Статус */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Статус *
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {getShipmentStatusTranslation(selectedShipment.status, locale)}
+                  </p>
+                </div>
 
-                  {/* Photos and Documents */}
-                  {(() => {
+                {/* Місцезнаходження */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Місцезнаходження
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {selectedShipment.location || selectedShipment.statusHistory[0]?.location || "-"}
+                  </p>
+                </div>
+
+                {/* Маршрут: З */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Маршрут: З
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">{selectedShipment.routeFrom || "-"}</p>
+                </div>
+
+                {/* Маршрут: В */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Маршрут: В
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">{selectedShipment.routeTo || "-"}</p>
+                </div>
+
+                {/* Дата отримано на складі */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Дата отримано на складі
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {formatDate(selectedShipment.receivedAtWarehouse as Date | null)}
+                  </p>
+                </div>
+
+                {/* ID партії */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    ID партії
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">{selectedShipment.batchId || "-"}</p>
+                </div>
+
+                {/* Тип вантажу */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Тип вантажу
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {selectedShipment.cargoType || selectedShipment.cargoTypeCustom || "-"}
+                  </p>
+                </div>
+
+                {/* Дата відправлено */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Дата відправлено
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {formatDate(selectedShipment.sentAt as Date | null)}
+                  </p>
+                </div>
+
+                {/* Дата доставлено */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Дата доставлено
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {formatDate(selectedShipment.deliveredAt as Date | null)}
+                  </p>
+                </div>
+
+                {/* ETA */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    ETA (орієнтовна дата прибуття)
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {formatDate(selectedShipment.eta as Date | null)}
+                  </p>
+                </div>
+
+                {/* Тип доставки */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Тип доставки
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">{selectedShipment.deliveryType || "-"}</p>
+                </div>
+
+                {/* Опис */}
+                {selectedShipment.description && (
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 md:col-span-2 lg:col-span-3">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Опис
+                    </label>
+                    <p className="text-sm text-slate-900">{selectedShipment.description}</p>
+                  </div>
+                )}
+
+                {/* Пакування, $ */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Пакування, $
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {selectedShipment.packingCost ? `${parseFloat(selectedShipment.packingCost.toString()).toFixed(2)}` : "-"}
+                  </p>
+                </div>
+
+                {/* Локальна доставка, $ */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Локальна доставка, $
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {selectedShipment.localDeliveryCost ? `${parseFloat(selectedShipment.localDeliveryCost.toString()).toFixed(2)}` : "-"}
+                  </p>
+                </div>
+
+                {/* Вартість (загальна), $ */}
+                <div className="rounded-lg border border-slate-200 bg-gradient-to-br from-teal-50 to-blue-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Вартість (загальна), $
+                  </label>
+                  <p className="text-lg font-bold text-teal-600">
+                    {selectedShipment.totalCost ? `${parseFloat(selectedShipment.totalCost.toString()).toFixed(2)}` : "-"}
+                  </p>
+                </div>
+
+                {/* Формат видачі */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Формат видачі
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {selectedShipment.deliveryFormat?.replace(/_/g, " ") || "-"}
+                  </p>
+                </div>
+
+                {/* Номер накладної / коментар */}
+                {selectedShipment.deliveryReference && (
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 md:col-span-2">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Номер накладної / коментар
+                    </label>
+                    <p className="text-sm text-slate-900">{selectedShipment.deliveryReference}</p>
+                  </div>
+                )}
+
+                {/* Пакування (чекбокс) */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Пакування
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {selectedShipment.packing ? "Так" : "Ні"}
+                  </p>
+                </div>
+
+                {/* Локальна доставка до складу (чекбокс) */}
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                    Локальна доставка до складу
+                  </label>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {selectedShipment.localDeliveryToDepot ? "Так" : "Ні"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Photos and Documents */}
+              {(() => {
                     // Helper function to check if file is an image
                     const isImageFile = (url: string): boolean => {
                       const ext = url.split('.').pop()?.toLowerCase();
@@ -746,7 +750,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                                     >
                                       <Image
                                         src={item.photoUrl!}
-                                        alt={`${(t.cabinet as any)?.shipmentModal?.photoOfShipment || "Фото"} ${item.description || item.itemCode || idx + 1}`}
+                                        alt={`${(t.cabinet as any)?.shipmentModal?.photoOfShipment || "Фото"} ${item.description || item.trackNumber || idx + 1}`}
                                         fill
                                         className="object-cover"
                                       />
@@ -809,94 +813,227 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                     );
                   })()}
 
-                  {/* Tracking */}
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                    <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                      <MapPin className="h-4 w-4" />
-                      {(t.cabinet as any)?.shipmentModal?.tracking || "Трекінг"}
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      {selectedShipment.localTrackingOrigin && (
-                        <div>
-                          <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.trackingOrigin || "Трек (країна відправлення)"}:</span>
-                          <p className="mt-1 font-mono text-xs font-semibold text-slate-900">
-                            {selectedShipment.localTrackingOrigin}
-                          </p>
-                        </div>
-                      )}
-                      {selectedShipment.localTrackingDestination && (
-                        <div>
-                          <span className="text-slate-600">{(t.cabinet as any)?.shipmentModal?.trackingDestination || "Трек (країна отримання)"}:</span>
-                          <p className="mt-1 font-mono text-xs font-semibold text-slate-900">
-                            {selectedShipment.localTrackingDestination}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Items */}
-              {selectedShipment.items.length > 0 && (
+              {/* Items Table */}
+              {selectedShipment.items && selectedShipment.items.length > 0 && (
                 <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <h4 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                    {(t.cabinet as any)?.shipmentModal?.itemsInBatch || "Позиції у партії"} ({selectedShipment.items.length})
+                    {(t.cabinet as any)?.shipmentModal?.itemsTitle || "Місця вантажу"}
                   </h4>
-                  <div className="space-y-3">
-                    {selectedShipment.items.map((item) => (
-                      <div
-                        key={item.id}
-                        className="rounded-lg border border-slate-200 bg-white p-3"
-                      >
-                        <div className="grid gap-3 md:grid-cols-2">
-                          <div>
-                            <p className="text-xs text-slate-500">{(t.cabinet as any)?.shipmentModal?.descriptionOrCode || "Опис / Код"}</p>
-                            <p className="font-semibold text-slate-900">
-                              {item.description || item.itemCode || "-"}
-                            </p>
-                            {item.localTracking && (
-                              <p className="mt-1 font-mono text-xs text-slate-500">
-                                {item.localTracking}
-                              </p>
-                            )}
-                          </div>
-                          <div className="grid grid-cols-2 gap-2 text-xs">
-                            <div>
-                              <p className="text-slate-500">{(t.cabinet as any)?.shipmentModal?.quantity || "Кількість"}:</p>
-                              <p className="font-semibold">{item.quantity ?? "-"}</p>
-                            </div>
-                            <div>
-                              <p className="text-slate-500">{(t.cabinet as any)?.shipmentModal?.weight || "Вага"}:</p>
-                              <p className="font-semibold">{item.weightKg?.toString() || "-"} кг</p>
-                            </div>
-                            <div>
-                              <p className="text-slate-500">{(t.cabinet as any)?.shipmentModal?.volume || "Об'єм"}:</p>
-                              <p className="font-semibold">{item.volumeM3?.toString() || "-"} m³</p>
-                            </div>
-                            <div>
-                              <p className="text-slate-500">{(t.cabinet as any)?.shipmentModal?.itemCost || "Вартість"}:</p>
-                              <p className="font-semibold">
-                                {item.totalCost ? `${item.totalCost.toString()} $` : "-"}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        {item.photoUrl && (
-                          <div className="mt-3">
-                            <div className="relative h-32 w-full overflow-hidden rounded-lg bg-slate-100">
-                              <Image
-                                src={item.photoUrl}
-                                alt={`${(t.cabinet as any)?.shipmentModal?.photoOfShipment || "Фото"} ${item.description || item.itemCode}`}
-                                fill
-                                className="object-cover"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                  <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+                    <table className="min-w-full text-xs">
+                      <thead className="bg-slate-50">
+                        <tr>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.itemNumber || "№"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.trackNumbers || "Трек номери"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.localTracking || "Локальний трек"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.itemDescription || "Опис"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.quantity || "Кількість"}
+                          </th>
+                          <th className="px-3 py-2 text-center text-xs font-semibold text-slate-700" colSpan={3}>
+                            {(t.cabinet as any)?.shipmentModal?.insurance || t.cabinet?.shipmentModal?.insurance || "Страхування"}
+                          </th>
+                          <th className="px-3 py-2 text-center text-xs font-semibold text-slate-700" colSpan={3}>
+                            {(t.cabinet as any)?.shipmentModal?.dimensions || "Габарити (СМ)"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.weightKg || "КГ"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.volumeM3 || "м³"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {t.cabinet?.shipmentModal?.density || (t.cabinet as any)?.shipmentModal?.density || "Щільність"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.tariff || "Тариф"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.itemCost || "Вартість"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.cargoType || "Тип вантажу"}
+                          </th>
+                          <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                            {(t.cabinet as any)?.shipmentModal?.note || "Примітка"}
+                          </th>
+                        </tr>
+                        <tr className="bg-slate-50">
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th className="px-3 py-1.5 text-center text-xs font-medium text-slate-600">
+                            {(t.cabinet as any)?.shipmentModal?.insuranceSum || "Сумма"}
+                          </th>
+                          <th className="px-3 py-1.5 text-center text-xs font-medium text-slate-600">
+                            {(t.cabinet as any)?.shipmentModal?.insurancePercent || "%"}
+                          </th>
+                          <th className="px-3 py-1.5 text-center text-xs font-medium text-slate-600">
+                            {(t.cabinet as any)?.shipmentModal?.insuranceCost || "Вартість"}
+                          </th>
+                          <th className="px-3 py-1.5 text-center text-xs font-medium text-slate-600">
+                            {(t.cabinet as any)?.shipmentModal?.length || "Довжина"}
+                          </th>
+                          <th className="px-3 py-1.5 text-center text-xs font-medium text-slate-600">
+                            {(t.cabinet as any)?.shipmentModal?.width || "Ширина"}
+                          </th>
+                          <th className="px-3 py-1.5 text-center text-xs font-medium text-slate-600">
+                            {(t.cabinet as any)?.shipmentModal?.height || "Висота"}
+                          </th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {selectedShipment.items.map((item, index) => {
+                          const insuranceValue = typeof item.insuranceValue === 'string' ? parseFloat(item.insuranceValue) : (item.insuranceValue ? Number(item.insuranceValue) : 0);
+                          const insurancePercent = typeof item.insurancePercent === 'string' ? parseFloat(item.insurancePercent) : (item.insurancePercent ? Number(item.insurancePercent) : 0);
+                          const insuranceCost = insuranceValue && insurancePercent ? (insuranceValue * insurancePercent / 100).toFixed(2) : "";
+                          
+                          return (
+                            <tr key={item.id || index} className="hover:bg-slate-50">
+                              <td className="px-3 py-2 font-semibold text-slate-900">{item.placeNumber || (index + 1)}</td>
+                              <td className="px-3 py-2 text-xs text-slate-900 font-mono">
+                                {item.trackNumber || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs text-slate-900">{item.localTracking || "-"}</td>
+                              <td className="px-3 py-2 text-xs text-slate-900">{item.description || "-"}</td>
+                              <td className="px-3 py-2 text-xs text-slate-900">{item.quantity || "-"}</td>
+                              <td className="px-3 py-2 text-center text-xs text-slate-900">
+                                {insuranceValue > 0 ? insuranceValue.toFixed(2) : "-"}
+                              </td>
+                              <td className="px-3 py-2 text-center text-xs text-slate-900">
+                                {insurancePercent > 0 ? `${insurancePercent}%` : "-"}
+                              </td>
+                              <td className="px-3 py-2 text-center text-xs font-semibold text-slate-700">
+                                {insuranceCost || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-center text-xs text-slate-900">
+                                {item.lengthCm || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-center text-xs text-slate-900">
+                                {item.widthCm || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-center text-xs text-slate-900">
+                                {item.heightCm || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs text-slate-900">
+                                {item.weightKg || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs text-slate-900">
+                                {item.volumeM3 || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs text-slate-900">
+                                {item.density || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs text-slate-900">
+                                {item.tariffType && item.tariffValue 
+                                  ? `${item.tariffValue} (${item.tariffType})` 
+                                  : "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs font-semibold text-slate-900">
+                                {item.deliveryCost || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs text-slate-900">
+                                {item.cargoType || item.cargoTypeCustom || "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs text-slate-900">{item.note || "-"}</td>
+                            </tr>
+                          );
+                        })}
+                        {/* Total Row */}
+                        {(() => {
+                          const totalPlaces = selectedShipment.items.length;
+                          let totalInsuranceSum = 0;
+                          let totalInsuranceCost = 0;
+                          let totalWeight = 0;
+                          let totalVolume = 0;
+                          let totalDeliveryCost = 0;
+                          let totalDensity = 0;
+                          let densityCount = 0;
+
+                          selectedShipment.items.forEach((item) => {
+                            const insuranceValue = typeof item.insuranceValue === 'string' ? parseFloat(item.insuranceValue) : (item.insuranceValue ? Number(item.insuranceValue) : 0);
+                            const insurancePercent = typeof item.insurancePercent === 'string' ? parseFloat(item.insurancePercent) : (item.insurancePercent ? Number(item.insurancePercent) : 0);
+                            const insuranceCost = (insuranceValue * insurancePercent) / 100;
+                            const weight = typeof item.weightKg === 'string' ? parseFloat(item.weightKg) : (item.weightKg ? Number(item.weightKg) : 0);
+                            const volume = typeof item.volumeM3 === 'string' ? parseFloat(item.volumeM3) : (item.volumeM3 ? Number(item.volumeM3) : 0);
+                            const deliveryCost = typeof item.deliveryCost === 'string' ? parseFloat(item.deliveryCost) : (item.deliveryCost ? Number(item.deliveryCost) : 0);
+                            const density = typeof item.density === 'string' ? parseFloat(item.density) : (item.density ? Number(item.density) : 0);
+
+                            totalInsuranceSum += insuranceValue;
+                            totalInsuranceCost += insuranceCost;
+                            totalWeight += weight;
+                            totalVolume += volume;
+                            totalDeliveryCost += deliveryCost;
+                            if (density > 0) {
+                              totalDensity += density;
+                              densityCount++;
+                            }
+                          });
+
+                          const avgDensity = densityCount > 0 ? totalDensity / densityCount : 0;
+
+                          return (
+                            <tr className="bg-slate-100 font-bold">
+                              <td colSpan={4} className="px-3 py-2.5 text-left text-xs text-slate-900">
+                                {(t.cabinet as any)?.shipmentModal?.total || "Загалом"}
+                              </td>
+                              <td className="px-3 py-2.5 text-center text-xs text-slate-900">
+                                {totalPlaces}
+                              </td>
+                              <td className="px-3 py-2.5 text-center text-xs text-slate-900">
+                                {totalInsuranceSum > 0 ? totalInsuranceSum.toFixed(2) : ""}
+                              </td>
+                              <td className="px-3 py-2.5"></td>
+                              <td className="px-3 py-2.5 text-center text-xs text-slate-900">
+                                {totalInsuranceCost > 0 ? totalInsuranceCost.toFixed(2) : ""}
+                              </td>
+                              <td colSpan={3} className="px-3 py-2.5"></td>
+                              <td className="px-3 py-2.5 text-center text-xs text-slate-900">
+                                {totalWeight > 0 ? totalWeight.toFixed(2) : ""}
+                              </td>
+                              <td className="px-3 py-2.5 text-center text-xs text-slate-900">
+                                {totalVolume > 0 ? totalVolume.toFixed(2) : ""}
+                              </td>
+                              <td className="px-3 py-2.5 text-center text-xs text-slate-900">
+                                {avgDensity > 0 ? avgDensity.toFixed(0) : ""}
+                              </td>
+                              <td className="px-3 py-2.5"></td>
+                              <td className="px-3 py-2.5 text-center text-xs text-slate-900">
+                                {totalDeliveryCost > 0 ? totalDeliveryCost.toFixed(2) : ""}
+                              </td>
+                              <td colSpan={2} className="px-3 py-2.5"></td>
+                            </tr>
+                          );
+                        })()}
+                      </tbody>
+                    </table>
                   </div>
+                </div>
+              )}
+
+              {/* Description */}
+              {selectedShipment.description && (
+                <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <h4 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-700">
+                    {(t.cabinet as any)?.shipmentModal?.description || "Опис"}
+                  </h4>
+                  <p className="text-sm text-slate-600">{selectedShipment.description}</p>
                 </div>
               )}
 
@@ -938,16 +1075,6 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
-
-              {/* Description */}
-              {selectedShipment.description && (
-                <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <h4 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-700">
-                    {(t.cabinet as any)?.shipmentModal?.description || "Опис"}
-                  </h4>
-                  <p className="text-sm text-slate-600">{selectedShipment.description}</p>
                 </div>
               )}
             </div>

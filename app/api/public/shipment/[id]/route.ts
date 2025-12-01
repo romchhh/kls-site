@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { verifyApiToken } from "@/lib/api-auth";
 
 // GET - Get full shipment information by internalTrack
+// Path parameter `id` is actually the internalTrack (e.g., "00100-2491Е-0001")
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -20,9 +21,11 @@ export async function GET(
     }
 
     const { id } = await params;
-    const internalTrack = id; // id parameter is actually internalTrack
+    // Decode URL-encoded internalTrack (handles special characters like Е, дефіси, etc.)
+    // Format: ID_партії-Код_клієнтаТип-Номер (e.g., "00100-2491Е-0001")
+    const internalTrack = decodeURIComponent(id);
 
-    if (!internalTrack) {
+    if (!internalTrack || internalTrack.trim() === "") {
       return NextResponse.json(
         { error: "Трек номер замовлення обов'язковий" },
         { status: 400 }
@@ -43,7 +46,9 @@ export async function GET(
             companyName: true,
           },
         },
-        items: true,
+        items: {
+          orderBy: { placeNumber: "asc" },
+        },
         statusHistory: {
           orderBy: { createdAt: "desc" },
         },
@@ -78,6 +83,17 @@ export async function GET(
       }
     }
 
+    // Calculate totals from items
+    const pieces = shipment.items.length;
+    const totalWeight = shipment.items.reduce((sum, item) => {
+      const weight = item.weightKg ? Number(item.weightKg) : 0;
+      return sum + (isNaN(weight) ? 0 : weight);
+    }, 0);
+    const totalVolume = shipment.items.reduce((sum, item) => {
+      const volume = item.volumeM3 ? Number(item.volumeM3) : 0;
+      return sum + (isNaN(volume) ? 0 : volume);
+    }, 0);
+
     // Format response with all data
     const response = {
       id: shipment.id,
@@ -86,31 +102,22 @@ export async function GET(
       status: shipment.status,
       description: shipment.description,
       location: shipment.location,
-      pieces: shipment.pieces,
-      weightKg: shipment.weightKg ? shipment.weightKg.toString() : null,
-      volumeM3: shipment.volumeM3 ? shipment.volumeM3.toString() : null,
-      density: shipment.density ? shipment.density.toString() : null,
+      pieces,
+      weightKg: totalWeight > 0 ? totalWeight.toString() : null,
+      volumeM3: totalVolume > 0 ? totalVolume.toString() : null,
       routeFrom: shipment.routeFrom,
       routeTo: shipment.routeTo,
       deliveryType: shipment.deliveryType,
       deliveryFormat: shipment.deliveryFormat,
       deliveryReference: shipment.deliveryReference,
       packing: shipment.packing,
+      packingCost: shipment.packingCost ? shipment.packingCost.toString() : null,
       localDeliveryToDepot: shipment.localDeliveryToDepot,
-      localTrackingOrigin: shipment.localTrackingOrigin,
-      localTrackingDestination: shipment.localTrackingDestination,
-      deliveryCost: shipment.deliveryCost ? shipment.deliveryCost.toString() : null,
-      deliveryCostPerPlace: shipment.deliveryCostPerPlace
-        ? shipment.deliveryCostPerPlace.toString()
-        : null,
+      localDeliveryCost: shipment.localDeliveryCost ? shipment.localDeliveryCost.toString() : null,
+      batchId: shipment.batchId,
+      cargoType: shipment.cargoType,
+      cargoTypeCustom: shipment.cargoTypeCustom,
       totalCost: shipment.totalCost ? shipment.totalCost.toString() : null,
-      insuranceTotal: shipment.insuranceTotal
-        ? shipment.insuranceTotal.toString()
-        : null,
-      insurancePercentTotal: shipment.insurancePercentTotal,
-      insurancePerPlacePercent: shipment.insurancePerPlacePercent,
-      tariffType: shipment.tariffType,
-      tariffValue: shipment.tariffValue ? shipment.tariffValue.toString() : null,
       receivedAtWarehouse: shipment.receivedAtWarehouse,
       sentAt: shipment.sentAt,
       deliveredAt: shipment.deliveredAt,
@@ -129,18 +136,26 @@ export async function GET(
       },
       items: shipment.items.map((item) => ({
         id: item.id,
-        itemCode: item.itemCode,
+        placeNumber: item.placeNumber,
+        trackNumber: item.trackNumber,
+        localTracking: item.localTracking,
         description: item.description,
         quantity: item.quantity,
+        insuranceValue: item.insuranceValue ? item.insuranceValue.toString() : null,
+        insurancePercent: item.insurancePercent ? item.insurancePercent.toString() : null,
+        lengthCm: item.lengthCm ? item.lengthCm.toString() : null,
+        widthCm: item.widthCm ? item.widthCm.toString() : null,
+        heightCm: item.heightCm ? item.heightCm.toString() : null,
         weightKg: item.weightKg ? item.weightKg.toString() : null,
         volumeM3: item.volumeM3 ? item.volumeM3.toString() : null,
         density: item.density ? item.density.toString() : null,
-        localTracking: item.localTracking,
-        photoUrl: item.photoUrl,
-        clientTariff: item.clientTariff ? item.clientTariff.toString() : null,
-        insuranceValue: item.insuranceValue ? item.insuranceValue.toString() : null,
+        tariffType: item.tariffType,
+        tariffValue: item.tariffValue ? item.tariffValue.toString() : null,
         deliveryCost: item.deliveryCost ? item.deliveryCost.toString() : null,
-        totalCost: item.totalCost ? item.totalCost.toString() : null,
+        cargoType: item.cargoType,
+        cargoTypeCustom: item.cargoTypeCustom,
+        note: item.note,
+        photoUrl: item.photoUrl,
       })),
       statusHistory: shipment.statusHistory.map((history) => ({
         id: history.id,

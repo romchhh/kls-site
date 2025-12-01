@@ -56,7 +56,9 @@ export async function GET(
     const shipments = await prisma.shipment.findMany({
       where: { userId: id },
       include: {
-        items: true,
+        items: {
+          orderBy: { placeNumber: "asc" },
+        },
         statusHistory: {
           orderBy: { createdAt: "desc" },
         },
@@ -86,6 +88,17 @@ export async function GET(
         }
       }
 
+      // Calculate totals from items
+      const pieces = (shipment.items || []).length;
+      const totalWeight = (shipment.items || []).reduce((sum: number, item: any) => {
+        const weight = item.weightKg ? Number(item.weightKg) : 0;
+        return sum + (isNaN(weight) ? 0 : weight);
+      }, 0);
+      const totalVolume = (shipment.items || []).reduce((sum: number, item: any) => {
+        const volume = item.volumeM3 ? Number(item.volumeM3) : 0;
+        return sum + (isNaN(volume) ? 0 : volume);
+      }, 0);
+
       return {
         id: shipment.id,
         internalTrack: shipment.internalTrack,
@@ -93,27 +106,22 @@ export async function GET(
         status: shipment.status,
         description: shipment.description,
         location: shipment.location,
-        pieces: shipment.pieces,
-        weightKg: shipment.weightKg?.toString() || null,
-        volumeM3: shipment.volumeM3?.toString() || null,
-        density: shipment.density?.toString() || null,
+        pieces,
+        weightKg: totalWeight > 0 ? totalWeight.toString() : null,
+        volumeM3: totalVolume > 0 ? totalVolume.toString() : null,
         routeFrom: shipment.routeFrom,
         routeTo: shipment.routeTo,
         deliveryType: shipment.deliveryType,
         deliveryFormat: shipment.deliveryFormat,
         deliveryReference: shipment.deliveryReference,
         packing: shipment.packing,
+        packingCost: shipment.packingCost?.toString() || null,
         localDeliveryToDepot: shipment.localDeliveryToDepot,
-        localTrackingOrigin: shipment.localTrackingOrigin,
-        localTrackingDestination: shipment.localTrackingDestination,
-        deliveryCost: shipment.deliveryCost?.toString() || null,
-        deliveryCostPerPlace: shipment.deliveryCostPerPlace?.toString() || null,
+        localDeliveryCost: shipment.localDeliveryCost?.toString() || null,
+        batchId: shipment.batchId,
+        cargoType: shipment.cargoType,
+        cargoTypeCustom: shipment.cargoTypeCustom,
         totalCost: shipment.totalCost?.toString() || null,
-        insuranceTotal: shipment.insuranceTotal?.toString() || null,
-        insurancePercentTotal: shipment.insurancePercentTotal,
-        insurancePerPlacePercent: shipment.insurancePerPlacePercent,
-        tariffType: shipment.tariffType,
-        tariffValue: shipment.tariffValue?.toString() || null,
         receivedAtWarehouse: shipment.receivedAtWarehouse,
         sentAt: shipment.sentAt,
         deliveredAt: shipment.deliveredAt,
@@ -124,18 +132,26 @@ export async function GET(
         updatedAt: shipment.updatedAt,
         items: (shipment.items || []).map((item: any) => ({
           id: item.id,
-          itemCode: item.itemCode,
+          placeNumber: item.placeNumber,
+          trackNumber: item.trackNumber,
+          localTracking: item.localTracking,
           description: item.description,
           quantity: item.quantity,
+          insuranceValue: item.insuranceValue?.toString() || null,
+          insurancePercent: item.insurancePercent?.toString() || null,
+          lengthCm: item.lengthCm?.toString() || null,
+          widthCm: item.widthCm?.toString() || null,
+          heightCm: item.heightCm?.toString() || null,
           weightKg: item.weightKg?.toString() || null,
           volumeM3: item.volumeM3?.toString() || null,
           density: item.density?.toString() || null,
-          localTracking: item.localTracking,
-          photoUrl: item.photoUrl,
-          clientTariff: item.clientTariff?.toString() || null,
-          insuranceValue: item.insuranceValue?.toString() || null,
+          tariffType: item.tariffType,
+          tariffValue: item.tariffValue?.toString() || null,
           deliveryCost: item.deliveryCost?.toString() || null,
-          totalCost: item.totalCost?.toString() || null,
+          cargoType: item.cargoType,
+          cargoTypeCustom: item.cargoTypeCustom,
+          note: item.note,
+          photoUrl: item.photoUrl,
         })),
         statusHistory: (shipment.statusHistory || []).map((status: any) => ({
           id: status.id,

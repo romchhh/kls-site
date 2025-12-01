@@ -107,10 +107,23 @@ export async function GET(req: NextRequest) {
             clientCode: true,
           },
         },
+        items: {
+          orderBy: { placeNumber: "asc" },
+        },
       },
       orderBy: { createdAt: "desc" },
     });
     shipments.forEach((shipment) => {
+      // Calculate weight and volume from items
+      const totalWeight = shipment.items.reduce((sum, item) => {
+        const weight = item.weightKg ? Number(item.weightKg) : 0;
+        return sum + (isNaN(weight) ? 0 : weight);
+      }, 0);
+      const totalVolume = shipment.items.reduce((sum, item) => {
+        const volume = item.volumeM3 ? Number(item.volumeM3) : 0;
+        return sum + (isNaN(volume) ? 0 : volume);
+      }, 0);
+
       shipmentsSheet.addRow({
         id: shipment.id,
         clientCode: shipment.clientCode,
@@ -120,8 +133,8 @@ export async function GET(req: NextRequest) {
         routeTo: shipment.routeTo,
         deliveryType: shipment.deliveryType,
         pieces: shipment.pieces,
-        weightKg: formatDecimal(shipment.weightKg),
-        volumeM3: formatDecimal(shipment.volumeM3),
+        weightKg: totalWeight > 0 ? totalWeight.toFixed(3) : "",
+        volumeM3: totalVolume > 0 ? totalVolume.toFixed(4) : "",
         totalCost: formatDecimal(shipment.totalCost),
         createdAt: formatDate(shipment.createdAt),
         receivedAtWarehouse: formatDate(shipment.receivedAtWarehouse),
@@ -135,26 +148,50 @@ export async function GET(req: NextRequest) {
     itemsSheet.columns = [
       { header: "ID", key: "id", width: 30 },
       { header: "ID вантажу", key: "shipmentId", width: 30 },
-      { header: "Код товару", key: "itemCode", width: 15 },
+      { header: "№ місця", key: "placeNumber", width: 10 },
+      { header: "Трек номер", key: "trackNumber", width: 20 },
+      { header: "Локальний трек", key: "localTracking", width: 20 },
       { header: "Опис", key: "description", width: 30 },
       { header: "Кількість", key: "quantity", width: 12 },
+      { header: "Страхування (сума)", key: "insuranceValue", width: 15 },
+      { header: "Страхування (%)", key: "insurancePercent", width: 12 },
+      { header: "Довжина (см)", key: "lengthCm", width: 12 },
+      { header: "Ширина (см)", key: "widthCm", width: 12 },
+      { header: "Висота (см)", key: "heightCm", width: 12 },
       { header: "Вага (кг)", key: "weightKg", width: 12 },
       { header: "Об'єм (м³)", key: "volumeM3", width: 12 },
-      { header: "Вартість", key: "totalCost", width: 15 },
+      { header: "Щільність", key: "density", width: 12 },
+      { header: "Тариф (тип)", key: "tariffType", width: 12 },
+      { header: "Тариф (значення)", key: "tariffValue", width: 12 },
+      { header: "Вартість доставки", key: "deliveryCost", width: 15 },
+      { header: "Тип вантажу", key: "cargoType", width: 15 },
+      { header: "Примітка", key: "note", width: 30 },
     ];
     const items = await prisma.shipmentItem.findMany({
-      orderBy: { id: "asc" },
+      orderBy: { shipmentId: "asc", placeNumber: "asc" },
     });
     items.forEach((item) => {
       itemsSheet.addRow({
         id: item.id,
         shipmentId: item.shipmentId,
-        itemCode: item.itemCode || "",
+        placeNumber: item.placeNumber || "",
+        trackNumber: item.trackNumber || "",
+        localTracking: item.localTracking || "",
         description: item.description || "",
         quantity: item.quantity || "",
+        insuranceValue: formatDecimal(item.insuranceValue),
+        insurancePercent: item.insurancePercent || "",
+        lengthCm: formatDecimal(item.lengthCm),
+        widthCm: formatDecimal(item.widthCm),
+        heightCm: formatDecimal(item.heightCm),
         weightKg: formatDecimal(item.weightKg),
         volumeM3: formatDecimal(item.volumeM3),
-        totalCost: formatDecimal(item.totalCost),
+        density: formatDecimal(item.density),
+        tariffType: item.tariffType || "",
+        tariffValue: formatDecimal(item.tariffValue),
+        deliveryCost: formatDecimal(item.deliveryCost),
+        cargoType: item.cargoType || item.cargoTypeCustom || "",
+        note: item.note || "",
       });
     });
 

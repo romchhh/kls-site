@@ -43,6 +43,17 @@ model AdminAction {
   @@map("admin_actions")
 }
 
+model Batch {
+  id          String     @id @default(cuid())
+  batchId     String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  shipments   Shipment[]
+
+  @@map("batches")
+}
+
 model Shipment {
   id                       String                  @id @default(cuid())
   userId                   String
@@ -52,33 +63,29 @@ model Shipment {
   cargoLabel               String?
   clientCode               String
   deliveredAt              DateTime?
-  deliveryCost             Decimal?                @db.Decimal(14, 2)
-  deliveryCostPerPlace     Decimal?                @db.Decimal(14, 2)
   deliveryFormat           DeliveryFormat?
   deliveryReference        String?
   deliveryType             DeliveryType
-  density                  Decimal?                @db.Decimal(10, 3)
   eta                      DateTime?
-  insurancePerPlacePercent Int?
-  insurancePercentTotal    Int?
-  insuranceTotal           Decimal?                @db.Decimal(14, 2)
   internalTrack            String                  @unique
   localDeliveryToDepot     Boolean?
+  localDeliveryCost        Decimal?                @db.Decimal(14, 2)
   localTrackingDestination String?
   localTrackingOrigin      String?
   location                 String?
   packing                  Boolean?
+  packingCost               Decimal?                @db.Decimal(14, 2)
   pieces                   Int                     @default(1)
   receivedAtWarehouse      DateTime?
   routeFrom                String
   routeTo                  String
   sentAt                   DateTime?
-  tariffType               String?
-  tariffValue              Decimal?                @db.Decimal(10, 2)
-  totalCost                Decimal?                @db.Decimal(14, 2)
-  volumeM3                 Decimal?                @db.Decimal(10, 4)
-  weightKg                 Decimal?                @db.Decimal(10, 3)
   status                   ShipmentStatusEnum      @default(CREATED)
+  totalCost                Decimal?                @db.Decimal(14, 2)
+  batchId                  String?
+  batch                    Batch?                  @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  cargoType                String?
+  cargoTypeCustom          String?
   mainPhotoUrl             String?
   additionalFilesUrls      String?
   invoices                 Invoice[]
@@ -90,21 +97,30 @@ model Shipment {
 }
 
 model ShipmentItem {
-  id             String   @id @default(cuid())
-  shipmentId     String
-  itemCode       String?
-  description    String?
-  quantity       Int?
-  clientTariff   Decimal? @db.Decimal(10, 2)
-  insuranceValue Decimal? @db.Decimal(14, 2)
-  weightKg       Decimal? @db.Decimal(10, 3)
-  volumeM3       Decimal? @db.Decimal(10, 4)
-  density        Decimal? @db.Decimal(10, 3)
-  localTracking  String?
-  photoUrl       String?
-  deliveryCost   Decimal? @db.Decimal(14, 2)
-  totalCost      Decimal? @db.Decimal(14, 2)
-  shipment       Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  id                String   @id @default(cuid())
+  shipmentId        String
+  trackNumber       String?
+  placeNumber       Int?
+  localTracking     String?
+  description       String?
+  quantity          Int?
+  insuranceValue    Decimal? @db.Decimal(14, 2)
+  insurancePercent  Int?
+  insuranceCost     Decimal? @db.Decimal(14, 2)
+  lengthCm          Decimal? @db.Decimal(10, 2)
+  widthCm           Decimal? @db.Decimal(10, 2)
+  heightCm          Decimal? @db.Decimal(10, 2)
+  weightKg          Decimal? @db.Decimal(10, 3)
+  volumeM3          Decimal? @db.Decimal(10, 4)
+  density           Decimal? @db.Decimal(10, 3)
+  tariffType        String?
+  tariffValue       Decimal? @db.Decimal(10, 2)
+  deliveryCost      Decimal? @db.Decimal(14, 2)
+  cargoType         String?
+  cargoTypeCustom   String?
+  note              String?
+  photoUrl          String?
+  shipment          Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
 
   @@map("shipment_items")
 }

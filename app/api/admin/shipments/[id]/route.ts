@@ -31,24 +31,12 @@ export async function PUT(
       cargoLabel,
       status,
       location,
-      pieces,
       routeFrom,
       routeTo,
       deliveryType,
       localTrackingOrigin,
       localTrackingDestination,
       description,
-      insuranceTotal,
-      insurancePercentTotal,
-      insurancePerPlacePercent,
-      weightKg,
-      volumeM3,
-      density,
-      tariffType,
-      tariffValue,
-      deliveryCost,
-      deliveryCostPerPlace,
-      totalCost,
       receivedAtWarehouse,
       sentAt,
       deliveredAt,
@@ -56,8 +44,14 @@ export async function PUT(
       deliveryFormat,
       deliveryReference,
       packing,
+      packingCost,
       localDeliveryToDepot,
+      localDeliveryCost,
+      batchId,
+      cargoType,
+      cargoTypeCustom,
       additionalFiles,
+      items, // Array of shipment items
     } = body;
 
     // Helper function to convert to Decimal
@@ -92,6 +86,118 @@ export async function PUT(
       computedEta.setDate(computedEta.getDate() + baseDays);
     }
 
+    // Process items if provided
+    let pieces = existing.pieces;
+    let calculatedTotalCost = new Prisma.Decimal(0);
+    let itemsUpdate: any = undefined;
+
+    if (items !== undefined && Array.isArray(items)) {
+      pieces = items.length || existing.pieces;
+      
+      // Delete existing items and create new ones
+      await prisma.shipmentItem.deleteMany({
+        where: { shipmentId: id },
+      });
+
+      const processedItems = items.map((item: any, index: number) => {
+        const insuranceValue = toDecimal(item.insuranceValue);
+        const insurancePercent = item.insurancePercent ? Number(item.insurancePercent) : null;
+        const insuranceCost = insuranceValue && insurancePercent 
+          ? new Prisma.Decimal(insuranceValue.toNumber() * insurancePercent / 100)
+          : null;
+        
+        if (insuranceCost) {
+          calculatedTotalCost = calculatedTotalCost.add(insuranceCost);
+        }
+        
+        const itemDeliveryCost = toDecimal(item.deliveryCost);
+        if (itemDeliveryCost) {
+          calculatedTotalCost = calculatedTotalCost.add(itemDeliveryCost);
+        }
+
+        // Auto-generate trackNumber if not provided
+        let trackNumber = item.trackNumber;
+        if (!trackNumber || trackNumber.trim() === "") {
+          // Format: 00010-2661A0001-1, 00010-2661A0001-2, etc.
+          // Convert internalTrack from "00010-2661A-0001" to "00010-2661A0001-1"
+          const trackBase = existing.internalTrack.replace(/-(\d+)$/, '$1'); // Remove last dash, keep number
+          trackNumber = `${trackBase}-${index + 1}`;
+        }
+
+        return {
+          trackNumber: trackNumber,
+          placeNumber: index + 1,
+          localTracking: item.localTracking || null,
+          description: item.description || null,
+          quantity: item.quantity ? Number(item.quantity) : null,
+          insuranceValue: insuranceValue,
+          insurancePercent: insurancePercent && insurancePercent >= 1 && insurancePercent <= 100 ? insurancePercent : null,
+          insuranceCost: insuranceCost,
+          lengthCm: toDecimal(item.lengthCm),
+          widthCm: toDecimal(item.widthCm),
+          heightCm: toDecimal(item.heightCm),
+          weightKg: toDecimal(item.weightKg),
+          volumeM3: toDecimal(item.volumeM3),
+          density: toDecimal(item.density),
+          tariffType: item.tariffType || null,
+          tariffValue: toDecimal(item.tariffValue),
+          deliveryCost: itemDeliveryCost,
+          cargoType: item.cargoType || null,
+          cargoTypeCustom: item.cargoTypeCustom || null,
+          note: item.note || null,
+          photoUrl: item.photoUrl || null,
+        };
+      });
+
+      itemsUpdate = {
+        create: processedItems,
+      };
+
+      // Add packing and local delivery costs
+      const packingCostDecimal = toDecimal(packingCost);
+      const localDeliveryCostDecimal = toDecimal(localDeliveryCost);
+      
+      if (packingCostDecimal) {
+        calculatedTotalCost = calculatedTotalCost.add(packingCostDecimal);
+      }
+      if (localDeliveryCostDecimal) {
+        calculatedTotalCost = calculatedTotalCost.add(localDeliveryCostDecimal);
+      }
+    } else {
+      // If items not provided, calculate from existing items
+      const existingItems = await prisma.shipmentItem.findMany({
+        where: { shipmentId: id },
+      });
+      
+      existingItems.forEach((item) => {
+        if (item.insuranceCost) {
+          calculatedTotalCost = calculatedTotalCost.add(item.insuranceCost);
+        }
+        if (item.deliveryCost) {
+          calculatedTotalCost = calculatedTotalCost.add(item.deliveryCost);
+        }
+      });
+
+      const packingCostDecimal = toDecimal(packingCost);
+      const localDeliveryCostDecimal = toDecimal(localDeliveryCost);
+      
+      if (packingCostDecimal !== undefined) {
+        if (packingCostDecimal) {
+          calculatedTotalCost = calculatedTotalCost.add(packingCostDecimal);
+        }
+      } else if (existing.packingCost) {
+        calculatedTotalCost = calculatedTotalCost.add(existing.packingCost);
+      }
+
+      if (localDeliveryCostDecimal !== undefined) {
+        if (localDeliveryCostDecimal) {
+          calculatedTotalCost = calculatedTotalCost.add(localDeliveryCostDecimal);
+        }
+      } else if (existing.localDeliveryCost) {
+        calculatedTotalCost = calculatedTotalCost.add(existing.localDeliveryCost);
+      }
+    }
+
     const shipment = await prisma.shipment.update({
       where: { id },
       data: {
@@ -99,7 +205,7 @@ export async function PUT(
         cargoLabel: cargoLabel ?? existing.cargoLabel,
         status: nextStatus,
         location: location ?? existing.location,
-        pieces: pieces ?? existing.pieces,
+        pieces,
         routeFrom: routeFrom ?? existing.routeFrom,
         routeTo: routeTo ?? existing.routeTo,
         deliveryType: nextDeliveryType,
@@ -111,47 +217,6 @@ export async function PUT(
           ? (body.mainPhotoUrl || (additionalFiles && Array.isArray(additionalFiles) && additionalFiles.length > 0 ? additionalFiles[0] : null))
           : (additionalFiles && Array.isArray(additionalFiles) && additionalFiles.length > 0 && !existing.mainPhotoUrl ? additionalFiles[0] : existing.mainPhotoUrl),
         additionalFilesUrls: additionalFiles !== undefined ? (additionalFiles && Array.isArray(additionalFiles) ? JSON.stringify(additionalFiles) : null) : existing.additionalFilesUrls,
-        insuranceTotal:
-          insuranceTotal !== undefined
-            ? toDecimal(insuranceTotal)
-            : existing.insuranceTotal,
-        insurancePercentTotal:
-          insurancePercentTotal !== undefined
-            ? insurancePercentTotal
-            : existing.insurancePercentTotal,
-        insurancePerPlacePercent:
-          insurancePerPlacePercent !== undefined
-            ? insurancePerPlacePercent
-            : existing.insurancePerPlacePercent,
-        weightKg:
-          weightKg !== undefined
-            ? toDecimal(weightKg)
-            : existing.weightKg,
-        volumeM3:
-          volumeM3 !== undefined
-            ? toDecimal(volumeM3)
-            : existing.volumeM3,
-        density:
-          density !== undefined
-            ? toDecimal(density)
-            : existing.density,
-        tariffType: tariffType ?? existing.tariffType,
-        tariffValue:
-          tariffValue !== undefined
-            ? toDecimal(tariffValue)
-            : existing.tariffValue,
-        deliveryCost:
-          deliveryCost !== undefined
-            ? toDecimal(deliveryCost)
-            : existing.deliveryCost,
-        deliveryCostPerPlace:
-          deliveryCostPerPlace !== undefined
-            ? toDecimal(deliveryCostPerPlace)
-            : existing.deliveryCostPerPlace,
-        totalCost:
-          totalCost !== undefined
-            ? toDecimal(totalCost)
-            : existing.totalCost,
         receivedAtWarehouse:
           receivedAtWarehouse !== undefined
             ? receivedAtWarehouse
@@ -175,12 +240,35 @@ export async function PUT(
         deliveryReference: deliveryReference ?? existing.deliveryReference,
         packing:
           typeof packing === "boolean" ? packing : existing.packing,
+        packingCost: packingCost !== undefined ? toDecimal(packingCost) : existing.packingCost,
         localDeliveryToDepot:
           typeof localDeliveryToDepot === "boolean"
             ? localDeliveryToDepot
             : existing.localDeliveryToDepot,
+        localDeliveryCost: localDeliveryCost !== undefined ? toDecimal(localDeliveryCost) : existing.localDeliveryCost,
+        batchId: batchId !== undefined ? (batchId || null) : existing.batchId,
+        cargoType: cargoType !== undefined ? (cargoType || null) : existing.cargoType,
+        cargoTypeCustom: cargoTypeCustom !== undefined ? (cargoTypeCustom || null) : existing.cargoTypeCustom,
+        totalCost: calculatedTotalCost.toNumber() > 0 ? calculatedTotalCost : null,
+        ...(itemsUpdate ? { items: itemsUpdate } : {}),
       },
     });
+
+    // Create status history entry if status changed
+    if (status && status !== existing.status) {
+      try {
+        await prisma.shipmentStatusHistory.create({
+          data: {
+            shipmentId: shipment.id,
+            status: status as any,
+            location: location ?? existing.location ?? null,
+            description: `Статус змінено на ${status}`,
+          },
+        });
+      } catch (historyError) {
+        console.error("Failed to create status history (non-critical):", historyError);
+      }
+    }
 
     await prisma.adminAction.create({
       data: {

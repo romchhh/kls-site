@@ -116,8 +116,8 @@
           "variable": [
             {
               "key": "track",
-              "value": "123",
-              "description": "Внутрішній трек номер замовлення (internalTrack)"
+              "value": "00100-2491Е-0001",
+              "description": "Внутрішній трек номер замовлення (internalTrack). Формат: ID_партії-Код_клієнтаТип-Номер, наприклад 00100-2491Е-0001"
             }
           ]
         },
@@ -130,9 +130,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/public/shipment/123",
+              "raw": "{{base_url}}/api/public/shipment/00100-2491Е-0001",
               "host": ["{{base_url}}"],
-              "path": ["api", "public", "shipment", "123"]
+              "path": ["api", "public", "shipment", "00100-2491Е-0001"]
             }
           },
           "status": "OK",
@@ -145,7 +145,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n  \"id\": \"cmig06let0003btso5b7tmkel\",\n  \"internalTrack\": \"123\",\n  \"status\": \"IN_TRANSIT\",\n  \"pieces\": 1,\n  \"weightKg\": \"12\",\n  \"volumeM3\": \"321\",\n  \"totalCost\": \"3000\",\n  \"client\": {\n    \"id\": \"user_id\",\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"phone\": \"+380123456789\",\n    \"clientCode\": \"1234\"\n  },\n  \"items\": [\n    {\n      \"id\": \"item_id\",\n      \"description\": \"Item description\",\n      \"quantity\": 1,\n      \"weightKg\": \"10\",\n      \"volumeM3\": \"0.5\"\n    }\n  ],\n  \"statusHistory\": [\n    {\n      \"id\": \"history_id\",\n      \"status\": \"CREATED\",\n      \"location\": \"Guangzhou\",\n      \"createdAt\": \"2025-11-26T12:00:00.000Z\"\n    }\n  ],\n  \"invoices\": []\n}"
+          "body": "{\n  \"id\": \"cmig06let0003btso5b7tmkel\",\n  \"internalTrack\": \"00100-2491Е-0001\",\n  \"cargoLabel\": \"Маркування\",\n  \"status\": \"IN_TRANSIT\",\n  \"description\": \"Опис вантажу\",\n  \"location\": \"Guangzhou\",\n  \"pieces\": 2,\n  \"weightKg\": \"3.00\",\n  \"volumeM3\": \"4.00\",\n  \"routeFrom\": \"CN\",\n  \"routeTo\": \"UA\",\n  \"deliveryType\": \"AIR\",\n  \"packing\": true,\n  \"packingCost\": \"100.00\",\n  \"localDeliveryToDepot\": true,\n  \"localDeliveryCost\": \"50.00\",\n  \"batchId\": \"00100\",\n  \"cargoType\": \"Електроніка\",\n  \"cargoTypeCustom\": null,\n  \"totalCost\": \"720.00\",\n  \"receivedAtWarehouse\": \"2025-11-28T00:00:00.000Z\",\n  \"sentAt\": \"2025-11-30T00:00:00.000Z\",\n  \"deliveredAt\": \"2025-12-03T00:00:00.000Z\",\n  \"eta\": \"2025-12-06T00:00:00.000Z\",\n  \"mainPhotoUrl\": \"https://example.com/photo.jpg\",\n  \"additionalFilesUrls\": [\"https://example.com/file.pdf\"],\n  \"createdAt\": \"2025-11-26T14:50:58.000Z\",\n  \"updatedAt\": \"2025-11-26T14:50:58.000Z\",\n  \"client\": {\n    \"id\": \"user_id\",\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"phone\": \"+380123456789\",\n    \"clientCode\": \"2491\",\n    \"companyName\": \"Test Company\"\n  },\n  \"items\": [\n    {\n      \"id\": \"item_id_1\",\n      \"placeNumber\": 1,\n      \"trackNumber\": \"00100-2491Е0001-1\",\n      \"localTracking\": \"123123\",\n      \"description\": \"test\",\n      \"quantity\": 4,\n      \"insuranceValue\": \"1000.00\",\n      \"insurancePercent\": \"10\",\n      \"lengthCm\": \"20.00\",\n      \"widthCm\": \"50.00\",\n      \"heightCm\": \"60.00\",\n      \"weightKg\": \"1.00\",\n      \"volumeM3\": \"2.00\",\n      \"density\": \"480.00\",\n      \"tariffType\": \"kg\",\n      \"tariffValue\": \"10.00\",\n      \"deliveryCost\": \"240.00\",\n      \"cargoType\": \"Електроніка\",\n      \"cargoTypeCustom\": null,\n      \"note\": \"testes\",\n      \"photoUrl\": \"https://example.com/item1.jpg\"\n    },\n    {\n      \"id\": \"item_id_2\",\n      \"placeNumber\": 2,\n      \"trackNumber\": \"00100-2491Е0001-2\",\n      \"localTracking\": \"12321\",\n      \"description\": \"еуіе2\",\n      \"quantity\": 14,\n      \"insuranceValue\": \"100.00\",\n      \"insurancePercent\": \"5\",\n      \"lengthCm\": \"22.00\",\n      \"widthCm\": \"21.94\",\n      \"heightCm\": \"50.00\",\n      \"weightKg\": \"2.00\",\n      \"volumeM3\": \"2.00\",\n      \"density\": \"480.00\",\n      \"tariffType\": \"kg\",\n      \"tariffValue\": \"10.00\",\n      \"deliveryCost\": \"123.00\",\n      \"cargoType\": \"Електроніка\",\n      \"cargoTypeCustom\": null,\n      \"note\": \"цггнйцу\",\n      \"photoUrl\": \"https://example.com/item2.jpg\"\n    }\n  ],\n  \"statusHistory\": [\n    {\n      \"id\": \"history_id\",\n      \"status\": \"CREATED\",\n      \"location\": \"Guangzhou\",\n      \"description\": \"Вантаж створено\",\n      \"createdAt\": \"2025-11-26T12:00:00.000Z\"\n    }\n  ],\n  \"invoices\": []\n}"
         },
         {
           "name": "Not Found Response",
