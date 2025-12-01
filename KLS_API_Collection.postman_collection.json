@@ -171,6 +171,33 @@
           "body": "{\n  \"error\": \"Замовлення з трек номером \\\"wrong_track\\\" не знайдено\"\n}"
         }
       ]
+    },
+    {
+      "name": "Get All User Shipments",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{api_token}}",
+            "description": "Bearer token отриманий з адмін панелі"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/public/user/:userId/shipments",
+          "host": ["{{base_url}}"],
+          "path": ["api", "public", "user", ":userId", "shipments"],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "cmij6wnoy0000zvwfrcy6lry6",
+              "description": "ID користувача в системі"
+            }
+          ]
+        },
+        "description": "Отримання всіх замовлень (вантажів) користувача за його ID. Повертає повну інформацію про всі замовлення користувача, включаючи товари, історію статусів та рахунки."
+      },
+      "response": []
     }
   ],
   "variable": [

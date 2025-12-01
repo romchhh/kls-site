@@ -261,6 +261,161 @@ console.log(data);
 
 ---
 
+## 3. Get All User Shipments
+
+### Endpoint
+```
+GET /api/public/user/:id/shipments
+```
+
+### Description
+Отримання всіх замовлень (вантажів) користувача за його ID. Повертає повну інформацію про всі замовлення користувача, включаючи товари, історію статусів та рахунки.
+
+**⚠️ Вимагає Bearer token авторизації**
+
+### Headers
+```
+Authorization: Bearer kls_your_token_here
+```
+
+### Path Parameters
+- `id` (string, required) - ID користувача в системі
+
+### Success Response (200)
+```json
+{
+  "user": {
+    "id": "cmij6wnoy0000zvwfrcy6lry6",
+    "name": "Test User",
+    "email": "test@example.com",
+    "phone": "1234567890",
+    "clientCode": "1234",
+    "companyName": "Test Company"
+  },
+  "shipments": [
+    {
+      "id": "cmij6wnoy0000zvwfrcy6lry7",
+      "internalTrack": "123",
+      "cargoLabel": "Cargo Label",
+      "status": "ARRIVED_UA",
+      "description": "Shipment description",
+      "location": "312",
+      "pieces": 1,
+      "weightKg": "12.5",
+      "volumeM3": "0.321",
+      "density": "38.94",
+      "routeFrom": "312",
+      "routeTo": "321",
+      "deliveryType": "AIR",
+      "deliveryFormat": "SELF_PICKUP",
+      "deliveryReference": "REF123",
+      "packing": true,
+      "localDeliveryToDepot": true,
+      "localTrackingOrigin": "TRACK001",
+      "localTrackingDestination": "TRACK002",
+      "deliveryCost": "3123.00",
+      "deliveryCostPerPlace": "312.00",
+      "totalCost": "3000.00",
+      "insuranceTotal": "100.00",
+      "insurancePercentTotal": 5,
+      "insurancePerPlacePercent": 10,
+      "tariffType": "STANDARD",
+      "tariffValue": "50.00",
+      "receivedAtWarehouse": "2025-11-28T00:00:00.000Z",
+      "sentAt": "2025-11-30T00:00:00.000Z",
+      "deliveredAt": "2025-12-03T00:00:00.000Z",
+      "eta": "2025-12-06T00:00:00.000Z",
+      "mainPhotoUrl": "/uploads/shipments/photo.jpg",
+      "additionalFilesUrls": [
+        "/uploads/shipments/file1.jpg",
+        "/uploads/shipments/file2.jpg"
+      ],
+      "createdAt": "2025-11-26T14:50:58.000Z",
+      "updatedAt": "2025-12-01T10:30:00.000Z",
+      "items": [
+        {
+          "id": "item1",
+          "itemCode": "ITEM001",
+          "description": "Item description",
+          "quantity": 1,
+          "weightKg": "12.5",
+          "volumeM3": "0.321",
+          "density": "38.94",
+          "localTracking": "LOCAL001",
+          "photoUrl": "/uploads/items/item.jpg",
+          "clientTariff": "50.00",
+          "insuranceValue": "100.00",
+          "deliveryCost": "3123.00",
+          "totalCost": "3000.00"
+        }
+      ],
+      "statusHistory": [
+        {
+          "id": "status1",
+          "status": "ARRIVED_UA",
+          "location": "312",
+          "description": "Arrived in Ukraine",
+          "createdAt": "2025-12-01T10:30:00.000Z"
+        }
+      ],
+      "invoices": [
+        {
+          "id": "invoice1",
+          "invoiceNumber": "INV-001",
+          "amount": "3000.00",
+          "status": "UNPAID",
+          "dueDate": "2025-12-15T00:00:00.000Z",
+          "createdAt": "2025-12-01T10:30:00.000Z",
+          "updatedAt": "2025-12-01T10:30:00.000Z"
+        }
+      ]
+    }
+  ],
+  "total": 1
+}
+```
+
+### Error Response (400)
+```json
+{
+  "error": "User ID is required"
+}
+```
+
+### Error Response (401 - Invalid Token)
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+### Error Response (404)
+```json
+{
+  "error": "User not found"
+}
+```
+
+### Example Request (cURL)
+```bash
+curl -X GET http://localhost:3000/api/public/user/cmij6wnoy0000zvwfrcy6lry6/shipments \
+  -H "Authorization: Bearer kls_your_token_here"
+```
+
+### Example Request (JavaScript)
+```javascript
+const userId = 'cmij6wnoy0000zvwfrcy6lry6';
+const response = await fetch(`http://localhost:3000/api/public/user/${userId}/shipments`, {
+  headers: {
+    'Authorization': 'Bearer kls_your_token_here'
+  }
+});
+const data = await response.json();
+console.log(data);
+```
+
+---
+
 ## Status Codes
 
 - `200` - Успішний запит
