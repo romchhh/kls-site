@@ -20,13 +20,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    // Check if file has arrayBuffer method (works for both File and Blob)
-    if (typeof (file as any).arrayBuffer !== "function") {
-      return NextResponse.json({ error: "Invalid file format" }, { status: 400 });
+    // Convert file to buffer - use stream() method which is more reliable in Node.js
+    let buffer: Buffer;
+    try {
+      // Try using stream() first (works in Node.js 18+)
+      if (typeof (file as any).stream === "function") {
+        const stream = (file as any).stream();
+        const chunks: Uint8Array[] = [];
+        const reader = stream.getReader();
+        
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (value) {
+            chunks.push(value);
+          }
+        }
+        buffer = Buffer.concat(chunks);
+      } else if (typeof (file as any).arrayBuffer === "function") {
+        // Fallback to arrayBuffer if stream is not available
+        const bytes = await (file as any).arrayBuffer();
+        buffer = Buffer.from(bytes);
+      } else {
+        return NextResponse.json({ error: "Invalid file format - no stream or arrayBuffer method" }, { status: 400 });
+      }
+    } catch (error) {
+      console.error("Error converting file to buffer:", error);
+      return NextResponse.json({ error: "Failed to process file" }, { status: 400 });
     }
-
-    const bytes = await (file as any).arrayBuffer();
-    const buffer = Buffer.from(bytes);
 
     const uploadsDir = path.join(process.cwd(), "public", "uploads", "shipments");
     await fs.mkdir(uploadsDir, { recursive: true });
@@ -39,7 +60,21 @@ export async function POST(request: NextRequest) {
 
     await fs.writeFile(filePath, buffer);
 
+    // Verify file was written
+    const stats = await fs.stat(filePath);
+    if (!stats.isFile()) {
+      console.error("File was not written correctly");
+      return NextResponse.json({ error: "Failed to save file" }, { status: 500 });
+    }
+
     const publicUrl = `/uploads/shipments/${generatedFileName}`;
+    
+    console.log("File uploaded successfully:", {
+      fileName: generatedFileName,
+      size: stats.size,
+      url: publicUrl,
+      path: filePath
+    });
 
     return NextResponse.json({ url: publicUrl }, { status: 200 });
   } catch (error) {

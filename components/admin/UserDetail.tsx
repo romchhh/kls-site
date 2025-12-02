@@ -2090,6 +2090,37 @@ export function UserDetail({ userId }: UserDetailProps) {
                       Завантаження фото...
                     </span>
                   )}
+                  {/* Show main photo if exists */}
+                  {shipmentForm.mainPhotoUrl && (
+                    <div className="mt-3">
+                      <div className="mb-2 text-[11px] font-semibold text-slate-700">
+                        Головне фото:
+                      </div>
+                      <div className="relative inline-block group">
+                        <img
+                          src={shipmentForm.mainPhotoUrl}
+                          alt="Головне фото"
+                          className="w-32 h-32 object-cover rounded-lg border border-slate-200"
+                          onError={(e) => {
+                            console.error("Error loading image:", shipmentForm.mainPhotoUrl);
+                            (e.target as HTMLImageElement).style.display = "none";
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShipmentForm((prev) => ({
+                              ...prev,
+                              mainPhotoUrl: "",
+                            }));
+                          }}
+                          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   {shipmentForm.additionalFiles && shipmentForm.additionalFiles.length > 0 && (
                     <div className="mt-3">
                       <div className="mb-2 text-[11px] font-semibold text-slate-700">
@@ -2102,6 +2133,10 @@ export function UserDetail({ userId }: UserDetailProps) {
                               src={url}
                               alt={`Фото ${idx + 1}`}
                               className="w-full h-24 object-cover rounded-lg border border-slate-200"
+                              onError={(e) => {
+                                console.error("Error loading image:", url);
+                                (e.target as HTMLImageElement).style.display = "none";
+                              }}
                             />
                             <button
                               type="button"
