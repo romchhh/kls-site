@@ -67,7 +67,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Failed to save file" }, { status: 500 });
     }
 
-    const publicUrl = `/uploads/shipments/${generatedFileName}`;
+    // Use API endpoint to serve files dynamically (bypasses Next.js static file cache)
+    const publicUrl = `/api/files/uploads/shipments/${generatedFileName}`;
     
     console.log("File uploaded successfully:", {
       fileName: generatedFileName,

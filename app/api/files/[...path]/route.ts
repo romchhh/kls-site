@@ -73,11 +73,14 @@ export async function GET(
     const fileName = path.basename(fullPath);
 
     // Return file with proper headers
+    // Use no-cache for newly uploaded files to ensure they're visible immediately
+    // After first load, browser can cache them
     return new NextResponse(fileBuffer, {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": `inline; filename="${fileName}"`,
-        "Cache-Control": "public, max-age=31536000, immutable",
+        "Cache-Control": "public, max-age=3600, must-revalidate",
+        "X-Content-Type-Options": "nosniff",
       },
     });
   } catch (error) {
