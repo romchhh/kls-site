@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Package, Plus, Trash2, Edit2, Save, X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Package, Plus, Trash2, Edit2, Save, X, Loader2, CheckCircle, AlertCircle, Search } from "lucide-react";
 import Link from "next/link";
 
 interface Shipment {
@@ -11,12 +11,15 @@ interface Shipment {
   clientCode: string;
   cargoLabel: string | null;
   createdAt: string;
+  userId?: string;
 }
 
 interface Batch {
   id: string;
   batchId: string;
   description: string | null;
+  deliveryType: "AIR" | "SEA" | "RAIL" | "MULTIMODAL";
+  status: "FORMING" | "FORMED";
   createdAt: string;
   shipments: Shipment[];
 }
@@ -29,15 +32,45 @@ export function BatchManagement() {
   const [editingBatch, setEditingBatch] = useState<Batch | null>(null);
   const [newBatchId, setNewBatchId] = useState("");
   const [newBatchDescription, setNewBatchDescription] = useState("");
+  const [newBatchDeliveryType, setNewBatchDeliveryType] = useState<"AIR" | "SEA" | "RAIL" | "MULTIMODAL">("AIR");
+  const [newBatchStatus, setNewBatchStatus] = useState<"FORMING" | "FORMED">("FORMING");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [showStatusUpdateModal, setShowStatusUpdateModal] = useState<Batch | null>(null);
   const [newStatus, setNewStatus] = useState("");
   const [newLocation, setNewLocation] = useState("");
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [loadingNextId, setLoadingNextId] = useState(false);
+  const [availableShipments, setAvailableShipments] = useState<any[]>([]);
+  const [loadingAvailableShipments, setLoadingAvailableShipments] = useState(false);
+  const [showAddShipmentModal, setShowAddShipmentModal] = useState(false);
+  const [selectedShipmentId, setSelectedShipmentId] = useState("");
+  const [addingShipment, setAddingShipment] = useState(false);
 
   useEffect(() => {
     fetchBatches();
   }, []);
+
+  // Load next batch ID when create form is opened
+  useEffect(() => {
+    if (showCreateForm) {
+      fetchNextBatchId();
+    }
+  }, [showCreateForm]);
+
+  const fetchNextBatchId = async () => {
+    setLoadingNextId(true);
+    try {
+      const res = await fetch("/api/admin/batches/next-id");
+      if (res.ok) {
+        const data = await res.json();
+        setNewBatchId(data.nextBatchId || "");
+      }
+    } catch (error) {
+      console.error("Error fetching next batch ID:", error);
+    } finally {
+      setLoadingNextId(false);
+    }
+  };
 
   const fetchBatches = async () => {
     setLoading(true);
@@ -65,8 +98,9 @@ export function BatchManagement() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          batchId: newBatchId,
           description: newBatchDescription || null,
+          deliveryType: newBatchDeliveryType,
+          status: newBatchStatus,
         }),
       });
 
@@ -76,6 +110,7 @@ export function BatchManagement() {
         setMessage({ type: "success", text: "Партія успішно створена" });
         setNewBatchId("");
         setNewBatchDescription("");
+        setNewBatchDeliveryType("AIR");
         setShowCreateForm(false);
         fetchBatches();
       } else {
@@ -101,8 +136,9 @@ export function BatchManagement() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: editingBatch.id,
-          batchId: newBatchId,
           description: newBatchDescription || null,
+          deliveryType: newBatchDeliveryType,
+          status: newBatchStatus,
         }),
       });
 
@@ -113,6 +149,7 @@ export function BatchManagement() {
         setEditingBatch(null);
         setNewBatchId("");
         setNewBatchDescription("");
+        setNewBatchDeliveryType("AIR");
         fetchBatches();
       } else {
         setMessage({ type: "error", text: data.error || "Помилка оновлення партії" });
@@ -185,12 +222,90 @@ export function BatchManagement() {
     setEditingBatch(batch);
     setNewBatchId(batch.batchId);
     setNewBatchDescription(batch.description || "");
+    setNewBatchDeliveryType(batch.deliveryType || "AIR");
+    setNewBatchStatus(batch.status || "FORMING");
+    fetchAvailableShipments();
   };
 
   const cancelEdit = () => {
     setEditingBatch(null);
     setNewBatchId("");
     setNewBatchDescription("");
+    setNewBatchDeliveryType("AIR");
+    setNewBatchStatus("FORMING");
+    setAvailableShipments([]);
+    setShowAddShipmentModal(false);
+  };
+
+  const fetchAvailableShipments = async () => {
+    if (!editingBatch) return;
+    setLoadingAvailableShipments(true);
+    try {
+      const res = await fetch(`/api/admin/batches/${editingBatch.id}/shipments`);
+      if (res.ok) {
+        const data = await res.json();
+        setAvailableShipments(data.shipments || []);
+      }
+    } catch (error) {
+      console.error("Error fetching available shipments:", error);
+    } finally {
+      setLoadingAvailableShipments(false);
+    }
+  };
+
+  const handleAddShipment = async (shipmentId: string) => {
+    if (!editingBatch) return;
+    setAddingShipment(true);
+    setMessage(null);
+
+    try {
+      const res = await fetch(`/api/admin/batches/${editingBatch.id}/shipments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ shipmentId }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage({ type: "success", text: "Вантаж успішно додано до партії" });
+        setSelectedShipmentId("");
+        setShowAddShipmentModal(false);
+        fetchBatches();
+        fetchAvailableShipments();
+      } else {
+        setMessage({ type: "error", text: data.error || "Помилка додавання вантажу" });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: "Помилка додавання вантажу" });
+    } finally {
+      setAddingShipment(false);
+    }
+  };
+
+  const handleRemoveShipment = async (shipmentId: string) => {
+    if (!editingBatch) return;
+    if (!confirm("Видалити вантаж з партії?")) return;
+
+    setMessage(null);
+
+    try {
+      const res = await fetch(`/api/admin/batches/${editingBatch.id}/shipments?shipmentId=${shipmentId}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage({ type: "success", text: "Вантаж успішно видалено з партії" });
+        fetchBatches();
+        fetchAvailableShipments();
+      } else {
+        setMessage({ type: "error", text: data.error || "Помилка видалення вантажу" });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: "Помилка видалення вантажу" });
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -221,6 +336,8 @@ export function BatchManagement() {
             setShowCreateForm(true);
             setNewBatchId("");
             setNewBatchDescription("");
+            setNewBatchDeliveryType("AIR");
+            setNewBatchStatus("FORMING");
           }}
           className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
         >
@@ -255,6 +372,7 @@ export function BatchManagement() {
                 setShowCreateForm(false);
                 setNewBatchId("");
                 setNewBatchDescription("");
+                setNewBatchDeliveryType("AIR");
               }}
               className="text-slate-400 hover:text-slate-700"
             >
@@ -268,12 +386,43 @@ export function BatchManagement() {
               </label>
               <input
                 type="text"
-                value={newBatchId}
-                onChange={(e) => setNewBatchId(e.target.value)}
-                required
-                placeholder="00010"
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                value={loadingNextId ? "Завантаження..." : newBatchId || "000001"}
+                disabled
+                className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-slate-700 font-mono cursor-not-allowed"
               />
+              <p className="mt-1 text-xs text-slate-500">
+                ID партії буде автоматично згенеровано після створення
+              </p>
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-semibold text-slate-700">
+                Тип доставки партії *
+              </label>
+              <select
+                value={newBatchDeliveryType}
+                onChange={(e) => setNewBatchDeliveryType(e.target.value as "AIR" | "SEA" | "RAIL" | "MULTIMODAL")}
+                required
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+              >
+                <option value="AIR">Авіа</option>
+                <option value="SEA">Море</option>
+                <option value="RAIL">Потяг</option>
+                <option value="MULTIMODAL">Мультимодальна</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-semibold text-slate-700">
+                Статус партії *
+              </label>
+              <select
+                value={newBatchStatus}
+                onChange={(e) => setNewBatchStatus(e.target.value as "FORMING" | "FORMED")}
+                required
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+              >
+                <option value="FORMING">Формується</option>
+                <option value="FORMED">Сформована</option>
+              </select>
             </div>
             <div>
               <label className="mb-1 block text-sm font-semibold text-slate-700">
@@ -309,6 +458,8 @@ export function BatchManagement() {
                   setShowCreateForm(false);
                   setNewBatchId("");
                   setNewBatchDescription("");
+                  setNewBatchDeliveryType("AIR");
+                  setNewBatchStatus("FORMING");
                 }}
                 className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
               >
@@ -340,6 +491,29 @@ export function BatchManagement() {
                   <div className="flex items-center gap-3">
                     <Package className="h-5 w-5 text-teal-600" />
                     <h3 className="text-xl font-black text-slate-900">Партія {batch.batchId}</h3>
+                  </div>
+                  <div className="mt-1 flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-slate-500">Тип доставки:</span>
+                      <span className="text-sm font-semibold text-slate-700">
+                        {batch.deliveryType === "AIR" && "Авіа"}
+                        {batch.deliveryType === "SEA" && "Море"}
+                        {batch.deliveryType === "RAIL" && "Потяг"}
+                        {batch.deliveryType === "MULTIMODAL" && "Мультимодальна"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-slate-500">Статус:</span>
+                      <span
+                        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          batch.status === "FORMING"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {batch.status === "FORMING" ? "Формується" : "Сформована"}
+                      </span>
+                    </div>
                   </div>
                   {batch.description && (
                     <p className="mt-1 text-sm text-slate-600">{batch.description}</p>
@@ -383,55 +557,177 @@ export function BatchManagement() {
               </div>
 
               {editingBatch?.id === batch.id ? (
-                <form onSubmit={handleUpdateBatch} className="mt-4 space-y-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
-                  <div>
-                    <label className="mb-1 block text-sm font-semibold text-slate-700">
-                      ID партії *
-                    </label>
-                    <input
-                      type="text"
-                      value={newBatchId}
-                      onChange={(e) => setNewBatchId(e.target.value)}
-                      required
-                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                    />
+                <div className="mt-4 space-y-4">
+                  <form onSubmit={handleUpdateBatch} className="space-y-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                    <div>
+                      <label className="mb-1 block text-sm font-semibold text-slate-700">
+                        ID партії
+                      </label>
+                      <input
+                        type="text"
+                        value={newBatchId}
+                        disabled
+                        className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-slate-500 cursor-not-allowed"
+                      />
+                      <p className="mt-1 text-xs text-slate-500">
+                        ID партії не можна змінити
+                      </p>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-semibold text-slate-700">
+                        Тип доставки партії *
+                      </label>
+                      <select
+                        value={newBatchDeliveryType}
+                        onChange={(e) => setNewBatchDeliveryType(e.target.value as "AIR" | "SEA" | "RAIL" | "MULTIMODAL")}
+                        required
+                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                      >
+                        <option value="AIR">Авіа</option>
+                        <option value="SEA">Море</option>
+                        <option value="RAIL">Потяг</option>
+                        <option value="MULTIMODAL">Мультимодальна</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-semibold text-slate-700">
+                        Статус партії *
+                      </label>
+                      <select
+                        value={newBatchStatus}
+                        onChange={(e) => setNewBatchStatus(e.target.value as "FORMING" | "FORMED")}
+                        required
+                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                      >
+                        <option value="FORMING">Формується</option>
+                        <option value="FORMED">Сформована</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-semibold text-slate-700">
+                        Опис
+                      </label>
+                      <input
+                        type="text"
+                        value={newBatchDescription}
+                        onChange={(e) => setNewBatchDescription(e.target.value)}
+                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                      />
+                    </div>
+                    <div className="flex gap-3">
+                      <button
+                        type="submit"
+                        disabled={saving}
+                        className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-50"
+                      >
+                        {saving ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" /> Збереження...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="h-4 w-4" /> Зберегти
+                          </>
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={cancelEdit}
+                        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                      >
+                        Скасувати
+                      </button>
+                    </div>
+                  </form>
+
+                  {/* Shipments Management */}
+                  <div className="rounded-lg border border-slate-200 bg-white p-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <h3 className="text-lg font-black text-slate-900">
+                        Вантажі в партії ({batch.shipments.length})
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowAddShipmentModal(true);
+                          fetchAvailableShipments();
+                        }}
+                        className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-3 py-2 text-xs font-semibold text-white hover:bg-teal-700"
+                      >
+                        <Plus className="h-3 w-3" /> Додати вантаж
+                      </button>
+                    </div>
+
+                    {batch.shipments.length > 0 ? (
+                      <div className="overflow-x-auto rounded-lg border border-slate-200">
+                        <table className="min-w-full text-xs">
+                          <thead className="bg-slate-50">
+                            <tr>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                                Трек номер
+                              </th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                                Код клієнта
+                              </th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                                Маркування
+                              </th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                                Статус
+                              </th>
+                              <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                                Дії
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {batch.shipments.map((shipment) => (
+                              <tr key={shipment.id} className="hover:bg-slate-50">
+                                <td className="px-3 py-2 font-mono text-slate-900">
+                                  {shipment.internalTrack}
+                                </td>
+                                <td className="px-3 py-2 text-slate-900">{shipment.clientCode}</td>
+                                <td className="px-3 py-2 text-slate-900">
+                                  {shipment.cargoLabel || "-"}
+                                </td>
+                                <td className="px-3 py-2">
+                                  <span
+                                    className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(
+                                      shipment.status
+                                    )}`}
+                                  >
+                                    {shipment.status}
+                                  </span>
+                                </td>
+                                <td className="px-3 py-2">
+                                  <div className="flex items-center gap-2">
+                                    {shipment.userId && (
+                                      <Link
+                                        href={`/admin/dashboard/users/${shipment.userId}?shipmentId=${shipment.id}`}
+                                        className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100"
+                                      >
+                                        <Edit2 className="h-3 w-3" /> Редагувати
+                                      </Link>
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveShipment(shipment.id)}
+                                      className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-100"
+                                    >
+                                      <Trash2 className="h-3 w-3" /> Видалити
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-slate-500">Немає вантажів в партії</p>
+                    )}
                   </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-semibold text-slate-700">
-                      Опис
-                    </label>
-                    <input
-                      type="text"
-                      value={newBatchDescription}
-                      onChange={(e) => setNewBatchDescription(e.target.value)}
-                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                    />
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      type="submit"
-                      disabled={saving}
-                      className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-50"
-                    >
-                      {saving ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" /> Збереження...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-4 w-4" /> Зберегти
-                        </>
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={cancelEdit}
-                      className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                    >
-                      Скасувати
-                    </button>
-                  </div>
-                </form>
+                </div>
               ) : (
                 batch.shipments.length > 0 && (
                   <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200">
@@ -486,6 +782,118 @@ export function BatchManagement() {
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Add Shipment Modal */}
+      {showAddShipmentModal && editingBatch && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl max-h-[80vh] overflow-y-auto">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-black text-slate-900">
+                Додати вантаж до партії {editingBatch.batchId}
+              </h2>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAddShipmentModal(false);
+                  setSelectedShipmentId("");
+                }}
+                className="text-slate-400 hover:text-slate-700"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {loadingAvailableShipments ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
+              </div>
+            ) : availableShipments.length === 0 ? (
+              <p className="py-8 text-center text-sm text-slate-500">
+                Немає доступних вантажів для додавання
+              </p>
+            ) : (
+              <div className="space-y-2">
+                <div className="max-h-96 overflow-y-auto rounded-lg border border-slate-200">
+                  <table className="min-w-full text-xs">
+                    <thead className="bg-slate-50 sticky top-0">
+                      <tr>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                          Трек номер
+                        </th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                          Код клієнта
+                        </th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                          Клієнт
+                        </th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                          Статус
+                        </th>
+                        <th className="px-3 py-2 text-left text-xs font-semibold text-slate-700">
+                          Дії
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {availableShipments.map((shipment: any) => (
+                        <tr key={shipment.id} className="hover:bg-slate-50">
+                          <td className="px-3 py-2 font-mono text-slate-900">
+                            {shipment.internalTrack}
+                          </td>
+                          <td className="px-3 py-2 text-slate-900">{shipment.clientCode}</td>
+                          <td className="px-3 py-2 text-slate-900">
+                            {shipment.user?.name || "-"}
+                          </td>
+                          <td className="px-3 py-2">
+                            <span
+                              className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(
+                                shipment.status
+                              )}`}
+                            >
+                              {shipment.status}
+                            </span>
+                          </td>
+                          <td className="px-3 py-2">
+                            <button
+                              type="button"
+                              onClick={() => handleAddShipment(shipment.id)}
+                              disabled={addingShipment}
+                              className="inline-flex items-center gap-1 rounded-lg border border-teal-200 bg-teal-50 px-2 py-1 text-xs font-semibold text-teal-700 hover:bg-teal-100 disabled:opacity-50"
+                            >
+                              {addingShipment ? (
+                                <>
+                                  <Loader2 className="h-3 w-3 animate-spin" /> Додавання...
+                                </>
+                              ) : (
+                                <>
+                                  <Plus className="h-3 w-3" /> Додати
+                                </>
+                              )}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-4 flex justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAddShipmentModal(false);
+                  setSelectedShipmentId("");
+                }}
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              >
+                Закрити
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

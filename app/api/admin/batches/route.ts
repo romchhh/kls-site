@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
             clientCode: true,
             cargoLabel: true,
             createdAt: true,
+            userId: true,
           },
           orderBy: { createdAt: "desc" },
         },
@@ -29,7 +30,13 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({ batches }, { status: 200 });
+    // Map deliveryType enum values for frontend
+    const batchesWithDeliveryType = batches.map((batch: any) => ({
+      ...batch,
+      deliveryType: batch.deliveryType || "AIR", // Default to AIR if not set
+    }));
+
+    return NextResponse.json({ batches: batchesWithDeliveryType }, { status: 200 });
   } catch (error: any) {
     console.error("Error fetching batches:", error);
     return NextResponse.json(
@@ -49,16 +56,50 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { batchId, description } = body;
+    const { description, deliveryType } = body;
 
-    if (!batchId || batchId.trim() === "") {
+    if (!deliveryType) {
       return NextResponse.json(
-        { error: "ID партії обов'язковий" },
+        { error: "Тип доставки обов'язковий" },
         { status: 400 }
       );
     }
 
-    // Check if batchId already exists
+    // Validate deliveryType enum value
+    const validDeliveryTypes = ["AIR", "SEA", "RAIL", "MULTIMODAL"];
+    if (!validDeliveryTypes.includes(deliveryType)) {
+      return NextResponse.json(
+        { error: `Невірний тип доставки. Дозволені значення: ${validDeliveryTypes.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
+    // Generate batchId automatically (format: XXXXXX, starting from 000001)
+    // Get all batches and find the highest numeric batchId
+    const allBatches = await (prisma as any).batch.findMany({
+      select: { batchId: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    let nextNumber = 1;
+    if (allBatches.length > 0) {
+      // Find the maximum numeric batchId
+      const numericBatchIds = allBatches
+        .map((b: any) => {
+          const num = parseInt(b.batchId, 10);
+          return isNaN(num) ? 0 : num;
+        })
+        .filter((n: number) => n > 0);
+      
+      if (numericBatchIds.length > 0) {
+        nextNumber = Math.max(...numericBatchIds) + 1;
+      }
+    }
+
+    // Format as XXXXXX (6 digits with leading zeros)
+    const batchId = String(nextNumber).padStart(6, "0");
+
+    // Check if batchId already exists (shouldn't happen, but just in case)
     const existing = await (prisma as any).batch.findUnique({
       where: { batchId },
     });
@@ -74,6 +115,8 @@ export async function POST(req: NextRequest) {
       data: {
         batchId,
         description: description || null,
+        deliveryType,
+        status: "FORMING", // Default status for new batches
       },
       include: {
         shipments: {
@@ -120,7 +163,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { id, batchId, description } = body;
+    const { id, description, deliveryType, status } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -140,25 +183,24 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // If batchId is being changed, check if new batchId already exists
-    if (batchId && batchId !== existing.batchId) {
-      const duplicate = await (prisma as any).batch.findUnique({
-        where: { batchId },
-      });
-
-      if (duplicate) {
+    // Validate status if provided
+    if (status !== undefined) {
+      const validStatuses = ["FORMING", "FORMED"];
+      if (!validStatuses.includes(status)) {
         return NextResponse.json(
-          { error: `Партія з ID "${batchId}" вже існує` },
-          { status: 409 }
+          { error: `Невірний статус. Дозволені значення: ${validStatuses.join(", ")}` },
+          { status: 400 }
         );
       }
     }
 
+    // batchId cannot be changed - it's auto-generated
     const batch = await (prisma as any).batch.update({
       where: { id },
       data: {
-        batchId: batchId || existing.batchId,
         description: description !== undefined ? description : existing.description,
+        deliveryType: deliveryType !== undefined ? deliveryType : existing.deliveryType,
+        status: status !== undefined ? status : existing.status,
       },
       include: {
         shipments: {

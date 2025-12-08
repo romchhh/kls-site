@@ -165,8 +165,8 @@ export function CabinetFinances({ locale }: CabinetFinancesProps) {
                     </td>
                     <td className="px-4 py-4">
                       {tx.type === "income"
-                        ? labels.txIncome || "Вхідна"
-                        : labels.txExpense || "Вихідна"}
+                        ? labels.txIncome || "Поповнення"
+                        : labels.txExpense || "Списання"}
                     </td>
                     <td className="px-4 py-4">{tx.description || "—"}</td>
                     <td className="px-4 py-4 text-right font-bold text-slate-900">

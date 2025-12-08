@@ -17,15 +17,18 @@ export async function GET(
 
     const { id } = await params;
 
-    const user = await prisma.user.findUnique({
+    const user = await (prisma as any).user.findUnique({
       where: { id },
       select: {
         id: true,
         email: true,
         name: true,
+        lastName: true,
+        middleName: true,
         phone: true,
         companyName: true,
         clientCode: true,
+        password: true,
         createdAt: true,
       },
     });
@@ -57,18 +60,20 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
-    const { email, name, phone, companyName } = body;
+    const { email, name, lastName, middleName, phone, companyName } = body;
 
     const existing = await prisma.user.findUnique({ where: { id } });
     if (!existing || existing.role !== "USER") {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const updated = await prisma.user.update({
+    const updated = await (prisma as any).user.update({
       where: { id },
       data: {
         email: email ?? existing.email,
         name: name ?? existing.name,
+        lastName: lastName !== undefined ? (lastName || null) : (existing as any).lastName,
+        middleName: middleName !== undefined ? (middleName || null) : (existing as any).middleName,
         phone: phone ?? existing.phone,
         companyName: companyName ?? existing.companyName,
       },
@@ -76,9 +81,12 @@ export async function PUT(
         id: true,
         email: true,
         name: true,
+        lastName: true,
+        middleName: true,
         phone: true,
         companyName: true,
         clientCode: true,
+        password: true,
         createdAt: true,
       },
     });

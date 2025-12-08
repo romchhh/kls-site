@@ -12,6 +12,7 @@ import {
   Loader2,
   Building,
   Hash,
+  Search,
 } from "lucide-react";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 
@@ -31,6 +32,7 @@ export function UsersManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddUser, setShowAddUser] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [userFormData, setUserFormData] = useState({
     email: "",
     password: "",
@@ -143,7 +145,19 @@ export function UsersManagement() {
 
       <div className="p-8">
         {/* Actions */}
-        <div className="mb-8">
+        <div className="mb-8 flex items-center gap-4">
+          <div className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Пошук користувачів (ім'я, email, телефон, код клієнта, компанія)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 bg-white pl-10 pr-4 py-2.5 text-slate-900 placeholder:text-slate-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              />
+            </div>
+          </div>
           <button
             onClick={() => setShowAddUser(!showAddUser)}
             className="flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-all duration-300 hover:bg-purple-700 hover:shadow-lg"
@@ -307,13 +321,33 @@ export function UsersManagement() {
             </div>
           ) : (
             <div className="divide-y divide-slate-200">
-              {users.length === 0 ? (
-                <div className="px-6 py-12 text-center text-slate-500">
-                  <Users className="mx-auto h-12 w-12 text-slate-300 mb-4" />
-                  <p>Користувачів поки немає</p>
-                </div>
-              ) : (
-                users.map((user) => (
+              {(() => {
+                const filteredUsers = users.filter((user) => {
+                  if (!searchQuery.trim()) return true;
+                  const query = searchQuery.toLowerCase();
+                  return (
+                    user.name.toLowerCase().includes(query) ||
+                    user.email.toLowerCase().includes(query) ||
+                    user.phone.toLowerCase().includes(query) ||
+                    user.clientCode.toLowerCase().includes(query) ||
+                    (user.companyName && user.companyName.toLowerCase().includes(query))
+                  );
+                });
+
+                if (filteredUsers.length === 0) {
+                  return (
+                    <div className="px-6 py-12 text-center text-slate-500">
+                      <Users className="mx-auto h-12 w-12 text-slate-300 mb-4" />
+                      <p>
+                        {searchQuery.trim()
+                          ? "Користувачів не знайдено"
+                          : "Користувачів поки немає"}
+                      </p>
+                    </div>
+                  );
+                }
+
+                return filteredUsers.map((user) => (
                   <button
                     key={user.id}
                     type="button"
@@ -361,8 +395,8 @@ export function UsersManagement() {
                       </div>
                     </div>
                   </button>
-                ))
-              )}
+                ));
+              })()}
             </div>
           )}
         </div>

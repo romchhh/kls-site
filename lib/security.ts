@@ -282,12 +282,33 @@ export async function safeLoginCheck(
     },
   });
 
+  // Debug logging (remove in production or make conditional)
+  if (process.env.NODE_ENV === "development") {
+    console.log("[AUTH DEBUG] Login attempt:", {
+      email: email.trim(),
+      userFound: !!user,
+      userEmail: user?.email,
+      userRole: user?.role,
+    });
+  }
+
   let isValid = false;
   if (user) {
     isValid = await bcrypt.compare(password, user.password);
+    
+    if (process.env.NODE_ENV === "development") {
+      console.log("[AUTH DEBUG] Password check:", {
+        isValid,
+        passwordLength: password.length,
+      });
+    }
   } else {
     // Still perform comparison to prevent timing attacks
     await bcrypt.compare(password, dummyHash);
+    
+    if (process.env.NODE_ENV === "development") {
+      console.log("[AUTH DEBUG] User not found for:", email.trim());
+    }
   }
 
   // Normalize response time
