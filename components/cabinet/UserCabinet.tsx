@@ -16,6 +16,9 @@ import {
   Globe,
   ChevronDown,
   Info,
+  ChevronLeft,
+  ChevronRight,
+  Bot,
 } from "lucide-react";
 import { SiteFooter } from "../SiteFooter";
 import { Locale, getTranslations, locales } from "@/lib/translations";
@@ -44,17 +47,32 @@ export function UserCabinet({ locale }: UserCabinetProps) {
   const initialTab = (searchParams.get("tab") as TabType) || "shipments";
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("sidebarCollapsed");
+      return saved === "true";
+    }
+    return false;
+  });
   const router = useRouter();
   const pathname = usePathname();
   const t = getTranslations(locale);
+
+  const toggleSidebar = () => {
+    const newState = !isSidebarCollapsed;
+    setIsSidebarCollapsed(newState);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("sidebarCollapsed", String(newState));
+    }
+  };
 
   const tabs = [
     { id: "shipments" as TabType, label: t.cabinet?.shipments || "Вантаж", icon: Package },
     { id: "invoices" as TabType, label: t.cabinet?.invoices || "Рахунки", icon: FileText },
     { id: "finances" as TabType, label: t.cabinet?.finances || "Фінанси", icon: DollarSign },
     { id: "warehouses" as TabType, label: t.cabinet?.warehouses || "Склади", icon: Warehouse },
-    { id: "settings" as TabType, label: t.cabinet?.settings || "Налаштування", icon: Settings },
     { id: "info" as TabType, label: t.cabinet?.info || "Інфо", icon: Info },
+    { id: "settings" as TabType, label: t.cabinet?.settings || "Налаштування", icon: Settings },
   ];
 
   const handleLogout = async () => {
@@ -186,9 +204,26 @@ export function UserCabinet({ locale }: UserCabinetProps) {
 
         <div className="grid gap-8 lg:grid-cols-12">
           {/* Sidebar */}
-          <aside className="lg:col-span-2">
-            <div className="mb-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
-              {t.nav?.cabinet || "Кабінет"}
+          <aside className={`transition-all duration-300 ${isSidebarCollapsed ? "lg:col-span-1" : "lg:col-span-2"}`}>
+            <div className={`mb-4 flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"}`}>
+              {!isSidebarCollapsed && (
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  {t.nav?.cabinet || "Кабінет"}
+                </div>
+              )}
+              <button
+                onClick={toggleSidebar}
+                className={`flex h-8 w-8 items-center justify-center ${
+                  isSidebarCollapsed ? "rounded-full" : "ml-auto rounded-lg"
+                } border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900`}
+                title={isSidebarCollapsed ? "Розгорнути меню" : "Згорнути меню"}
+              >
+                {isSidebarCollapsed ? (
+                  <ChevronRight className="h-4 w-4" />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" />
+                )}
+              </button>
             </div>
             <nav className="space-y-2">
               {tabs.map((tab) => {
@@ -205,22 +240,45 @@ export function UserCabinet({ locale }: UserCabinetProps) {
                         router.push(nextPath);
                       }
                     }}
-                    className={`relative flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-sm font-semibold transition-all duration-200 ${
+                    className={`group relative flex w-full items-center ${
+                      isSidebarCollapsed 
+                        ? "justify-center rounded-full p-3" 
+                        : "gap-3 rounded-xl px-4 py-3.5"
+                    } text-left text-sm font-semibold transition-all duration-200 ${
                       isActive
                         ? "bg-teal-600 text-white shadow-lg"
                         : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-xl ${
+                      className={`flex items-center justify-center ${
+                        isSidebarCollapsed 
+                          ? "h-10 w-10" 
+                          : "h-9 w-9 rounded-xl"
+                      } ${
                         isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-800"
                     }`}
-                  >
+                    >
                       <Icon className="h-4 w-4" />
                     </span>
-                    <span>{tab.label}</span>
-                    {isActive && (
-                      <span className="absolute inset-y-1 right-1 w-1 rounded-full bg-white/70 lg:right-1.5" />
+                    {!isSidebarCollapsed && (
+                      <>
+                        <span>{tab.label}</span>
+                        {isActive && (
+                          <span className="absolute inset-y-1 right-1 w-1 rounded-full bg-white/70 lg:right-1.5" />
+                        )}
+                      </>
+                    )}
+                    {/* Tooltip for collapsed sidebar */}
+                    {isSidebarCollapsed && (
+                      <div className="absolute left-full ml-2 z-50 hidden group-hover:block">
+                        <div className="relative">
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-900"></div>
+                          <div className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white whitespace-nowrap shadow-xl">
+                            {tab.label}
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </button>
                 );
@@ -228,26 +286,69 @@ export function UserCabinet({ locale }: UserCabinetProps) {
             </nav>
 
             {/* Quick Contact */}
-            <div className="mt-6 rounded-xl border border-slate-200 bg-gradient-to-br from-teal-50 via-white to-emerald-50 p-4 shadow-sm">
-              <h3 className="mb-2 text-sm font-semibold text-slate-900">
-                {t.cabinet?.quickContact || "Швидкий зв'язок"}
-              </h3>
-              <p className="mb-3 text-xs text-slate-600">
-                {t.cabinet?.managerInfo ||
-                  "Реєстрація, зміна даних та складні питання вирішуються через вашого персонального менеджера."}
-              </p>
-              <button
-                onClick={handleTelegramContact}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-teal-700 hover:shadow-lg"
-              >
-                <MessageCircle className="h-5 w-5" />
-                {t.cabinet?.contactTelegram || "Telegram"}
-              </button>
-            </div>
+            {!isSidebarCollapsed && (
+              <div className="mt-6 rounded-xl border border-slate-200 bg-gradient-to-br from-teal-50 via-white to-emerald-50 p-4 shadow-sm">
+                <h3 className="mb-2 text-sm font-semibold text-slate-900">
+                  {t.cabinet?.quickContact || "Швидкий зв'язок"}
+                </h3>
+                <p className="mb-3 text-xs text-slate-600">
+                  {t.cabinet?.managerInfo ||
+                    "Реєстрація, зміна даних та складні питання вирішуються через вашого персонального менеджера."}
+                </p>
+                <button
+                  onClick={handleTelegramContact}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-teal-700 hover:shadow-lg"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  {t.cabinet?.contactTelegram || "Telegram"}
+                </button>
+                <button
+                  onClick={() => window.open("https://t.me/KlsInternationalBot", "_blank")}
+                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-teal-600 bg-white px-4 py-2.5 text-sm font-semibold text-teal-600 transition-all duration-300 hover:bg-teal-50 hover:shadow-md"
+                >
+                  <Bot className="h-5 w-5" />
+                  Підключити телеграм бота
+                </button>
+              </div>
+            )}
+            {isSidebarCollapsed && (
+              <div className="mt-6 space-y-2">
+                <button
+                  onClick={handleTelegramContact}
+                  className="group relative flex w-full items-center justify-center rounded-full bg-teal-600 p-3 text-white transition-all duration-300 hover:bg-teal-700 hover:shadow-lg"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  {/* Tooltip */}
+                  <div className="absolute left-full ml-2 z-50 hidden group-hover:block">
+                    <div className="relative">
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-900"></div>
+                      <div className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white whitespace-nowrap shadow-xl">
+                        {t.cabinet?.contactTelegram || "Telegram"}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+                <button
+                  onClick={() => window.open("https://t.me/KlsInternationalBot", "_blank")}
+                  className="group relative flex w-full items-center justify-center rounded-full border border-teal-600 bg-white p-3 text-teal-600 transition-all duration-300 hover:bg-teal-50 hover:shadow-md"
+                >
+                  <Bot className="h-5 w-5" />
+                  {/* Tooltip */}
+                  <div className="absolute left-full ml-2 z-50 hidden group-hover:block">
+                    <div className="relative">
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-900"></div>
+                      <div className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white whitespace-nowrap shadow-xl">
+                        {t.cabinet?.connectTelegramBot || "Підключити телеграм бота"}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            )}
           </aside>
 
           {/* Main Content */}
-          <main className="lg:col-span-10">
+          <main className={`transition-all duration-300 ${isSidebarCollapsed ? "lg:col-span-11" : "lg:col-span-10"}`}>
             <div className="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm lg:p-8">
               {activeTab === "shipments" && <CabinetShipments locale={locale} />}
               {activeTab === "invoices" && <CabinetInvoices locale={locale} />}

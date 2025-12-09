@@ -105,10 +105,36 @@ export async function POST(req: NextRequest, { params }: Params) {
       finalShipmentId = String(shipmentId);
     }
 
+    // Generate unique invoice number if it already exists
+    let finalInvoiceNumber = String(invoiceNumber);
+    let counter = 1;
+    while (true) {
+      const existingInvoice = await prisma.invoice.findUnique({
+        where: { invoiceNumber: finalInvoiceNumber },
+      });
+
+      if (!existingInvoice) {
+        break; // Number is unique, we can use it
+      }
+
+      // Generate new number with suffix
+      const baseNumber = String(invoiceNumber);
+      finalInvoiceNumber = `${baseNumber}-${counter}`;
+      counter++;
+
+      // Safety check to prevent infinite loop
+      if (counter > 1000) {
+        return NextResponse.json(
+          { error: "Unable to generate unique invoice number" },
+          { status: 500 },
+        );
+      }
+    }
+
     const invoice = await prisma.invoice.create({
       data: {
         userId: id,
-        invoiceNumber: String(invoiceNumber),
+        invoiceNumber: finalInvoiceNumber,
         amount: new Prisma.Decimal(amountValue),
         shipmentId: finalShipmentId,
         status: invoiceStatus as "UNPAID" | "PAID" | "ARCHIVED",
@@ -146,7 +172,13 @@ export async function POST(req: NextRequest, { params }: Params) {
       console.error("Failed to log admin action:", logError);
     }
 
-    return NextResponse.json({ invoice: invoiceWithRelations }, { status: 201 });
+    // Return invoice with a message if the number was modified
+    const response: any = { invoice: invoiceWithRelations };
+    if (finalInvoiceNumber !== String(invoiceNumber)) {
+      response.message = `Invoice number was changed to ${finalInvoiceNumber} because ${invoiceNumber} already exists`;
+    }
+
+    return NextResponse.json(response, { status: 201 });
   } catch (error: any) {
     console.error("Error creating invoice:", error);
     console.error("Error details:", {

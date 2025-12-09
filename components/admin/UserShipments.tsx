@@ -1241,6 +1241,30 @@ export function UserShipments({
               </div>
               <div>
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                  Вартість доставки, $
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={(() => {
+                    // Sum delivery costs from items
+                    let total = 0;
+                    shipmentForm.items.forEach((item) => {
+                      if (item.deliveryCost) {
+                        total += parseFloat(item.deliveryCost) || 0;
+                      }
+                    });
+                    return total > 0 ? total.toFixed(2) : "";
+                  })()}
+                  readOnly
+                  className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                />
+                <p className="mt-1 text-[10px] text-slate-500">
+                  Автоматично: сума вартості доставки з місць
+                </p>
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
                   Пакування, $
                 </label>
                 <input
@@ -2165,6 +2189,30 @@ export function UserShipments({
               </div>
               <div>
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                  Вартість доставки, $
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={(() => {
+                    // Sum delivery costs from items
+                    let total = 0;
+                    editingShipmentForm.items.forEach((item) => {
+                      if (item.deliveryCost) {
+                        total += parseFloat(item.deliveryCost) || 0;
+                      }
+                    });
+                    return total > 0 ? total.toFixed(2) : "";
+                  })()}
+                  readOnly
+                  className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                />
+                <p className="mt-1 text-[10px] text-slate-500">
+                  Автоматично: сума вартості доставки з місць
+                </p>
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
                   Пакування, $
                 </label>
                 <input
@@ -3007,6 +3055,22 @@ export function UserShipments({
                   Опис
                 </label>
                 <p className="text-sm text-slate-900">{viewingShipment.description || "-"}</p>
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                  Вартість доставки, $
+                </label>
+                <p className="text-sm font-semibold text-slate-900">
+                  {(() => {
+                    let total = 0;
+                    viewingShipment.items?.forEach((item) => {
+                      if (item.deliveryCost) {
+                        total += parseFloat(item.deliveryCost) || 0;
+                      }
+                    });
+                    return total > 0 ? total.toFixed(2) : "-";
+                  })()}
+                </p>
               </div>
               <div>
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">

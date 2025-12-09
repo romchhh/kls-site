@@ -119,7 +119,11 @@ export function UserFinances({
         status: "UNPAID",
         dueDate: "",
       });
-      onSuccess("Рахунок створено");
+      // Show message if invoice number was modified
+      const successMessage = (result as any).message 
+        ? `Рахунок створено. ${(result as any).message}` 
+        : "Рахунок створено";
+      onSuccess(successMessage);
     } else {
       onError(result.error || "Не вдалося створити рахунок");
     }

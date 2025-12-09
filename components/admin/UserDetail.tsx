@@ -16,6 +16,7 @@ import {
 import { UserEditForm } from "./UserEditForm";
 import { UserFinances } from "./UserFinances";
 import { UserShipments } from "./UserShipments";
+import { Toast } from "./Toast";
 import type {
   UserDetailProps,
   User,
@@ -1065,6 +1066,22 @@ export function UserDetail({ userId }: UserDetailProps) {
           </button>
         </div>
       </header>
+
+      {/* Toast notifications */}
+      {error && (
+        <Toast
+          message={error}
+          type="error"
+          onClose={() => setError("")}
+        />
+      )}
+      {success && (
+        <Toast
+          message={success}
+          type="success"
+          onClose={() => setSuccess("")}
+        />
+      )}
 
       <div className="p-8 space-y-8">
         <UserEditForm

@@ -42,7 +42,7 @@ export function useInvoices(userId: string) {
         return { success: false, error: data.error || "Не вдалося створити рахунок" };
       }
       await fetchInvoices();
-      return { success: true };
+      return { success: true, message: data.message };
     } catch {
       return { success: false, error: "Сталася помилка при створенні рахунку" };
     }

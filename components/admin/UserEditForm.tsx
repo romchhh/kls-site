@@ -81,16 +81,6 @@ export function UserEditForm({
 
   return (
     <div className="max-w-2xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      {error && (
-        <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-600">
-          {error}
-        </div>
-      )}
-      {success && (
-        <div className="mb-4 rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-600">
-          {success}
-        </div>
-      )}
       <form onSubmit={handleSave} className="space-y-4">
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">

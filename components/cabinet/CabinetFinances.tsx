@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Locale, getTranslations } from "@/lib/translations";
-import { DollarSign, Loader2 } from "lucide-react";
+import { DollarSign, Loader2, FileText } from "lucide-react";
 
 type CabinetFinancesProps = {
   locale: Locale;
@@ -23,20 +23,34 @@ type BalanceResponse = {
   currency: string;
 };
 
+type InvoiceRow = {
+  id: string;
+  invoiceNumber: string;
+  amount: string;
+  status: string;
+  shipmentId: string | null;
+  shipment: {
+    id: string;
+    internalTrack: string;
+  } | null;
+};
+
 export function CabinetFinances({ locale }: CabinetFinancesProps) {
   const t = getTranslations(locale);
   const labels = (t.cabinet as any) || {};
   const [transactions, setTransactions] = useState<TransactionRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState<BalanceResponse | null>(null);
+  const [invoices, setInvoices] = useState<InvoiceRow[]>([]);
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       try {
-        const [txRes, balRes] = await Promise.allSettled([
+        const [txRes, balRes, invRes] = await Promise.allSettled([
           fetch("/api/user/transactions"),
           fetch("/api/user/balance"),
+          fetch("/api/user/invoices"),
         ]);
 
         if (txRes.status === "fulfilled" && txRes.value.ok) {
@@ -47,6 +61,11 @@ export function CabinetFinances({ locale }: CabinetFinancesProps) {
         if (balRes.status === "fulfilled" && balRes.value.ok) {
           const data = (await balRes.value.json()) as BalanceResponse;
           setBalance(data);
+        }
+
+        if (invRes.status === "fulfilled" && invRes.value.ok) {
+          const data = await invRes.value.json();
+          setInvoices(data.invoices || []);
         }
       } catch {
         // ignore
@@ -60,11 +79,38 @@ export function CabinetFinances({ locale }: CabinetFinancesProps) {
 
   const rows = getUserTransactionsWithBalance(transactions).slice().reverse();
 
+  // Calculate unpaid invoices
+  const unpaidInvoices = invoices.filter((inv) => inv.status === "UNPAID");
+  const unpaidAmount = unpaidInvoices.reduce((sum, inv) => sum + parseFloat(inv.amount || "0"), 0);
+  const unpaidShipmentsCount = new Set(unpaidInvoices.filter((inv) => inv.shipmentId).map((inv) => inv.shipmentId)).size;
+
   return (
     <div>
       <h2 className="mb-6 text-2xl font-black text-slate-900 md:text-3xl">
         {labels.finances || "Фінанси"}
       </h2>
+
+      {/* Invoices Block */}
+      {unpaidInvoices.length > 0 && (
+        <div className="mb-6 rounded-2xl border border-orange-200 bg-gradient-to-br from-orange-50 via-white to-orange-50/50 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-slate-600">
+                {labels.unpaidInvoicesTitle || "Рахунки до оплати"}
+              </p>
+              <p className="mt-2 text-3xl font-black text-orange-600">
+                {unpaidAmount.toFixed(2)} {balance?.currency ?? "USD"}
+              </p>
+              <div className="mt-1 text-xs text-slate-500">
+                {labels.unpaidInvoicesSubtitle || "За"} {unpaidShipmentsCount} {labels.shipmentsCount || "вантажів"}
+              </div>
+            </div>
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-lg">
+              <FileText className="h-7 w-7" />
+            </div>
+          </div>
+        </div>
+      )}
 
       {balance && balance.balance > 0 && (
         <div className="mb-6 rounded-2xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-red-50/50 p-6">
