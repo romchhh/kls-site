@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Loader2,
@@ -89,7 +89,7 @@ export function UserDetail({ userId }: UserDetailProps) {
 
 
 
-  const [createInvoiceFromShipment, setCreateInvoiceFromShipment] = useState<((shipment: ShipmentRow) => void) | null>(null);
+  const createInvoiceFromShipmentRef = useRef<((shipment: ShipmentRow) => void) | null>(null);
 
   const [editingShipment, setEditingShipment] = useState<ShipmentRow | null>(null);
   const [viewingShipment, setViewingShipment] = useState<ShipmentRow | null>(null);
@@ -1107,7 +1107,9 @@ export function UserDetail({ userId }: UserDetailProps) {
           success={success}
           onError={setError}
           onSuccess={setSuccess}
-          onCreateInvoiceFromShipment={setCreateInvoiceFromShipment}
+          onCreateInvoiceFromShipment={(fn) => {
+            createInvoiceFromShipmentRef.current = fn;
+          }}
         />
 
         {/* Shipments management */}
@@ -1119,11 +1121,7 @@ export function UserDetail({ userId }: UserDetailProps) {
           invoices={[]}
           onError={setError}
           onSuccess={setSuccess}
-          onCreateInvoiceFromShipment={createInvoiceFromShipment || ((shipment: ShipmentRow) => {
-            if (shipment && shipment.internalTrack) {
-              console.warn("createInvoiceFromShipment not yet initialized");
-            }
-          })}
+          onCreateInvoiceFromShipment={createInvoiceFromShipmentRef.current}
           onShipmentsChange={fetchShipments}
         />
 

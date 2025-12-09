@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Hash, X, Plus, Loader2, Eye, Edit, Trash2, Upload, FileText,
@@ -19,7 +19,7 @@ interface UserShipmentsProps {
   invoices: InvoiceRow[];
   onError: (error: string) => void;
   onSuccess: (success: string) => void;
-  onCreateInvoiceFromShipment: (shipment: ShipmentRow) => void;
+  onCreateInvoiceFromShipment: ((shipment: ShipmentRow) => void) | null;
   onShipmentsChange: () => void; // Callback to refresh shipments
 }
 
@@ -36,6 +36,12 @@ export function UserShipments({
 }: UserShipmentsProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  
+  // Зберігаємо функцію в ref, щоб вона завжди була доступна
+  const createInvoiceFromShipmentRef = useRef(onCreateInvoiceFromShipment);
+  useEffect(() => {
+    createInvoiceFromShipmentRef.current = onCreateInvoiceFromShipment;
+  }, [onCreateInvoiceFromShipment]);
   
   const [shipments, setShipments] = useState<ShipmentRow[]>(initialShipments);
   const [loadingShipments, setLoadingShipments] = useState(initialLoading);
@@ -1846,12 +1852,25 @@ export function UserShipments({
                           )}
                           <button
                             type="button"
-                            onClick={() => {
-                              if (s && s.internalTrack) {
-                                onCreateInvoiceFromShipment(s);
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              const createInvoiceFn = createInvoiceFromShipmentRef.current || onCreateInvoiceFromShipment;
+                              if (!createInvoiceFn) {
+                                onError("Функція створення рахунка не доступна. Спробуйте оновити сторінку.");
+                                return;
+                              }
+                              if (!s || !s.internalTrack) {
+                                onError("Неможливо створити рахунок: вантаж не знайдено");
+                                return;
+                              }
+                              try {
+                                createInvoiceFn(s);
+                              } catch (error) {
+                                onError(`Помилка при створенні рахунка: ${error instanceof Error ? error.message : "Невідома помилка"}`);
                               }
                             }}
-                            className="inline-flex items-center justify-center gap-0.5 rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 text-[10px] font-semibold text-blue-600 hover:bg-blue-100"
+                            className="inline-flex items-center justify-center gap-0.5 rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 text-[10px] font-semibold text-blue-600 hover:bg-blue-100 cursor-pointer relative z-10"
                             title="Створити рахунок"
                           >
                             Рахунок

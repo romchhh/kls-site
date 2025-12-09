@@ -14,8 +14,21 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const t = getTranslations(locale);
-  const modalT = t.contactQuick;
+  
+  // Безпечне отримання перекладів з fallback
+  const safeLocale: Locale = locale && ["ua", "ru", "en"].includes(locale) ? locale : "ua";
+  const t = getTranslations(safeLocale);
+  const modalT = t?.contactQuick || {
+    title: "Зв'язатися з нами",
+    subtitle: "Оберіть зручний спосіб зв'язку",
+    chooseMessenger: "Оберіть месенджер:",
+    or: "або",
+    phoneLabel: "Ваш телефон",
+    phonePlaceholder: "+380 XX XXX XX XX",
+    submit: "Залишити заявку",
+    submitting: "Відправка...",
+    success: "Дякуємо! Ми зв'яжемося з вами найближчим часом.",
+  };
 
   useEffect(() => {
     if (showSuccess) {

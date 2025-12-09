@@ -11,8 +11,15 @@ type DeliveryTypesSectionProps = {
 };
 
 export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
-  const t = getTranslations(locale);
-  const content = t.deliveryTypes;
+  // Безпечне отримання перекладів з fallback
+  const safeLocale: Locale = locale && ["ua", "ru", "en"].includes(locale) ? locale : "ua";
+  const t = getTranslations(safeLocale);
+  const content = t?.deliveryTypes;
+  
+  // Якщо контент відсутній, не рендеримо компонент
+  if (!content || !content.types || content.types.length === 0) {
+    return null;
+  }
   const [isVisible, setIsVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);

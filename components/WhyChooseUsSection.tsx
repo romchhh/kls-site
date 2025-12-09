@@ -23,8 +23,15 @@ const featureIcons = [
 ];
 
 export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
-  const t = getTranslations(locale);
-  const content = t.whyChooseUs;
+  // Безпечне отримання перекладів з fallback
+  const safeLocale: Locale = locale && ["ua", "ru", "en"].includes(locale) ? locale : "ua";
+  const t = getTranslations(safeLocale);
+  const content = t?.whyChooseUs;
+  
+  // Якщо контент відсутній, не рендеримо компонент
+  if (!content || !content.features || content.features.length === 0) {
+    return null;
+  }
   // Use all features for rotation
   const features = content.features;
   // Each card starts with a different feature index

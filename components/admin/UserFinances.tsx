@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useLayoutEffect, useCallback } from "react";
 import { DollarSign, Loader2, Plus, X, Trash2 } from "lucide-react";
 import { useBalance } from "./hooks/useBalance";
 import { useInvoices } from "./hooks/useInvoices";
@@ -181,9 +181,14 @@ export function UserFinances({
     }
   };
 
-  const createInvoiceFromShipment = useCallback((shipment: ShipmentRow | null | undefined) => {
-    if (!shipment || !shipment.internalTrack) {
-      // Не показуємо помилку, якщо функція викликається з null/undefined при ініціалізації
+  const createInvoiceFromShipment = useCallback((shipment: ShipmentRow) => {
+    if (!shipment) {
+      onError("Неможливо створити рахунок: вантаж не знайдено");
+      return;
+    }
+    
+    if (!shipment.internalTrack || shipment.internalTrack.trim() === "") {
+      onError("Неможливо створити рахунок: вантаж не знайдено");
       return;
     }
 
@@ -210,7 +215,6 @@ export function UserFinances({
       });
       return;
     }
-
     setInvoiceForm({
       invoiceNumber: generateInvoiceNumber(shipment.internalTrack),
       amount: shipment.totalCost || "0",
@@ -219,15 +223,21 @@ export function UserFinances({
       dueDate: "",
     });
     setShowAddInvoice(true);
-  }, [invoices]);
+  }, [invoices, onError]);
 
-  // Expose createInvoiceFromShipment to parent component
+  // Expose createInvoiceFromShipment to parent component immediately
+  useLayoutEffect(() => {
+    if (onCreateInvoiceFromShipment) {
+      onCreateInvoiceFromShipment(createInvoiceFromShipment);
+    }
+  }, [onCreateInvoiceFromShipment, createInvoiceFromShipment]);
+  
+  // Also update on regular effect to ensure it's set
   useEffect(() => {
     if (onCreateInvoiceFromShipment) {
       onCreateInvoiceFromShipment(createInvoiceFromShipment);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onCreateInvoiceFromShipment]);
+  }, [onCreateInvoiceFromShipment, createInvoiceFromShipment]);
 
   return (
     <>
