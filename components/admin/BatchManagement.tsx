@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Package, Plus, Trash2, Edit2, Save, X, Loader2, CheckCircle, AlertCircle, Search } from "lucide-react";
+import { Package, Plus, Trash2, Edit2, Save, X, Loader2, CheckCircle, AlertCircle, Search, Warehouse, Truck } from "lucide-react";
+import { getDeliveryDays } from "@/lib/utils/shipmentAutomation";
 import Link from "next/link";
 
 interface Shipment {
@@ -12,6 +13,9 @@ interface Shipment {
   cargoLabel: string | null;
   createdAt: string;
   userId?: string;
+  receivedAtWarehouse?: string | null;
+  sentAt?: string | null;
+  routeFrom?: string | null;
 }
 
 interface Batch {
@@ -213,6 +217,83 @@ export function BatchManagement() {
       }
     } catch (error) {
       setMessage({ type: "error", text: "Помилка оновлення статусу" });
+    } finally {
+      setUpdatingStatus(false);
+    }
+  };
+
+  // Автоматизація: Позначити всі вантажі в партії як "прибули на склад"
+  const handleMarkBatchAsReceived = async (batch: Batch) => {
+    const today = new Date().toISOString().split('T')[0];
+    const receivedDate = prompt(
+      `Введіть дату отримання на складі для всіх вантажів партії ${batch.batchId} (формат: РРРР-ММ-ДД):`,
+      today
+    );
+    
+    if (!receivedDate) return;
+    
+    setUpdatingStatus(true);
+    setMessage(null);
+    
+    try {
+      const res = await fetch(`/api/admin/batches/${batch.id}/mark-received`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ receivedAtWarehouse: receivedDate }),
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        setMessage({ 
+          type: "success", 
+          text: `Всі вантажі партії ${batch.batchId} позначено як прибули на склад. Статус, місцезнаходження та таймлайн оновлено автоматично для ${data.shipments?.length || 0} вантажів.` 
+        });
+        fetchBatches();
+      } else {
+        setMessage({ type: "error", text: data.error || "Не вдалося позначити вантажі як прибули на склад" });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: "Сталася помилка при оновленні вантажів" });
+    } finally {
+      setUpdatingStatus(false);
+    }
+  };
+
+  // Автоматизація: Позначити всі вантажі в партії як "відправлено"
+  const handleMarkBatchAsSent = async (batch: Batch) => {
+    const today = new Date().toISOString().split('T')[0];
+    const sentDate = prompt(
+      `Введіть дату відправлення для всіх вантажів партії ${batch.batchId} (формат: РРРР-ММ-ДД):`,
+      today
+    );
+    
+    if (!sentDate) return;
+    
+    setUpdatingStatus(true);
+    setMessage(null);
+    
+    try {
+      const res = await fetch(`/api/admin/batches/${batch.id}/mark-sent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sentAt: sentDate }),
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        const deliveryDays = getDeliveryDays(batch.deliveryType);
+        setMessage({ 
+          type: "success", 
+          text: `Всі вантажі партії ${batch.batchId} позначено як відправлено. Статус, місцезнаходження, ETA (+${deliveryDays} днів) та таймлайн оновлено автоматично для ${data.shipments?.length || 0} вантажів.` 
+        });
+        fetchBatches();
+      } else {
+        setMessage({ type: "error", text: data.error || "Не вдалося позначити вантажі як відправлено" });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: "Сталася помилка при оновленні вантажів" });
     } finally {
       setUpdatingStatus(false);
     }
@@ -525,19 +606,45 @@ export function BatchManagement() {
                     Вантажів в партії: {batch.shipments.length}
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {batch.shipments.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowStatusUpdateModal(batch);
-                        setNewStatus("");
-                        setNewLocation("");
-                      }}
-                      className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100"
-                    >
-                      Оновити статус всіх
-                    </button>
+                    <>
+                      {/* Перевіряємо, чи є вантажі без дати отримання на складі */}
+                      {batch.shipments.some(s => !s.receivedAtWarehouse) && (
+                        <button
+                          type="button"
+                          onClick={() => handleMarkBatchAsReceived(batch)}
+                          disabled={updatingStatus}
+                          className="inline-flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs font-semibold text-green-700 hover:bg-green-100 disabled:opacity-50"
+                          title="Позначити всі вантажі як прибули на склад"
+                        >
+                          <Warehouse className="h-3 w-3" /> Прибули на склад
+                        </button>
+                      )}
+                      {/* Перевіряємо, чи є вантажі з датою отримання, але без дати відправлення */}
+                      {batch.shipments.some(s => s.receivedAtWarehouse && !s.sentAt) && (
+                        <button
+                          type="button"
+                          onClick={() => handleMarkBatchAsSent(batch)}
+                          disabled={updatingStatus}
+                          className="inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-xs font-semibold text-purple-700 hover:bg-purple-100 disabled:opacity-50"
+                          title="Позначити всі вантажі як відправлено"
+                        >
+                          <Truck className="h-3 w-3" /> Відправлено
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowStatusUpdateModal(batch);
+                          setNewStatus("");
+                          setNewLocation("");
+                        }}
+                        className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100"
+                      >
+                        Оновити статус всіх
+                      </button>
+                    </>
                   )}
                   <button
                     type="button"

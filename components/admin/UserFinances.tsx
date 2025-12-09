@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { DollarSign, Loader2, Plus, X, Trash2 } from "lucide-react";
 import { useBalance } from "./hooks/useBalance";
 import { useInvoices } from "./hooks/useInvoices";
@@ -181,9 +181,9 @@ export function UserFinances({
     }
   };
 
-  const createInvoiceFromShipment = (shipment: ShipmentRow) => {
+  const createInvoiceFromShipment = useCallback((shipment: ShipmentRow | null | undefined) => {
     if (!shipment || !shipment.internalTrack) {
-      onError("Неможливо створити рахунок: вантаж не знайдено");
+      // Не показуємо помилку, якщо функція викликається з null/undefined при ініціалізації
       return;
     }
 
@@ -219,14 +219,15 @@ export function UserFinances({
       dueDate: "",
     });
     setShowAddInvoice(true);
-  };
+  }, [invoices]);
 
   // Expose createInvoiceFromShipment to parent component
   useEffect(() => {
     if (onCreateInvoiceFromShipment) {
       onCreateInvoiceFromShipment(createInvoiceFromShipment);
     }
-  }, [onCreateInvoiceFromShipment, invoices]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onCreateInvoiceFromShipment]);
 
   return (
     <>

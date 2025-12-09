@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getAutoStatus, getLocationForStatus } from "@/lib/utils/shipmentAutomation";
 
 // This endpoint should be called by a cron job (e.g., Vercel Cron, or external cron service)
-// It automatically updates shipment statuses based on dates
+// It automatically updates shipment statuses based on dates and delivery type
 
 export async function GET(req: NextRequest) {
   try {
@@ -37,69 +38,44 @@ export async function GET(req: NextRequest) {
     let updatedCount = 0;
 
     for (const shipment of shipmentsToUpdate) {
-      if (!shipment.receivedAtWarehouse) continue;
-
-      const receivedDate = new Date(shipment.receivedAtWarehouse);
+      const receivedDate = shipment.receivedAtWarehouse ? new Date(shipment.receivedAtWarehouse) : null;
       const sentDate = shipment.sentAt ? new Date(shipment.sentAt) : null;
-      
-      // Calculate expected dates
-      const expectedSentDate = new Date(receivedDate);
-      expectedSentDate.setDate(expectedSentDate.getDate() + 3);
+      const deliveredDate = shipment.deliveredAt ? new Date(shipment.deliveredAt) : null;
+      const etaDate = shipment.eta ? new Date(shipment.eta) : null;
 
-      const transitDays =
-        shipment.deliveryType === "SEA"
-          ? 40
-          : shipment.deliveryType === "RAIL"
-          ? 18
-          : shipment.deliveryType === "MULTIMODAL"
-          ? 25
-          : 21; // AIR
+      // Використовуємо утиліту для автоматичного визначення статусу
+      const autoStatusData = getAutoStatus(
+        receivedDate,
+        sentDate,
+        deliveredDate,
+        etaDate,
+        shipment.deliveryType as any,
+        shipment.status as any
+      );
 
-      const expectedArrivedDate = sentDate
-        ? new Date(sentDate)
-        : new Date(expectedSentDate);
-      expectedArrivedDate.setDate(expectedArrivedDate.getDate() + transitDays);
+      // Оновлюємо вантаж, якщо статус змінився
+      if (autoStatusData.status && autoStatusData.status !== shipment.status) {
+        const newLocation = autoStatusData.location || getLocationForStatus(
+          autoStatusData.status,
+          shipment.routeFrom,
+          shipment.routeTo
+        );
 
-      let newStatus = shipment.status;
-      let newLocation = shipment.location;
-      let updateSentAt = false;
-      let updateDeliveredAt = false;
-
-      // Update status based on dates
-      if (shipment.status === "RECEIVED_CN" && today >= expectedSentDate) {
-        // 3 days after receivedAtWarehouse -> IN_TRANSIT
-        newStatus = "IN_TRANSIT";
-        newLocation = shipment.routeTo === "UA" ? "В дорозі до України" : "В дорозі";
-        updateSentAt = true;
-      } else if (
-        shipment.status === "IN_TRANSIT" &&
-        today >= expectedArrivedDate
-      ) {
-        // After transit days -> ARRIVED_UA
-        newStatus = "ARRIVED_UA";
-        newLocation = "Прибуло в Україну";
-        updateDeliveredAt = true;
-      }
-
-      // Update shipment if status changed
-      if (newStatus !== shipment.status) {
         await prisma.shipment.update({
           where: { id: shipment.id },
           data: {
-            status: newStatus,
+            status: autoStatusData.status as any,
             location: newLocation,
-            sentAt: updateSentAt && !shipment.sentAt ? expectedSentDate : shipment.sentAt,
-            deliveredAt: updateDeliveredAt && !shipment.deliveredAt ? expectedArrivedDate : shipment.deliveredAt,
           },
         });
 
-        // Create status history entry
+        // Створюємо запис в історії статусів
         await prisma.shipmentStatusHistory.create({
           data: {
             shipmentId: shipment.id,
-            status: newStatus as any,
+            status: autoStatusData.status as any,
             location: newLocation,
-            description: `Автоматичне оновлення статусу`,
+            description: autoStatusData.description || "Автоматичне оновлення статусу",
           },
         });
 

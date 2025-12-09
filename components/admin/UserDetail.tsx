@@ -6,19 +6,6 @@ import {
   Loader2,
   Trash2,
   ArrowLeft,
-  Mail,
-  Phone,
-  Building,
-  Hash,
-  Calendar,
-  Save,
-  X,
-  Plus,
-  DollarSign,
-  AlertTriangle,
-  Eye,
-  EyeOff,
-  Lock,
   Warehouse,
   Truck,
   CheckCircle,
@@ -26,7 +13,6 @@ import {
   Clock,
   Package,
 } from "lucide-react";
-import { ShipmentTimeline } from "./ShipmentTimeline";
 import { UserEditForm } from "./UserEditForm";
 import { UserFinances } from "./UserFinances";
 import { UserShipments } from "./UserShipments";
@@ -34,22 +20,10 @@ import type {
   UserDetailProps,
   User,
   ShipmentRow,
-  TransactionRow,
-  InvoiceRow,
-  BalanceData,
-  BalanceForm,
-  Batch,
-  ShipmentForm,
-  ShipmentFormItem,
-  InvoiceForm,
 } from "./types/userDetail.types";
 import {
   getDeliveryTypeCode,
-  generateInternalTrack,
-  generateItemTrackNumber,
-  generateInvoiceNumber,
   formatDateForInput,
-  CARGO_TYPES,
 } from "./utils/shipmentUtils";
 
 export function UserDetail({ userId }: UserDetailProps) {
@@ -1145,7 +1119,11 @@ export function UserDetail({ userId }: UserDetailProps) {
           invoices={[]}
           onError={setError}
           onSuccess={setSuccess}
-          onCreateInvoiceFromShipment={createInvoiceFromShipment || (() => {})}
+          onCreateInvoiceFromShipment={createInvoiceFromShipment || ((shipment: ShipmentRow) => {
+            if (shipment && shipment.internalTrack) {
+              console.warn("createInvoiceFromShipment not yet initialized");
+            }
+          })}
           onShipmentsChange={fetchShipments}
         />
 

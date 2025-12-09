@@ -9,6 +9,7 @@ import {
 import { ShipmentTimeline } from "./ShipmentTimeline";
 import type { User, ShipmentRow, Batch, InvoiceRow, ShipmentFormItem } from "./types/userDetail.types";
 import { getDeliveryTypeCode, formatDateForInput, CARGO_TYPES } from "./utils/shipmentUtils";
+import { calculateETA, getDeliveryDays } from "@/lib/utils/shipmentAutomation";
 
 interface UserShipmentsProps {
   user: User;
@@ -458,6 +459,75 @@ export function UserShipments({
     }
   };
 
+  // Автоматизація: Позначити вантаж як "прибув на склад"
+  const handleMarkAsReceived = async (shipment: ShipmentRow) => {
+    const today = new Date().toISOString().split('T')[0];
+    const receivedDate = prompt(
+      `Введіть дату отримання на складі (формат: РРРР-ММ-ДД):`,
+      today
+    );
+    
+    if (!receivedDate) return;
+    
+    onError("");
+    onSuccess("");
+    
+    try {
+      const res = await fetch(`/api/admin/shipments/${shipment.id}/mark-received`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ receivedAtWarehouse: receivedDate }),
+      });
+      
+      const data = await res.json();
+      if (!res.ok) {
+        onError(data.error || "Не вдалося позначити вантаж як прибув на склад");
+        return;
+      }
+      
+      await fetchShipments();
+      onShipmentsChange();
+      onSuccess("Вантаж позначено як прибув на склад. Статус, місцезнаходження та таймлайн оновлено автоматично.");
+    } catch {
+      onError("Сталася помилка при оновленні вантажу");
+    }
+  };
+
+  // Автоматизація: Позначити вантаж як "відправлено"
+  const handleMarkAsSent = async (shipment: ShipmentRow) => {
+    const today = new Date().toISOString().split('T')[0];
+    const sentDate = prompt(
+      `Введіть дату відправлення (формат: РРРР-ММ-ДД):`,
+      today
+    );
+    
+    if (!sentDate) return;
+    
+    onError("");
+    onSuccess("");
+    
+    try {
+      const res = await fetch(`/api/admin/shipments/${shipment.id}/mark-sent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sentAt: sentDate }),
+      });
+      
+      const data = await res.json();
+      if (!res.ok) {
+        onError(data.error || "Не вдалося позначити вантаж як відправлено");
+        return;
+      }
+      
+      await fetchShipments();
+      onShipmentsChange();
+      const deliveryDays = getDeliveryDays(shipment.deliveryType as any);
+      onSuccess(`Вантаж позначено як відправлено. Статус, місцезнаходження, ETA (+${deliveryDays} днів) та таймлайн оновлено автоматично.`);
+    } catch {
+      onError("Сталася помилка при оновленні вантажу");
+    }
+  };
+
   const openViewShipment = (shipment: ShipmentRow) => {
     setViewingShipment(shipment);
   };
@@ -760,19 +830,33 @@ export function UserShipments({
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
                   Дата отримано на складі
                 </label>
-                <input
-                  type="date"
-                  value={shipmentForm.receivedAtWarehouse}
-                  onChange={(e) =>
-                    setShipmentForm({
-                      ...shipmentForm,
-                      receivedAtWarehouse: e.target.value,
-                    })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="date"
+                    value={shipmentForm.receivedAtWarehouse}
+                    onChange={(e) => {
+                      const receivedDate = e.target.value;
+                      // Автоматично встановлюємо статус та місцезнаходження
+                      if (receivedDate) {
+                        const statusInfo = getStatusInfoLocal("RECEIVED_CN");
+                        setShipmentForm({
+                          ...shipmentForm,
+                          receivedAtWarehouse: receivedDate,
+                          status: "RECEIVED_CN",
+                          location: statusInfo.location,
+                        });
+                      } else {
+                        setShipmentForm({
+                          ...shipmentForm,
+                          receivedAtWarehouse: receivedDate,
+                        });
+                      }
+                    }}
+                    className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                  />
+                </div>
                 <p className="mt-1 text-[10px] text-slate-500">
-                  Після встановлення запускається автоматизація
+                  Після встановлення автоматично встановлюється статус "Отримано на складі" та місцезнаходження
                 </p>
               </div>
               {/* Третій рядок: Місцезнаходження, Тип вантажу, Дата відправлено */}
@@ -826,32 +910,18 @@ export function UserShipments({
                   value={shipmentForm.sentAt}
                   onChange={(e) => {
                     const sentDate = e.target.value;
-                    let deliveredDate = "";
                     let etaDate = "";
                     
                     if (sentDate) {
                       const sent = new Date(sentDate);
-                      // Calculate transit days based on delivery type
-                      const transitDays =
-                        shipmentForm.deliveryType === "SEA"
-                          ? 40
-                          : shipmentForm.deliveryType === "RAIL"
-                          ? 18
-                          : shipmentForm.deliveryType === "MULTIMODAL"
-                          ? 25
-                          : 21; // AIR default
-                      
-                      // Calculate deliveredAt and ETA
-                      const delivered = new Date(sent);
-                      delivered.setDate(delivered.getDate() + transitDays);
-                      deliveredDate = delivered.toISOString().split('T')[0];
-                      etaDate = deliveredDate;
+                      // Використовуємо утиліту для розрахунку ETA
+                      const eta = calculateETA(sent, shipmentForm.deliveryType as any);
+                      etaDate = eta.toISOString().split('T')[0];
                     }
                     
                     setShipmentForm({
                       ...shipmentForm,
                       sentAt: sentDate,
-                      deliveredAt: deliveredDate,
                       eta: etaDate,
                     });
                   }}
@@ -920,7 +990,7 @@ export function UserShipments({
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
                 <p className="mt-1 text-[10px] text-slate-500">
-                  Автоматично: дата відправлено + N днів (можна встановити вручну)
+                  Після встановлення автоматично встановлюється статус "В дорозі", місцезнаходження та ETA
                 </p>
               </div>
               <div>
@@ -939,7 +1009,7 @@ export function UserShipments({
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
                 <p className="mt-1 text-[10px] text-slate-500">
-                  Автоматично: дата відправлено + N днів (можна встановити вручну)
+                  Автоматично розраховується: дата відправлено + {getDeliveryDays(shipmentForm.deliveryType as any)} днів ({shipmentForm.deliveryType === "AIR" ? "Авіа" : shipmentForm.deliveryType === "SEA" ? "Море" : shipmentForm.deliveryType === "RAIL" ? "Залізниця" : "Мультимодал"}) (можна встановити вручну)
                 </p>
               </div>
               {/* Додаткові поля */}
@@ -1751,10 +1821,36 @@ export function UserShipments({
                         {s.totalCost ? `${s.totalCost} $` : "-"}
                       </td>
                       <td className="px-2 py-1.5">
-                        <div className="grid grid-cols-2 gap-1 w-36">
+                        <div className="grid grid-cols-2 gap-1 w-48">
+                          {!s.receivedAtWarehouse && (
+                            <button
+                              type="button"
+                              onClick={() => handleMarkAsReceived(s)}
+                              className="inline-flex items-center justify-center gap-0.5 rounded-lg border border-green-200 bg-green-50 px-2 py-1 text-[10px] font-semibold text-green-700 hover:bg-green-100"
+                              title="Позначити як прибув на склад"
+                            >
+                              <Warehouse className="h-2.5 w-2.5" />
+                              Прибув
+                            </button>
+                          )}
+                          {s.receivedAtWarehouse && !s.sentAt && (
+                            <button
+                              type="button"
+                              onClick={() => handleMarkAsSent(s)}
+                              className="inline-flex items-center justify-center gap-0.5 rounded-lg border border-purple-200 bg-purple-50 px-2 py-1 text-[10px] font-semibold text-purple-700 hover:bg-purple-100"
+                              title="Позначити як відправлено"
+                            >
+                              <Truck className="h-2.5 w-2.5" />
+                              Відправлено
+                            </button>
+                          )}
                           <button
                             type="button"
-                            onClick={() => onCreateInvoiceFromShipment(s)}
+                            onClick={() => {
+                              if (s && s.internalTrack) {
+                                onCreateInvoiceFromShipment(s);
+                              }
+                            }}
                             className="inline-flex items-center justify-center gap-0.5 rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 text-[10px] font-semibold text-blue-600 hover:bg-blue-100"
                             title="Створити рахунок"
                           >
@@ -2129,12 +2225,24 @@ export function UserShipments({
                 <input
                   type="date"
                   value={editingShipmentForm.receivedAtWarehouse}
-                  onChange={(e) =>
-                    setEditingShipmentForm({
-                      ...editingShipmentForm,
-                      receivedAtWarehouse: e.target.value,
-                    })
-                  }
+                  onChange={(e) => {
+                    const receivedDate = e.target.value;
+                    // Автоматично встановлюємо статус та місцезнаходження
+                    if (receivedDate) {
+                      const statusInfo = getStatusInfoLocal("RECEIVED_CN");
+                      setEditingShipmentForm({
+                        ...editingShipmentForm,
+                        receivedAtWarehouse: receivedDate,
+                        status: editingShipmentForm.status || "RECEIVED_CN",
+                        location: statusInfo.location || editingShipmentForm.location,
+                      });
+                    } else {
+                      setEditingShipmentForm({
+                        ...editingShipmentForm,
+                        receivedAtWarehouse: receivedDate,
+                      });
+                    }
+                  }}
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
               </div>
@@ -2147,32 +2255,18 @@ export function UserShipments({
                   value={editingShipmentForm.sentAt}
                   onChange={(e) => {
                     const sentDate = e.target.value;
-                    let deliveredDate = editingShipmentForm.deliveredAt;
                     let etaDate = editingShipmentForm.eta;
                     
                     if (sentDate) {
                       const sent = new Date(sentDate);
-                      // Calculate transit days based on delivery type
-                      const transitDays =
-                        editingShipmentForm.deliveryType === "SEA"
-                          ? 40
-                          : editingShipmentForm.deliveryType === "RAIL"
-                          ? 18
-                          : editingShipmentForm.deliveryType === "MULTIMODAL"
-                          ? 25
-                          : 21; // AIR default
-                      
-                      // Calculate deliveredAt and ETA
-                      const delivered = new Date(sent);
-                      delivered.setDate(delivered.getDate() + transitDays);
-                      deliveredDate = delivered.toISOString().split('T')[0];
-                      etaDate = deliveredDate;
+                      // Використовуємо утиліту для розрахунку ETA
+                      const eta = calculateETA(sent, editingShipmentForm.deliveryType as any);
+                      etaDate = eta.toISOString().split('T')[0];
                     }
                     
                     setEditingShipmentForm({
                       ...editingShipmentForm,
                       sentAt: sentDate,
-                      deliveredAt: deliveredDate,
                       eta: etaDate,
                     });
                   }}
