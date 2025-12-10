@@ -100,13 +100,11 @@ export async function GET(
       return sum + (isNaN(volume) ? 0 : volume);
     }, 0);
 
-    // Ensure logical consistency: if packing is false, packingCost must be null
-    const packing = shipment.packing === true;
-    const packingCost = formatPackingCost(packing, shipment.packingCost);
+    // Format packingCost - return if exists (ignore boolean field)
+    const packingCost = formatPackingCost(shipment.packing, shipment.packingCost);
 
-    // Ensure logical consistency: if localDeliveryToDepot is false, localDeliveryCost must be null
-    const localDeliveryToDepot = shipment.localDeliveryToDepot === true;
-    const localDeliveryCost = formatLocalDeliveryCost(localDeliveryToDepot, shipment.localDeliveryCost);
+    // Format localDeliveryCost - return if exists (ignore boolean field)
+    const localDeliveryCost = formatLocalDeliveryCost(shipment.localDeliveryToDepot, shipment.localDeliveryCost);
 
     // Format response with all data
     const response = {
@@ -124,9 +122,9 @@ export async function GET(
       deliveryType: shipment.deliveryType,
       deliveryFormat: shipment.deliveryFormat,
       deliveryReference: shipment.deliveryReference,
-      packing: packing,
+      packing: shipment.packing,
       packingCost: packingCost,
-      localDeliveryToDepot: localDeliveryToDepot,
+      localDeliveryToDepot: shipment.localDeliveryToDepot,
       localDeliveryCost: localDeliveryCost,
       batchId: shipment.batchId,
       cargoType: shipment.cargoType,

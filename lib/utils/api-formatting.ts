@@ -49,33 +49,23 @@ export function formatDecimalWithZero(value: any): string {
 }
 
 /**
- * Ensure packingCost is null or "0.00" if packing is false
- * Returns formatted cost if packing is true and cost exists
+ * Format packingCost - returns the cost if it exists (not null and not 0)
+ * Boolean field is ignored - we only check if cost value exists
  */
 export function formatPackingCost(packing: boolean | null, packingCost: any): string | null {
-  // If packing is false or null, packingCost must be null
-  if (!packing) {
-    return null;
-  }
-  
-  // If packing is true, format the cost
+  // Ignore boolean field, just format the cost if it exists
   return formatDecimal(packingCost);
 }
 
 /**
- * Ensure localDeliveryCost is null or "0.00" if localDeliveryToDepot is false
- * Returns formatted cost if localDeliveryToDepot is true and cost exists
+ * Format localDeliveryCost - returns the cost if it exists (not null and not 0)
+ * Boolean field is ignored - we only check if cost value exists
  */
 export function formatLocalDeliveryCost(
   localDeliveryToDepot: boolean | null,
   localDeliveryCost: any
 ): string | null {
-  // If localDeliveryToDepot is false or null, localDeliveryCost must be null
-  if (!localDeliveryToDepot) {
-    return null;
-  }
-  
-  // If localDeliveryToDepot is true, format the cost
+  // Ignore boolean field, just format the cost if it exists
   return formatDecimal(localDeliveryCost);
 }
 

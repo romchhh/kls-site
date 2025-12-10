@@ -113,13 +113,11 @@ export async function GET(
       // Calculate density: total weight / total volume
       const density = totalWeight > 0 && totalVolume > 0 ? (totalWeight / totalVolume).toFixed(2) : null;
 
-      // Ensure logical consistency: if packing is false, packingCost must be null
-      const packing = shipment.packing === true;
-      const packingCost = formatPackingCost(packing, shipment.packingCost);
+      // Format packingCost - return if exists (ignore boolean field)
+      const packingCost = formatPackingCost(shipment.packing, shipment.packingCost);
 
-      // Ensure logical consistency: if localDeliveryToDepot is false, localDeliveryCost must be null
-      const localDeliveryToDepot = shipment.localDeliveryToDepot === true;
-      const localDeliveryCost = formatLocalDeliveryCost(localDeliveryToDepot, shipment.localDeliveryCost);
+      // Format localDeliveryCost - return if exists (ignore boolean field)
+      const localDeliveryCost = formatLocalDeliveryCost(shipment.localDeliveryToDepot, shipment.localDeliveryCost);
 
       return {
         id: shipment.id,
@@ -137,9 +135,9 @@ export async function GET(
         deliveryType: shipment.deliveryType,
         deliveryFormat: shipment.deliveryFormat,
         deliveryReference: shipment.deliveryReference,
-        packing: packing,
+        packing: shipment.packing,
         packingCost: packingCost,
-        localDeliveryToDepot: localDeliveryToDepot,
+        localDeliveryToDepot: shipment.localDeliveryToDepot,
         localDeliveryCost: localDeliveryCost,
         // batchId is excluded from response for user (security)
         cargoType: shipment.cargoType,

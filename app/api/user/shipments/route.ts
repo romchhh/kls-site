@@ -47,13 +47,11 @@ export async function GET() {
         return sum + (isNaN(volume) ? 0 : volume);
       }, 0);
       
-      // Ensure logical consistency: if packing is false, packingCost must be null
-      const packing = shipment.packing === true;
-      const packingCost = formatPackingCost(packing, shipment.packingCost);
+      // Format packingCost - return if exists (ignore boolean field)
+      const packingCost = formatPackingCost(shipment.packing, shipment.packingCost);
 
-      // Ensure logical consistency: if localDeliveryToDepot is false, localDeliveryCost must be null
-      const localDeliveryToDepot = shipment.localDeliveryToDepot === true;
-      const localDeliveryCost = formatLocalDeliveryCost(localDeliveryToDepot, shipment.localDeliveryCost);
+      // Format localDeliveryCost - return if exists (ignore boolean field)
+      const localDeliveryCost = formatLocalDeliveryCost(shipment.localDeliveryToDepot, shipment.localDeliveryCost);
 
       // Exclude batchId from response for user
       const { batchId, ...shipmentWithoutBatchId } = shipment;
@@ -63,9 +61,9 @@ export async function GET() {
         pieces,
         weightKg: formatDecimal(totalWeight > 0 ? totalWeight : null),
         volumeM3: formatDecimal(totalVolume > 0 ? totalVolume : null),
-        packing: packing,
+        packing: shipment.packing,
         packingCost: packingCost,
-        localDeliveryToDepot: localDeliveryToDepot,
+        localDeliveryToDepot: shipment.localDeliveryToDepot,
         localDeliveryCost: localDeliveryCost,
         totalCost: formatDecimal(shipment.totalCost),
         items: shipment.items.map((item) => ({
