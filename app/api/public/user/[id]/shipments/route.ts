@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyApiToken } from "@/lib/api-auth";
+import {
+  formatDecimal,
+  formatPackingCost,
+  formatLocalDeliveryCost,
+  formatShipmentItem,
+} from "@/lib/utils/api-formatting";
 
 // GET - Get all shipments for a user by user ID
 export async function GET(
@@ -107,6 +113,14 @@ export async function GET(
       // Calculate density: total weight / total volume
       const density = totalWeight > 0 && totalVolume > 0 ? (totalWeight / totalVolume).toFixed(2) : null;
 
+      // Ensure logical consistency: if packing is false, packingCost must be null
+      const packing = shipment.packing === true;
+      const packingCost = formatPackingCost(packing, shipment.packingCost);
+
+      // Ensure logical consistency: if localDeliveryToDepot is false, localDeliveryCost must be null
+      const localDeliveryToDepot = shipment.localDeliveryToDepot === true;
+      const localDeliveryCost = formatLocalDeliveryCost(localDeliveryToDepot, shipment.localDeliveryCost);
+
       return {
         id: shipment.id,
         internalTrack: shipment.internalTrack,
@@ -115,22 +129,22 @@ export async function GET(
         description: shipment.description,
         location: shipment.location,
         pieces,
-        weightKg: totalWeight > 0 ? totalWeight.toString() : null,
-        volumeM3: totalVolume > 0 ? totalVolume.toString() : null,
+        weightKg: formatDecimal(totalWeight > 0 ? totalWeight : null),
+        volumeM3: formatDecimal(totalVolume > 0 ? totalVolume : null),
         density: density,
         routeFrom: shipment.routeFrom,
         routeTo: shipment.routeTo,
         deliveryType: shipment.deliveryType,
         deliveryFormat: shipment.deliveryFormat,
         deliveryReference: shipment.deliveryReference,
-        packing: shipment.packing,
-        packingCost: shipment.packingCost?.toString() || null,
-        localDeliveryToDepot: shipment.localDeliveryToDepot,
-        localDeliveryCost: shipment.localDeliveryCost?.toString() || null,
+        packing: packing,
+        packingCost: packingCost,
+        localDeliveryToDepot: localDeliveryToDepot,
+        localDeliveryCost: localDeliveryCost,
         // batchId is excluded from response for user (security)
         cargoType: shipment.cargoType,
         cargoTypeCustom: shipment.cargoTypeCustom,
-        totalCost: shipment.totalCost?.toString() || null,
+        totalCost: formatDecimal(shipment.totalCost),
         receivedAtWarehouse: shipment.receivedAtWarehouse,
         sentAt: shipment.sentAt,
         deliveredAt: shipment.deliveredAt,
@@ -139,29 +153,7 @@ export async function GET(
         additionalFilesUrls,
         createdAt: shipment.createdAt,
         updatedAt: shipment.updatedAt,
-        items: (shipment.items || []).map((item: any) => ({
-          id: item.id,
-          placeNumber: item.placeNumber,
-          trackNumber: item.trackNumber,
-          localTracking: item.localTracking,
-          description: item.description,
-          quantity: item.quantity,
-          insuranceValue: item.insuranceValue?.toString() || null,
-          insurancePercent: item.insurancePercent?.toString() || null,
-          lengthCm: item.lengthCm?.toString() || null,
-          widthCm: item.widthCm?.toString() || null,
-          heightCm: item.heightCm?.toString() || null,
-          weightKg: item.weightKg?.toString() || null,
-          volumeM3: item.volumeM3?.toString() || null,
-          density: item.density?.toString() || null,
-          tariffType: item.tariffType,
-          tariffValue: item.tariffValue?.toString() || null,
-          deliveryCost: item.deliveryCost?.toString() || null,
-          cargoType: item.cargoType,
-          cargoTypeCustom: item.cargoTypeCustom,
-          note: item.note,
-          photoUrl: item.photoUrl,
-        })),
+        items: (shipment.items || []).map((item: any) => formatShipmentItem(item)),
         statusHistory: (shipment.statusHistory || []).map((status: any) => ({
           id: status.id,
           status: status.status,

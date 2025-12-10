@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  formatDecimal,
+  formatPackingCost,
+  formatLocalDeliveryCost,
+  formatShipmentItem,
+} from "@/lib/utils/api-formatting";
 
 export async function GET() {
   try {
@@ -41,43 +47,31 @@ export async function GET() {
         return sum + (isNaN(volume) ? 0 : volume);
       }, 0);
       
+      // Ensure logical consistency: if packing is false, packingCost must be null
+      const packing = shipment.packing === true;
+      const packingCost = formatPackingCost(packing, shipment.packingCost);
+
+      // Ensure logical consistency: if localDeliveryToDepot is false, localDeliveryCost must be null
+      const localDeliveryToDepot = shipment.localDeliveryToDepot === true;
+      const localDeliveryCost = formatLocalDeliveryCost(localDeliveryToDepot, shipment.localDeliveryCost);
+
       // Exclude batchId from response for user
       const { batchId, ...shipmentWithoutBatchId } = shipment;
       
       return {
         ...shipmentWithoutBatchId,
         pieces,
-        weightKg: totalWeight > 0 ? totalWeight : null,
-        volumeM3: totalVolume > 0 ? totalVolume : null,
-        packingCost: shipment.packingCost ? shipment.packingCost.toString() : null,
-        localDeliveryCost: shipment.localDeliveryCost ? shipment.localDeliveryCost.toString() : null,
-        totalCost: shipment.totalCost ? shipment.totalCost.toString() : null,
-        items: shipment.items.map((item) => {
-          return {
-            id: item.id,
-            shipmentId: item.shipmentId,
-            placeNumber: item.placeNumber,
-            trackNumber: item.trackNumber,
-            localTracking: item.localTracking,
-            description: item.description,
-            quantity: item.quantity,
-            insuranceValue: item.insuranceValue ? item.insuranceValue.toString() : null,
-            insurancePercent: item.insurancePercent ? item.insurancePercent.toString() : null,
-            lengthCm: item.lengthCm ? item.lengthCm.toString() : null,
-            widthCm: item.widthCm ? item.widthCm.toString() : null,
-            heightCm: item.heightCm ? item.heightCm.toString() : null,
-            weightKg: item.weightKg ? item.weightKg.toString() : null,
-            volumeM3: item.volumeM3 ? item.volumeM3.toString() : null,
-            density: item.density ? item.density.toString() : null,
-            tariffType: item.tariffType,
-            tariffValue: item.tariffValue ? item.tariffValue.toString() : null,
-            deliveryCost: item.deliveryCost ? item.deliveryCost.toString() : null,
-            cargoType: item.cargoType,
-            cargoTypeCustom: item.cargoTypeCustom,
-            note: item.note,
-            photoUrl: item.photoUrl,
-          };
-        }),
+        weightKg: formatDecimal(totalWeight > 0 ? totalWeight : null),
+        volumeM3: formatDecimal(totalVolume > 0 ? totalVolume : null),
+        packing: packing,
+        packingCost: packingCost,
+        localDeliveryToDepot: localDeliveryToDepot,
+        localDeliveryCost: localDeliveryCost,
+        totalCost: formatDecimal(shipment.totalCost),
+        items: shipment.items.map((item) => ({
+          ...formatShipmentItem(item),
+          shipmentId: item.shipmentId,
+        })),
       };
     });
 

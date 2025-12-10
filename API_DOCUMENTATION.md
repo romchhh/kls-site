@@ -156,9 +156,9 @@ Authorization: Bearer kls_your_token_here
   "deliveryFormat": "NOVA_POSHTA | SELF_PICKUP | CARGO",
   "deliveryReference": "string",
   "packing": true,
-  "packingCost": "100.00",
+  "packingCost": "100.00",  // null якщо packing = false
   "localDeliveryToDepot": true,
-  "localDeliveryCost": "50.00",
+  "localDeliveryCost": "50.00",  // null якщо localDeliveryToDepot = false
   "batchId": "00100",
   "cargoType": "Електроніка",
   "cargoTypeCustom": null,
@@ -314,6 +314,23 @@ Authorization: Bearer kls_your_token_here
 - `id` (string, required) - ID користувача в системі
 
 ### Success Response (200)
+
+**Важливі примітки про формат даних:**
+
+1. **Логічна відповідність полів:**
+   - Якщо `packing = false`, то `packingCost` **завжди** `null`
+   - Якщо `packing = true`, то `packingCost` містить вартість упаковки (рядок з числом, наприклад `"100.00"`)
+   - Якщо `localDeliveryToDepot = false`, то `localDeliveryCost` **завжди** `null`
+   - Якщо `localDeliveryToDepot = true`, то `localDeliveryCost` містить вартість локальної доставки (рядок з числом, наприклад `"50.00"`)
+
+2. **Формат числових значень:**
+   - Всі числові поля (вага, об'єм, вартість) повертаються як **рядки** з двома десятковими знаками
+   - Приклад: `"100.00"`, `"12.50"`, `"0.00"` (або `null` якщо значення відсутнє)
+
+3. **Поля items (місця вантажу):**
+   - Кожен item містить обов'язкові поля: `weightKg`, `volumeM3`, `cargoType`/`cargoTypeCustom`, `deliveryCost`
+   - Всі числові поля форматуются як рядки з двома десятковими знаками
+
 ```json
 {
   "user": {
@@ -333,8 +350,8 @@ Authorization: Bearer kls_your_token_here
       "description": "Shipment description",
       "location": "312",
       "pieces": 1,
-      "weightKg": "12.5",
-      "volumeM3": "0.321",
+      "weightKg": "12.50",
+      "volumeM3": "0.32",
       "density": "38.94",
       "routeFrom": "CN",
       "routeTo": "UA",
