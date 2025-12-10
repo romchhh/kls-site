@@ -90,6 +90,13 @@ const calculateCost = (
 
 export function CostCalculationSection({ locale }: CostCalculationSectionProps) {
   const t = getTranslations(locale);
+  const costCalculationContent = t?.costCalculation;
+  
+  if (!costCalculationContent) {
+    console.error(`Translations for costCalculation not found for locale: ${locale}`);
+    return null; // Or render a fallback UI
+  }
+  
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [deliveryType, setDeliveryType] = useState("");
@@ -165,12 +172,12 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
   };
 
   const getDeliveryTypeLabel = (type: string): string => {
-    const types = t.costCalculation?.deliveryTypes || {};
+    const types = costCalculationContent?.deliveryTypes || {};
     return types[type as keyof typeof types] || type;
   };
 
   const getCountryLabel = (country: string): string => {
-    const countries = t.costCalculation?.countries || {};
+    const countries = costCalculationContent?.countries || {};
     return countries[country as keyof typeof countries] || country;
   };
 
@@ -190,10 +197,10 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
             style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
           >
             <h2 className="mb-6 text-5xl font-bold tracking-tight text-slate-900 md:text-6xl lg:text-7xl">
-              {t.costCalculation.title}
+              {costCalculationContent.title}
             </h2>
             <p className="mb-6 text-xl leading-relaxed text-slate-600/80 md:text-2xl">
-              {t.costCalculation.subtitle}
+              {costCalculationContent.subtitle}
             </p>
             
             {/* Arrow */}
@@ -235,7 +242,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-600">
                       1
                     </span>
-                    {t.costCalculation.origin}
+                    {costCalculationContent.origin}
                   </label>
                   <select
                     value={origin}
@@ -246,13 +253,13 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     className="w-full rounded-xl border-2 border-slate-200 bg-white px-5 py-4 text-base text-slate-900 shadow-sm transition-all duration-300 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 hover:border-teal-300"
                   >
                     <option value="">
-                      {t.costCalculation.selectCountry || "Оберіть країну"}
+                      {costCalculationContent.selectCountry || "Оберіть країну"}
                     </option>
-                    <option value="china">{t.costCalculation.countries.china}</option>
-                    <option value="ukraine">{t.costCalculation.countries.ukraine}</option>
-                    <option value="poland">{t.costCalculation.countries.poland}</option>
-                    <option value="germany">{t.costCalculation.countries.germany}</option>
-                    <option value="usa">{t.costCalculation.countries.usa}</option>
+                    <option value="china">{costCalculationContent.countries.china}</option>
+                    <option value="ukraine">{costCalculationContent.countries.ukraine}</option>
+                    <option value="poland">{costCalculationContent.countries.poland}</option>
+                    <option value="germany">{costCalculationContent.countries.germany}</option>
+                    <option value="usa">{costCalculationContent.countries.usa}</option>
                   </select>
                 </div>
 
@@ -266,7 +273,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-600">
                       2
                     </span>
-                    {t.costCalculation.destination}
+                    {costCalculationContent.destination}
                   </label>
                   <select
                     value={destination}
@@ -277,13 +284,13 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     className="w-full rounded-xl border-2 border-slate-200 bg-white px-5 py-4 text-base text-slate-900 shadow-sm transition-all duration-300 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 hover:border-teal-300"
                   >
                     <option value="">
-                      {t.costCalculation.selectCountry || "Оберіть країну"}
+                      {costCalculationContent.selectCountry || "Оберіть країну"}
                     </option>
-                    <option value="china">{t.costCalculation.countries.china}</option>
-                    <option value="ukraine">{t.costCalculation.countries.ukraine}</option>
-                    <option value="poland">{t.costCalculation.countries.poland}</option>
-                    <option value="germany">{t.costCalculation.countries.germany}</option>
-                    <option value="usa">{t.costCalculation.countries.usa}</option>
+                    <option value="china">{costCalculationContent.countries.china}</option>
+                    <option value="ukraine">{costCalculationContent.countries.ukraine}</option>
+                    <option value="poland">{costCalculationContent.countries.poland}</option>
+                    <option value="germany">{costCalculationContent.countries.germany}</option>
+                    <option value="usa">{costCalculationContent.countries.usa}</option>
                   </select>
                 </div>
               </div>
@@ -299,7 +306,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-600">
                     3
                   </span>
-                  {t.costCalculation.deliveryType}
+                  {costCalculationContent.deliveryType}
                 </label>
                 <select
                   value={deliveryType}
@@ -310,22 +317,22 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                   className="w-full rounded-xl border-2 border-slate-200 bg-white px-5 py-4 text-base text-slate-900 shadow-sm transition-all duration-300 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 hover:border-teal-300"
                 >
                   <option value="">
-                    {t.costCalculation.selectDeliveryType || "Оберіть тип доставки"}
+                    {costCalculationContent.selectDeliveryType || "Оберіть тип доставки"}
                   </option>
-                  <option value="air">{t.costCalculation.deliveryTypes.air}</option>
-                  <option value="sea">{t.costCalculation.deliveryTypes.sea}</option>
-                  <option value="rail">{t.costCalculation.deliveryTypes.rail}</option>
+                  <option value="air">{costCalculationContent.deliveryTypes.air}</option>
+                  <option value="sea">{costCalculationContent.deliveryTypes.sea}</option>
+                  <option value="rail">{costCalculationContent.deliveryTypes.rail}</option>
                   <option value="multimodal">
-                    {t.costCalculation.deliveryTypes.multimodal}
+                    {costCalculationContent.deliveryTypes.multimodal}
                   </option>
                   <option value="express">
-                    {t.costCalculation.deliveryTypes.express}
+                    {costCalculationContent.deliveryTypes.express}
                   </option>
-                  <option value="ddp">{t.costCalculation.deliveryTypes.ddp}</option>
-                  <option value="dpu">{t.costCalculation.deliveryTypes.dpu}</option>
+                  <option value="ddp">{costCalculationContent.deliveryTypes.ddp}</option>
+                  <option value="dpu">{costCalculationContent.deliveryTypes.dpu}</option>
                 </select>
                 <p className="mt-2 text-sm text-slate-500">
-                  {t.costCalculation.countriesNote || "Країни з яких і в які доставка"}
+                  {costCalculationContent.countriesNote || "Країни з яких і в які доставка"}
                 </p>
               </div>
 
@@ -352,7 +359,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     </>
                   ) : (
                     <>
-                      {t.costCalculation.calculate}
+                      {costCalculationContent.calculate}
                       <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
                     </>
                   )}

@@ -208,7 +208,7 @@ export function UserCabinet({ locale }: UserCabinetProps) {
             <div className={`mb-4 flex items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"}`}>
               {!isSidebarCollapsed && (
                 <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {t.nav?.cabinet || "Кабінет"}
+              {t.nav?.cabinet || "Кабінет"}
                 </div>
               )}
               <button
@@ -258,14 +258,14 @@ export function UserCabinet({ locale }: UserCabinetProps) {
                       } ${
                         isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-800"
                     }`}
-                    >
+                  >
                       <Icon className="h-4 w-4" />
                     </span>
                     {!isSidebarCollapsed && (
                       <>
-                        <span>{tab.label}</span>
-                        {isActive && (
-                          <span className="absolute inset-y-1 right-1 w-1 rounded-full bg-white/70 lg:right-1.5" />
+                    <span>{tab.label}</span>
+                    {isActive && (
+                      <span className="absolute inset-y-1 right-1 w-1 rounded-full bg-white/70 lg:right-1.5" />
                         )}
                       </>
                     )}
@@ -287,21 +287,21 @@ export function UserCabinet({ locale }: UserCabinetProps) {
 
             {/* Quick Contact */}
             {!isSidebarCollapsed && (
-              <div className="mt-6 rounded-xl border border-slate-200 bg-gradient-to-br from-teal-50 via-white to-emerald-50 p-4 shadow-sm">
-                <h3 className="mb-2 text-sm font-semibold text-slate-900">
-                  {t.cabinet?.quickContact || "Швидкий зв'язок"}
-                </h3>
-                <p className="mb-3 text-xs text-slate-600">
-                  {t.cabinet?.managerInfo ||
-                    "Реєстрація, зміна даних та складні питання вирішуються через вашого персонального менеджера."}
-                </p>
-                <button
-                  onClick={handleTelegramContact}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-teal-700 hover:shadow-lg"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  {t.cabinet?.contactTelegram || "Telegram"}
-                </button>
+            <div className="mt-6 rounded-xl border border-slate-200 bg-gradient-to-br from-teal-50 via-white to-emerald-50 p-4 shadow-sm">
+              <h3 className="mb-2 text-sm font-semibold text-slate-900">
+                {t.cabinet?.quickContact || "Швидкий зв'язок"}
+              </h3>
+              <p className="mb-3 text-xs text-slate-600">
+                {t.cabinet?.managerInfo ||
+                  "Реєстрація, зміна даних та складні питання вирішуються через вашого персонального менеджера."}
+              </p>
+              <button
+                onClick={handleTelegramContact}
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-teal-700 hover:shadow-lg"
+              >
+                <MessageCircle className="h-5 w-5" />
+                {t.cabinet?.contactTelegram || "Telegram"}
+              </button>
                 <button
                   onClick={() => window.open("https://t.me/KlsInternationalBot", "_blank")}
                   className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-teal-600 bg-white px-4 py-2.5 text-sm font-semibold text-teal-600 transition-all duration-300 hover:bg-teal-50 hover:shadow-md"
@@ -343,7 +343,7 @@ export function UserCabinet({ locale }: UserCabinetProps) {
                     </div>
                   </div>
                 </button>
-              </div>
+            </div>
             )}
           </aside>
 

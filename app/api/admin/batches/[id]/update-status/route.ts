@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getLocationForStatus } from "@/lib/utils/shipmentAutomation";
 
 // PUT - Update status for all shipments in a batch
 export async function PUT(
@@ -17,7 +18,7 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
-    const { status, location, description } = body;
+    const { status, location: providedLocation, description } = body;
 
     if (!status) {
       return NextResponse.json(
@@ -41,6 +42,9 @@ export async function PUT(
       );
     }
 
+    // Автоматично встановлюємо місцезнаходження на основі статусу
+    const finalLocation = providedLocation || getLocationForStatus(status as any, batch.routeFrom, batch.routeTo);
+
     // Update all shipments in batch
     const updatedShipments = await prisma.shipment.updateMany({
       where: {
@@ -48,7 +52,7 @@ export async function PUT(
       },
       data: {
         status: status as any,
-        location: location || undefined,
+        location: finalLocation || undefined,
       },
     });
 
@@ -61,7 +65,7 @@ export async function PUT(
     const statusHistoryEntries = shipments.map((shipment) => ({
       shipmentId: shipment.id,
       status: status as any,
-      location: location || null,
+      location: finalLocation || null,
       description: description || `Масове оновлення статусу для партії ${batch.batchId}`,
     }));
 

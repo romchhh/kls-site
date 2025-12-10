@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { getDeliveryTypeCode } from "@/components/admin/utils/shipmentUtils";
 
 export async function GET(
   _req: NextRequest,
@@ -285,28 +286,28 @@ export async function POST(
       });
     }
 
-    // Count existing shipments in this batch for this client to generate shipment number
-    const existingShipmentsInBatch = await prisma.shipment.count({
+    // Count ALL existing shipments for this client (globally, not per batch) to generate shipment number
+    // Номер замовлення не прив'язаний до типу доставки - рахується глобально для користувача
+    const existingShipmentsForClient = await prisma.shipment.count({
       where: {
-        batchId: batch.id,
-        clientCode: user.clientCode,
+        userId: userId,
       },
     });
 
-    // Generate internal track: batchId-clientCode-cargoType-number
+    // Generate internal track: batchId-clientCode-deliveryType-number
     // Format: 00010-2661A0001 (без дефісу перед номером)
-    const cargoTypeCode = cargoType ? cargoType.substring(0, 1).toUpperCase() : "X";
-    const shipmentNumber = String(existingShipmentsInBatch + 1).padStart(4, "0");
-    const internalTrack = `${batchId}-${user.clientCode}${cargoTypeCode}${shipmentNumber}`;
+    // Використовуємо deliveryType, а не cargoType
+    const deliveryTypeCode = getDeliveryTypeCode(deliveryType || "AIR");
+    const shipmentNumber = String(existingShipmentsForClient + 1).padStart(4, "0");
+    const internalTrack = `${batchId}-${user.clientCode}${deliveryTypeCode}${shipmentNumber}`;
 
-    // Auto-generate trackNumber for items if not provided
+    // Auto-generate trackNumber for items - завжди генеруємо на основі internalTrack
     // Format: 00010-2661A0001-1, 00010-2661A0001-2, etc.
     // internalTrack: "00010-2661A0001" -> "00010-2661A0001-1"
+    // Завжди перезаписуємо trackNumber, щоб гарантувати синхронізацію з internalTrack вантажу
     const processedItemsWithTracks = processedItems.map((item: any, index: number) => {
-      if (!item.trackNumber || item.trackNumber.trim() === "") {
-        // Add place number to internalTrack
-        item.trackNumber = `${internalTrack}-${index + 1}`;
-      }
+      // Завжди генеруємо trackNumber на основі internalTrack вантажу
+      item.trackNumber = `${internalTrack}-${index + 1}`;
       return item;
     });
 

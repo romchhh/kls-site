@@ -18,7 +18,14 @@ type HoverStyle = {
 
 export function ServicesSection({ locale }: ServicesSectionProps) {
   const t = getTranslations(locale);
-  const services = t.services.items;
+  const servicesContent = t?.services;
+  
+  if (!servicesContent || !servicesContent.items) {
+    console.error(`Translations for services not found for locale: ${locale}`);
+    return null; // Or render a fallback UI
+  }
+  
+  const services = servicesContent.items;
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [visibleStates, setVisibleStates] = useState<boolean[]>(() =>
@@ -259,7 +266,7 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
               <div className="flex h-full flex-col justify-between gap-6">
                 <div>
                   <span className={`mb-3 inline-flex items-center rounded-full border ${colors.badge} px-3 py-1 text-xs uppercase tracking-[0.3em]`}>
-                    {t.services.title}
+                    {servicesContent.title}
                   </span>
                   <h3 className="text-2xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-4xl break-words">
                     {service.title}
@@ -270,7 +277,7 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
                   className={`group/read relative inline-flex items-center gap-3 self-start overflow-hidden rounded-full border ${colors.button} px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] transition-all duration-500 hover:scale-105`}
                 >
                   <span className="relative z-10">
-                    {t.services.readMore}
+                    {servicesContent.readMore}
                   </span>
                   <ArrowUpRight
                     size={18}
@@ -304,7 +311,7 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
           </div>
         );
       }),
-    [services, visibleStates, hoverStyles, locale, t]
+    [services, visibleStates, hoverStyles, locale, servicesContent]
   );
 
   return (
@@ -332,21 +339,21 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
           }`}
           style={isHeaderVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
           >
-            {t.services.title}
+            {servicesContent.title}
           </div>
           <h2 className={`mb-6 text-5xl font-semibold tracking-tight text-slate-900 md:text-6xl lg:text-7xl ${
             isHeaderVisible ? 'animate-slide-in-top' : ''
           }`}
           style={isHeaderVisible ? { animationDelay: '0.2s' } : { opacity: 0 }}
           >
-            {t.services.mainTitle}
+            {servicesContent.mainTitle}
           </h2>
           <p className={`mt-6 text-xl leading-relaxed text-slate-600/80 md:text-2xl ${
             isHeaderVisible ? 'animate-slide-in-bottom' : ''
           }`}
           style={isHeaderVisible ? { animationDelay: '0.3s' } : { opacity: 0 }}
           >
-            {t.services.mainDescription}
+            {servicesContent.mainDescription}
           </p>
           
           {/* Arrow */}

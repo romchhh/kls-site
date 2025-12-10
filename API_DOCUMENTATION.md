@@ -336,23 +336,18 @@ Authorization: Bearer kls_your_token_here
       "weightKg": "12.5",
       "volumeM3": "0.321",
       "density": "38.94",
-      "routeFrom": "312",
-      "routeTo": "321",
+      "routeFrom": "CN",
+      "routeTo": "UA",
       "deliveryType": "AIR",
       "deliveryFormat": "SELF_PICKUP",
       "deliveryReference": "REF123",
       "packing": true,
+      "packingCost": "100.00",
       "localDeliveryToDepot": true,
-      "localTrackingOrigin": "TRACK001",
-      "localTrackingDestination": "TRACK002",
-      "deliveryCost": "3123.00",
-      "deliveryCostPerPlace": "312.00",
+      "localDeliveryCost": "50.00",
+      "cargoType": "Електроніка",
+      "cargoTypeCustom": null,
       "totalCost": "3000.00",
-      "insuranceTotal": "100.00",
-      "insurancePercentTotal": 5,
-      "insurancePerPlacePercent": 10,
-      "tariffType": "STANDARD",
-      "tariffValue": "50.00",
       "receivedAtWarehouse": "2025-11-28T00:00:00.000Z",
       "sentAt": "2025-11-30T00:00:00.000Z",
       "deliveredAt": "2025-12-03T00:00:00.000Z",
@@ -367,18 +362,26 @@ Authorization: Bearer kls_your_token_here
       "items": [
         {
           "id": "item1",
-          "itemCode": "ITEM001",
+          "placeNumber": 1,
+          "trackNumber": "00100-2491A0001-1",
+          "localTracking": "LOCAL001",
           "description": "Item description",
           "quantity": 1,
+          "insuranceValue": "1000.00",
+          "insurancePercent": "5",
+          "lengthCm": "20.00",
+          "widthCm": "50.00",
+          "heightCm": "60.00",
           "weightKg": "12.5",
           "volumeM3": "0.321",
           "density": "38.94",
-          "localTracking": "LOCAL001",
-          "photoUrl": "/uploads/items/item.jpg",
-          "clientTariff": "50.00",
-          "insuranceValue": "100.00",
-          "deliveryCost": "3123.00",
-          "totalCost": "3000.00"
+          "tariffType": "kg",
+          "tariffValue": "10.00",
+          "deliveryCost": "240.00",
+          "cargoType": "Електроніка",
+          "cargoTypeCustom": null,
+          "note": "Note",
+          "photoUrl": "/uploads/items/item.jpg"
         }
       ],
       "statusHistory": [
@@ -448,6 +451,194 @@ console.log(data);
 
 ---
 
+## 4. Get User Invoices
+
+### Endpoint
+```
+GET /api/public/user/:id/invoices
+```
+
+### Description
+Отримання всіх рахунків користувача за його ID. Повертає список рахунків зі статистикою.
+
+**⚠️ Вимагає Bearer token авторизації**
+
+### Headers
+```
+Authorization: Bearer kls_your_token_here
+```
+
+### Path Parameters
+- `id` (string, required) - ID користувача в системі
+
+### Success Response (200)
+```json
+{
+  "user": {
+    "id": "cmij6wnoy0000zvwfrcy6lry6",
+    "clientCode": "1234"
+  },
+  "invoices": [
+    {
+      "id": "invoice_id",
+      "invoiceNumber": "INV-001",
+      "amount": "1300.00",
+      "status": "UNPAID | PAID | ARCHIVED",
+      "dueDate": "2025-12-15T00:00:00.000Z",
+      "createdAt": "2025-12-01T10:30:00.000Z",
+      "updatedAt": "2025-12-01T10:30:00.000Z",
+      "shipment": {
+        "id": "shipment_id",
+        "internalTrack": "00100-2491S0003",
+        "totalCost": "1300.00",
+        "createdAt": "2025-12-01T10:30:00.000Z"
+      }
+    }
+  ],
+  "statistics": {
+    "total": 1,
+    "totalAmount": "1300.00",
+    "unpaid": 1,
+    "unpaidAmount": "1300.00"
+  }
+}
+```
+
+### Error Response (400)
+```json
+{
+  "error": "User ID is required"
+}
+```
+
+### Error Response (401 - Invalid Token)
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+### Error Response (404)
+```json
+{
+  "error": "User not found"
+}
+```
+
+### Example Request (cURL)
+```bash
+curl -X GET http://localhost:3000/api/public/user/cmij6wnoy0000zvwfrcy6lry6/invoices \
+  -H "Authorization: Bearer kls_your_token_here"
+```
+
+### Example Request (JavaScript)
+```javascript
+const userId = 'cmij6wnoy0000zvwfrcy6lry6';
+const response = await fetch(`http://localhost:3000/api/public/user/${userId}/invoices`, {
+  headers: {
+    'Authorization': 'Bearer kls_your_token_here'
+  }
+});
+const data = await response.json();
+console.log(data);
+```
+
+---
+
+## 5. Get User Information
+
+### Endpoint
+```
+GET /api/public/user/:id
+```
+
+### Description
+Отримання повної інформації про користувача за його ID. Повертає баланс, рахунки та статистику вантажів.
+
+**⚠️ Вимагає Bearer token авторизації**
+
+### Headers
+```
+Authorization: Bearer kls_your_token_here
+```
+
+### Path Parameters
+- `id` (string, required) - ID користувача в системі
+
+### Success Response (200)
+```json
+{
+  "user": {
+    "id": "cmij6wnoy0000zvwfrcy6lry6",
+    "name": "Test User",
+    "email": "test@example.com",
+    "phone": "+380123456789",
+    "clientCode": "1234",
+    "companyName": "Test Company"
+  },
+  "balance": {
+    "available": 1100.00,
+    "incomeTotal": 1100.00,
+    "expenseTotal": 0.00,
+    "currency": "USD"
+  },
+  "invoices": {
+    "total": 1,
+    "totalAmount": "1300.00",
+    "unpaid": 1,
+    "unpaidAmount": "1300.00",
+    "unpaidShipmentsCount": 1
+  },
+  "shipments": {
+    "total": 1,
+    "received": 0,
+    "inTransit": 0,
+    "readyForPickup": 1
+  }
+}
+```
+
+### Error Response (400)
+```json
+{
+  "error": "User ID is required"
+}
+```
+
+### Error Response (401 - Invalid Token)
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+### Error Response (404)
+```json
+{
+  "error": "User not found"
+}
+```
+
+### Example Request (cURL)
+```bash
+curl -X GET http://localhost:3000/api/public/user/cmij6wnoy0000zvwfrcy6lry6 \
+  -H "Authorization: Bearer kls_your_token_here"
+```
+
+### Example Request (JavaScript)
+```javascript
+const userId = 'cmij6wnoy0000zvwfrcy6lry6';
+const response = await fetch(`http://localhost:3000/api/public/user/${userId}`, {
+  headers: {
+    'Authorization': 'Bearer kls_your_token_here'
+  }
+});
+const data = await response.json();
+console.log(data);
+```
+
+---
+
 ## Status Codes
 
 - `200` - Успішний запит
@@ -461,7 +652,8 @@ console.log(data);
 ## Notes
 
 1. Всі дати повертаються в форматі ISO 8601 (UTC)
-2. Всі грошові суми повертаються як рядки для точності
-3. API не вимагає авторизації, але захищене від DDoS атак
+2. Всі грошові суми повертаються як рядки для точності (крім балансу, який повертається як число)
+3. API вимагає Bearer token авторизації для всіх публічних endpoints
 4. Для безпеки, при невірних даних авторизації використовується однаковий час відповіді
+5. Вантажі зі статусом `CREATED` (Очікується на складі) не повертаються в API для клієнтів
 

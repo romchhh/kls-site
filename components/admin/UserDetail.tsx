@@ -226,22 +226,21 @@ export function UserDetail({ userId }: UserDetailProps) {
   };
 
   // Helper function to generate internal track number for shipment
+  // Номер замовлення рахується глобально для користувача, а не в партії
   const generateInternalTrack = (batchId: string, clientCode: string, deliveryType: string): string => {
     if (!batchId || batchId.trim() === "" || !clientCode) {
       return "";
     }
-    // Count existing shipments in this batch for this client
-    // Use user.clientCode if available, otherwise count all shipments in batch
+    // Count ALL existing shipments for this client (globally), not per batch
+    // Use user.clientCode if available, otherwise use provided clientCode
     const currentClientCode = user?.clientCode || clientCode;
-    const existingShipmentsInBatch = shipments.filter(
-      (s) => s.batchId === batchId
-    ).length;
+    const existingShipmentsForClient = shipments.length;
     
     // Generate internal track: batchId-clientCode-deliveryType-number
     // Format: 00010-2661A0001 (без дефісу перед номером)
     // A = Авіа, S = Море, R = Потяг, M = Мультимодальна
     const deliveryTypeCode = getDeliveryTypeCode(deliveryType);
-    const shipmentNumber = String(existingShipmentsInBatch + 1).padStart(4, "0");
+    const shipmentNumber = String(existingShipmentsForClient + 1).padStart(4, "0");
     return `${batchId}-${currentClientCode}${deliveryTypeCode}${shipmentNumber}`;
   };
 

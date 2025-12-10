@@ -50,6 +50,6 @@ export const contactsTranslations = {
 
 export function getShipmentStatusTranslation(status: string, locale: Locale): string {
   const t = getTranslations(locale);
-  const shipmentStatuses = (t.cabinet as any)?.shipmentStatuses || {};
-  return shipmentStatuses[status] || status.replace(/_/g, " ");
+  const timelineStatuses = (t.cabinet as any)?.timelineStatuses || {};
+  return timelineStatuses[status] || status.replace(/_/g, " ");
 }

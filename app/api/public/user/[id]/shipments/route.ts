@@ -52,9 +52,14 @@ export async function GET(
       );
     }
 
-    // Get all shipments for this user
+    // Get all shipments for this user (excluding CREATED status)
     const shipments = await prisma.shipment.findMany({
-      where: { userId: id },
+      where: {
+        userId: id,
+        NOT: {
+          status: "CREATED", // Exclude shipments with 'CREATED' status from user view
+        },
+      },
       include: {
         items: {
           orderBy: { placeNumber: "asc" },
@@ -99,6 +104,9 @@ export async function GET(
         return sum + (isNaN(volume) ? 0 : volume);
       }, 0);
 
+      // Calculate density: total weight / total volume
+      const density = totalWeight > 0 && totalVolume > 0 ? (totalWeight / totalVolume).toFixed(2) : null;
+
       return {
         id: shipment.id,
         internalTrack: shipment.internalTrack,
@@ -109,6 +117,7 @@ export async function GET(
         pieces,
         weightKg: totalWeight > 0 ? totalWeight.toString() : null,
         volumeM3: totalVolume > 0 ? totalVolume.toString() : null,
+        density: density,
         routeFrom: shipment.routeFrom,
         routeTo: shipment.routeTo,
         deliveryType: shipment.deliveryType,
@@ -118,7 +127,7 @@ export async function GET(
         packingCost: shipment.packingCost?.toString() || null,
         localDeliveryToDepot: shipment.localDeliveryToDepot,
         localDeliveryCost: shipment.localDeliveryCost?.toString() || null,
-        batchId: shipment.batchId,
+        // batchId is excluded from response for user (security)
         cargoType: shipment.cargoType,
         cargoTypeCustom: shipment.cargoTypeCustom,
         totalCost: shipment.totalCost?.toString() || null,

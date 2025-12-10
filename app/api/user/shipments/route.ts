@@ -12,7 +12,11 @@ export async function GET() {
     }
 
     const shipments = await prisma.shipment.findMany({
-      where: { userId: session.user.id },
+      where: { 
+        userId: session.user.id,
+        // Hide shipments with CREATED status (Очікується на складі) from clients
+        status: { not: "CREATED" }
+      },
       orderBy: { createdAt: "desc" },
       include: {
         items: {
@@ -37,8 +41,11 @@ export async function GET() {
         return sum + (isNaN(volume) ? 0 : volume);
       }, 0);
       
+      // Exclude batchId from response for user
+      const { batchId, ...shipmentWithoutBatchId } = shipment;
+      
       return {
-        ...shipment,
+        ...shipmentWithoutBatchId,
         pieces,
         weightKg: totalWeight > 0 ? totalWeight : null,
         volumeM3: totalVolume > 0 ? totalVolume : null,

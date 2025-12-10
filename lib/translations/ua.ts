@@ -641,12 +641,14 @@ export const ua = {
     },
     // Timeline status labels
     timelineStatuses: {
-      CREATED: "Отримано",
-      RECEIVED_CN: "В Китаї",
-      IN_TRANSIT: "У дорозі",
-      ARRIVED_UA: "Прибуло",
-      ON_UA_WAREHOUSE: "На складі",
-      DELIVERED: "Доставлено",
+      CREATED: "Очікується на складі",
+      RECEIVED_CN: "Отримано на складі (Китай)",
+      CONSOLIDATION: "Готується до відправлення",
+      IN_TRANSIT: "В дорозі",
+      ARRIVED_UA: "Доставлено на склад (Україна)",
+      ON_UA_WAREHOUSE: "Готово до видачі",
+      DELIVERED: "Завершено",
+      ARCHIVED: "Архів",
     },
   },
 };

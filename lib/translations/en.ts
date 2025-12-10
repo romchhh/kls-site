@@ -641,12 +641,14 @@ export const en = {
     },
     // Timeline status labels
     timelineStatuses: {
-      CREATED: "Received",
-      RECEIVED_CN: "In China",
+      CREATED: "Awaiting at warehouse",
+      RECEIVED_CN: "Received at warehouse (China)",
+      CONSOLIDATION: "Preparing for shipment",
       IN_TRANSIT: "In Transit",
-      ARRIVED_UA: "Arrived",
-      ON_UA_WAREHOUSE: "On Warehouse",
-      DELIVERED: "Delivered",
+      ARRIVED_UA: "Delivered to warehouse (Ukraine)",
+      ON_UA_WAREHOUSE: "Ready for pickup",
+      DELIVERED: "Completed",
+      ARCHIVED: "Archived",
     },
   },
 };

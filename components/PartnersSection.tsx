@@ -10,7 +10,13 @@ type PartnersSectionProps = {
 
 export function PartnersSection({ locale }: PartnersSectionProps) {
   const t = getTranslations(locale);
-  const content = t.partners;
+  const content = t?.partners;
+  
+  if (!content || !content.partners) {
+    console.error(`Translations for partners not found for locale: ${locale}`);
+    return null; // Or render a fallback UI
+  }
+  
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const marqueePartners = [...content.partners, ...content.partners];

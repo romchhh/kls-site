@@ -641,12 +641,14 @@ export const ru = {
     },
     // Timeline status labels
     timelineStatuses: {
-      CREATED: "Получено",
-      RECEIVED_CN: "В Китае",
+      CREATED: "Ожидается на складе",
+      RECEIVED_CN: "Получено на складе (Китай)",
+      CONSOLIDATION: "Готовится к отправке",
       IN_TRANSIT: "В пути",
-      ARRIVED_UA: "Прибыло",
-      ON_UA_WAREHOUSE: "На складе",
-      DELIVERED: "Доставлено",
+      ARRIVED_UA: "Доставлено на склад (Украина)",
+      ON_UA_WAREHOUSE: "Готово к выдаче",
+      DELIVERED: "Завершено",
+      ARCHIVED: "Архив",
     },
   },
 };

@@ -194,22 +194,41 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
         </div>
 
         {/* Statistics Card */}
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-teal-50 via-white to-emerald-50 p-5 shadow-md lg:col-span-3">
-          <h3 className="mb-4 text-sm font-bold text-slate-900 uppercase tracking-wide">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-teal-50 via-white to-emerald-50 p-6 shadow-lg lg:col-span-3">
+          <div className="mb-5 flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider">
             {t.cabinet?.shipmentsSummary || "Статистика вантажів"}
           </h3>
-          <div className="grid grid-cols-3 gap-3">
+            {summary && summary.total > 0 && (
+              <div className="flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 shadow-sm border border-slate-200/50">
+                <Package className="h-3.5 w-3.5 text-slate-600" />
+                <span className="text-xs font-bold text-slate-700">
+                  {summary.total} {summary.total === 1 ? ((t.cabinet as any)?.shipmentSingular || "вантаж") : summary.total < 5 ? ((t.cabinet as any)?.shipmentPlural2 || "вантажі") : ((t.cabinet as any)?.shipmentPlural5 || "вантажів")}
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="grid grid-cols-3 gap-4">
             <SummaryItem
               label={t.cabinet?.received || "Отримано"}
               value={summary?.received ?? 0}
+              total={summary?.total ?? 0}
+              color="blue"
+              icon={Package}
             />
             <SummaryItem
               label={(t.cabinet as any)?.inTransit || "В дорозі"}
               value={summary?.inTransit ?? 0}
+              total={summary?.total ?? 0}
+              color="orange"
+              icon={Package2}
             />
             <SummaryItem
               label={(t.cabinet as any)?.readyForPickup || "Готово до видачі"}
               value={summary?.readyForPickup ?? 0}
+              total={summary?.total ?? 0}
+              color="green"
+              icon={CheckCircle}
             />
           </div>
         </div>
@@ -337,12 +356,31 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                           </span>
                         </td>
                         <td className="px-3 py-4 lg:px-4">
-                          <div className="flex items-center gap-1.5">
-                            <MapPin className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />
+                          {(() => {
+                            const location = s.location || latestStatus?.location;
+                            if (!location) return <span className="text-xs text-slate-400 lg:text-sm">-</span>;
+                            
+                            // Визначаємо іконку на основі місцезнаходження та статусу
+                            let LocationIcon = MapPin;
+                            if (location.includes("Китай") || location.includes("China")) {
+                              LocationIcon = Warehouse;
+                            } else if (location.includes("Україна") || location.includes("Ukraine") || location.includes("Украина")) {
+                              LocationIcon = Warehouse;
+                            } else if (location.includes("Дорога") || location.includes("дорозі") || location.includes("Дорога")) {
+                              LocationIcon = Plane; // Або Truck
+                            } else if (s.status === "DELIVERED") {
+                              LocationIcon = CheckCircle;
+                            }
+                            
+                            return (
+                              <div className="flex items-center gap-1.5">
+                                <LocationIcon className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />
                           <span className="text-xs font-medium text-slate-900 lg:text-sm">
-                            {s.location || latestStatus?.location || "-"}
+                                  {location}
                           </span>
-                          </div>
+                              </div>
+                            );
+                          })()}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 lg:px-4">
                           <span className="text-xs font-semibold text-slate-700 lg:text-sm">{pieces}</span>
@@ -403,12 +441,12 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
             <div className="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50 px-4 sm:px-8 py-14">
               <div className="flex items-start relative w-full">
                 {[
-                  { status: "CREATED", label: (t.cabinet as any)?.timelineStatuses?.CREATED || "Отримано" },
-                  { status: "RECEIVED_CN", label: (t.cabinet as any)?.timelineStatuses?.RECEIVED_CN || "В Китаї" },
-                  { status: "IN_TRANSIT", label: (t.cabinet as any)?.timelineStatuses?.IN_TRANSIT || "У дорозі" },
-                  { status: "ARRIVED_UA", label: (t.cabinet as any)?.timelineStatuses?.ARRIVED_UA || "Прибуло" },
-                  { status: "ON_UA_WAREHOUSE", label: (t.cabinet as any)?.timelineStatuses?.ON_UA_WAREHOUSE || "На складі" },
-                  { status: "DELIVERED", label: (t.cabinet as any)?.timelineStatuses?.DELIVERED || "Доставлено" },
+                  { status: "RECEIVED_CN", label: (t.cabinet as any)?.timelineStatuses?.RECEIVED_CN || "Отримано на складі (Китай)" },
+                  { status: "CONSOLIDATION", label: (t.cabinet as any)?.timelineStatuses?.CONSOLIDATION || "Готується до відправлення" },
+                  { status: "IN_TRANSIT", label: (t.cabinet as any)?.timelineStatuses?.IN_TRANSIT || "В дорозі" },
+                  { status: "ARRIVED_UA", label: (t.cabinet as any)?.timelineStatuses?.ARRIVED_UA || "Доставлено на склад (Україна)" },
+                  { status: "ON_UA_WAREHOUSE", label: (t.cabinet as any)?.timelineStatuses?.ON_UA_WAREHOUSE || "Готово до видачі" },
+                  { status: "DELIVERED", label: (t.cabinet as any)?.timelineStatuses?.DELIVERED || "Завершено" },
                 ].map((item, idx, arr) => {
                   // Determine order of statuses
                   const statusOrder = [
@@ -457,40 +495,75 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                           if (statusHistoryItem) {
                             return (
                                 <>
-                                  {statusHistoryItem.location && (
-                                    <div className="mt-1 flex items-center justify-center gap-1">
-                                      <MapPin className="h-3 w-3 text-slate-400" />
-                                      <span className="text-[10px] font-medium text-slate-600">
-                                        {statusHistoryItem.location}
-                                      </span>
-                                    </div>
-                                  )}
+                                  {statusHistoryItem.location && (() => {
+                                    const location = statusHistoryItem.location;
+                                    // Визначаємо іконку на основі місцезнаходження та статусу
+                                    let LocationIcon = MapPin;
+                                    if (location.includes("Китай") || location.includes("China")) {
+                                      LocationIcon = Warehouse;
+                                    } else if (location.includes("Україна") || location.includes("Ukraine") || location.includes("Украина")) {
+                                      LocationIcon = Warehouse;
+                                    } else if (location.includes("Дорога") || location.includes("дорозі") || location.includes("Дорога")) {
+                                      LocationIcon = Plane;
+                                    } else if (item.status === "DELIVERED") {
+                                      LocationIcon = CheckCircle;
+                                    }
+                                    
+                                    return (
+                                      <div className="mt-1 flex items-center justify-center gap-1">
+                                        <LocationIcon className="h-3 w-3 text-slate-400" />
+                                        <span className="text-[10px] font-medium text-slate-600">
+                                          {location}
+                                        </span>
+                                      </div>
+                                    );
+                                  })()}
                                   <span className="block text-[10px] text-slate-500 mt-1">
                                 {formatDate(statusHistoryItem.createdAt)}
                               </span>
                                 </>
                             );
                           }
-                          // For DELIVERED status, show ETA if available
-                          if (item.status === "DELIVERED" && selectedShipment.eta) {
+                          // For DELIVERED status, only show date if status is actually DELIVERED and we have a real date
+                          if (item.status === "DELIVERED") {
+                            // Only show date if current status is DELIVERED (not just showing the timeline item)
+                            if (selectedShipment.status === "DELIVERED" && selectedShipment.deliveredAt) {
                             return (
-                                <span className="block text-[10px] text-slate-500 mt-1">
-                                {formatDate(selectedShipment.eta)}
+                                  <span className="block text-[10px] text-slate-500 mt-1">
+                                  {formatDate(selectedShipment.deliveredAt)}
                               </span>
-                            );
+                              );
+                            }
+                            // Don't show anything if status is not actually DELIVERED
+                            return null;
                           }
                             // For CREATED status, show receivedAtWarehouse if available
                             if (item.status === "CREATED" && selectedShipment.receivedAtWarehouse) {
                               return (
                                 <>
-                                  {selectedShipment.location && (
-                                    <div className="mt-1 flex items-center justify-center gap-1">
-                                      <MapPin className="h-3 w-3 text-slate-400" />
-                                      <span className="text-[10px] font-medium text-slate-600">
-                                        {selectedShipment.location}
-                                      </span>
-                                    </div>
-                                  )}
+                                  {selectedShipment.location && (() => {
+                                    const location = selectedShipment.location;
+                                    // Визначаємо іконку на основі місцезнаходження та статусу
+                                    let LocationIcon = MapPin;
+                                    if (location.includes("Китай") || location.includes("China")) {
+                                      LocationIcon = Warehouse;
+                                    } else if (location.includes("Україна") || location.includes("Ukraine") || location.includes("Украина")) {
+                                      LocationIcon = Warehouse;
+                                    } else if (location.includes("Дорога") || location.includes("дорозі") || location.includes("Дорога")) {
+                                      LocationIcon = Plane;
+                                    } else if (selectedShipment.status === "DELIVERED") {
+                                      LocationIcon = CheckCircle;
+                                    }
+                                    
+                                    return (
+                                      <div className="mt-1 flex items-center justify-center gap-1">
+                                        <LocationIcon className="h-3 w-3 text-slate-400" />
+                                        <span className="text-[10px] font-medium text-slate-600">
+                                          {location}
+                                        </span>
+                                      </div>
+                                    );
+                                  })()}
                                   <span className="block text-[10px] text-slate-500 mt-1">
                                     {formatDate(selectedShipment.receivedAtWarehouse)}
                                   </span>
@@ -506,8 +579,8 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                                     {selectedShipment.location}
                                   </span>
                                 </div>
-                              );
-                            }
+                            );
+                          }
                           return null;
                         })()}
                         </div>
@@ -568,36 +641,59 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                           <span className="font-semibold text-slate-900">
                             {deliveryTotal.toFixed(2)} $
                           </span>
-                        </div>
+                </div>
                       ) : null;
                     })()}
                     
                     {/* Additional Services */}
-                    {(selectedShipment.packingCost || selectedShipment.localDeliveryCost) && (
-                      <>
-                        <div className="mt-3 pt-3 border-t border-slate-200">
-                          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                            {t.cabinet?.additionalServices || "Додаткові послуги:"}
-                          </p>
-                          {selectedShipment.packingCost && (
-                            <div className="flex justify-between text-sm">
-                              <span className="text-slate-600">{t.cabinet?.packaging || "Пакування:"}</span>
-                              <span className="font-semibold text-slate-900">
-                                {parseFloat(selectedShipment.packingCost.toString()).toFixed(2)} $
-                              </span>
-                            </div>
-                          )}
-                          {selectedShipment.localDeliveryCost && (
-                            <div className="flex justify-between text-sm">
-                              <span className="text-slate-600">{t.cabinet?.localDeliveryToWarehouse || "Локальна доставка до складу:"}</span>
-                              <span className="font-semibold text-slate-900">
-                                {parseFloat(selectedShipment.localDeliveryCost.toString()).toFixed(2)} $
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    )}
+                    {(() => {
+                      // Calculate total insurance cost from all items
+                      let totalInsuranceCost = 0;
+                      selectedShipment.items?.forEach((item) => {
+                        if (item.insuranceValue && item.insurancePercent) {
+                          const insuranceValue = typeof item.insuranceValue === 'string' ? parseFloat(item.insuranceValue) : (item.insuranceValue ? Number(item.insuranceValue) : 0);
+                          const insurancePercent = typeof item.insurancePercent === 'string' ? parseFloat(item.insurancePercent) : (item.insurancePercent ? Number(item.insurancePercent) : 0);
+                          totalInsuranceCost += (insuranceValue * insurancePercent) / 100;
+                        }
+                      });
+                      
+                      const hasInsurance = totalInsuranceCost > 0;
+                      const hasAdditionalServices = hasInsurance || selectedShipment.packingCost || selectedShipment.localDeliveryCost;
+                      
+                      return hasAdditionalServices ? (
+                        <>
+                          <div className="mt-3 pt-3 border-t border-slate-200">
+                            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
+                              {t.cabinet?.additionalServices || "Додаткові послуги:"}
+                            </p>
+                            {hasInsurance && (
+                              <div className="flex justify-between text-sm">
+                                <span className="text-slate-600">{(t.cabinet as any)?.insurance || "Страхування:"}</span>
+                                <span className="font-semibold text-slate-900">
+                                  {totalInsuranceCost.toFixed(2)} $
+                                </span>
+                </div>
+                            )}
+                            {selectedShipment.packingCost && (
+                              <div className="flex justify-between text-sm">
+                                <span className="text-slate-600">{t.cabinet?.packaging || "Пакування:"}</span>
+                                <span className="font-semibold text-slate-900">
+                                  {parseFloat(selectedShipment.packingCost.toString()).toFixed(2)} $
+                                </span>
+                </div>
+                            )}
+                            {selectedShipment.localDeliveryCost && (
+                              <div className="flex justify-between text-sm">
+                                <span className="text-slate-600">{t.cabinet?.localDeliveryToWarehouse || "Локальна доставка до складу:"}</span>
+                                <span className="font-semibold text-slate-900">
+                                  {parseFloat(selectedShipment.localDeliveryCost.toString()).toFixed(2)} $
+                                </span>
+                </div>
+                            )}
+                          </div>
+                        </>
+                      ) : null;
+                    })()}
                   </div>
                 </div>
 
@@ -613,7 +709,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                     </span>
                   </div>
                 </div>
-              </div>
+                </div>
 
               {/* Status & Route + Dates - Two columns */}
               <div className="mb-6 grid gap-4 md:grid-cols-2">
@@ -671,24 +767,24 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                     <div className="flex justify-between">
                       <span className="text-xs text-slate-600">{t.cabinet?.sentLabel || (t.cabinet as any)?.shipmentModal?.sent || "Відправлено:"}</span>
                       <span className="text-sm font-bold text-slate-900">
-                        {formatDate(selectedShipment.sentAt as Date | null)}
+                    {formatDate(selectedShipment.sentAt as Date | null)}
                       </span>
-                    </div>
+                </div>
                     <div className="flex justify-between">
                       <span className="text-xs text-slate-600">{t.cabinet?.deliveredLabel || (t.cabinet as any)?.shipmentModal?.delivered || "Доставлено:"}</span>
                       <span className="text-sm font-bold text-slate-900">
-                        {formatDate(selectedShipment.deliveredAt as Date | null)}
+                    {formatDate(selectedShipment.deliveredAt as Date | null)}
                       </span>
-                    </div>
+                </div>
                     <div className="flex justify-between">
                       <span className="text-xs text-slate-600">{t.cabinet?.expectedDateLabel || (t.cabinet as any)?.shipmentModal?.expectedDate || "Очікувана дата:"}</span>
                       <span className="text-sm font-bold text-slate-900">
-                        {formatDate(selectedShipment.eta as Date | null)}
+                    {formatDate(selectedShipment.eta as Date | null)}
                       </span>
-                    </div>
+                </div>
                   </div>
                 </div>
-              </div>
+                </div>
 
               {/* Items Table - MOVED HERE */}
               {selectedShipment.items && selectedShipment.items.length > 0 && (
@@ -744,7 +840,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                           return (
                             <tr key={item.id || index} className="hover:bg-slate-50">
                               <td className="px-3 py-2.5 font-bold text-slate-900">{item.placeNumber || (index + 1)}</td>
-                              <td className="px-3 py-2.5 text-xs font-mono text-slate-900">{item.trackNumber || "-"}</td>
+                              <td className="px-3 py-2.5 text-xs font-mono text-slate-900">{formatTrackNumber(item.trackNumber) || "-"}</td>
                               <td className="px-3 py-2.5 text-xs text-slate-900">{item.localTracking || "-"}</td>
                               <td className="px-3 py-2.5 text-xs text-slate-900">{item.description || "-"}</td>
                               <td className="px-3 py-2.5 text-center text-xs text-slate-900">{item.quantity || 1}</td>
@@ -822,8 +918,8 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                       </tbody>
                     </table>
                   </div>
-                </div>
-              )}
+                  </div>
+                )}
 
               {/* Type & Description - Two columns */}
               <div className="mb-6 grid gap-4 md:grid-cols-2">
@@ -843,7 +939,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                     {selectedShipment.description || "-"}
                   </p>
                 </div>
-              </div>
+                </div>
 
               {/* Delivery Format & Reference - Two columns */}
               <div className="mb-6 grid gap-4 md:grid-cols-2">
@@ -857,7 +953,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                 </div>
                 <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <label className="mb-2 block text-xs font-bold uppercase tracking-wide text-slate-700">
-                    Номер накладної / коментар
+                      Номер накладної / коментар
                   </label>
                   <p className="text-sm font-semibold text-slate-900">
                     {selectedShipment.deliveryReference || "-"}
@@ -1223,13 +1319,85 @@ function getStatusEmoji(status: string): React.ReactNode {
 type SummaryItemProps = {
   label: string;
   value: number;
+  total: number;
+  color?: "blue" | "orange" | "green";
+  icon?: React.ComponentType<{ className?: string }>;
 };
 
-function SummaryItem({ label, value }: SummaryItemProps) {
+function SummaryItem({ label, value, total, color = "blue", icon: Icon }: SummaryItemProps) {
+  const colorClasses = {
+    blue: {
+      bg: "bg-gradient-to-br from-blue-50 to-blue-100/50",
+      border: "border-blue-200/60",
+      text: "text-blue-700",
+      number: "text-blue-600",
+      iconBg: "bg-blue-500/10",
+      iconColor: "text-blue-600",
+      progress: "bg-blue-500",
+    },
+    orange: {
+      bg: "bg-gradient-to-br from-orange-50 to-orange-100/50",
+      border: "border-orange-200/60",
+      text: "text-orange-700",
+      number: "text-orange-600",
+      iconBg: "bg-orange-500/10",
+      iconColor: "text-orange-600",
+      progress: "bg-orange-500",
+    },
+    green: {
+      bg: "bg-gradient-to-br from-emerald-50 to-emerald-100/50",
+      border: "border-emerald-200/60",
+      text: "text-emerald-700",
+      number: "text-emerald-600",
+      iconBg: "bg-emerald-500/10",
+      iconColor: "text-emerald-600",
+      progress: "bg-emerald-500",
+    },
+  };
+
+  const colors = colorClasses[color];
+  const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-center shadow-sm hover:shadow-md transition-all hover:border-teal-300">
-      <div className="text-[11px] font-semibold text-slate-600 uppercase tracking-wide mb-1">{label}</div>
-      <div className="text-2xl font-black text-teal-700">{value}</div>
+    <div className={`group relative overflow-hidden rounded-xl border-2 ${colors.border} ${colors.bg} px-4 py-5 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-100`}>
+      <div className="relative z-10">
+        {/* Icon */}
+        {Icon && (
+          <div className={`mb-3 flex justify-center`}>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${colors.iconBg} transition-transform duration-300 group-hover:scale-110`}>
+              <Icon className={`h-5 w-5 ${colors.iconColor}`} />
+            </div>
+          </div>
+        )}
+        
+        {/* Label */}
+        <div className={`mb-2 text-[10px] font-bold ${colors.text} uppercase tracking-wider`}>
+          {label}
+        </div>
+        
+        {/* Value */}
+        <div className={`mb-2 text-3xl font-black ${colors.number} leading-none`}>
+          {value}
+        </div>
+        
+        {/* Percentage and Progress Bar */}
+        {total > 0 && (
+          <div className="mt-3 space-y-1.5">
+            <div className="text-[10px] font-semibold text-slate-500">
+              {percentage}%
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/60">
+              <div
+                className={`h-full ${colors.progress} transition-all duration-500 ease-out`}
+                style={{ width: `${percentage}%` }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* Decorative background element */}
+      <div className={`absolute -right-4 -top-4 h-20 w-20 rounded-full ${colors.iconBg} opacity-50 blur-xl transition-opacity duration-300 group-hover:opacity-70`}></div>
     </div>
   );
 }

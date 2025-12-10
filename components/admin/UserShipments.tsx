@@ -135,11 +135,13 @@ export function UserShipments({
   };
 
   // Helper function to generate internal track number
+  // Номер замовлення рахується глобально для користувача, а не в партії
   const generateInternalTrack = (batchId: string, clientCode: string, deliveryType: string): string => {
     if (!batchId || batchId.trim() === "" || !clientCode) return "";
-    const existingShipmentsInBatch = shipments.filter((s) => s.batchId === batchId).length;
+    // Рахуємо всі вантажі користувача (глобально), а не тільки в партії
+    const existingShipmentsForClient = shipments.length;
     const deliveryTypeCode = getDeliveryTypeCode(deliveryType);
-    const shipmentNumber = String(existingShipmentsInBatch + 1).padStart(4, "0");
+    const shipmentNumber = String(existingShipmentsForClient + 1).padStart(4, "0");
     return `${batchId}-${clientCode}${deliveryTypeCode}${shipmentNumber}`;
   };
 
@@ -157,6 +159,19 @@ export function UserShipments({
     const deliveryType = shipmentForm.deliveryType || selectedBatch?.deliveryType || "AIR";
     return generateInternalTrack(shipmentForm.batchId, user.clientCode, deliveryType);
   }, [shipmentForm.batchId, shipmentForm.deliveryType, batches, user?.clientCode, shipments]);
+
+  // Автоматично оновлюємо трек номери місць при зміні calculatedInternalTrack
+  useEffect(() => {
+    if (calculatedInternalTrack && shipmentForm.items.length > 0) {
+      setShipmentForm((prev) => ({
+        ...prev,
+        items: prev.items.map((item, index) => ({
+          ...item,
+          trackNumber: `${calculatedInternalTrack}-${index + 1}`,
+        })),
+      }));
+    }
+  }, [calculatedInternalTrack]);
 
   // Fetch functions
   const fetchBatches = async () => {
@@ -393,6 +408,19 @@ export function UserShipments({
   const handleCreateShipment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    
+    // Підтвердження перед створенням
+    const confirmMessage = `Ви впевнені, що хочете створити вантаж?\n\n` +
+      `Партія: ${shipmentForm.batchId || "Не вказано"}\n` +
+      `Тип доставки: ${shipmentForm.deliveryType || "Не вказано"}\n` +
+      `Трек номер: ${calculatedInternalTrack || "Буде згенеровано автоматично"}\n` +
+      `Місць: ${shipmentForm.items.length}\n\n` +
+      `Перевірте всі дані перед створенням!`;
+    
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+    
     onError("");
     onSuccess("");
     try {
@@ -1667,7 +1695,6 @@ export function UserShipments({
                           let totalVolume = 0;
                           let totalDeliveryCost = 0;
                           let totalDensity = 0;
-                          let densityCount = 0;
 
                           shipmentForm.items.forEach((item) => {
                             const insuranceValue = parseFloat(item.insuranceValue) || 0;
@@ -1676,20 +1703,18 @@ export function UserShipments({
                             const weight = parseFloat(item.weightKg) || 0;
                             const volume = parseFloat(item.volumeM3) || 0;
                             const deliveryCost = parseFloat(item.deliveryCost) || 0;
-                            const density = parseFloat(item.density) || 0;
 
                             totalInsuranceSum += insuranceValue;
                             totalInsuranceCost += insuranceCost;
                             totalWeight += weight;
                             totalVolume += volume;
                             totalDeliveryCost += deliveryCost;
-                            if (density > 0) {
-                              totalDensity += density;
-                              densityCount++;
-                            }
                           });
-
-                          const avgDensity = densityCount > 0 ? totalDensity / densityCount : 0;
+                          
+                          // Розраховуємо загальну щільність: загальна вага / загальний об'єм
+                          if (totalWeight > 0 && totalVolume > 0) {
+                            totalDensity = totalWeight / totalVolume;
+                          }
 
                           return (
                             <tr className="bg-slate-100 font-bold">
@@ -1711,7 +1736,7 @@ export function UserShipments({
                                 {totalVolume > 0 ? totalVolume.toFixed(2) : ""}
                               </td>
                               <td className="px-2 py-2 text-center text-[10px] text-slate-900">
-                                {avgDensity > 0 ? avgDensity.toFixed(0) : ""}
+                                {totalDensity > 0 ? totalDensity.toFixed(0) : ""}
                               </td>
                               <td className="px-2 py-2"></td>
                               <td className="px-2 py-2 text-center text-[10px] text-slate-900">
@@ -2851,7 +2876,6 @@ export function UserShipments({
                           let totalVolume = 0;
                           let totalDeliveryCost = 0;
                           let totalDensity = 0;
-                          let densityCount = 0;
 
                           editingShipmentForm.items.forEach((item) => {
                             const insuranceValue = parseFloat(item.insuranceValue) || 0;
@@ -2860,20 +2884,18 @@ export function UserShipments({
                             const weight = parseFloat(item.weightKg) || 0;
                             const volume = parseFloat(item.volumeM3) || 0;
                             const deliveryCost = parseFloat(item.deliveryCost) || 0;
-                            const density = parseFloat(item.density) || 0;
 
                             totalInsuranceSum += insuranceValue;
                             totalInsuranceCost += insuranceCost;
                             totalWeight += weight;
                             totalVolume += volume;
                             totalDeliveryCost += deliveryCost;
-                            if (density > 0) {
-                              totalDensity += density;
-                              densityCount++;
-                            }
                           });
-
-                          const avgDensity = densityCount > 0 ? totalDensity / densityCount : 0;
+                          
+                          // Розраховуємо загальну щільність: загальна вага / загальний об'єм
+                          if (totalWeight > 0 && totalVolume > 0) {
+                            totalDensity = totalWeight / totalVolume;
+                          }
 
                           return (
                             <tr className="bg-slate-100 font-bold">
@@ -2895,7 +2917,7 @@ export function UserShipments({
                                 {totalVolume > 0 ? totalVolume.toFixed(2) : ""}
                               </td>
                               <td className="px-2 py-2 text-center text-[10px] text-slate-900">
-                                {avgDensity > 0 ? avgDensity.toFixed(0) : ""}
+                                {totalDensity > 0 ? totalDensity.toFixed(0) : ""}
                               </td>
                               <td className="px-2 py-2"></td>
                               <td className="px-2 py-2 text-center text-[10px] text-slate-900">
@@ -3307,7 +3329,6 @@ export function UserShipments({
                           let totalVolume = 0;
                           let totalDeliveryCost = 0;
                           let totalDensity = 0;
-                          let densityCount = 0;
 
                           viewingShipment.items.forEach((item) => {
                             const insuranceValue = parseFloat(String(item.insuranceValue || "0")) || 0;
@@ -3337,13 +3358,12 @@ export function UserShipments({
                             totalWeight += weight;
                             totalVolume += volume;
                             totalDeliveryCost += deliveryCost;
-                            if (density > 0) {
-                              totalDensity += density;
-                              densityCount++;
-                            }
                           });
-
-                          const avgDensity = densityCount > 0 ? totalDensity / densityCount : 0;
+                          
+                          // Розраховуємо загальну щільність: загальна вага / загальний об'єм
+                          if (totalWeight > 0 && totalVolume > 0) {
+                            totalDensity = totalWeight / totalVolume;
+                          }
 
                           return (
                             <tr className="bg-slate-100 font-bold">
@@ -3365,7 +3385,7 @@ export function UserShipments({
                                 {totalVolume > 0 ? totalVolume.toFixed(4) : ""}
                               </td>
                               <td className="px-2 py-2 text-center text-[10px] text-slate-900">
-                                {avgDensity > 0 ? avgDensity.toFixed(0) : ""}
+                                {totalDensity > 0 ? totalDensity.toFixed(0) : ""}
                               </td>
                               <td className="px-2 py-2"></td>
                               <td className="px-2 py-2 text-center text-[10px] text-slate-900">

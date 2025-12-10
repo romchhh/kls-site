@@ -198,6 +198,60 @@
         "description": "Отримання всіх замовлень (вантажів) користувача за його ID. Повертає повну інформацію про всі замовлення користувача, включаючи товари, історію статусів та рахунки."
       },
       "response": []
+    },
+    {
+      "name": "Get User Invoices",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{api_token}}",
+            "description": "Bearer token отриманий з адмін панелі"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/public/user/:userId/invoices",
+          "host": ["{{base_url}}"],
+          "path": ["api", "public", "user", ":userId", "invoices"],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "cmij6wnoy0000zvwfrcy6lry6",
+              "description": "ID користувача в системі"
+            }
+          ]
+        },
+        "description": "Отримання всіх рахунків користувача за його ID. Повертає список рахунків зі статистикою."
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Information",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{api_token}}",
+            "description": "Bearer token отриманий з адмін панелі"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/public/user/:userId",
+          "host": ["{{base_url}}"],
+          "path": ["api", "public", "user", ":userId"],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "cmij6wnoy0000zvwfrcy6lry6",
+              "description": "ID користувача в системі"
+            }
+          ]
+        },
+        "description": "Отримання повної інформації про користувача за його ID. Повертає баланс, рахунки та статистику вантажів."
+      },
+      "response": []
     }
   ],
   "variable": [

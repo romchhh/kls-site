@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { getLocationForStatus } from "@/lib/utils/shipmentAutomation";
+import { getDeliveryTypeCode } from "@/components/admin/utils/shipmentUtils";
 
 export async function PUT(
   req: NextRequest,
@@ -21,7 +23,16 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
 
-    const existing = await prisma.shipment.findUnique({ where: { id } });
+    const existing = await prisma.shipment.findUnique({ 
+      where: { id },
+      include: {
+        user: {
+          select: {
+            clientCode: true,
+          },
+        },
+      },
+    });
     if (!existing) {
       return NextResponse.json({ error: "Shipment not found" }, { status: 404 });
     }
@@ -30,7 +41,7 @@ export async function PUT(
       internalTrack,
       cargoLabel,
       status,
-      location,
+      location: providedLocation,
       routeFrom,
       routeTo,
       deliveryType,
@@ -66,6 +77,136 @@ export async function PUT(
     let computedEta: Date | null = null;
     const nextStatus = status ?? existing.status;
     const nextDeliveryType = deliveryType ?? existing.deliveryType;
+    
+    // Автоматично встановлюємо місцезнаходження на основі статусу, якщо не вказано явно
+    let finalLocation = providedLocation;
+    if (status && status !== existing.status) {
+      // Якщо статус змінюється, автоматично встановлюємо location
+      finalLocation = providedLocation || getLocationForStatus(status as any, routeFrom ?? existing.routeFrom, routeTo ?? existing.routeTo);
+    } else if (!finalLocation && status) {
+      // Якщо статус не змінюється, але location не вказано, встановлюємо на основі поточного статусу
+      finalLocation = getLocationForStatus(status as any, routeFrom ?? existing.routeFrom, routeTo ?? existing.routeTo);
+    }
+    
+    // Якщо змінюється тип доставки, оновлюємо трек номер вантажу та items
+    // НЕ дозволяємо змінювати internalTrack напряму, якщо змінюється deliveryType
+    let finalInternalTrack = existing.internalTrack;
+    let shouldUpdateItemTracks = false;
+    
+    // Якщо змінюється тип доставки, автоматично генеруємо новий трек номер
+    if (deliveryType && deliveryType !== existing.deliveryType) {
+      // Перевіряємо, чи є необхідні дані для генерації трек номера
+      const currentBatchId = batchId !== undefined ? (batchId || existing.batchId) : existing.batchId;
+      const clientCode = existing.user?.clientCode;
+      
+      if (!currentBatchId || !clientCode) {
+        console.error("Cannot update track number: missing batchId or clientCode", {
+          batchId: currentBatchId,
+          clientCode: clientCode,
+          existingBatchId: existing.batchId,
+        });
+      } else if (!existing.internalTrack || existing.internalTrack.trim() === "") {
+        console.error("Cannot update track number: existing internalTrack is empty");
+      } else {
+        // Парсимо існуючий трек номер
+        // Формат може бути: 00100-2491S0001 або 00100-2491Е-0001
+        const trackParts = existing.internalTrack.split("-");
+        
+        if (trackParts.length >= 2) {
+          // Витягуємо batchId з першої частини (наприклад, "00100")
+          const extractedBatchId = trackParts[0];
+          
+          // Друга частина містить clientCode + буква типу доставки + номер замовлення
+          // Формат: "2491S0001" або "2491Е" (якщо номер замовлення в окремій частині)
+          const secondPart = trackParts[1];
+          
+          // Шукаємо букву типу доставки (A, S, R, M) в другій частині
+          const typeMatch = secondPart.match(/(\d+)([ASRM])(\d{4})$/);
+          
+          if (typeMatch) {
+            // Формат: 2491S0001
+            const extractedClientCode = typeMatch[1];
+            const oldDeliveryTypeCode = typeMatch[2];
+            const orderNumber = typeMatch[3];
+            
+            // Генеруємо новий трек номер з новим типом доставки
+            const newDeliveryTypeCode = getDeliveryTypeCode(deliveryType);
+            finalInternalTrack = `${extractedBatchId}-${extractedClientCode}${newDeliveryTypeCode}${orderNumber}`;
+            shouldUpdateItemTracks = true;
+            console.log("Updated track number due to deliveryType change:", {
+              old: existing.internalTrack,
+              new: finalInternalTrack,
+              deliveryType: deliveryType,
+              orderNumber: orderNumber,
+              extractedBatchId: extractedBatchId,
+            });
+          } else if (trackParts.length >= 3) {
+            // Формат: 00100-2491Е-0001 (з дефісом перед номером замовлення)
+            const orderNumber = trackParts[2];
+            
+            // Шукаємо букву типу доставки в другій частині
+            const typeMatch2 = secondPart.match(/(\d+)([ASRM])$/);
+            if (typeMatch2) {
+              const extractedClientCode = typeMatch2[1];
+              const newDeliveryTypeCode = getDeliveryTypeCode(deliveryType);
+              finalInternalTrack = `${extractedBatchId}-${extractedClientCode}${newDeliveryTypeCode}-${orderNumber}`;
+              shouldUpdateItemTracks = true;
+              console.log("Updated track number (with dash format):", {
+                old: existing.internalTrack,
+                new: finalInternalTrack,
+                deliveryType: deliveryType,
+                orderNumber: orderNumber,
+              });
+            } else {
+              // Спробуємо витягти номер замовлення з останньої частини
+              const lastPart = trackParts[trackParts.length - 1];
+              if (lastPart && lastPart.match(/^\d{4}$/)) {
+                const extractedClientCode = secondPart.replace(/[ASRM]$/, "");
+                const newDeliveryTypeCode = getDeliveryTypeCode(deliveryType);
+                finalInternalTrack = `${extractedBatchId}-${extractedClientCode}${newDeliveryTypeCode}-${lastPart}`;
+                shouldUpdateItemTracks = true;
+                console.log("Updated track number (extracted from last part):", {
+                  old: existing.internalTrack,
+                  new: finalInternalTrack,
+                  deliveryType: deliveryType,
+                  orderNumber: lastPart,
+                });
+              } else {
+                console.error("Cannot parse track number format:", existing.internalTrack);
+              }
+            }
+          } else {
+            // Fallback: спробуємо витягти останні 4 цифри
+            const fallbackMatch = existing.internalTrack.match(/(\d{4})$/);
+            const fallbackOrderNumber = fallbackMatch ? fallbackMatch[1] : null;
+            if (fallbackOrderNumber && extractedBatchId && clientCode) {
+              const newDeliveryTypeCode = getDeliveryTypeCode(deliveryType);
+              finalInternalTrack = `${extractedBatchId}-${clientCode}${newDeliveryTypeCode}${fallbackOrderNumber}`;
+              shouldUpdateItemTracks = true;
+              console.log("Updated track number (fallback):", {
+                old: existing.internalTrack,
+                new: finalInternalTrack,
+                deliveryType: deliveryType,
+                orderNumber: fallbackOrderNumber,
+              });
+            } else {
+              console.error("Cannot extract order number from track:", existing.internalTrack);
+            }
+          }
+        } else {
+          console.error("Invalid track number format:", existing.internalTrack);
+        }
+      }
+    } else if (internalTrack !== undefined && internalTrack !== null && internalTrack !== existing.internalTrack && !deliveryType) {
+      // Якщо deliveryType не змінюється і не передається, але internalTrack передано явно, використовуємо його
+      // Але тільки якщо це не виглядає як ID (перевірка на формат трек номера)
+      if (internalTrack.includes("-") && internalTrack.match(/^\d+-/)) {
+        finalInternalTrack = internalTrack;
+      } else {
+        console.warn("Ignoring invalid internalTrack format:", internalTrack);
+      }
+    }
+    
     const nextSentAt =
       sentAt !== undefined
         ? sentAt
@@ -91,6 +232,39 @@ export async function PUT(
     let calculatedTotalCost = new Prisma.Decimal(0);
     let itemsUpdate: any = undefined;
 
+    // Якщо змінюється deliveryType, але items не передаються, потрібно оновити існуючі items
+    if (shouldUpdateItemTracks && (items === undefined || !Array.isArray(items))) {
+      console.log("Updating existing items track numbers because deliveryType changed", {
+        shouldUpdateItemTracks,
+        itemsProvided: items !== undefined && Array.isArray(items),
+        finalInternalTrack,
+      });
+      
+      // Отримуємо існуючі items
+      const existingItems = await prisma.shipmentItem.findMany({
+        where: { shipmentId: id },
+        orderBy: { placeNumber: "asc" },
+      });
+
+      console.log(`Found ${existingItems.length} existing items to update`);
+
+      // Оновлюємо трек номери для всіх існуючих items
+      // Використовуємо finalInternalTrack як основу (наприклад, 00100-2491A0003)
+      // Трек номер місця буде: 00100-2491A0003-1, 00100-2491A0003-2, тощо
+      
+      for (const item of existingItems) {
+        const oldTrackNumber = item.trackNumber;
+        const newTrackNumber = `${finalInternalTrack}-${item.placeNumber}`;
+        console.log(`Updating item ${item.placeNumber}: ${oldTrackNumber} -> ${newTrackNumber}`);
+        await prisma.shipmentItem.update({
+          where: { id: item.id },
+          data: { trackNumber: newTrackNumber },
+        });
+      }
+      
+      console.log("Finished updating item track numbers");
+    }
+
     if (items !== undefined && Array.isArray(items)) {
       pieces = items.length || existing.pieces;
       
@@ -115,13 +289,16 @@ export async function PUT(
           calculatedTotalCost = calculatedTotalCost.add(itemDeliveryCost);
         }
 
-        // Auto-generate trackNumber if not provided
+        // Auto-generate trackNumber if not provided or if deliveryType changed
+        // Якщо змінився deliveryType (shouldUpdateItemTracks = true), ЗАВЖДИ оновлюємо трек номер
+        // на основі нового finalInternalTrack, навіть якщо trackNumber вже заповнений
         let trackNumber = item.trackNumber;
-        if (!trackNumber || trackNumber.trim() === "") {
-          // Format: 00010-2661A0001-1, 00010-2661A0001-2, etc.
-          // Convert internalTrack from "00010-2661A-0001" to "00010-2661A0001-1"
-          const trackBase = existing.internalTrack.replace(/-(\d+)$/, '$1'); // Remove last dash, keep number
-          trackNumber = `${trackBase}-${index + 1}`;
+        if (shouldUpdateItemTracks) {
+          // Завжди оновлюємо трек номер, якщо змінився deliveryType
+          trackNumber = `${finalInternalTrack}-${index + 1}`;
+        } else if (!trackNumber || trackNumber.trim() === "") {
+          // Якщо deliveryType не змінився, але trackNumber порожній, генеруємо на основі поточного finalInternalTrack
+          trackNumber = `${finalInternalTrack}-${index + 1}`;
         }
 
         return {
@@ -201,10 +378,10 @@ export async function PUT(
     const shipment = await prisma.shipment.update({
       where: { id },
       data: {
-        internalTrack: internalTrack ?? existing.internalTrack,
+        internalTrack: finalInternalTrack,
         cargoLabel: cargoLabel ?? existing.cargoLabel,
         status: nextStatus,
-        location: location ?? existing.location,
+        location: finalLocation ?? existing.location,
         pieces,
         routeFrom: routeFrom ?? existing.routeFrom,
         routeTo: routeTo ?? existing.routeTo,
@@ -261,7 +438,7 @@ export async function PUT(
           data: {
             shipmentId: shipment.id,
             status: status as any,
-            location: location ?? existing.location ?? null,
+            location: finalLocation ?? existing.location ?? null,
             description: `Статус змінено на ${status}`,
           },
         });

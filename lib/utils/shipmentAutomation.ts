@@ -43,6 +43,7 @@ export function calculateETA(sentAt: Date, deliveryType: DeliveryType): Date {
 
 /**
  * Отримує місцезнаходження на основі статусу та маршруту
+ * Відповідає вимогам: статус має бути прив'язаний до місцезнаходження
  */
 export function getLocationForStatus(
   status: ShipmentStatus,
@@ -51,31 +52,21 @@ export function getLocationForStatus(
 ): string {
   switch (status) {
     case "CREATED":
-      return "";
+      return "Китай Склад";
     case "RECEIVED_CN":
-      // Визначаємо склад на основі маршруту "З"
-      if (routeFrom) {
-        if (routeFrom.includes("CN") || routeFrom.includes("Китай") || routeFrom.includes("China")) {
-          return "Склад Китай";
-        }
-        if (routeFrom.includes("HK") || routeFrom.includes("Гонконг") || routeFrom.includes("Hong Kong")) {
-          return "Склад Гонконг";
-        }
-      }
-      return "Склад Китай"; // За замовчуванням
+      return "Китай Склад";
     case "CONSOLIDATION":
-      return routeFrom?.includes("CN") || routeFrom?.includes("Китай") || routeFrom?.includes("China")
-        ? "Склад Китай"
-        : "Склад Гонконг";
+      return "Дорога"; // Готується до відправлення - в дорозі
     case "IN_TRANSIT":
-      return "В дорозі";
+      return "Дорога"; // В дорозі
     case "ARRIVED_UA":
+      return "Україна склад";
     case "ON_UA_WAREHOUSE":
-      return "Склад Україна";
+      return "Україна склад";
     case "DELIVERED":
-      return "Доставлено";
+      return ""; // Для завершено - не показуємо місцезнаходження (буде іконка галочки)
     case "ARCHIVED":
-      return "Архів";
+      return ""; // Для архіву - не показуємо
     default:
       return "";
   }
@@ -113,7 +104,7 @@ export function getSentAtData(
 } {
   return {
     status: "IN_TRANSIT",
-    location: "В дорозі",
+    location: getLocationForStatus("IN_TRANSIT", null, routeTo),
     eta: calculateETA(sentAt, deliveryType),
     description: "Вантаж відправлено",
   };
