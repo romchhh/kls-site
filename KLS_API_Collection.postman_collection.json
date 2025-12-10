@@ -252,6 +252,33 @@
         "description": "Отримання повної інформації про користувача за його ID. Повертає баланс, рахунки та статистику вантажів."
       },
       "response": []
+    },
+    {
+      "name": "Get User Finances",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{api_token}}",
+            "description": "Bearer token отриманий з адмін панелі"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/public/user/:userId/finances",
+          "host": ["{{base_url}}"],
+          "path": ["api", "public", "user", ":userId", "finances"],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "cmij6wnoy0000zvwfrcy6lry6",
+              "description": "ID користувача в системі"
+            }
+          ]
+        },
+        "description": "Отримання фінансової інформації користувача: баланс та історія транзакцій з running balance."
+      },
+      "response": []
     }
   ],
   "variable": [

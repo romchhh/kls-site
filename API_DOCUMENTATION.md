@@ -656,6 +656,123 @@ console.log(data);
 
 ---
 
+## 6. Get User Finances
+
+### Endpoint
+```
+GET /api/public/user/:id/finances
+```
+
+### Description
+Отримання фінансової інформації користувача: баланс та історія транзакцій з running balance.
+
+**⚠️ Вимагає Bearer token авторизації**
+
+### Headers
+```
+Authorization: Bearer kls_your_token_here
+```
+
+### Path Parameters
+- `id` (string, required) - ID користувача в системі
+
+### Success Response (200)
+```json
+{
+  "balance": {
+    "available": "1100.00",
+    "incomeTotal": "1100.00",
+    "expenseTotal": "0.00",
+    "currency": "USD"
+  },
+  "transactions": [
+    {
+      "id": "transaction_id",
+      "type": "income",
+      "amount": "500.00",
+      "description": "Поповнення балансу",
+      "createdAt": "2025-12-01T10:30:00.000Z",
+      "runningBalance": "500.00"
+    },
+    {
+      "id": "transaction_id_2",
+      "type": "expense",
+      "amount": "100.00",
+      "description": "Оплата за вантаж",
+      "createdAt": "2025-12-02T14:20:00.000Z",
+      "runningBalance": "400.00"
+    },
+    {
+      "id": "transaction_id_3",
+      "type": "income",
+      "amount": "700.00",
+      "description": "Поповнення балансу",
+      "createdAt": "2025-12-03T09:15:00.000Z",
+      "runningBalance": "1100.00"
+    }
+  ]
+}
+```
+
+### Response Fields
+
+#### Balance Object
+- `available` (string) - Поточний баланс користувача (форматований як рядок з 2 знаками після коми)
+- `incomeTotal` (string) - Загальна сума поповнень (форматований як рядок з 2 знаками після коми)
+- `expenseTotal` (string) - Загальна сума списаних коштів (форматований як рядок з 2 знаками після коми)
+- `currency` (string) - Валюта (завжди "USD")
+
+#### Transaction Object
+- `id` (string) - Унікальний ідентифікатор транзакції
+- `type` (string) - Тип транзакції: `"income"` (поповнення) або `"expense"` (списання)
+- `amount` (string) - Сума транзакції (форматований як рядок з 2 знаками після коми)
+- `description` (string | null) - Опис транзакції
+- `createdAt` (string) - Дата створення транзакції в форматі ISO 8601
+- `runningBalance` (string) - Running balance після цієї транзакції (форматований як рядок з 2 знаками після коми)
+
+**Примітка:** Транзакції повертаються в хронологічному порядку (від найстарішої до найновішої) для правильного розрахунку running balance.
+
+### Error Response (400)
+```json
+{
+  "error": "User ID is required"
+}
+```
+
+### Error Response (401 - Invalid Token)
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+### Error Response (404)
+```json
+{
+  "error": "User not found"
+}
+```
+
+### Example Request (cURL)
+```bash
+curl -X GET http://localhost:3000/api/public/user/cmij6wnoy0000zvwfrcy6lry6/finances \
+  -H "Authorization: Bearer kls_your_token_here"
+```
+
+### Example Request (JavaScript)
+```javascript
+const userId = 'cmij6wnoy0000zvwfrcy6lry6';
+const response = await fetch(`http://localhost:3000/api/public/user/${userId}/finances`, {
+  headers: {
+    'Authorization': 'Bearer kls_your_token_here'
+  }
+});
+const data = await response.json();
+console.log(data);
+```
+
+---
+
 ## Status Codes
 
 - `200` - Успішний запит
