@@ -532,10 +532,10 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                                   <span className="block text-[10px] text-slate-500 mt-1">
                                   {formatDate(selectedShipment.deliveredAt)}
                               </span>
-                              );
-                            }
+                            );
+                          }
                             // Don't show anything if status is not actually DELIVERED
-                            return null;
+                          return null;
                           }
                             // For CREATED status, show receivedAtWarehouse if available
                             if (item.status === "CREATED" && selectedShipment.receivedAtWarehouse) {
@@ -563,7 +563,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                                         </span>
                                       </div>
                                     );
-                                  })()}
+                        })()}
                                   <span className="block text-[10px] text-slate-500 mt-1">
                                     {formatDate(selectedShipment.receivedAtWarehouse)}
                                   </span>
@@ -665,7 +665,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                           <div className="mt-3 pt-3 border-t border-slate-200">
                             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
                               {t.cabinet?.additionalServices || "Додаткові послуги:"}
-                            </p>
+                  </p>
                             {hasInsurance && (
                               <div className="flex justify-between text-sm">
                                 <span className="text-slate-600">{(t.cabinet as any)?.insurance || "Страхування:"}</span>
@@ -1356,7 +1356,6 @@ function SummaryItem({ label, value, total, color = "blue", icon: Icon }: Summar
   };
 
   const colors = colorClasses[color];
-  const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
 
   return (
     <div className={`group relative overflow-hidden rounded-xl border-2 ${colors.border} ${colors.bg} px-4 py-5 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-100`}>
@@ -1376,24 +1375,9 @@ function SummaryItem({ label, value, total, color = "blue", icon: Icon }: Summar
         </div>
         
         {/* Value */}
-        <div className={`mb-2 text-3xl font-black ${colors.number} leading-none`}>
+        <div className={`text-3xl font-black ${colors.number} leading-none`}>
           {value}
         </div>
-        
-        {/* Percentage and Progress Bar */}
-        {total > 0 && (
-          <div className="mt-3 space-y-1.5">
-            <div className="text-[10px] font-semibold text-slate-500">
-              {percentage}%
-            </div>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/60">
-              <div
-                className={`h-full ${colors.progress} transition-all duration-500 ease-out`}
-                style={{ width: `${percentage}%` }}
-              />
-            </div>
-          </div>
-        )}
       </div>
       
       {/* Decorative background element */}

@@ -111,23 +111,59 @@ export function Navigation({ locale }: NavigationProps) {
     };
   }, []);
 
-  const deliverySubpages = [
-    { key: "air", href: `/${locale}/delivery/air` },
-    { key: "sea", href: `/${locale}/delivery/sea` },
-    { key: "rail", href: `/${locale}/delivery/rail` },
-    { key: "multimodal", href: `/${locale}/delivery/multimodal` },
-    { key: "express", href: `/${locale}/delivery/express` },
-    { key: "ddp", href: `/${locale}/delivery/ddp` },
-    { key: "fba", href: `/${locale}/delivery/fba` },
-    { key: "lcl", href: `/${locale}/delivery/lcl` },
+  // Структура доставки з 3-рівневим меню
+  const deliveryCategories = [
+    {
+      key: "ukraineTurnkey",
+      href: `/${locale}/delivery/ukraine-turnkey`,
+      items: [
+        { key: "sea", href: `/${locale}/delivery/sea` },
+        { key: "air", href: `/${locale}/delivery/air` },
+        { key: "rail", href: `/${locale}/delivery/rail` },
+        { key: "multimodal", href: `/${locale}/delivery/multimodal` },
+      ],
+    },
+    {
+      key: "euWorld",
+      href: `/${locale}/delivery/eu-world`,
+      items: [
+        { key: "fba", href: `/${locale}/delivery/fba` },
+        { key: "ddp", href: `/${locale}/delivery/ddp` },
+        { key: "express", href: `/${locale}/delivery/express` },
+        { key: "portToPort", href: `/${locale}/delivery/port-to-port` },
+        { key: "crossBorder", href: `/${locale}/delivery/cross-border` },
+      ],
+    },
+    {
+      key: "international",
+      href: `/${locale}/delivery/international`,
+      items: [
+        { key: "seaContainer", href: `/${locale}/delivery/sea-container` },
+        { key: "airCargo", href: `/${locale}/delivery/air-cargo` },
+        { key: "railCargo", href: `/${locale}/delivery/rail-cargo` },
+        { key: "roadCargo", href: `/${locale}/delivery/road-cargo` },
+      ],
+    },
   ];
 
-  const servicesSubpages = [
+  // Структура послуг з 2-рівневим меню
+  const servicesCategories = [
+    {
+      key: "warehousing",
+      href: `/${locale}/services/warehousing`,
+      items: [
+        { key: "consolidation", href: `/${locale}/services/consolidation` },
+        { key: "storage", href: `/${locale}/services/storage` },
+        { key: "inspection", href: `/${locale}/services/inspection` },
+        { key: "packaging", href: `/${locale}/services/packaging` },
+      ],
+    },
     { key: "payments", href: `/${locale}/services/payments` },
-    { key: "warehousing", href: `/${locale}/services/warehousing` },
+    { key: "customs", href: `/${locale}/services/customs` },
+    { key: "local", href: `/${locale}/services/local` },
     { key: "sourcing", href: `/${locale}/services/sourcing` },
     { key: "insurance", href: `/${locale}/services/insurance` },
-    { key: "local", href: `/${locale}/services/local` },
+    { key: "forwarding", href: `/${locale}/services/forwarding` },
   ];
 
   const getLocalizedPath = (newLocale: Locale) => {
@@ -183,25 +219,46 @@ export function Navigation({ locale }: NavigationProps) {
             </button>
             {isDeliveryOpen && (
               <div 
-                className="absolute top-full left-0 mt-2 w-56 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-2 z-50"
+                className="absolute top-full left-0 mt-2 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-6 z-50"
                 style={{
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)"
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)",
+                  minWidth: "600px",
+                  maxWidth: "800px"
                 }}
                 onMouseEnter={handleDeliveryMouseEnter}
                 onMouseLeave={handleDeliveryMouseLeave}
               >
-                {deliverySubpages.map((subpage) => {
-                  const deliveryText = t.delivery[subpage.key as keyof typeof t.delivery];
-                  return (
-                    <Link
-                      key={subpage.key}
-                      href={subpage.href}
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-teal-50/80 hover:text-teal-700 rounded-lg mx-2 transition-all duration-200"
-                    >
-                      {typeof deliveryText === 'string' ? deliveryText : subpage.key}
-                    </Link>
-                  );
-                })}
+                <div className="grid grid-cols-3 gap-6">
+                  {deliveryCategories.map((category) => {
+                    const categoryText = t.delivery[category.key as keyof typeof t.delivery];
+                    return (
+                      <div key={category.key} className="space-y-2">
+                        <Link
+                          href={category.href}
+                          className="block px-3 py-2 text-base font-semibold text-gray-900 hover:text-teal-700 transition-colors border-b border-gray-200"
+                        >
+                          {typeof categoryText === 'string' ? categoryText : category.key}
+                        </Link>
+                        {category.items && category.items.length > 0 && (
+                          <div className="space-y-1">
+                            {category.items.map((item) => {
+                              const itemText = t.delivery[item.key as keyof typeof t.delivery];
+                              return (
+                                <Link
+                                  key={item.key}
+                                  href={item.href}
+                                  className="block px-3 py-1.5 text-sm text-gray-700 hover:bg-teal-50/80 hover:text-teal-700 rounded-md transition-all duration-200"
+                                >
+                                  {typeof itemText === 'string' ? itemText : item.key}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
@@ -227,43 +284,50 @@ export function Navigation({ locale }: NavigationProps) {
             </button>
             {isServicesOpen && (
               <div 
-                className="absolute top-full left-0 mt-2 w-56 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-2 z-50"
+                className="absolute top-full left-0 mt-2 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-6 z-50"
                 style={{
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)"
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)",
+                  minWidth: "500px",
+                  maxWidth: "700px"
                 }}
                 onMouseEnter={handleServicesMouseEnter}
                 onMouseLeave={handleServicesMouseLeave}
               >
-                {servicesSubpages.map((subpage) => {
-                  const serviceText = t.services[subpage.key as keyof typeof t.services];
-                  return (
-                    <Link
-                      key={subpage.key}
-                      href={subpage.href}
-                      className="block px-4 py-2.5 text-base text-gray-700 hover:bg-teal-50/80 hover:text-teal-700 rounded-lg mx-2 transition-all duration-200"
-                    >
-                      {typeof serviceText === 'string' ? serviceText : subpage.key}
-                    </Link>
-                  );
-                })}
+                <div className="grid grid-cols-2 gap-6">
+                  {servicesCategories.map((category) => {
+                    const categoryText = t.services[category.key as keyof typeof t.services];
+                    const hasItems = category.items && category.items.length > 0;
+                    return (
+                      <div key={category.key} className="space-y-2">
+                        <Link
+                          href={category.href}
+                          className="block px-3 py-2 text-base font-semibold text-gray-900 hover:text-teal-700 transition-colors border-b border-gray-200"
+                        >
+                          {typeof categoryText === 'string' ? categoryText : category.key}
+                        </Link>
+                        {hasItems && (
+                          <div className="space-y-1">
+                            {category.items!.map((item) => {
+                              const itemText = t.services[item.key as keyof typeof t.services];
+                              return (
+                                <Link
+                                  key={item.key}
+                                  href={item.href}
+                                  className="block px-3 py-1.5 text-sm text-gray-700 hover:bg-teal-50/80 hover:text-teal-700 rounded-md transition-all duration-200"
+                                >
+                                  {typeof itemText === 'string' ? itemText : item.key}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
-
-          <Link
-            href={`/${locale}/about`}
-            className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
-              isHomePage && scrollY <= 50
-                ? pathname === `/${locale}/about`
-                  ? "bg-white/20 text-white backdrop-blur-sm"
-                  : "text-white/90 hover:bg-white/10 hover:text-white"
-                : pathname === `/${locale}/about`
-                ? "bg-teal-100 text-teal-700 shadow-sm"
-                : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
-            }`}
-          >
-            {t.nav.about}
-          </Link>
 
           <Link
             href={`/${locale}/contacts`}
@@ -385,151 +449,184 @@ export function Navigation({ locale }: NavigationProps) {
             </button>
           </div>
           
-          <div className="fixed inset-0 flex items-center justify-center lg:hidden px-6" style={{ zIndex: 50, pointerEvents: 'none' }}>
-            <div className="space-y-4 px-8 py-8 w-full max-w-md" style={{ pointerEvents: 'auto' }}>
-              {/* Доставка з підсекціями */}
-              <div className="space-y-2">
-                <button
-                  onClick={() => {
-                    setIsMobileDeliveryOpen(!isMobileDeliveryOpen);
-                    if (!isMobileDeliveryOpen) {
-                      setIsMobileServicesOpen(false);
-                      setIsMobileLangOpen(false);
-                    }
-                  }}
-                  className="flex w-full items-center justify-between py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
-                >
-                  <span>{t.nav.delivery}</span>
-                  {isMobileDeliveryOpen ? (
-                    <Minus size={20} className="text-white" />
-                  ) : (
-                    <Plus size={20} className="text-white" />
+          <div className="fixed inset-0 flex flex-col lg:hidden" style={{ zIndex: 50 }}>
+            <div className="flex-1 overflow-y-auto px-4 py-20">
+              <div className="mx-auto max-w-md space-y-3">
+                {/* Доставка з підсекціями */}
+                <div className="space-y-1">
+                  <button
+                    onClick={() => {
+                      setIsMobileDeliveryOpen(!isMobileDeliveryOpen);
+                      if (!isMobileDeliveryOpen) {
+                        setIsMobileServicesOpen(false);
+                        setIsMobileLangOpen(false);
+                      }
+                    }}
+                    className="flex w-full items-center justify-between py-3 px-2 text-lg font-semibold text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
+                  >
+                    <span>{t.nav.delivery}</span>
+                    {isMobileDeliveryOpen ? (
+                      <Minus size={20} className="text-white flex-shrink-0" />
+                    ) : (
+                      <Plus size={20} className="text-white flex-shrink-0" />
+                    )}
+                  </button>
+                  {isMobileDeliveryOpen && (
+                    <div className="space-y-2 pl-2 pr-2">
+                      {deliveryCategories.map((category) => {
+                        const categoryText = t.delivery[category.key as keyof typeof t.delivery];
+                        return (
+                          <div key={category.key} className="space-y-1">
+                            <Link
+                              href={category.href}
+                              className="block py-2 px-3 text-base font-semibold text-white transition-colors hover:text-teal-300 hover:bg-white/5 rounded-lg"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              {typeof categoryText === 'string' ? categoryText : category.key}
+                            </Link>
+                            {category.items && category.items.length > 0 && (
+                              <div className="space-y-0.5 pl-3 border-l-2 border-white/20">
+                                {category.items.map((item) => {
+                                  const itemText = t.delivery[item.key as keyof typeof t.delivery];
+                                  return (
+                                    <Link
+                                      key={item.key}
+                                      href={item.href}
+                                      className="block py-1.5 px-3 text-sm text-white/80 transition-colors hover:text-teal-300 hover:bg-white/5 rounded-md"
+                                      onClick={() => setIsMenuOpen(false)}
+                                    >
+                                      {typeof itemText === 'string' ? itemText : item.key}
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   )}
-                </button>
-                {isMobileDeliveryOpen && (
-                  <div className="space-y-1 pl-4 slide-in-from-top-2">
-                    {deliverySubpages.map((subpage) => (
-                      <Link
-                        key={subpage.key}
-                        href={subpage.href}
-                        className="block py-2.5 text-base text-white/80 transition-colors hover:text-teal-300"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {t.delivery[subpage.key as keyof typeof t.delivery]}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+                </div>
 
-              {/* Послуги з підсекціями */}
-              <div className="space-y-2">
-                <button
-                  onClick={() => {
-                    setIsMobileServicesOpen(!isMobileServicesOpen);
-                    if (!isMobileServicesOpen) {
-                      setIsMobileDeliveryOpen(false);
-                      setIsMobileLangOpen(false);
-                    }
-                  }}
-                  className="flex w-full items-center justify-between py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
-                >
-                  <span>{t.nav.services}</span>
-                  {isMobileServicesOpen ? (
-                    <Minus size={20} className="text-white" />
-                  ) : (
-                    <Plus size={20} className="text-white" />
+                {/* Послуги з підсекціями */}
+                <div className="space-y-1">
+                  <button
+                    onClick={() => {
+                      setIsMobileServicesOpen(!isMobileServicesOpen);
+                      if (!isMobileServicesOpen) {
+                        setIsMobileDeliveryOpen(false);
+                        setIsMobileLangOpen(false);
+                      }
+                    }}
+                    className="flex w-full items-center justify-between py-3 px-2 text-lg font-semibold text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
+                  >
+                    <span>{t.nav.services}</span>
+                    {isMobileServicesOpen ? (
+                      <Minus size={20} className="text-white flex-shrink-0" />
+                    ) : (
+                      <Plus size={20} className="text-white flex-shrink-0" />
+                    )}
+                  </button>
+                  {isMobileServicesOpen && (
+                    <div className="space-y-2 pl-2 pr-2">
+                      {servicesCategories.map((category) => {
+                        const categoryText = t.services[category.key as keyof typeof t.services];
+                        const hasItems = category.items && category.items.length > 0;
+                        return (
+                          <div key={category.key} className="space-y-1">
+                            <Link
+                              href={category.href}
+                              className="block py-2 px-3 text-base font-semibold text-white transition-colors hover:text-teal-300 hover:bg-white/5 rounded-lg"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              {typeof categoryText === 'string' ? categoryText : category.key}
+                            </Link>
+                            {hasItems && (
+                              <div className="space-y-0.5 pl-3 border-l-2 border-white/20">
+                                {category.items!.map((item) => {
+                                  const itemText = t.services[item.key as keyof typeof t.services];
+                                  return (
+                                    <Link
+                                      key={item.key}
+                                      href={item.href}
+                                      className="block py-1.5 px-3 text-sm text-white/80 transition-colors hover:text-teal-300 hover:bg-white/5 rounded-md"
+                                      onClick={() => setIsMenuOpen(false)}
+                                    >
+                                      {typeof itemText === 'string' ? itemText : item.key}
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   )}
-                </button>
-                {isMobileServicesOpen && (
-                  <div className="space-y-1 pl-4 slide-in-from-top-2">
-                    {servicesSubpages.map((subpage) => {
-                      const serviceText = t.services[subpage.key as keyof typeof t.services];
-                      return (
-                        <Link
-                          key={subpage.key}
-                          href={subpage.href}
-                          className="block py-2.5 text-base text-white/80 transition-colors hover:text-teal-300"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {typeof serviceText === 'string' ? serviceText : subpage.key}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+                </div>
 
-              {/* Про нас */}
-              <Link
-                href={`/${locale}/about`}
-                className="block py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t.nav.about}
-              </Link>
-
-              {/* Контакти */}
-              <Link
-                href={`/${locale}/contacts`}
-                className="block py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {t.nav.contacts}
-              </Link>
-
-              {/* Кабінет */}
-              <div className="pt-4">
+                {/* Контакти */}
                 <Link
-                  href={`/${locale}/cabinet`}
-                  className="group relative overflow-hidden flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gray-800 text-white font-semibold shadow-lg transition-all duration-300 hover:bg-gray-700 hover:scale-105"
+                  href={`/${locale}/contacts`}
+                  className="block py-3 px-2 text-lg font-semibold text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <User size={18} className="relative z-10" />
-                  <span className="relative z-10 text-lg">{t.nav.cabinet}</span>
+                  {t.nav.contacts}
                 </Link>
-              </div>
 
-              {/* Мова з dropdown */}
-              <div className="space-y-2">
-                <button
-                  onClick={() => {
-                    setIsMobileLangOpen(!isMobileLangOpen);
-                    if (!isMobileLangOpen) {
-                      setIsMobileDeliveryOpen(false);
-                      setIsMobileServicesOpen(false);
-                    }
-                  }}
-                  className="flex w-full items-center justify-between py-3 text-lg font-semibold text-white transition-colors hover:text-teal-300"
-                >
-                  <span className="flex items-center gap-2">
-                    <Globe size={18} />
-                    {locale.toUpperCase()}
-                  </span>
-                  {isMobileLangOpen ? (
-                    <Minus size={20} className="text-white" />
-                  ) : (
-                    <Plus size={20} className="text-white" />
+                {/* Кабінет */}
+                <div className="pt-2">
+                  <Link
+                    href={`/${locale}/cabinet`}
+                    className="group relative overflow-hidden flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gray-800 text-white font-semibold shadow-lg transition-all duration-300 hover:bg-gray-700 active:scale-95"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <User size={18} className="relative z-10" />
+                    <span className="relative z-10 text-lg">{t.nav.cabinet}</span>
+                  </Link>
+                </div>
+
+                {/* Мова з dropdown */}
+                <div className="space-y-1">
+                  <button
+                    onClick={() => {
+                      setIsMobileLangOpen(!isMobileLangOpen);
+                      if (!isMobileLangOpen) {
+                        setIsMobileDeliveryOpen(false);
+                        setIsMobileServicesOpen(false);
+                      }
+                    }}
+                    className="flex w-full items-center justify-between py-3 px-2 text-lg font-semibold text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Globe size={18} />
+                      {locale.toUpperCase()}
+                    </span>
+                    {isMobileLangOpen ? (
+                      <Minus size={20} className="text-white flex-shrink-0" />
+                    ) : (
+                      <Plus size={20} className="text-white flex-shrink-0" />
+                    )}
+                  </button>
+                  {isMobileLangOpen && (
+                    <div className="space-y-1 pl-2 pr-2">
+                      {locales.map((loc) => (
+                        <Link
+                          key={loc}
+                          href={getLocalizedPath(loc)}
+                          className={`block py-2 px-3 text-base transition-colors rounded-lg hover:bg-white/5 ${
+                            loc === locale
+                              ? "text-teal-300 font-semibold bg-white/10"
+                              : "text-white/80 hover:text-teal-300"
+                          }`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {loc === "ua" ? "UA" : loc === "ru" ? "RU" : "EN"}
+                        </Link>
+                      ))}
+                    </div>
                   )}
-                </button>
-                {isMobileLangOpen && (
-                  <div className="space-y-1 pl-10 slide-in-from-top-2">
-                    {locales.map((loc) => (
-                      <Link
-                        key={loc}
-                        href={getLocalizedPath(loc)}
-                        className={`block py-2.5 text-base transition-colors ${
-                          loc === locale
-                            ? "text-teal-300 font-semibold"
-                            : "text-white/80 hover:text-teal-300"
-                        }`}
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {loc === "ua" ? "UA" : loc === "ru" ? "RU" : "EN"}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

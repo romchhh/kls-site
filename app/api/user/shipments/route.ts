@@ -68,7 +68,7 @@ export async function GET() {
         totalCost: formatDecimal(shipment.totalCost),
         items: shipment.items.map((item) => ({
           ...formatShipmentItem(item),
-          shipmentId: item.shipmentId,
+            shipmentId: item.shipmentId,
         })),
       };
     });

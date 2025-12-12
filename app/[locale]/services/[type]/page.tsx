@@ -8,6 +8,12 @@ const serviceTypes = [
   "sourcing",
   "insurance",
   "local",
+  "consolidation",
+  "storage",
+  "inspection",
+  "packaging",
+  "customs",
+  "forwarding",
 ] as const;
 
 type ServiceType = (typeof serviceTypes)[number];

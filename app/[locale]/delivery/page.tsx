@@ -75,14 +75,6 @@ export default async function DeliveryPage({
                 {t.delivery.fba}
               </h2>
             </a>
-            <a
-              href={`/${locale}/delivery/lcl`}
-              className="rounded-lg border border-gray-200 p-6 transition-shadow hover:shadow-lg"
-            >
-              <h2 className="mb-2 text-xl font-semibold text-gray-900">
-                {t.delivery.lcl}
-              </h2>
-            </a>
           </div>
         </div>
       </main>

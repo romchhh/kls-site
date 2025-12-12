@@ -196,7 +196,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
               <Link
                 key={type.key}
                 href={`/${locale}/delivery/${type.key}`}
-                className={`group relative flex min-h-[380px] w-[78vw] flex-shrink-0 snap-start flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl md:min-w-0 md:w-auto md:snap-none ${
+                className={`group relative flex min-h-[300px] w-[78vw] flex-shrink-0 snap-start flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl md:min-w-0 md:w-auto md:snap-none ${
                   index === 0 ? "ml-6" : ""
                 } ${
                   index === content.types.length - 1 ? "mr-4" : ""
@@ -225,22 +225,22 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                 </div>
 
                 {/* Content */}
-                <div className="relative z-10 flex h-full flex-col justify-between p-4 md:p-6">
+                <div className="relative z-10 flex h-full flex-col justify-between p-4 md:p-5">
                   {/* Title */}
                   <div>
-                    <h3 className="mb-4 break-words text-xl font-black leading-tight text-white md:mb-6 md:text-3xl lg:text-4xl">
+                    <h3 className="mb-3 break-words text-lg font-black leading-tight text-white md:mb-4 md:text-2xl lg:text-3xl">
                       {type.title}
                     </h3>
 
                     {/* Features List */}
-                    <div className="space-y-4">
+                    <div className="space-y-2.5">
                       {type.features.map((feature, featureIndex) => (
                         <div
                           key={featureIndex}
-                          className="flex items-start gap-3"
+                          className="flex items-start gap-2.5"
                         >
-                          <div className="mt-2 flex h-2.5 w-2.5 flex-shrink-0 rounded-full bg-white" />
-                          <p className="text-base font-normal leading-relaxed text-white/95 md:text-lg">
+                          <div className="mt-1.5 flex h-2 w-2 flex-shrink-0 rounded-full bg-white" />
+                          <p className="text-sm font-normal leading-relaxed text-white/95 md:text-base">
                             {feature.text}
                           </p>
                         </div>
@@ -249,10 +249,10 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                   </div>
 
                   {/* Learn More Button - appears on hover */}
-                  <div className="mt-6 opacity-0 transition-all duration-500 group-hover:opacity-100">
-                    <div className="flex items-center gap-3 rounded-2xl bg-white/95 px-6 py-3.5 text-base font-semibold text-slate-900 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:gap-4 md:text-lg md:px-8 md:py-4">
+                  <div className="mt-4 opacity-0 transition-all duration-500 group-hover:opacity-100">
+                    <div className="flex items-center gap-2.5 rounded-xl bg-white/95 px-5 py-2.5 text-sm font-semibold text-slate-900 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:gap-3 md:text-base md:px-6 md:py-3">
                       <span>{content.learnMore}</span>
-                      <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1 md:w-5 md:h-5" />
+                      <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1 md:w-4 md:h-4" />
                     </div>
                   </div>
                 </div>

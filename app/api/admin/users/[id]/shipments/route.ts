@@ -307,7 +307,7 @@ export async function POST(
     // Завжди перезаписуємо trackNumber, щоб гарантувати синхронізацію з internalTrack вантажу
     const processedItemsWithTracks = processedItems.map((item: any, index: number) => {
       // Завжди генеруємо trackNumber на основі internalTrack вантажу
-      item.trackNumber = `${internalTrack}-${index + 1}`;
+        item.trackNumber = `${internalTrack}-${index + 1}`;
       return item;
     });
 

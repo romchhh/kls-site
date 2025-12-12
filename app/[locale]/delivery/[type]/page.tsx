@@ -10,7 +10,12 @@ const deliveryTypes = [
   "express",
   "ddp",
   "fba",
-  "lcl",
+  "port-to-port",
+  "cross-border",
+  "sea-container",
+  "air-cargo",
+  "rail-cargo",
+  "road-cargo",
 ] as const;
 
 type DeliveryType = (typeof deliveryTypes)[number];
@@ -28,7 +33,18 @@ export default async function DeliveryTypePage({
     return <div>Not found</div>;
   }
 
-  const title = t.delivery[deliveryType];
+  // Map URL slugs to translation keys
+  const deliveryTypeMap: Record<string, keyof typeof t.delivery> = {
+    "port-to-port": "portToPort",
+    "cross-border": "crossBorder",
+    "sea-container": "seaContainer",
+    "air-cargo": "airCargo",
+    "rail-cargo": "railCargo",
+    "road-cargo": "roadCargo",
+  };
+  
+  const translationKey = deliveryTypeMap[deliveryType] || deliveryType;
+  const title = t.delivery[translationKey as keyof typeof t.delivery] || deliveryType;
 
   return (
     <div className="min-h-screen bg-white">
