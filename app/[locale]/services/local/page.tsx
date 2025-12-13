@@ -1,5 +1,6 @@
 import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
+import { ContactForm } from "../../../../components/ContactForm";
 import { Locale } from "../../../../lib/translations";
 
 const content = {
@@ -173,15 +174,18 @@ export default async function LocalPage({
     <div className="min-h-screen bg-white">
       <Navigation locale={locale} />
       <main className="pt-32 pb-20">
-        <div className="mx-auto max-w-4xl px-6 lg:px-8">
-          <h1 className="mb-4 text-4xl font-bold text-gray-900">{data.title}</h1>
-          <p className="mb-8 text-xl text-gray-600">{data.subtitle}</p>
-          
-          <div className="mb-12 rounded-2xl bg-gradient-to-br from-cyan-50 to-blue-50 p-8">
-            <p className="text-lg text-gray-700">{data.intro}</p>
-          </div>
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-3">
+            {/* Left column - Content */}
+            <div className="lg:col-span-2">
+              <h1 className="mb-4 text-4xl font-bold text-gray-900">{data.title}</h1>
+              <p className="mb-8 text-xl text-gray-600">{data.subtitle}</p>
+              
+              <div className="mb-12 rounded-2xl bg-gradient-to-br from-cyan-50 to-blue-50 p-8">
+                <p className="text-lg text-gray-700">{data.intro}</p>
+              </div>
 
-          <div className="mb-12">
+              <div className="mb-12">
             <h2 className="mb-6 text-2xl font-semibold text-gray-900">{data.ourCapabilities}</h2>
             <div className="space-y-6">
               <div className="rounded-xl border border-gray-200 bg-white p-6">
@@ -269,6 +273,15 @@ export default async function LocalPage({
                 </li>
               ))}
             </ul>
+          </div>
+            </div>
+
+            {/* Right column - Contact Form */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-32">
+                <ContactForm locale={locale} />
+              </div>
+            </div>
           </div>
         </div>
       </main>

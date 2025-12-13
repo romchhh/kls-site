@@ -1,5 +1,6 @@
 import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
+import { ContactForm } from "../../../../components/ContactForm";
 import { Locale, getTranslations } from "../../../../lib/translations";
 import Link from "next/link";
 import { Package, FileText, Zap, Anchor, Globe2, ArrowRight } from "lucide-react";
@@ -62,18 +63,26 @@ export default async function EuWorldPage({
           </div>
           
           <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <h1 className="mb-6 text-5xl md:text-6xl font-bold text-gray-900">
-                {t.delivery.euWorld}
-              </h1>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                {locale === "ua" &&
-                  "Доставка вантажів в країни Європейського Союзу та інші країни світу. Широкий спектр логістичних рішень для міжнародної торгівлі."}
-                {locale === "ru" &&
-                  "Доставка грузов в страны Европейского Союза и другие страны мира. Широкий спектр логистических решений для международной торговли."}
-                {locale === "en" &&
-                  "Delivery of cargo to European Union countries and other countries around the world. A wide range of logistics solutions for international trade."}
-              </p>
+            <div className="grid gap-8 lg:grid-cols-3">
+              {/* Left column - Title and Description */}
+              <div className="lg:col-span-2">
+                <h1 className="mb-6 text-5xl md:text-6xl font-bold text-gray-900">
+                  {t.delivery.euWorld}
+                </h1>
+                <p className="text-xl text-gray-700 leading-relaxed">
+                  {locale === "ua" &&
+                    "Доставка вантажів в країни Європейського Союзу та інші країни світу. Широкий спектр логістичних рішень для міжнародної торгівлі."}
+                  {locale === "ru" &&
+                    "Доставка грузов в страны Европейского Союза и другие страны мира. Широкий спектр логистических решений для международной торговли."}
+                  {locale === "en" &&
+                    "Delivery of cargo to European Union countries and other countries around the world. A wide range of logistics solutions for international trade."}
+                </p>
+              </div>
+
+              {/* Right column - Contact Form */}
+              <div className="lg:col-span-1">
+                <ContactForm locale={locale} />
+              </div>
             </div>
           </div>
         </section>

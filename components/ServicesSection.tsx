@@ -1,384 +1,307 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Locale, getTranslations } from "../lib/translations";
+import { 
+  DollarSign, 
+  Package, 
+  Search, 
+  Shield, 
+  Truck, 
+  FileText, 
+  ArrowRight,
+  Tag,
+  Clock
+} from "lucide-react";
 
 type ServicesSectionProps = {
   locale: Locale;
-};
-
-type HoverStyle = {
-  glowX: number;
-  glowY: number;
-  intensity: number;
 };
 
 export function ServicesSection({ locale }: ServicesSectionProps) {
   const t = getTranslations(locale);
   const servicesContent = t?.services;
   
-  if (!servicesContent || !servicesContent.items) {
-    console.error(`Translations for services not found for locale: ${locale}`);
-    return null; // Or render a fallback UI
+  if (!servicesContent) {
+    return null;
   }
-  
-  const services = servicesContent.items;
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [visibleStates, setVisibleStates] = useState<boolean[]>(() =>
-    services.map(() => false)
-  );
-  const [scrollBlurIntensity, setScrollBlurIntensity] = useState(0);
-  const [hoverStyles, setHoverStyles] = useState<HoverStyle[]>(() =>
-    services.map(() => ({
-      glowX: 50,
-      glowY: 50,
-      intensity: 0,
-    }))
-  );
-  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
 
-  useEffect(() => {
-    setVisibleStates(services.map(() => false));
-    setHoverStyles(
-      services.map(() => ({
-        glowX: 50,
-        glowY: 50,
-        intensity: 0,
-      }))
-    );
-  }, [services]);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.target === sectionRef.current) {
-            setIsHeaderVisible(true);
-            
-            // Запускаємо послідовну анімацію карток після появи заголовка
-            services.forEach((_, index) => {
-              setTimeout(() => {
-              setVisibleStates((prev) => {
-                if (prev[index]) {
-                  return prev;
-                }
-                const next = [...prev];
-                next[index] = true;
-                return next;
-              });
-              }, 500 + index * 150); // Затримка 500ms для заголовка + 150ms між картками
-            });
+          if (entry.isIntersecting) {
+            setIsVisible(true);
           }
         });
       },
       { threshold: 0.1 }
     );
 
-    // Спостерігаємо за секцією
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-      }
+    if (scrollContainerRef.current) {
+      observer.observe(scrollContainerRef.current);
+    }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (scrollContainerRef.current) {
+        observer.unobserve(scrollContainerRef.current);
       }
-    };
-  }, [services]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) {
-        return;
-      }
-
-      const rect = sectionRef.current.getBoundingClientRect();
-      const sectionCenter = rect.top + rect.height / 2;
-      const viewportCenter = window.innerHeight / 2;
-      const distance = Math.min(Math.abs(sectionCenter - viewportCenter), window.innerHeight);
-      const normalized = 1 - distance / window.innerHeight;
-      const intensity = Math.max(0, Math.min(normalized, 1));
-      setScrollBlurIntensity(intensity);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
-  // Color schemes for different service cards
-  const colorSchemes = [
-    { // Грошові операції - зелені відтінки
-      border: "border-emerald-200/30",
-      badge: "border-emerald-200/30 text-emerald-700/80",
-      button: "border-emerald-200/40 text-emerald-700 hover:border-emerald-300/60",
-      glow: "rgba(16, 185, 129, 0.25)",
-      glowBlur: "bg-emerald-200/20",
-      glowBlurHover: "bg-emerald-300/30",
-      buttonGradient: "from-emerald-100/20 via-emerald-100/15",
-      buttonGradientHover: "via-emerald-100/20",
+  const services = [
+    {
+      key: "payments",
+      title: servicesContent.payments,
+      description: locale === "ua"
+        ? "Швидкі, безпечні та вигідні грошові перекази в Китай"
+        : locale === "ru"
+        ? "Быстрые, безопасные и выгодные денежные переводы в Китай"
+        : "Fast, secure and profitable money transfers to China",
+      href: `/${locale}/services/payments`,
+      icon: DollarSign,
+      cost: locale === "ua" ? "Від 0.5%" : locale === "ru" ? "От 0.5%" : "From 0.5%",
+      time: locale === "ua" ? "До 12 годин" : locale === "ru" ? "До 12 часов" : "Up to 12 hours",
     },
-    { // Складські послуги - блакитні відтінки
-      border: "border-blue-200/30",
-      badge: "border-blue-200/30 text-blue-700/80",
-      button: "border-blue-200/40 text-blue-700 hover:border-blue-300/60",
-      glow: "rgba(59, 130, 246, 0.25)",
-      glowBlur: "bg-blue-200/20",
-      glowBlurHover: "bg-blue-300/30",
-      buttonGradient: "from-blue-100/20 via-blue-100/15",
-      buttonGradientHover: "via-blue-100/20",
+    {
+      key: "warehousing",
+      title: servicesContent.warehousing,
+      description: locale === "ua"
+        ? "Комплексні складські послуги для зберігання та обробки вантажів"
+        : locale === "ru"
+        ? "Комплексные складские услуги для хранения и обработки грузов"
+        : "Comprehensive warehousing services for storage and cargo processing",
+      href: `/${locale}/services/warehousing`,
+      icon: Package,
+      cost: locale === "ua" ? "Від 0.5$/кг/міс" : locale === "ru" ? "От 0.5$/кг/мес" : "From $0.5/kg/month",
+      time: locale === "ua" ? "Без обмежень" : locale === "ru" ? "Без ограничений" : "Unlimited",
     },
-    { // Сервіс пошуку/закупівлі - фіолетові відтінки
-      border: "border-purple-200/30",
-      badge: "border-purple-200/30 text-purple-700/80",
-      button: "border-purple-200/40 text-purple-700 hover:border-purple-300/60",
-      glow: "rgba(168, 85, 247, 0.25)",
-      glowBlur: "bg-purple-200/20",
-      glowBlurHover: "bg-purple-300/30",
-      buttonGradient: "from-purple-100/20 via-purple-100/15",
-      buttonGradientHover: "via-purple-100/20",
+    {
+      key: "sourcing",
+      title: servicesContent.sourcing,
+      description: locale === "ua"
+        ? "Професійний пошук та закупівля товарів в Китаї та Кореї"
+        : locale === "ru"
+        ? "Профессиональный поиск и закупка товаров в Китае и Корее"
+        : "Professional search and procurement of goods in China and Korea",
+      href: `/${locale}/services/sourcing`,
+      icon: Search,
+      cost: locale === "ua" ? "Від 1000$ за партію" : locale === "ru" ? "От 1000$ за партию" : "From $1000 per batch",
+      time: locale === "ua" ? "7-14 днів" : locale === "ru" ? "7-14 дней" : "7-14 days",
     },
-    { // Страхування вантажу - помаранчеві відтінки
-      border: "border-orange-200/30",
-      badge: "border-orange-200/30 text-orange-700/80",
-      button: "border-orange-200/40 text-orange-700 hover:border-orange-300/60",
-      glow: "rgba(249, 115, 22, 0.25)",
-      glowBlur: "bg-orange-200/20",
-      glowBlurHover: "bg-orange-300/30",
-      buttonGradient: "from-orange-100/20 via-orange-100/15",
-      buttonGradientHover: "via-orange-100/20",
+    {
+      key: "insurance",
+      title: servicesContent.insurance,
+      description: locale === "ua"
+        ? "Повне страхування вантажу на всьому маршруті доставки"
+        : locale === "ru"
+        ? "Полное страхование груза на всем маршруте доставки"
+        : "Complete insurance coverage for cargo throughout the delivery route",
+      href: `/${locale}/services/insurance`,
+      icon: Shield,
+      cost: locale === "ua" ? "Від 0.3% від вартості" : locale === "ru" ? "От 0.3% от стоимости" : "From 0.3% of value",
+      time: locale === "ua" ? "На весь період" : locale === "ru" ? "На весь период" : "For entire period",
     },
-    { // Локальна доставка - рожеві відтінки
-      border: "border-pink-200/30",
-      badge: "border-pink-200/30 text-pink-700/80",
-      button: "border-pink-200/40 text-pink-700 hover:border-pink-300/60",
-      glow: "rgba(236, 72, 153, 0.25)",
-      glowBlur: "bg-pink-200/20",
-      glowBlurHover: "bg-pink-300/30",
-      buttonGradient: "from-pink-100/20 via-pink-100/15",
-      buttonGradientHover: "via-pink-100/20",
+    {
+      key: "customs",
+      title: servicesContent.customs,
+      description: locale === "ua"
+        ? "Повний комплекс митно-брокерських послуг"
+        : locale === "ru"
+        ? "Полный комплекс таможенно-брокерских услуг"
+        : "Full range of customs brokerage services",
+      href: `/${locale}/services/customs`,
+      icon: FileText,
+      cost: locale === "ua" ? "Від 50$ за декларацію" : locale === "ru" ? "От 50$ за декларацию" : "From $50 per declaration",
+      time: locale === "ua" ? "1-3 дні" : locale === "ru" ? "1-3 дня" : "1-3 days",
+    },
+    {
+      key: "forwarding",
+      title: servicesContent.forwarding,
+      description: locale === "ua"
+        ? "Експедирування вантажів з повним супроводом"
+        : locale === "ru"
+        ? "Экспедирование грузов с полным сопровождением"
+        : "Cargo forwarding with full support",
+      href: `/${locale}/services/forwarding`,
+      icon: Truck,
+      cost: locale === "ua" ? "Індивідуально" : locale === "ru" ? "Индивидуально" : "Individual",
+      time: locale === "ua" ? "За запитом" : locale === "ru" ? "По запросу" : "On request",
     },
   ];
 
-  const serviceCards = useMemo(
-    () =>
-      services.map((service, index) => {
-        const isVisible = visibleStates[index];
-        const colors = colorSchemes[index % colorSchemes.length];
-        const hoverStyle = hoverStyles[index] ?? {
-          glowX: 50,
-          glowY: 50,
-          intensity: 0,
-        };
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -400, behavior: "smooth" });
+    }
+  };
 
-        return (
-          <div
-            key={`${service.title}-${index}`}
-            ref={(node) => {
-              cardRefs.current[index] = node;
-            }}
-            className={`group relative overflow-hidden rounded-3xl border-2 ${colors.border} bg-white/15 p-[2px] shadow-2xl backdrop-blur-xl card-hover min-h-[200px] ${
-              index === 0 
-                ? "lg:row-span-2 lg:min-h-full" 
-                : ""
-            } ${
-              isVisible
-                ? "opacity-100 blur-0 scale-100 translate-y-0"
-                : "translate-y-20 opacity-0 blur-sm scale-95"
-            }`}
-            style={isVisible ? { 
-              transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)"
-            } : {
-              transition: "none"
-            }}
-          >
-            <div
-              className="relative h-full rounded-[calc(1.5rem-2px)] bg-gradient-to-br from-white/60 via-white/40 to-white/20 p-8 transition-all duration-500 group-hover:from-white/70 group-hover:via-white/50 group-hover:to-white/30 md:p-10"
-              onMouseMove={(event) => {
-                const bounds = event.currentTarget.getBoundingClientRect();
-                const glowX = ((event.clientX - bounds.left) / bounds.width) * 100;
-                const glowY = ((event.clientY - bounds.top) / bounds.height) * 100;
-                setHoverStyles((prev) => {
-                  const next = [...prev];
-                  next[index] = {
-                    glowX,
-                    glowY,
-                    intensity: 1,
-                  };
-                  return next;
-                });
-              }}
-              onMouseLeave={() => {
-                setHoverStyles((prev) => {
-                  const next = [...prev];
-                  next[index] = {
-                    glowX: 50,
-                    glowY: 50,
-                    intensity: 0,
-                  };
-                  return next;
-                });
-              }}
-            >
-              <div
-                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                style={{
-                  background: `radial-gradient(circle at ${hoverStyle.glowX}% ${hoverStyle.glowY}%, ${colors.glow}, transparent 60%)`,
-                }}
-              />
-              <div 
-                className="pointer-events-none absolute -left-10 top-1/2 h-32 w-32 -translate-y-1/2 rounded-full mix-blend-overlay blur-3xl transition-all duration-700 group-hover:translate-x-[6rem]"
-                style={{
-                  backgroundColor: index === 0 ? "rgba(16, 185, 129, 0.2)" : 
-                                  index === 1 ? "rgba(59, 130, 246, 0.2)" :
-                                  index === 2 ? "rgba(168, 85, 247, 0.2)" :
-                                  index === 3 ? "rgba(249, 115, 22, 0.2)" :
-                                  "rgba(236, 72, 153, 0.2)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = index === 0 ? "rgba(16, 185, 129, 0.3)" : 
-                                                          index === 1 ? "rgba(59, 130, 246, 0.3)" :
-                                                          index === 2 ? "rgba(168, 85, 247, 0.3)" :
-                                                          index === 3 ? "rgba(249, 115, 22, 0.3)" :
-                                                          "rgba(236, 72, 153, 0.3)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = index === 0 ? "rgba(16, 185, 129, 0.2)" : 
-                                                          index === 1 ? "rgba(59, 130, 246, 0.2)" :
-                                                          index === 2 ? "rgba(168, 85, 247, 0.2)" :
-                                                          index === 3 ? "rgba(249, 115, 22, 0.2)" :
-                                                          "rgba(236, 72, 153, 0.2)";
-                }}
-              />
-              <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45)_0%,_rgba(255,255,255,0)_55%)]" />
-                <div className="absolute -inset-[120%] animate-[spin_12s_linear_infinite] bg-[conic-gradient(from_0deg,_rgba(255,255,255,0)_0deg,_rgba(255,255,255,0.65)_90deg,_rgba(255,255,255,0)_180deg)] opacity-30 blur-3xl" />
-              </div>
-              <div className="flex h-full flex-col justify-between gap-6">
-                <div>
-                  <span className={`mb-3 inline-flex items-center rounded-full border ${colors.badge} px-3 py-1 text-xs uppercase tracking-[0.3em]`}>
-                    {servicesContent.title}
-                  </span>
-                  <h3 className="text-2xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-4xl break-words">
-                    {service.title}
-                  </h3>
-                </div>
-                <Link
-                  href={service.href}
-                  className={`group/read relative inline-flex items-center gap-3 self-start overflow-hidden rounded-full border ${colors.button} px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.18em] transition-all duration-500 hover:scale-105`}
-                >
-                  <span className="relative z-10">
-                    {servicesContent.readMore}
-                  </span>
-                  <ArrowUpRight
-                    size={18}
-                    className="relative z-10 transition-transform duration-500 group-hover/read:translate-x-1 group-hover/read:-translate-y-1"
-                  />
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-r to-transparent opacity-60 transition-opacity duration-500 group-hover/read:opacity-80"
-                    style={{
-                      background: index === 0 ? "linear-gradient(to right, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.15), transparent)" :
-                                  index === 1 ? "linear-gradient(to right, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.15), transparent)" :
-                                  index === 2 ? "linear-gradient(to right, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.15), transparent)" :
-                                  index === 3 ? "linear-gradient(to right, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.15), transparent)" :
-                                  "linear-gradient(to right, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.15), transparent)",
-                    }}
-                  />
-                  <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/read:opacity-100">
-                    <div 
-                      className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent blur-sm"
-                      style={{
-                        background: index === 0 ? "linear-gradient(to right, transparent, rgba(16, 185, 129, 0.2), transparent)" :
-                                        index === 1 ? "linear-gradient(to right, transparent, rgba(59, 130, 246, 0.2), transparent)" :
-                                        index === 2 ? "linear-gradient(to right, transparent, rgba(168, 85, 247, 0.2), transparent)" :
-                                        index === 3 ? "linear-gradient(to right, transparent, rgba(249, 115, 22, 0.2), transparent)" :
-                                        "linear-gradient(to right, transparent, rgba(236, 72, 153, 0.2), transparent)",
-                      }}
-                    />
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </div>
-        );
-      }),
-    [services, visibleStates, hoverStyles, locale, servicesContent]
-  );
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 400, behavior: "smooth" });
+    }
+  };
 
   return (
     <section
-      ref={sectionRef}
       id="services"
-      className="relative overflow-hidden bg-gradient-to-b from-white via-white to-slate-50 py-24"
+      className="relative overflow-hidden bg-gradient-to-b from-white via-gray-50 to-white py-24"
     >
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          opacity: 0.2 + (1 - scrollBlurIntensity) * 0.25,
-          filter: `blur(${Math.max(1.5, (1 - scrollBlurIntensity) * 6)}px)`,
-        }}
-      />
-      <div className="pointer-events-none absolute left-1/2 top-16 h-[35rem] w-[35rem] -translate-x-1/2 rounded-full bg-teal-100/35 blur-[140px]" />
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-400 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-400 rounded-full blur-3xl" />
+      </div>
+
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        <div className={`mx-auto mb-24 max-w-4xl text-center ${
-          isHeaderVisible ? 'animate-slide-in-top' : ''
+        {/* Header */}
+        <div className={`mb-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 ${
+          isVisible ? 'animate-slide-in-top' : ''
         }`}
-        style={isHeaderVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
+        style={isVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
         >
-          <div className={`mb-6 inline-flex items-center rounded-full border-2 border-teal-200/60 bg-white/80 backdrop-blur-sm px-6 py-2 text-sm font-semibold uppercase tracking-[0.4em] text-teal-600 shadow-lg ${
-            isHeaderVisible ? 'animate-slide-in-top' : ''
-          }`}
-          style={isHeaderVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
-          >
-            {servicesContent.title}
-          </div>
-          <h2 className={`mb-6 text-5xl font-semibold tracking-tight text-slate-900 md:text-6xl lg:text-7xl ${
-            isHeaderVisible ? 'animate-slide-in-top' : ''
-          }`}
-          style={isHeaderVisible ? { animationDelay: '0.2s' } : { opacity: 0 }}
-          >
-            {servicesContent.mainTitle}
-          </h2>
-          <p className={`mt-6 text-xl leading-relaxed text-slate-600/80 md:text-2xl ${
-            isHeaderVisible ? 'animate-slide-in-bottom' : ''
-          }`}
-          style={isHeaderVisible ? { animationDelay: '0.3s' } : { opacity: 0 }}
-          >
-            {servicesContent.mainDescription}
-          </p>
-          
-          {/* Arrow */}
-          <div className="mt-8 flex justify-start pl-8">
-            <div
-              className={`transition-all duration-700 ${
-                isHeaderVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={isHeaderVisible ? { animationDelay: "0.4s" } : {}}
-            >
-              <Image
-                src="/Arrow 05.png"
-                alt=""
-                width={100}
-                height={100}
-                className="opacity-40 rotate-180"
-              />
+          <div>
+            <div className="mb-4 inline-flex items-center rounded-full border-2 border-teal-200/60 bg-white/80 backdrop-blur-sm px-6 py-2 text-sm font-semibold uppercase tracking-[0.4em] text-teal-600 shadow-lg">
+              {servicesContent.title}
             </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+              {servicesContent.mainTitle}
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl leading-relaxed">
+              {servicesContent.mainDescription}
+            </p>
+          </div>
+          
+          {/* Navigation buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={scrollLeft}
+              className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-teal-200 bg-white text-teal-600 shadow-md transition-all duration-300 hover:bg-teal-50 hover:border-teal-300 hover:scale-110 hover:shadow-lg"
+            >
+              <ArrowRight className="h-5 w-5 rotate-180" />
+            </button>
+            <button
+              onClick={scrollRight}
+              className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-teal-200 bg-white text-teal-600 shadow-md transition-all duration-300 hover:bg-teal-50 hover:border-teal-300 hover:scale-110 hover:shadow-lg"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
 
-        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2">
-          {serviceCards}
+        {/* Services Scroll Container */}
+        <div
+          ref={scrollContainerRef}
+          className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
+          {/* All Services Card */}
+          <Link
+            href={`/${locale}/services`}
+            className={`group relative flex-shrink-0 w-[340px] rounded-3xl bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-8 text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-3xl snap-start ${
+              isVisible ? 'animate-slide-in-bottom' : ''
+            }`}
+            style={isVisible ? { animationDelay: '0.2s' } : { opacity: 0 }}
+          >
+            <div className="flex h-full flex-col justify-between min-h-[280px]">
+              <div>
+                <h3 className="text-3xl font-bold leading-tight mb-2">
+                  {locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}
+                </h3>
+                <p className="text-white/90 text-sm">
+                  {locale === "ua" ? "Переглянути всі наші послуги" : locale === "ru" ? "Посмотреть все наши услуги" : "View all our services"}
+                </p>
+              </div>
+              <div className="mt-auto flex items-center justify-end">
+                <div className="rounded-xl bg-white/20 p-3 backdrop-blur-sm transition-all duration-300 group-hover:bg-white/30 group-hover:scale-110 group-hover:rotate-3">
+                  <ArrowRight className="h-7 w-7 text-white" />
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Service Cards */}
+          {services.map((service, index) => {
+            const Icon = service.icon;
+            return (
+              <Link
+                key={service.key}
+                href={service.href}
+                className={`group relative flex-shrink-0 w-[340px] rounded-3xl border-2 border-gray-200 bg-white p-6 shadow-xl transition-all duration-500 hover:border-teal-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1 snap-start ${
+                  isVisible ? 'animate-slide-in-bottom' : ''
+                }`}
+                style={isVisible ? { animationDelay: `${0.3 + index * 0.1}s` } : { opacity: 0 }}
+              >
+                <div className="flex h-full flex-col min-h-[280px]">
+                  {/* Icon */}
+                  <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 text-teal-600 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:from-teal-100 group-hover:to-teal-200">
+                    <Icon className="h-7 w-7" />
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="mb-3 text-xl font-bold text-gray-900 leading-tight">
+                    {service.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="mb-5 text-sm text-gray-600 leading-relaxed flex-grow">
+                    {service.description}
+                  </p>
+
+                  {/* Cost and Time */}
+                  <div className="mb-5 space-y-3">
+                    {service.cost && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50">
+                          <Tag className="h-4 w-4 text-teal-600" />
+                        </div>
+                        <span className="text-gray-700 font-semibold">
+                          {locale === "ua" ? "Вартість:" : locale === "ru" ? "Стоимость:" : "Cost:"} <span className="text-teal-600">{service.cost}</span>
+                        </span>
+                      </div>
+                    )}
+                    {service.time && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50">
+                          <Clock className="h-4 w-4 text-teal-600" />
+                        </div>
+                        <span className="text-gray-700 font-semibold">
+                          {locale === "ua" ? "Термін:" : locale === "ru" ? "Срок:" : "Term:"} <span className="text-teal-600">{service.time}</span>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Button */}
+                  <div className="mt-auto">
+                    <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-teal-50 to-teal-50/50 px-5 py-3.5 transition-all duration-300 group-hover:from-teal-100 group-hover:to-teal-50 group-hover:shadow-md">
+                      <span className="text-sm font-bold text-gray-900">
+                        {servicesContent.readMore}
+                      </span>
+                      <div className="rounded-lg bg-white p-2 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-teal-50">
+                        <ArrowRight className="h-4 w-4 text-teal-600" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
+
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </section>
   );
 }

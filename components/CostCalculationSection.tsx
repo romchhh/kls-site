@@ -11,10 +11,8 @@ import {
   Weight,
   Box,
   Package,
-  MessageSquare,
   User,
   Phone,
-  Mail,
   ArrowRight,
   CheckCircle2,
   Info
@@ -41,16 +39,9 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
   const [weight, setWeight] = useState<string>("");
   const [volume, setVolume] = useState<string>("");
   const [productName, setProductName] = useState<string>("");
-  const [width, setWidth] = useState<string>("");
-  const [height, setHeight] = useState<string>("");
-  const [length, setLength] = useState<string>("");
-  const [cargoCategory, setCargoCategory] = useState<string>("");
-  const [additionalInfo, setAdditionalInfo] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [phoneCode, setPhoneCode] = useState<string>("+380");
-  const [email, setEmail] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
   const [contactFormat, setContactFormat] = useState<string>("");
   const [recaptchaChecked, setRecaptchaChecked] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -84,7 +75,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     { value: "israel", label: costCalc.countries.israel },
   ];
 
-  // Коди країн для телефону
+  // Коди країн для телефону (всі світові крім RU та PY)
   const countryCodes = [
     { code: "+380", flag: "🇺🇦", country: "Україна" },
     { code: "+1", flag: "🇺🇸", country: "США/Канада" },
@@ -92,7 +83,39 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     { code: "+86", flag: "🇨🇳", country: "Китай" },
     { code: "+48", flag: "🇵🇱", country: "Польща" },
     { code: "+49", flag: "🇩🇪", country: "Німеччина" },
-    { code: "+7", flag: "🇷🇺", country: "Росія" },
+    { code: "+33", flag: "🇫🇷", country: "Франція" },
+    { code: "+39", flag: "🇮🇹", country: "Італія" },
+    { code: "+34", flag: "🇪🇸", country: "Іспанія" },
+    { code: "+31", flag: "🇳🇱", country: "Нідерланди" },
+    { code: "+32", flag: "🇧🇪", country: "Бельгія" },
+    { code: "+41", flag: "🇨🇭", country: "Швейцарія" },
+    { code: "+43", flag: "🇦🇹", country: "Австрія" },
+    { code: "+46", flag: "🇸🇪", country: "Швеція" },
+    { code: "+47", flag: "🇳🇴", country: "Норвегія" },
+    { code: "+45", flag: "🇩🇰", country: "Данія" },
+    { code: "+358", flag: "🇫🇮", country: "Фінляндія" },
+    { code: "+353", flag: "🇮🇪", country: "Ірландія" },
+    { code: "+351", flag: "🇵🇹", country: "Португалія" },
+    { code: "+30", flag: "🇬🇷", country: "Греція" },
+    { code: "+90", flag: "🇹🇷", country: "Туреччина" },
+    { code: "+971", flag: "🇦🇪", country: "ОАЕ" },
+    { code: "+974", flag: "🇶🇦", country: "Катар" },
+    { code: "+81", flag: "🇯🇵", country: "Японія" },
+    { code: "+82", flag: "🇰🇷", country: "Південна Корея" },
+    { code: "+65", flag: "🇸🇬", country: "Сінгапур" },
+    { code: "+60", flag: "🇲🇾", country: "Малайзія" },
+    { code: "+66", flag: "🇹🇭", country: "Таїланд" },
+    { code: "+61", flag: "🇦🇺", country: "Австралія" },
+    { code: "+64", flag: "🇳🇿", country: "Нова Зеландія" },
+    { code: "+55", flag: "🇧🇷", country: "Бразилія" },
+    { code: "+52", flag: "🇲🇽", country: "Мексика" },
+    { code: "+54", flag: "🇦🇷", country: "Аргентина" },
+    { code: "+57", flag: "🇨🇴", country: "Колумбія" },
+    { code: "+27", flag: "🇿🇦", country: "Південна Африка" },
+    { code: "+20", flag: "🇪🇬", country: "Єгипет" },
+    { code: "+972", flag: "🇮🇱", country: "Ізраїль" },
+    { code: "+886", flag: "🇹🇼", country: "Тайвань" },
+    { code: "+852", flag: "🇭🇰", country: "Гонконг" },
   ];
 
   const deliveryTypes = [
@@ -122,93 +145,9 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     },
   ];
 
-  // Функція розрахунку орієнтовної вартості
-  const calculateEstimatedCost = (): number | null => {
-    if (!deliveryType || !origin || !destination || !weight) {
-      return null;
-    }
-
-    const weightNum = parseFloat(weight) || 0;
-    const volumeNum = parseFloat(volume) || 0;
-
-    if (weightNum <= 0) return null;
-
-    // Базові тарифи за кг для різних типів доставки
-    const baseRates: Record<string, number> = {
-      air: 10,
-      sea: 1.5,
-      rail: 4,
-      multimodal: 6,
-    };
-
-    // Коефіцієнти для різних маршрутів
-    const routeMultipliers: Record<string, Record<string, number>> = {
-      china: {
-        ukraine: 1.0,
-        eu: 1.2,
-        usa: 1.5,
-        canada: 1.5,
-        britain: 1.3,
-        switzerland: 1.3,
-        cyprus: 1.2,
-        turkey: 1.1,
-        uae: 1.4,
-        qatar: 1.4,
-        brazil: 1.6,
-        colombia: 1.6,
-        japan: 1.3,
-        thailand: 1.2,
-        hongkong: 0.9,
-        taiwan: 1.2,
-        ireland: 1.3,
-        israel: 1.3,
-      },
-      hongkong: {
-        ukraine: 1.0,
-        eu: 1.2,
-        usa: 1.5,
-        canada: 1.5,
-        britain: 1.3,
-        switzerland: 1.3,
-        cyprus: 1.2,
-        turkey: 1.1,
-        uae: 1.4,
-        qatar: 1.4,
-        brazil: 1.6,
-        colombia: 1.6,
-        japan: 1.3,
-        thailand: 1.2,
-        taiwan: 1.2,
-        ireland: 1.3,
-        israel: 1.3,
-      },
-    };
-
-    const baseRate = baseRates[deliveryType] || 5;
-    const multiplier = routeMultipliers[origin]?.[destination] || 1.0;
-
-    // Розрахунок на основі ваги
-    let cost = weightNum * baseRate * multiplier;
-
-    // Якщо є об'єм, враховуємо об'ємну вагу (1 м³ = 167 кг)
-    if (volumeNum > 0) {
-      const volumetricWeight = volumeNum * 167;
-      const chargeableWeight = Math.max(weightNum, volumetricWeight);
-      cost = chargeableWeight * baseRate * multiplier;
-    }
-
-    // Мінімальна вартість
-    const minCost = deliveryType === "air" ? 50 : deliveryType === "sea" ? 100 : 80;
-    cost = Math.max(minCost, cost);
-
-    // Округлення до 10
-    return Math.ceil(cost / 10) * 10;
-  };
-
-  const estimatedCost = calculateEstimatedCost();
 
   const canProceedStep1 = deliveryType !== "";
-  const canProceedStep2 = origin !== "" && destination !== "" && weight !== "" && productName !== "" && cargoCategory !== "";
+  const canProceedStep2 = origin !== "" && destination !== "" && weight !== "";
   const canProceedStep3 = name !== "" && phone !== "" && recaptchaChecked;
 
   const handleNext = () => {
@@ -245,15 +184,9 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
         setWeight("");
         setVolume("");
         setProductName("");
-        setWidth("");
-        setHeight("");
-        setLength("");
-        setCargoCategory("");
-        setAdditionalInfo("");
         setName("");
         setPhone("");
-        setEmail("");
-        setMessage("");
+        setPhoneCode("+380");
         setContactFormat("");
         setRecaptchaChecked(false);
       }, 3000);
@@ -261,12 +194,8 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
   };
 
   return (
-    <section id="cost-calculation" className="relative min-h-screen bg-white py-20">
+    <section id="cost-calculation" className="relative bg-white pb-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        {/* Заголовок */}
-        <h1 className="mb-12 text-center text-4xl font-bold text-gray-900">
-          {costCalc.title}
-        </h1>
 
         {/* Прогрес-бар */}
         <div className="mb-12 flex items-center justify-center">
@@ -350,15 +279,15 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
               {currentStep === 3 && (
                 <div className="mt-1 h-0.5 w-full bg-teal-500" />
               )}
-              </div>
             </div>
           </div>
+        </div>
 
         {/* Контент кроків */}
         <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
           {/* Крок 1: Вибір типу доставки */}
           {currentStep === 1 && (
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div className="grid grid-cols-2 gap-6">
                 {deliveryTypes.map((type) => {
                   const Icon = type.icon;
@@ -473,7 +402,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                 <div className="md:col-span-2">
                   <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
                     <Package className="h-4 w-4 text-teal-600" />
-                    {costCalc.productName}*
+                    {costCalc.productName}
                   </label>
                   <input
                     type="text"
@@ -483,98 +412,12 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   />
                 </div>
-
-                {/* Габарити */}
-                <div className="md:col-span-2">
-                  <label className="mb-2 text-sm font-medium text-gray-700">
-                    {costCalc.dimensions}
-                  </label>
-                  <div className="grid grid-cols-3 gap-3">
-                    <input
-                      type="number"
-                      value={width}
-                      onChange={(e) => setWidth(e.target.value)}
-                      placeholder={costCalc.width}
-                      className="rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                    />
-                    <input
-                      type="number"
-                      value={height}
-                      onChange={(e) => setHeight(e.target.value)}
-                      placeholder={costCalc.height}
-                      className="rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                    />
-                    <input
-                      type="number"
-                      value={length}
-                      onChange={(e) => setLength(e.target.value)}
-                      placeholder={costCalc.length}
-                      className="rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                    />
-                </div>
-              </div>
-
-                {/* Категорія вантажу */}
-                <div className="md:col-span-2">
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <Package className="h-4 w-4 text-teal-600" />
-                    {costCalc.cargoCategory}*
-                </label>
-                <select
-                    value={cargoCategory}
-                    onChange={(e) => setCargoCategory(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  >
-                    <option value="">{costCalc.selectCategory}</option>
-                    {Object.entries(costCalc.cargoCategories).map(([key, value]) => (
-                      <option key={key} value={key}>
-                        {value}
-                  </option>
-                    ))}
-                </select>
-                </div>
-
-                {/* Додаткова інформація */}
-                <div className="md:col-span-2">
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <MessageSquare className="h-4 w-4 text-teal-600" />
-                    {costCalc.additionalInfo}
-                  </label>
-                  <textarea
-                    value={additionalInfo}
-                    onChange={(e) => setAdditionalInfo(e.target.value)}
-                    rows={3}
-                    placeholder={costCalc.additionalInfo}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  />
-                </div>
               </div>
 
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 <Info className="h-4 w-4 text-teal-600" />
                 {costCalc.requiredFields}
-                  </div>
-                  
-              {/* Орієнтовна вартість */}
-              {estimatedCost !== null && (
-                <div className="mt-6 rounded-xl border-2 border-teal-200 bg-teal-50 p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        {locale === "ua" ? "Орієнтовна вартість доставки" : locale === "ru" ? "Примерная стоимость доставки" : "Estimated delivery cost"}
-                      </p>
-                      <p className="mt-1 text-3xl font-bold text-teal-600">
-                        ${estimatedCost.toLocaleString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-gray-500">
-                        {locale === "ua" ? "*Орієнтовна вартість" : locale === "ru" ? "*Примерная стоимость" : "*Estimated cost"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           )}
 
@@ -607,7 +450,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     <select
                       value={phoneCode}
                       onChange={(e) => setPhoneCode(e.target.value)}
-                      className="rounded-lg border border-gray-300 bg-white px-3 py-3 text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                      className="w-32 rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                     >
                       {countryCodes.map((country) => (
                         <option key={country.code} value={country.code}>
@@ -625,57 +468,29 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                   </div>
                 </div>
 
-                {/* Email */}
-                <div className="md:col-span-2">
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <Mail className="h-4 w-4 text-teal-600" />
-                    {costCalc.email}
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={costCalc.email}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  />
-                </div>
-
                 {/* Формат зв'язку */}
                 <div className="md:col-span-2">
                   <label className="mb-2 text-sm font-medium text-gray-700">
                     {costCalc.contactFormat}
                   </label>
                   <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                    {Object.entries(costCalc.contactFormats).map(([key, value]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setContactFormat(contactFormat === key ? "" : key)}
-                        className={`rounded-lg border-2 px-4 py-2 text-sm font-medium transition-all ${
-                          contactFormat === key
-                            ? "border-teal-500 bg-teal-50 text-teal-700"
-                            : "border-gray-200 bg-white text-gray-600 hover:border-teal-300 hover:bg-teal-50/50"
-                        }`}
-                      >
-                        {value}
-                      </button>
-                    ))}
+                    {Object.entries(costCalc.contactFormats)
+                      .filter(([key]) => key !== "py") // Виключаємо PY
+                      .map(([key, value]) => (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setContactFormat(contactFormat === key ? "" : key)}
+                          className={`rounded-lg border-2 px-4 py-2 text-sm font-medium transition-all ${
+                            contactFormat === key
+                              ? "border-teal-500 bg-teal-50 text-teal-700"
+                              : "border-gray-200 bg-white text-gray-600 hover:border-teal-300 hover:bg-teal-50/50"
+                          }`}
+                        >
+                          {value}
+                        </button>
+                      ))}
                   </div>
-                </div>
-
-                {/* Повідомлення */}
-                <div className="md:col-span-2">
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <MessageSquare className="h-4 w-4 text-teal-600" />
-                    {costCalc.message}
-                  </label>
-                  <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    rows={4}
-                    placeholder={costCalc.message}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  />
                 </div>
               </div>
 
@@ -713,7 +528,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                 {costCalc.back}
               </button>
             )}
-            <div className="ml-auto">
+            <div className={currentStep === 1 ? "w-full flex justify-center" : "ml-auto"}>
               {currentStep < 3 ? (
                 <button
                   onClick={handleNext}
@@ -721,15 +536,15 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     (currentStep === 1 && !canProceedStep1) ||
                     (currentStep === 2 && !canProceedStep2)
                   }
-                  className={`flex items-center gap-2 rounded-lg px-8 py-3 font-medium transition-all ${
+                  className={`flex items-center gap-2 rounded-lg px-12 py-4 text-lg font-semibold transition-all ${
                     (currentStep === 1 && canProceedStep1) ||
                     (currentStep === 2 && canProceedStep2)
-                      ? "bg-teal-600 text-white hover:bg-teal-700"
+                      ? "bg-teal-600 text-white hover:bg-teal-700 shadow-lg hover:shadow-xl"
                       : "cursor-not-allowed bg-gray-300 text-gray-500"
                   }`}
                 >
                   {costCalc.next}
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-5 w-5" />
                 </button>
               ) : (
                 <button
@@ -754,9 +569,9 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                 </button>
               )}
             </div>
-            </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
   );
 }

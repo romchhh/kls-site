@@ -1,5 +1,6 @@
 import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
+import { ContactForm } from "../../../../components/ContactForm";
 import { Locale } from "../../../../lib/translations";
 
 const content = {

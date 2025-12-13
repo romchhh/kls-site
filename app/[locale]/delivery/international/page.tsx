@@ -1,5 +1,6 @@
 import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
+import { ContactForm } from "../../../../components/ContactForm";
 import { Locale, getTranslations } from "../../../../lib/translations";
 import Link from "next/link";
 import { Ship, Plane, Train, Truck, ArrowRight, CheckCircle2 } from "lucide-react";
@@ -140,13 +141,21 @@ export default async function InternationalPage({
           </div>
           
           <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="max-w-3xl">
-              <h1 className="mb-6 text-5xl md:text-6xl font-bold text-gray-900">
-                {t.delivery.international}
-              </h1>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                {data.intro}
-              </p>
+            <div className="grid gap-8 lg:grid-cols-3">
+              {/* Left column - Title and Description */}
+              <div className="lg:col-span-2">
+                <h1 className="mb-6 text-5xl md:text-6xl font-bold text-gray-900">
+                  {t.delivery.international}
+                </h1>
+                <p className="text-xl text-gray-700 leading-relaxed">
+                  {data.intro}
+                </p>
+              </div>
+
+              {/* Right column - Contact Form */}
+              <div className="lg:col-span-1">
+                <ContactForm locale={locale} />
+              </div>
             </div>
           </div>
         </section>

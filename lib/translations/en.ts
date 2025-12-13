@@ -716,5 +716,16 @@ export const en = {
       ARCHIVED: "Archived",
     },
   },
+  contactForm: {
+    title: "Request delivery",
+    subtitle: "Fill in your contact details and we will contact you shortly!",
+    name: "Name",
+    phone: "Phone",
+    submit: "Request delivery",
+    submitting: "Submitting...",
+    success: "Thank you! We will contact you shortly.",
+    nameRequired: "Fill in this field.",
+    phoneRequired: "Fill in this field.",
+  },
 };
 

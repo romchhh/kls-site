@@ -91,7 +91,7 @@ export default async function HomePage({
       <HeroSection locale={locale} />
       
       {/* Секція Доставка */}
-      <section className="relative bg-gradient-to-b from-white via-gray-50 to-white py-20 overflow-hidden">
+      <section id="delivery" className="relative bg-gradient-to-b from-white via-gray-50 to-white py-20 overflow-hidden">
         {/* Декоративні елементи */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-400 rounded-full blur-3xl" />
@@ -171,8 +171,8 @@ export default async function HomePage({
       <ServicesSection locale={locale} />
       <PartnersSection locale={locale} />
       <DeliveryTypesSection locale={locale} />
-      <CostCalculationSection locale={locale} />
       <CTASection locale={locale} />
+      <CostCalculationSection locale={locale} />
       <SiteFooter locale={locale} />
       <ScrollToTop />
       <ContactButton locale={locale} />
