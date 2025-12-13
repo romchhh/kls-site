@@ -664,6 +664,56 @@ export const ua = {
         logo: "https://flagcdn.com/w320/ca.png",
         url: undefined,
       },
+      {
+        name: "Швейцарія",
+        logo: "https://flagcdn.com/w320/ch.png",
+        url: undefined,
+      },
+      {
+        name: "Кіпр",
+        logo: "https://flagcdn.com/w320/cy.png",
+        url: undefined,
+      },
+      {
+        name: "Туреччина",
+        logo: "https://flagcdn.com/w320/tr.png",
+        url: undefined,
+      },
+      {
+        name: "Бразилія",
+        logo: "https://flagcdn.com/w320/br.png",
+        url: undefined,
+      },
+      {
+        name: "Колумбія",
+        logo: "https://flagcdn.com/w320/co.png",
+        url: undefined,
+      },
+      {
+        name: "Японія",
+        logo: "https://flagcdn.com/w320/jp.png",
+        url: undefined,
+      },
+      {
+        name: "Таїланд",
+        logo: "https://flagcdn.com/w320/th.png",
+        url: undefined,
+      },
+      {
+        name: "Тайвань",
+        logo: "https://flagcdn.com/w320/tw.png",
+        url: undefined,
+      },
+      {
+        name: "Ірландія",
+        logo: "https://flagcdn.com/w320/ie.png",
+        url: undefined,
+      },
+      {
+        name: "Ізраїль",
+        logo: "https://flagcdn.com/w320/il.png",
+        url: undefined,
+      },
     ],
   },
   contactQuick: {

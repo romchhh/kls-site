@@ -305,6 +305,56 @@ export const ru = {
         logo: "https://flagcdn.com/w320/ca.png",
         url: undefined,
       },
+      {
+        name: "Швейцария",
+        logo: "https://flagcdn.com/w320/ch.png",
+        url: undefined,
+      },
+      {
+        name: "Кипр",
+        logo: "https://flagcdn.com/w320/cy.png",
+        url: undefined,
+      },
+      {
+        name: "Турция",
+        logo: "https://flagcdn.com/w320/tr.png",
+        url: undefined,
+      },
+      {
+        name: "Бразилия",
+        logo: "https://flagcdn.com/w320/br.png",
+        url: undefined,
+      },
+      {
+        name: "Колумбия",
+        logo: "https://flagcdn.com/w320/co.png",
+        url: undefined,
+      },
+      {
+        name: "Япония",
+        logo: "https://flagcdn.com/w320/jp.png",
+        url: undefined,
+      },
+      {
+        name: "Тайланд",
+        logo: "https://flagcdn.com/w320/th.png",
+        url: undefined,
+      },
+      {
+        name: "Тайвань",
+        logo: "https://flagcdn.com/w320/tw.png",
+        url: undefined,
+      },
+      {
+        name: "Ирландия",
+        logo: "https://flagcdn.com/w320/ie.png",
+        url: undefined,
+      },
+      {
+        name: "Израиль",
+        logo: "https://flagcdn.com/w320/il.png",
+        url: undefined,
+      },
     ],
   },
   contactQuick: {

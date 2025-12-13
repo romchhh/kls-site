@@ -305,6 +305,56 @@ export const en = {
         logo: "https://flagcdn.com/w320/ca.png",
         url: undefined,
       },
+      {
+        name: "Switzerland",
+        logo: "https://flagcdn.com/w320/ch.png",
+        url: undefined,
+      },
+      {
+        name: "Cyprus",
+        logo: "https://flagcdn.com/w320/cy.png",
+        url: undefined,
+      },
+      {
+        name: "Turkey",
+        logo: "https://flagcdn.com/w320/tr.png",
+        url: undefined,
+      },
+      {
+        name: "Brazil",
+        logo: "https://flagcdn.com/w320/br.png",
+        url: undefined,
+      },
+      {
+        name: "Colombia",
+        logo: "https://flagcdn.com/w320/co.png",
+        url: undefined,
+      },
+      {
+        name: "Japan",
+        logo: "https://flagcdn.com/w320/jp.png",
+        url: undefined,
+      },
+      {
+        name: "Thailand",
+        logo: "https://flagcdn.com/w320/th.png",
+        url: undefined,
+      },
+      {
+        name: "Taiwan",
+        logo: "https://flagcdn.com/w320/tw.png",
+        url: undefined,
+      },
+      {
+        name: "Ireland",
+        logo: "https://flagcdn.com/w320/ie.png",
+        url: undefined,
+      },
+      {
+        name: "Israel",
+        logo: "https://flagcdn.com/w320/il.png",
+        url: undefined,
+      },
     ],
   },
   contactQuick: {
