@@ -600,6 +600,7 @@ export const ru = {
     status: "Статус",
     location: "Местонахождение",
     places: "Мест",
+    weightKg: "кг",
     volumeM3: "M³",
     density: "Плотность",
     cost: "Стоимость",

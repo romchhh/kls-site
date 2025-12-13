@@ -183,7 +183,7 @@ export function UserShipments({
           id: batch.id,
           batchId: batch.batchId,
           description: batch.description,
-          status: batch.status || "FORMING",
+          status: batch.status || "CREATED",
           deliveryType: batch.deliveryType || "AIR",
         })));
       }
@@ -264,9 +264,22 @@ export function UserShipments({
             if (weight > 0 && volumeM3 > 0) {
               updatedItem.density = (weight / volumeM3).toFixed(2);
             }
+            // Автоматичний розрахунок вартості при зміні об'єму (якщо тариф по м³)
+            const tariffValue = parseFloat(updatedItem.tariffValue || "0");
+            if (tariffValue > 0) {
+              if (updatedItem.tariffType === "m3" && volumeM3 > 0) {
+                updatedItem.deliveryCost = (tariffValue * volumeM3).toFixed(2);
+              } else if (updatedItem.tariffType === "kg" && weight > 0) {
+                updatedItem.deliveryCost = (tariffValue * weight).toFixed(2);
+              }
+            }
           } else {
             updatedItem.volumeM3 = "";
             updatedItem.density = "";
+            // Очистити вартість, якщо об'єм не вказано і тариф по м³
+            if (updatedItem.tariffType === "m3") {
+              updatedItem.deliveryCost = "";
+            }
           }
         }
         if (field === "weightKg" || field === "volumeM3") {
@@ -276,6 +289,24 @@ export function UserShipments({
             updatedItem.density = (weight / volume).toFixed(2);
           } else {
             updatedItem.density = "";
+          }
+        }
+        // Автоматичний розрахунок вартості: Тариф * кг/м3 (в залежності від вибору)
+        if (field === "tariffType" || field === "tariffValue" || field === "weightKg" || field === "volumeM3") {
+          const tariffValue = parseFloat(updatedItem.tariffValue || "0");
+          const weight = parseFloat(updatedItem.weightKg || "0");
+          const volume = parseFloat(updatedItem.volumeM3 || "0");
+          
+          if (tariffValue > 0) {
+            if (updatedItem.tariffType === "kg" && weight > 0) {
+              updatedItem.deliveryCost = (tariffValue * weight).toFixed(2);
+            } else if (updatedItem.tariffType === "m3" && volume > 0) {
+              updatedItem.deliveryCost = (tariffValue * volume).toFixed(2);
+            } else {
+              updatedItem.deliveryCost = "";
+            }
+          } else {
+            updatedItem.deliveryCost = "";
           }
         }
         return updatedItem;
@@ -356,9 +387,22 @@ export function UserShipments({
             if (weight > 0 && volumeM3 > 0) {
               updatedItem.density = (weight / volumeM3).toFixed(2);
             }
+            // Автоматичний розрахунок вартості при зміні об'єму (якщо тариф по м³)
+            const tariffValue = parseFloat(updatedItem.tariffValue || "0");
+            if (tariffValue > 0) {
+              if (updatedItem.tariffType === "m3" && volumeM3 > 0) {
+                updatedItem.deliveryCost = (tariffValue * volumeM3).toFixed(2);
+              } else if (updatedItem.tariffType === "kg" && weight > 0) {
+                updatedItem.deliveryCost = (tariffValue * weight).toFixed(2);
+              }
+            }
           } else {
             updatedItem.volumeM3 = "";
             updatedItem.density = "";
+            // Очистити вартість, якщо об'єм не вказано і тариф по м³
+            if (updatedItem.tariffType === "m3") {
+              updatedItem.deliveryCost = "";
+            }
           }
         }
         if (field === "weightKg" || field === "volumeM3") {
@@ -368,6 +412,24 @@ export function UserShipments({
             updatedItem.density = (weight / volume).toFixed(2);
           } else {
             updatedItem.density = "";
+          }
+        }
+        // Автоматичний розрахунок вартості: Тариф * кг/м3 (в залежності від вибору)
+        if (field === "tariffType" || field === "tariffValue" || field === "weightKg" || field === "volumeM3") {
+          const tariffValue = parseFloat(updatedItem.tariffValue || "0");
+          const weight = parseFloat(updatedItem.weightKg || "0");
+          const volume = parseFloat(updatedItem.volumeM3 || "0");
+          
+          if (tariffValue > 0) {
+            if (updatedItem.tariffType === "kg" && weight > 0) {
+              updatedItem.deliveryCost = (tariffValue * weight).toFixed(2);
+            } else if (updatedItem.tariffType === "m3" && volume > 0) {
+              updatedItem.deliveryCost = (tariffValue * volume).toFixed(2);
+            } else {
+              updatedItem.deliveryCost = "";
+            }
+          } else {
+            updatedItem.deliveryCost = "";
           }
         }
         return updatedItem;
@@ -786,7 +848,7 @@ export function UserShipments({
                 >
                   <option value="">Оберіть партію</option>
                   {batches
-                    .filter((batch) => batch.status === "FORMING")
+                    .filter((batch) => batch.status === "CREATED" || batch.status === "RECEIVED_CN" || batch.status === "CONSOLIDATION")
                     .map((batch) => (
                       <option key={batch.id} value={batch.batchId}>
                         {batch.batchId} {batch.description ? `- ${batch.description}` : ""}
@@ -1629,16 +1691,17 @@ export function UserShipments({
                                   type="number"
                                   step="0.01"
                                   value={item.deliveryCost}
-                                  onChange={(e) => updateItem(index, "deliveryCost", e.target.value)}
+                                  onChange={(e) => updateEditItem(index, "deliveryCost", e.target.value)}
                                   className="w-20 rounded border border-slate-300 bg-white px-1.5 py-0.5 text-[10px] focus:border-teal-500 focus:outline-none"
                                   placeholder="240.00"
+                                  title="Розраховується автоматично: Тариф × кг/м³ (в залежності від вибору). Можна редагувати вручну."
                                 />
                               </td>
                               <td className="px-2 py-1.5">
                                 <div className="flex flex-col gap-1">
                                   <select
                                     value={item.cargoType}
-                                    onChange={(e) => updateItem(index, "cargoType", e.target.value)}
+                                    onChange={(e) => updateEditItem(index, "cargoType", e.target.value)}
                                     className="w-full rounded border border-slate-300 bg-white px-1 py-0.5 text-[9px] focus:border-teal-500 focus:outline-none"
                                   >
                                     <option value="">-</option>
@@ -2007,7 +2070,7 @@ export function UserShipments({
                     >
                       <option value="">Оберіть партію</option>
                       {batches
-                        .filter((batch) => batch.status === "FORMING")
+                        .filter((batch) => batch.status === "CREATED" || batch.status === "RECEIVED_CN" || batch.status === "CONSOLIDATION")
                         .map((batch) => (
                           <option key={batch.id} value={batch.batchId}>
                             {batch.batchId} {batch.description ? `- ${batch.description}` : ""}
@@ -2859,6 +2922,7 @@ export function UserShipments({
                                   onChange={(e) => updateEditItem(index, "deliveryCost", e.target.value)}
                                   className="w-20 rounded border border-slate-300 bg-white px-1.5 py-0.5 text-[10px] focus:border-teal-500 focus:outline-none"
                                   placeholder="240.00"
+                                  title="Розраховується автоматично: Тариф × кг/м³ (в залежності від вибору). Можна редагувати вручну."
                                 />
                               </td>
                               <td className="px-2 py-1.5">

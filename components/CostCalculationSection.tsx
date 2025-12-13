@@ -161,8 +161,8 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep((prev) => (prev - 1) as Step);
-    }
-  };
+      }
+    };
 
   const handleSubmit = async () => {
     if (!canProceedStep3) return;
@@ -173,7 +173,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
-      
+
       // Скидання форми через 3 секунди
       setTimeout(() => {
         setIsSubmitted(false);
@@ -254,7 +254,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                 <div className="mt-1 h-0.5 w-full bg-teal-500" />
               )}
             </div>
-
+            
             {/* Лінія */}
             <div className={`h-0.5 w-16 ${
               currentStep >= 3 ? "bg-teal-500" : "bg-gray-300"
@@ -279,9 +279,9 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
               {currentStep === 3 && (
                 <div className="mt-1 h-0.5 w-full bg-teal-500" />
               )}
+              </div>
             </div>
           </div>
-        </div>
 
         {/* Контент кроків */}
         <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
@@ -311,7 +311,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                         isSelected ? "text-teal-700" : "text-gray-700 group-hover:text-teal-600"
                       }`}>
                         {type.label}
-                      </span>
+                    </span>
                       {isSelected && (
                         <div className="absolute top-3 right-3">
                           <CheckCircle2 className="h-6 w-6 text-teal-600" />
@@ -566,12 +566,12 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                   ) : (
                     costCalc.send
                   )}
-                </button>
+              </button>
               )}
+                    </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 }

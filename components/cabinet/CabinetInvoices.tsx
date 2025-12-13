@@ -80,6 +80,14 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
     }
   };
 
+  // Format track number - remove batch number part (before dash)
+  const formatTrackNumber = (track: string | null | undefined): string => {
+    if (!track) return "-";
+    const parts = track.split("-");
+    // Return part after first dash, or original if no dash
+    return parts.length > 1 ? parts.slice(1).join("-") : track;
+  };
+
   return (
     <div>
       <h2 className="mb-6 text-2xl font-black text-slate-900 md:text-3xl">
@@ -145,6 +153,9 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
                     {t.cabinet?.invoiceDate || "Дата"}
                   </th>
                   <th className="px-4 py-3.5 text-left font-bold">
+                    {(t.cabinet as any)?.invoiceNumber || "Номер рахунку"}
+                  </th>
+                  <th className="px-4 py-3.5 text-left font-bold">
                     {t.cabinet?.invoiceTrackNumber || "Трек номер"}
                   </th>
                   <th className="px-4 py-3.5 text-right font-bold">
@@ -163,6 +174,11 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
                   >
                     <td className="px-4 py-4">
                       {formatDate(inv.createdAt)}
+                    </td>
+                    <td className="px-4 py-4">
+                      <span className="font-semibold text-slate-900">
+                        {inv.invoiceNumber || "-"}
+                      </span>
                     </td>
                     <td className="px-4 py-4">
                       {inv.shipment ? (
@@ -196,7 +212,7 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
                           className="inline-flex items-center gap-1.5 text-teal-600 hover:text-teal-700 hover:underline font-semibold"
                         >
                           <Package className="h-3.5 w-3.5" />
-                          {inv.shipment.internalTrack}
+                          {formatTrackNumber(inv.shipment.internalTrack)}
                         </button>
                       ) : (
                         <span className="text-slate-400">—</span>

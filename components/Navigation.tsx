@@ -21,6 +21,10 @@ export function Navigation({ locale }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMobileLangOpen, setIsMobileLangOpen] = useState(false);
+  const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
+  const [isMobileDeliveryOpen, setIsMobileDeliveryOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const pathname = usePathname();
   const t = getTranslations(locale) ?? translations[defaultLocale];
@@ -30,6 +34,8 @@ export function Navigation({ locale }: NavigationProps) {
   
   // Refs для таймерів затримки
   const langTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const deliveryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const servicesTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -70,12 +76,88 @@ export function Navigation({ locale }: NavigationProps) {
     }, 200);
   };
 
+  const handleDeliveryMouseEnter = () => {
+    if (deliveryTimeoutRef.current) {
+      clearTimeout(deliveryTimeoutRef.current);
+    }
+    setIsDeliveryOpen(true);
+  };
+
+  const handleDeliveryMouseLeave = () => {
+    deliveryTimeoutRef.current = setTimeout(() => {
+      setIsDeliveryOpen(false);
+    }, 200);
+  };
+
+  const handleServicesMouseEnter = () => {
+    if (servicesTimeoutRef.current) {
+      clearTimeout(servicesTimeoutRef.current);
+    }
+    setIsServicesOpen(true);
+  };
+
+  const handleServicesMouseLeave = () => {
+    servicesTimeoutRef.current = setTimeout(() => {
+      setIsServicesOpen(false);
+    }, 200);
+  };
+
   // Очистка таймерів при розмонтуванні
   useEffect(() => {
     return () => {
       if (langTimeoutRef.current) clearTimeout(langTimeoutRef.current);
+      if (deliveryTimeoutRef.current) clearTimeout(deliveryTimeoutRef.current);
+      if (servicesTimeoutRef.current) clearTimeout(servicesTimeoutRef.current);
     };
   }, []);
+
+  // Категорії доставки
+  const deliveryCategories = [
+    {
+      name: locale === "ua" ? "Доставка в Україну під ключ" : locale === "ru" ? "Доставка в Украину под ключ" : "Delivery to Ukraine Turnkey",
+      href: `/${locale}/delivery/ukraine-turnkey`,
+    },
+    {
+      name: locale === "ua" ? "Доставка в країни ЄС та світу" : locale === "ru" ? "Доставка в страны ЕС и мира" : "Delivery to EU and World",
+      href: `/${locale}/delivery/eu-world`,
+    },
+    {
+      name: locale === "ua" ? "Міжнародне перевезення та експедирування" : locale === "ru" ? "Международные перевозки и экспедирование" : "International Transportation and Forwarding",
+      href: `/${locale}/delivery/international`,
+    },
+  ];
+
+  // Категорії послуг
+  const servicesCategories = [
+    {
+      name: t.services.warehousing,
+      href: `/${locale}/services/warehousing`,
+    },
+    {
+      name: t.services.payments,
+      href: `/${locale}/services/payments`,
+    },
+    {
+      name: t.services.sourcing,
+      href: `/${locale}/services/sourcing`,
+    },
+    {
+      name: t.services.insurance,
+      href: `/${locale}/services/insurance`,
+    },
+    {
+      name: t.services.local,
+      href: `/${locale}/services/local`,
+    },
+    {
+      name: t.services.customs,
+      href: `/${locale}/services/customs`,
+    },
+    {
+      name: t.services.forwarding,
+      href: `/${locale}/services/forwarding`,
+    },
+  ];
 
 
   const getLocalizedPath = (newLocale: Locale) => {
@@ -110,50 +192,112 @@ export function Navigation({ locale }: NavigationProps) {
         </div>
 
         <div className="hidden items-center space-x-6 lg:flex">
-          <Link
-            href={isHomePage ? "#delivery" : `/${locale}#delivery`}
-            onClick={(e) => {
-              if (isHomePage) {
-                e.preventDefault();
-                const element = document.getElementById('delivery');
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              } else {
-                // Якщо не на головній, переходимо на головну і скролимо
-                e.preventDefault();
-                window.location.href = `/${locale}#delivery`;
-                setTimeout(() => {
+          <div
+            className="relative"
+            onMouseEnter={handleDeliveryMouseEnter}
+            onMouseLeave={handleDeliveryMouseLeave}
+          >
+            <Link
+              href={isHomePage ? "#delivery" : `/${locale}#delivery`}
+              onClick={(e) => {
+                if (isHomePage) {
+                  e.preventDefault();
                   const element = document.getElementById('delivery');
                   if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
-                }, 100);
-              }
-            }}
-            className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
-              isHomePage && scrollY <= 50
-                ? "text-white/90 hover:bg-white/10 hover:text-white"
-                : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
-            }`}
-          >
-            {t.nav.delivery}
-          </Link>
+                } else {
+                  // Якщо не на головній, переходимо на головну і скролимо
+                  e.preventDefault();
+                  window.location.href = `/${locale}#delivery`;
+                  setTimeout(() => {
+                    const element = document.getElementById('delivery');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }, 100);
+                }
+              }}
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
+                isHomePage && scrollY <= 50
+                  ? "text-white/90 hover:bg-white/10 hover:text-white"
+                  : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
+              }`}
+            >
+              {t.nav.delivery}
+              <ChevronDown size={18} className={`transition-transform duration-200 ${isDeliveryOpen ? "rotate-180" : ""}`} />
+            </Link>
+            {isDeliveryOpen && (
+              <div 
+                className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-2 z-50"
+                style={{
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)"
+                }}
+                onMouseEnter={handleDeliveryMouseEnter}
+                onMouseLeave={handleDeliveryMouseLeave}
+              >
+                {deliveryCategories.map((category, index) => (
+                  <Link
+                    key={index}
+                    href={category.href}
+                    className={`block px-4 py-3 text-base rounded-lg mx-2 transition-all duration-200 ${
+                      pathname === category.href
+                        ? "bg-teal-50/80 text-teal-700 font-medium"
+                        : "text-gray-700 hover:bg-teal-50/80 hover:text-teal-700"
+                    }`}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
 
-          <Link
-            href={`/${locale}/services`}
-            className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
-              isHomePage && scrollY <= 50
-                ? pathname?.includes("/services")
-                  ? "bg-white/20 text-white backdrop-blur-sm"
-                  : "text-white/90 hover:bg-white/10 hover:text-white"
-                : pathname?.includes("/services")
-                ? "bg-teal-100 text-teal-700 shadow-sm"
-                : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
-            }`}
+          <div
+            className="relative"
+            onMouseEnter={handleServicesMouseEnter}
+            onMouseLeave={handleServicesMouseLeave}
           >
-            {t.nav.services}
-          </Link>
+            <Link
+              href={`/${locale}/services`}
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
+                isHomePage && scrollY <= 50
+                  ? pathname?.includes("/services")
+                    ? "bg-white/20 text-white backdrop-blur-sm"
+                    : "text-white/90 hover:bg-white/10 hover:text-white"
+                  : pathname?.includes("/services")
+                  ? "bg-teal-100 text-teal-700 shadow-sm"
+                  : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
+              }`}
+            >
+              {t.nav.services}
+              <ChevronDown size={18} className={`transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`} />
+            </Link>
+            {isServicesOpen && (
+              <div 
+                className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-2 z-50"
+                style={{
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)"
+                }}
+                onMouseEnter={handleServicesMouseEnter}
+                onMouseLeave={handleServicesMouseLeave}
+              >
+                {servicesCategories.map((category, index) => (
+                  <Link
+                    key={index}
+                    href={category.href}
+                    className={`block px-4 py-3 text-base rounded-lg mx-2 transition-all duration-200 ${
+                      pathname === category.href
+                        ? "bg-teal-50/80 text-teal-700 font-medium"
+                        : "text-gray-700 hover:bg-teal-50/80 hover:text-teal-700"
+                    }`}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
 
           <Link
             href={`/${locale}/contacts`}
@@ -276,48 +420,116 @@ export function Navigation({ locale }: NavigationProps) {
           </div>
           
           <div className="fixed inset-0 flex flex-col lg:hidden" style={{ zIndex: 50 }}>
-            <div className="flex-1 overflow-y-auto px-4 py-20">
+            <div className="flex-1 overflow-y-auto px-4 pt-32 pb-20">
               <div className="mx-auto max-w-md space-y-3">
-                {/* Доставка */}
-                <Link
-                  href={isHomePage ? "#delivery" : `/${locale}#delivery`}
-                  onClick={(e) => {
-                    setIsMenuOpen(false);
-                    if (isHomePage) {
-                      e.preventDefault();
-                      setTimeout(() => {
-                        const element = document.getElementById('delivery');
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                {/* Доставка з підсекціями */}
+                <div className="space-y-1">
+                  <div className="flex w-full items-center justify-between">
+                    <Link
+                      href={isHomePage ? "#delivery" : `/${locale}#delivery`}
+                      onClick={(e) => {
+                        setIsMenuOpen(false);
+                        if (isHomePage) {
+                          e.preventDefault();
+                          setTimeout(() => {
+                            const element = document.getElementById('delivery');
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                          }, 100);
+                        } else {
+                          e.preventDefault();
+                          window.location.href = `/${locale}#delivery`;
+                          setTimeout(() => {
+                            const element = document.getElementById('delivery');
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                          }, 100);
                         }
-                      }, 100);
-                    } else {
-                      e.preventDefault();
-                      window.location.href = `/${locale}#delivery`;
-                      setTimeout(() => {
-                        const element = document.getElementById('delivery');
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                      }, 100);
-                    }
-                  }}
-                  className="flex w-full items-center justify-between py-3 px-2 text-lg font-semibold text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
-                >
-                  <span>{t.nav.delivery}</span>
-                  <ArrowRight size={20} className="text-white flex-shrink-0" />
-                </Link>
+                      }}
+                      className="flex-1 py-3 px-2 text-lg font-semibold text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
+                    >
+                      {t.nav.delivery}
+                    </Link>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsMobileDeliveryOpen(!isMobileDeliveryOpen);
+                      }}
+                      className="p-2 text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
+                    >
+                      {isMobileDeliveryOpen ? (
+                        <Minus size={20} className="flex-shrink-0" />
+                      ) : (
+                        <Plus size={20} className="flex-shrink-0" />
+                      )}
+                    </button>
+                  </div>
+                  {isMobileDeliveryOpen && (
+                    <div className="space-y-1 pl-2 pr-2">
+                      {deliveryCategories.map((category, index) => (
+                        <Link
+                          key={index}
+                          href={category.href}
+                          className={`block py-2 px-3 text-base transition-colors rounded-lg hover:bg-white/5 ${
+                            pathname === category.href
+                              ? "text-teal-300 font-semibold bg-white/10"
+                              : "text-white/80 hover:text-teal-300"
+                          }`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
                 {/* Послуги з підсекціями */}
                 <div className="space-y-1">
-                  <Link
-                    href={`/${locale}/services`}
-                    className="flex w-full items-center justify-between py-3 px-2 text-lg font-semibold text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <span>{t.nav.services}</span>
-                    <ArrowRight size={20} className="text-white flex-shrink-0" />
-                  </Link>
+                  <div className="flex w-full items-center justify-between">
+                    <Link
+                      href={`/${locale}/services`}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex-1 py-3 px-2 text-lg font-semibold text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
+                    >
+                      {t.nav.services}
+                    </Link>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsMobileServicesOpen(!isMobileServicesOpen);
+                      }}
+                      className="p-2 text-white transition-colors hover:text-teal-300 rounded-lg hover:bg-white/5"
+                    >
+                      {isMobileServicesOpen ? (
+                        <Minus size={20} className="flex-shrink-0" />
+                      ) : (
+                        <Plus size={20} className="flex-shrink-0" />
+                      )}
+                    </button>
+                  </div>
+                  {isMobileServicesOpen && (
+                    <div className="space-y-1 pl-2 pr-2">
+                      {servicesCategories.map((category, index) => (
+                        <Link
+                          key={index}
+                          href={category.href}
+                          className={`block py-2 px-3 text-base transition-colors rounded-lg hover:bg-white/5 ${
+                            pathname === category.href
+                              ? "text-teal-300 font-semibold bg-white/10"
+                              : "text-white/80 hover:text-teal-300"
+                          }`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Контакти */}

@@ -21,7 +21,7 @@ export function useShipments(userId: string) {
             id: batch.id,
             batchId: batch.batchId,
             description: batch.description,
-            status: batch.status || "FORMING",
+            status: batch.status || "CREATED",
             deliveryType: batch.deliveryType || "AIR",
           }))
         );

@@ -1361,6 +1361,7 @@ export const ua = {
     status: "Статус",
     location: "Місцезнаходження",
     places: "Місць",
+    weightKg: "кг",
     volumeM3: "M³",
     density: "Щільність",
     cost: "Вартість",

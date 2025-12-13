@@ -43,7 +43,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
   }, []);
 
   return (
-    <footer ref={footerRef} id="contact" className="relative overflow-hidden bg-slate-950 py-20 text-white">
+    <footer ref={footerRef} id="site-footer" data-footer-id="site-footer" className="relative overflow-hidden bg-slate-950 py-20 text-white">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(20,184,166,0.18)_0%,_rgba(2,6,23,0)_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(140deg,rgba(20,184,166,0.12)_0%,_rgba(20,184,166,0)_55%),linear-gradient(320deg,rgba(20,184,166,0.2)_0%,_rgba(20,184,166,0)_60%)]" />
 

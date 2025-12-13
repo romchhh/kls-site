@@ -600,6 +600,7 @@ export const en = {
     status: "Status",
     location: "Location",
     places: "Places",
+    weightKg: "kg",
     volumeM3: "M³",
     density: "Density",
     cost: "Cost",

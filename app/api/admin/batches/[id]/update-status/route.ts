@@ -42,8 +42,13 @@ export async function PUT(
       );
     }
 
+    // Отримуємо routeFrom та routeTo з першого вантажу в партії (якщо є)
+    const firstShipment = batch.shipments && batch.shipments.length > 0 ? batch.shipments[0] : null;
+    const routeFrom = firstShipment?.routeFrom || null;
+    const routeTo = firstShipment?.routeTo || null;
+    
     // Автоматично встановлюємо місцезнаходження на основі статусу
-    const finalLocation = providedLocation || getLocationForStatus(status as any, batch.routeFrom, batch.routeTo);
+    const finalLocation = providedLocation || getLocationForStatus(status as any, routeFrom, routeTo);
 
     // Update all shipments in batch
     const updatedShipments = await prisma.shipment.updateMany({
@@ -53,6 +58,14 @@ export async function PUT(
       data: {
         status: status as any,
         location: finalLocation || undefined,
+      },
+    });
+
+    // Оновлюємо статус партії, щоб він відповідав статусу вантажів
+    await (prisma as any).batch.update({
+      where: { id: batch.id },
+      data: {
+        status: status as any,
       },
     });
 
@@ -80,7 +93,7 @@ export async function PUT(
         actionType: "BATCH_UPDATE_STATUS",
         targetType: "BATCH",
         targetId: batch.id,
-        description: `Оновлено статус для ${updatedShipments.count} вантажів в партії ${batch.batchId}`,
+        description: `Оновлено статус партії ${batch.batchId} та ${updatedShipments.count} вантажів`,
       },
     });
 

@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
         batchId,
         description: description || null,
         deliveryType,
-        status: "FORMING", // Default status for new batches
+        status: "CREATED", // Default status for new batches
       },
       include: {
         shipments: {
@@ -185,7 +185,7 @@ export async function PUT(req: NextRequest) {
 
     // Validate status if provided
     if (status !== undefined) {
-      const validStatuses = ["FORMING", "FORMED"];
+      const validStatuses = ["CREATED", "RECEIVED_CN", "CONSOLIDATION", "IN_TRANSIT", "ARRIVED_UA", "ON_UA_WAREHOUSE", "DELIVERED", "ARCHIVED"];
       if (!validStatuses.includes(status)) {
         return NextResponse.json(
           { error: `Невірний статус. Дозволені значення: ${validStatuses.join(", ")}` },
@@ -211,10 +211,51 @@ export async function PUT(req: NextRequest) {
             clientCode: true,
             cargoLabel: true,
             createdAt: true,
+            routeFrom: true,
+            routeTo: true,
           },
         },
       },
     });
+
+    // Якщо статус партії змінився, синхронізуємо статуси всіх вантажів в партії
+    if (status !== undefined && status !== existing.status) {
+      const firstShipment = batch.shipments && batch.shipments.length > 0 ? batch.shipments[0] : null;
+      const routeFrom = firstShipment?.routeFrom || null;
+      const routeTo = firstShipment?.routeTo || null;
+      
+      // Автоматично встановлюємо місцезнаходження на основі статусу
+      const { getLocationForStatus } = await import("@/lib/utils/shipmentAutomation");
+      const finalLocation = getLocationForStatus(status as any, routeFrom, routeTo);
+
+      // Update all shipments in batch to match batch status
+      await prisma.shipment.updateMany({
+        where: {
+          batchId: batch.id,
+        },
+        data: {
+          status: status as any,
+          location: finalLocation || undefined,
+        },
+      });
+
+      // Create status history entries for all updated shipments
+      const shipments = await prisma.shipment.findMany({
+        where: { batchId: batch.id },
+        select: { id: true },
+      });
+
+      const statusHistoryEntries = shipments.map((shipment) => ({
+        shipmentId: shipment.id,
+        status: status as any,
+        location: finalLocation || null,
+        description: `Синхронізація статусу з партією ${batch.batchId}`,
+      }));
+
+      await prisma.shipmentStatusHistory.createMany({
+        data: statusHistoryEntries,
+      });
+    }
 
     // Log admin action
     await prisma.adminAction.create({

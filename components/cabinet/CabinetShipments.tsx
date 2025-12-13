@@ -182,11 +182,21 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                   <span className="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-1.5 font-semibold border border-white/20">
                     {t.cabinet?.amountLabel || "Сума:"} {invoices.reduce((sum, inv) => sum + parseFloat(inv.amount || "0"), 0).toFixed(2)} USD
                   </span>
-                  {invoices.filter((inv) => inv.status === "UNPAID").length > 0 && (
-                    <span className="rounded-lg bg-orange-500/20 backdrop-blur-sm px-3 py-1.5 font-semibold border border-orange-400/30 text-orange-200">
-                      {t.cabinet?.toPayLabel || "До оплати:"} {invoices.filter((inv) => inv.status === "UNPAID").reduce((sum, inv) => sum + parseFloat(inv.amount || "0"), 0).toFixed(2)} USD
-                    </span>
-                  )}
+                  {invoices.filter((inv) => inv.status === "UNPAID").length > 0 && (() => {
+                    const unpaidInvoices = invoices.filter((inv) => inv.status === "UNPAID");
+                    const unpaidCount = unpaidInvoices.length;
+                    const unpaidAmount = unpaidInvoices.reduce((sum, inv) => sum + parseFloat(inv.amount || "0"), 0);
+                    const invoiceWord = unpaidCount === 1 
+                      ? (t.cabinet?.invoice || "рахунок")
+                      : unpaidCount < 5 
+                        ? ((t.cabinet as any)?.invoicesFew || "рахунки")
+                        : (t.cabinet?.invoicesPlural || "рахунків");
+                    return (
+                      <span className="rounded-lg bg-orange-500/20 backdrop-blur-sm px-3 py-1.5 font-semibold border border-orange-400/30 text-orange-200">
+                        {t.cabinet?.toPayLabel || "До оплати:"} {unpaidCount} {invoiceWord} {t.cabinet?.amountLabel || "Сума"} {unpaidAmount.toFixed(2)} USD
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
             )}
@@ -284,6 +294,9 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                     </th>
                     <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       {t.cabinet?.places || "Місць"}
+                    </th>
+                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                      {t.cabinet?.weightKg || "кг"}
                     </th>
                     <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
                       {t.cabinet?.volumeM3 || "M³"}
@@ -384,6 +397,11 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 lg:px-4">
                           <span className="text-xs font-semibold text-slate-700 lg:text-sm">{pieces}</span>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
+                          <span className="text-xs text-slate-700 lg:text-sm">
+                            {totalWeight > 0 ? totalWeight.toFixed(2) : "-"}
+                          </span>
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 lg:px-4">
                           <span className="text-xs text-slate-700 lg:text-sm">

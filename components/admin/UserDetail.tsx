@@ -354,6 +354,35 @@ export function UserDetail({ userId }: UserDetailProps) {
           }
         }
         
+        // Автоматичний розрахунок вартості: Тариф * кг/м3 (в залежності від вибору)
+        if (field === "tariffType" || field === "tariffValue" || field === "weightKg" || field === "volumeM3" || field === "lengthCm" || field === "widthCm" || field === "heightCm") {
+          const tariffValue = parseFloat(updatedItem.tariffValue || "0");
+          const weight = parseFloat(updatedItem.weightKg || "0");
+          let volume = parseFloat(updatedItem.volumeM3 || "0");
+          
+          // Якщо змінили габарити, перерахувати об'єм
+          if (field === "lengthCm" || field === "widthCm" || field === "heightCm") {
+            const length = parseFloat(updatedItem.lengthCm || "0");
+            const width = parseFloat(updatedItem.widthCm || "0");
+            const height = parseFloat(updatedItem.heightCm || "0");
+            if (length > 0 && width > 0 && height > 0) {
+              volume = (length * width * height) / 1000000;
+            }
+          }
+          
+          if (tariffValue > 0) {
+            if (updatedItem.tariffType === "kg" && weight > 0) {
+              updatedItem.deliveryCost = (tariffValue * weight).toFixed(2);
+            } else if (updatedItem.tariffType === "m3" && volume > 0) {
+              updatedItem.deliveryCost = (tariffValue * volume).toFixed(2);
+            } else {
+              updatedItem.deliveryCost = "";
+            }
+          } else {
+            updatedItem.deliveryCost = "";
+          }
+        }
+        
         return updatedItem;
       }),
     }));
@@ -504,6 +533,35 @@ export function UserDetail({ userId }: UserDetailProps) {
           }
         }
         
+        // Автоматичний розрахунок вартості: Тариф * кг/м3 (в залежності від вибору)
+        if (field === "tariffType" || field === "tariffValue" || field === "weightKg" || field === "volumeM3" || field === "lengthCm" || field === "widthCm" || field === "heightCm") {
+          const tariffValue = parseFloat(updatedItem.tariffValue || "0");
+          const weight = parseFloat(updatedItem.weightKg || "0");
+          let volume = parseFloat(updatedItem.volumeM3 || "0");
+          
+          // Якщо змінили габарити, перерахувати об'єм
+          if (field === "lengthCm" || field === "widthCm" || field === "heightCm") {
+            const length = parseFloat(updatedItem.lengthCm || "0");
+            const width = parseFloat(updatedItem.widthCm || "0");
+            const height = parseFloat(updatedItem.heightCm || "0");
+            if (length > 0 && width > 0 && height > 0) {
+              volume = (length * width * height) / 1000000;
+            }
+          }
+          
+          if (tariffValue > 0) {
+            if (updatedItem.tariffType === "kg" && weight > 0) {
+              updatedItem.deliveryCost = (tariffValue * weight).toFixed(2);
+            } else if (updatedItem.tariffType === "m3" && volume > 0) {
+              updatedItem.deliveryCost = (tariffValue * volume).toFixed(2);
+            } else {
+              updatedItem.deliveryCost = "";
+            }
+          } else {
+            updatedItem.deliveryCost = "";
+          }
+        }
+        
         return updatedItem;
       }),
     }));
@@ -594,7 +652,7 @@ export function UserDetail({ userId }: UserDetailProps) {
             id: batch.id,
             batchId: batch.batchId,
             description: batch.description,
-            status: batch.status || "FORMING",
+            status: batch.status || "CREATED",
             deliveryType: batch.deliveryType || "AIR",
           }))
         );
