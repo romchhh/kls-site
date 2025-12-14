@@ -114,21 +114,21 @@ export function UserShipments({
   const getStatusInfoLocal = (status: string) => {
     switch (status) {
       case "CREATED":
-        return { icon: Clock, label: "Очікується на складі", color: "text-blue-600", bgColor: "bg-blue-50", location: "" };
+        return { icon: Clock, label: "Очікується на складі", color: "text-blue-600", bgColor: "bg-blue-50", location: "Китай — склад" };
       case "RECEIVED_CN":
-        return { icon: Warehouse, label: "Отримано на складі (Китай)", color: "text-yellow-600", bgColor: "bg-yellow-50", location: "CN warehouse" };
+        return { icon: Warehouse, label: "Отримано на складі (Китай)", color: "text-yellow-600", bgColor: "bg-yellow-50", location: "Китай — склад" };
       case "CONSOLIDATION":
-        return { icon: Warehouse, label: "Готується до відправлення", color: "text-yellow-600", bgColor: "bg-yellow-50", location: "CN warehouse" };
+        return { icon: Truck, label: "Готується до відправлення", color: "text-orange-600", bgColor: "bg-orange-50", location: "Дорога" };
       case "IN_TRANSIT":
-        return { icon: Truck, label: "В дорозі", color: "text-purple-600", bgColor: "bg-purple-50", location: "In transit" };
+        return { icon: Truck, label: "В дорозі", color: "text-purple-600", bgColor: "bg-purple-50", location: "Дорога" };
       case "ARRIVED_UA":
-        return { icon: Warehouse, label: "Доставлено на склад (Україна)", color: "text-indigo-600", bgColor: "bg-indigo-50", location: "UA warehouse" };
+        return { icon: Warehouse, label: "Доставлено на склад (Україна)", color: "text-indigo-600", bgColor: "bg-indigo-50", location: "Україна — склад" };
       case "ON_UA_WAREHOUSE":
-        return { icon: Warehouse, label: "На складі України", color: "text-teal-600", bgColor: "bg-teal-50", location: "UA warehouse" };
+        return { icon: Warehouse, label: "Готово до видачі", color: "text-teal-600", bgColor: "bg-teal-50", location: "Україна — склад" };
       case "DELIVERED":
-        return { icon: CheckCircle, label: "Доставлено клієнту", color: "text-green-600", bgColor: "bg-green-50", location: "Delivered" };
+        return { icon: CheckCircle, label: "Завершено", color: "text-green-600", bgColor: "bg-green-50", location: "" };
       case "ARCHIVED":
-        return { icon: Archive, label: "Завершено", color: "text-slate-600", bgColor: "bg-slate-50", location: "" };
+        return { icon: Archive, label: "Архів", color: "text-slate-600", bgColor: "bg-slate-50", location: "" };
       default:
         return { icon: Package, label: status, color: "text-slate-600", bgColor: "bg-slate-50", location: "" };
     }
@@ -824,427 +824,567 @@ export function UserShipments({
           {showAddShipment && (
             <form
               onSubmit={handleCreateShipment}
-              className="mb-6 grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 md:grid-cols-3"
+              className="mb-6 space-y-6 rounded-xl border border-slate-200 bg-slate-50 p-6"
             >
-              {/* Перший рядок: ID партії *, Трек номер вантажу (автозаповнений), Маркування */}
-              <div className="md:col-span-1">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  ID партії *
-                </label>
-                <select
-                  value={shipmentForm.batchId}
-                  onChange={(e) => {
-                    const selectedBatchId = e.target.value;
-                    const selectedBatch = batches.find(b => b.batchId === selectedBatchId);
-                    setShipmentForm({ 
-                      ...shipmentForm, 
-                      batchId: selectedBatchId,
-                      // Автоматично встановлюємо deliveryType з батча
-                      deliveryType: selectedBatch?.deliveryType || shipmentForm.deliveryType || "AIR"
-                    });
-                  }}
-                  required
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                >
-                  <option value="">Оберіть партію</option>
-                  {batches
-                    .filter((batch) => batch.status === "CREATED" || batch.status === "RECEIVED_CN" || batch.status === "CONSOLIDATION")
-                    .map((batch) => (
-                      <option key={batch.id} value={batch.batchId}>
-                        {batch.batchId} {batch.description ? `- ${batch.description}` : ""}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              <div className="md:col-span-1">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Трек номер вантажу (автоматично)
-                </label>
-                <input
-                  type="text"
-                  value={calculatedInternalTrack}
-                  readOnly
-                  className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-mono text-slate-700 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  placeholder="Оберіть партію та тип вантажу"
-                />
-                <p className="mt-1 text-[10px] text-slate-500">
-                  Формат: ID_партії-Код_клієнтаТипНомер (Тип: Авіа=A, Море=S, Потяг=R, Мультимодал=M)
-                </p>
-              </div>
-              <div className="md:col-span-1">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Маркування
-                </label>
-                <input
-                  type="text"
-                  value={shipmentForm.cargoLabel}
-                  onChange={(e) =>
-                    setShipmentForm({ ...shipmentForm, cargoLabel: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-              </div>
-              {/* Другий рядок: Маршрути (в стовпчик), Дата отримано на складі */}
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Маршрут: З
-                </label>
-                <select
-                  value={shipmentForm.routeFrom}
-                  onChange={(e) =>
-                    setShipmentForm({ ...shipmentForm, routeFrom: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                >
-                  <option value="">Не вказано</option>
-                  <option value="CN">China (CN)</option>
-                  <option value="HK">Hong Kong (HK)</option>
-                  <option value="KR">Korea (KR)</option>
-                  <option value="TR">Turkey (TR)</option>
-                  <option value="EU">EU</option>
-                </select>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Маршрут: В
-                </label>
-                <select
-                  value={shipmentForm.routeTo}
-                  onChange={(e) =>
-                    setShipmentForm({ ...shipmentForm, routeTo: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                >
-                  <option value="">Не вказано</option>
-                  <option value="UA">Ukraine (UA)</option>
-                  <option value="PL">Poland (PL)</option>
-                  <option value="EU">EU</option>
-                  <option value="US">USA (US)</option>
-                </select>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Дата отримано на складі
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="date"
-                    value={shipmentForm.receivedAtWarehouse}
-                    onChange={(e) => {
-                      const receivedDate = e.target.value;
-                      // Автоматично встановлюємо статус та місцезнаходження
-                      if (receivedDate) {
-                        const statusInfo = getStatusInfoLocal("RECEIVED_CN");
-                        setShipmentForm({
-                          ...shipmentForm,
-                          receivedAtWarehouse: receivedDate,
-                          status: "RECEIVED_CN",
-                          location: statusInfo.location,
-                        });
-                      } else {
-                        setShipmentForm({
-                          ...shipmentForm,
-                          receivedAtWarehouse: receivedDate,
-                        });
-                      }
-                    }}
-                    className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  />
-                </div>
-                <p className="mt-1 text-[10px] text-slate-500">
-                  Після встановлення автоматично встановлюється статус "Отримано на складі" та місцезнаходження
-                </p>
-              </div>
-              {/* Третій рядок: Місцезнаходження, Тип вантажу, Дата відправлено */}
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Місцезнаходження
-                </label>
-                <input
-                  type="text"
-                  value={shipmentForm.location}
-                  onChange={(e) =>
-                    setShipmentForm({ ...shipmentForm, location: e.target.value })
-                  }
-                  placeholder="Напр. CN warehouse, UA warehouse"
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Тип вантажу
-                </label>
-                <input
-                  type="text"
-                  list="cargo-types"
-                  value={shipmentForm.cargoType || shipmentForm.cargoTypeCustom || ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    // Check if value is from the list
-                    const isFromList = CARGO_TYPES.includes(value);
-                    setShipmentForm({
-                      ...shipmentForm,
-                      cargoType: isFromList ? value : "",
-                      cargoTypeCustom: isFromList ? "" : value,
-                    });
-                  }}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  placeholder="Оберіть зі списку або введіть вручну"
-                />
-                <datalist id="cargo-types">
-                  {CARGO_TYPES.map((type) => (
-                    <option key={type} value={type} />
-                  ))}
-                </datalist>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Дата відправлено
-                </label>
-                <input
-                  type="date"
-                  value={shipmentForm.sentAt}
-                  onChange={(e) => {
-                    const sentDate = e.target.value;
-                    let etaDate = "";
-                    
-                    if (sentDate) {
-                      const sent = new Date(sentDate);
-                      // Використовуємо утиліту для розрахунку ETA
-                      const eta = calculateETA(sent, shipmentForm.deliveryType as any);
-                      etaDate = eta.toISOString().split('T')[0];
-                    }
-                    
-                    setShipmentForm({
-                      ...shipmentForm,
-                      sentAt: sentDate,
-                      eta: etaDate,
-                    });
-                  }}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-                <p className="mt-1 text-[10px] text-slate-500">
-                  Автоматично: дата отримано + 3 дні (можна встановити вручну)
-                </p>
-              </div>
-              {/* Четвертий рядок: Статус *, Дата доставлено, ETA */}
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Статус *
-                </label>
-                <select
-                  value={shipmentForm.status}
-                  onChange={(e) => {
-                    const newStatus = e.target.value;
-                    const statusInfo = getStatusInfoLocal(newStatus);
-                    setShipmentForm({
-                      ...shipmentForm,
-                      status: newStatus,
-                      // Автоматично встановлюємо location при зміні статусу
-                      location: statusInfo.location || shipmentForm.location,
-                    });
-                  }}
-                  required
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                >
-                  <option value="">Оберіть статус</option>
-                  {["CREATED", "RECEIVED_CN", "CONSOLIDATION", "IN_TRANSIT", "ARRIVED_UA", "ON_UA_WAREHOUSE", "DELIVERED", "ARCHIVED"].map((status) => {
-                    const statusInfo = getStatusInfoLocal(status);
-                    return (
-                      <option key={status} value={status}>
-                        {statusInfo.label}
-                      </option>
-                    );
-                  })}
-                </select>
-                {shipmentForm.status && (
-                  <div className={`mt-2 flex items-center gap-2 rounded-lg px-3 py-2 ${getStatusInfoLocal(shipmentForm.status).bgColor}`}>
-                    {(() => {
-                      const statusInfo = getStatusInfoLocal(shipmentForm.status);
-                      const Icon = statusInfo.icon;
-                      return <Icon className={`h-4 w-4 ${statusInfo.color}`} />;
-                    })()}
-                    <span className={`text-xs font-semibold ${getStatusInfoLocal(shipmentForm.status).color}`}>
-                      {getStatusInfoLocal(shipmentForm.status).label}
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Дата доставлено
-                </label>
-                <input
-                  type="date"
-                  value={shipmentForm.deliveredAt}
-                  onChange={(e) =>
-                    setShipmentForm({
-                      ...shipmentForm,
-                      deliveredAt: e.target.value,
-                    })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-                <p className="mt-1 text-[10px] text-slate-500">
-                  Після встановлення автоматично встановлюється статус "В дорозі", місцезнаходження та ETA
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  ETA (орієнтовна дата прибуття)
-                </label>
-                <input
-                  type="date"
-                  value={shipmentForm.eta}
-                  onChange={(e) =>
-                    setShipmentForm({
-                      ...shipmentForm,
-                      eta: e.target.value,
-                    })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-                <p className="mt-1 text-[10px] text-slate-500">
-                  Автоматично розраховується: дата відправлено + {getDeliveryDays(shipmentForm.deliveryType as any)} днів ({shipmentForm.deliveryType === "AIR" ? "Авіа" : shipmentForm.deliveryType === "SEA" ? "Море" : shipmentForm.deliveryType === "RAIL" ? "Залізниця" : "Мультимодал"}) (можна встановити вручну)
-                </p>
-              </div>
-              {/* Додаткові поля */}
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Тип доставки
-                </label>
-                <select
-                  value={shipmentForm.deliveryType}
-                  onChange={(e) =>
-                    setShipmentForm({
-                      ...shipmentForm,
-                      deliveryType: e.target.value,
-                    })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                >
-                  <option value="AIR">Авіа</option>
-                  <option value="SEA">Море</option>
-                  <option value="RAIL">Залізниця</option>
-                  <option value="MULTIMODAL">Мультимодал</option>
-                </select>
-              </div>
-              <div className="md:col-span-3">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Опис
-                </label>
-                <input
-                  type="text"
-                  value={shipmentForm.description}
-                  onChange={(e) =>
-                    setShipmentForm({
-                      ...shipmentForm,
-                      description: e.target.value,
-                    })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-              </div>
-              <div className="md:col-span-3">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Фото вантажу (можна додати кілька)
-                </label>
-                <div
-                  className="flex flex-col gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-3 py-3 text-xs text-slate-600"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-                    if (files.length > 0) {
-                      files.forEach(file => uploadAdditionalFile(file, "create"));
-                    }
-                  }}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span>
-                      Перетягніть фото сюди або оберіть вручну (jpg, png, webp)
-                    </span>
-                    <label className="inline-flex cursor-pointer items-center rounded-md bg-slate-100 px-2 py-1 font-semibold text-slate-700 hover:bg-slate-200">
-                      Обрати фото
-                      <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="hidden"
-                        onChange={(e) => {
-                          const files = e.target.files;
-                          if (files) {
-                            Array.from(files).forEach(file => {
-                              if (file.type.startsWith('image/')) {
-                                uploadAdditionalFile(file, "create");
-                              }
-                            });
-                          }
-                        }}
-                      />
+              {/* Секція 1: Основна інформація */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Основна інформація</h3>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      ID партії *
                     </label>
+                    <select
+                      value={shipmentForm.batchId}
+                      onChange={(e) => {
+                        const selectedBatchId = e.target.value;
+                        const selectedBatch = batches.find(b => b.batchId === selectedBatchId);
+                        setShipmentForm({ 
+                          ...shipmentForm, 
+                          batchId: selectedBatchId,
+                          // Автоматично встановлюємо deliveryType з батча
+                          deliveryType: selectedBatch?.deliveryType || shipmentForm.deliveryType || "AIR"
+                        });
+                      }}
+                      required
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    >
+                      <option value="">Оберіть партію</option>
+                      {batches
+                        .filter((batch) => batch.status === "CREATED" || batch.status === "RECEIVED_CN" || batch.status === "CONSOLIDATION")
+                        .map((batch) => (
+                          <option key={batch.id} value={batch.batchId}>
+                            {batch.batchId} {batch.description ? `- ${batch.description}` : ""}
+                          </option>
+                        ))}
+                    </select>
                   </div>
-                  {isUploadingAdditionalFilesCreate && (
-                    <span className="text-[11px] text-slate-500">
-                      Завантаження фото...
-                    </span>
-                  )}
-                  {/* Show main photo if exists */}
-                  {shipmentForm.mainPhotoUrl && (
-                    <div className="mt-3">
-                      <div className="mb-2 text-[11px] font-semibold text-slate-700">
-                        Головне фото:
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Тип доставки
+                    </label>
+                    <select
+                      value={shipmentForm.deliveryType}
+                      onChange={(e) =>
+                        setShipmentForm({
+                          ...shipmentForm,
+                          deliveryType: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    >
+                      <option value="AIR">Авіа</option>
+                      <option value="SEA">Море</option>
+                      <option value="RAIL">Залізниця</option>
+                      <option value="MULTIMODAL">Мультимодал</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Маршрут: З
+                    </label>
+                    <select
+                      value={shipmentForm.routeFrom}
+                      onChange={(e) =>
+                        setShipmentForm({ ...shipmentForm, routeFrom: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    >
+                      <option value="">Не вказано</option>
+                      <option value="CN">China (CN)</option>
+                      <option value="HK">Hong Kong (HK)</option>
+                      <option value="KR">Korea (KR)</option>
+                      <option value="TR">Turkey (TR)</option>
+                      <option value="EU">EU</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Маршрут: В
+                    </label>
+                    <select
+                      value={shipmentForm.routeTo}
+                      onChange={(e) =>
+                        setShipmentForm({ ...shipmentForm, routeTo: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    >
+                      <option value="">Не вказано</option>
+                      <option value="UA">Ukraine (UA)</option>
+                      <option value="PL">Poland (PL)</option>
+                      <option value="EU">EU</option>
+                      <option value="US">USA (US)</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-4">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Внутрішній трек
+                    </label>
+                    <input
+                      type="text"
+                      value={calculatedInternalTrack}
+                      readOnly
+                      className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-mono text-slate-700 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                      placeholder="Оберіть партію та тип вантажу"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 2: Дати */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Дати</h3>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Дата отримано на складі
+                    </label>
+                    <input
+                      type="date"
+                      value={shipmentForm.receivedAtWarehouse}
+                      onChange={(e) => {
+                        const receivedDate = e.target.value;
+                        if (receivedDate) {
+                          const statusInfo = getStatusInfoLocal("RECEIVED_CN");
+                          setShipmentForm({
+                            ...shipmentForm,
+                            receivedAtWarehouse: receivedDate,
+                            status: shipmentForm.status || "RECEIVED_CN",
+                            location: statusInfo.location || shipmentForm.location,
+                          });
+                        } else {
+                          setShipmentForm({
+                            ...shipmentForm,
+                            receivedAtWarehouse: receivedDate,
+                          });
+                        }
+                      }}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                    <p className="mt-1 text-[10px] text-slate-500">
+                      Після встановлення автоматично встановлюється статус "Отримано на складі" та місцезнаходження
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Дата відправлено
+                    </label>
+                    <input
+                      type="date"
+                      value={shipmentForm.sentAt}
+                      onChange={(e) => {
+                        const sentDate = e.target.value;
+                        let etaDate = shipmentForm.eta;
+                        if (sentDate) {
+                          const sent = new Date(sentDate);
+                          const eta = calculateETA(sent, shipmentForm.deliveryType as any);
+                          etaDate = eta.toISOString().split('T')[0];
+                        }
+                        setShipmentForm({
+                          ...shipmentForm,
+                          sentAt: sentDate,
+                          eta: etaDate,
+                        });
+                      }}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                    <p className="mt-1 text-[10px] text-slate-500">
+                      Автоматично розраховується: дата отримано + 3 дні (можна встановити вручну)
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      ETA (орієнтовна дата прибуття)
+                    </label>
+                    <input
+                      type="date"
+                      value={shipmentForm.eta}
+                      onChange={(e) =>
+                        setShipmentForm({
+                          ...shipmentForm,
+                          eta: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                    <p className="mt-1 text-[10px] text-slate-500">
+                      Автоматично розраховується: дата відправлено + {getDeliveryDays(shipmentForm.deliveryType as any)} днів ({shipmentForm.deliveryType === "AIR" ? "Авіа" : shipmentForm.deliveryType === "SEA" ? "Море" : shipmentForm.deliveryType === "RAIL" ? "Залізниця" : "Мультимодал"}) (можна встановити вручну)
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Дата доставлено
+                    </label>
+                    <input
+                      type="date"
+                      value={shipmentForm.deliveredAt}
+                      onChange={(e) =>
+                        setShipmentForm({
+                          ...shipmentForm,
+                          deliveredAt: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                    <p className="mt-1 text-[10px] text-slate-500">
+                      Після встановлення автоматично встановлюється статус "В дорозі", місцезнаходження та ЕТА
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 3: Статус та місцезнаходження */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Статус та місцезнаходження</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Статус *
+                    </label>
+                    <select
+                      value={shipmentForm.status}
+                      onChange={(e) => {
+                        const newStatus = e.target.value;
+                        const statusInfo = getStatusInfoLocal(newStatus);
+                        setShipmentForm({
+                          ...shipmentForm,
+                          status: newStatus,
+                          // Автоматично встановлюємо location при зміні статусу
+                          location: statusInfo.location || shipmentForm.location,
+                        });
+                      }}
+                      required
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    >
+                      <option value="">Без змін</option>
+                      {["CREATED", "RECEIVED_CN", "CONSOLIDATION", "IN_TRANSIT", "ARRIVED_UA", "ON_UA_WAREHOUSE", "DELIVERED", "ARCHIVED"].map((status) => {
+                        const statusInfo = getStatusInfoLocal(status);
+                        return (
+                          <option key={status} value={status}>
+                            {statusInfo.label}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    {shipmentForm.status && (
+                      <div className={`mt-2 flex items-center gap-2 rounded-lg px-3 py-2 ${getStatusInfoLocal(shipmentForm.status).bgColor}`}>
+                        {(() => {
+                          const statusInfo = getStatusInfoLocal(shipmentForm.status);
+                          const Icon = statusInfo.icon;
+                          return <Icon className={`h-4 w-4 ${statusInfo.color}`} />;
+                        })()}
+                        <span className={`text-xs font-semibold ${getStatusInfoLocal(shipmentForm.status).color}`}>
+                          {getStatusInfoLocal(shipmentForm.status).label}
+                        </span>
                       </div>
-                      <div className="relative inline-block group">
-                        <img
-                          src={shipmentForm.mainPhotoUrl}
-                          alt="Головне фото"
-                          className="w-32 h-32 object-cover rounded-lg border border-slate-200"
-                          onError={(e) => {
-                            console.error("Error loading image:", shipmentForm.mainPhotoUrl);
-                            (e.target as HTMLImageElement).style.display = "none";
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShipmentForm((prev) => ({
-                              ...prev,
-                              mainPhotoUrl: "",
-                            }));
-                          }}
-                          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
+                    )}
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Місцезнаходження
+                    </label>
+                    <input
+                      type="text"
+                      value={shipmentForm.location}
+                      onChange={(e) =>
+                        setShipmentForm({
+                          ...shipmentForm,
+                          location: e.target.value,
+                        })
+                      }
+                      placeholder="Напр. CN warehouse, UA warehouse"
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 4: Деталі вантажу */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Деталі вантажу</h3>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="md:col-span-3">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Маркування
+                    </label>
+                    <textarea
+                      value={shipmentForm.cargoLabel}
+                      onChange={(e) =>
+                        setShipmentForm({ ...shipmentForm, cargoLabel: e.target.value })
+                      }
+                      rows={3}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Тип вантажу
+                    </label>
+                    <select
+                      value={shipmentForm.cargoType}
+                      onChange={(e) =>
+                        setShipmentForm({ ...shipmentForm, cargoType: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    >
+                      <option value="">Оберіть зі списку або введіть вручну</option>
+                      {CARGO_TYPES.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Тип вантажу (кастомний)
+                    </label>
+                    <input
+                      type="text"
+                      value={shipmentForm.cargoTypeCustom}
+                      onChange={(e) =>
+                        setShipmentForm({ ...shipmentForm, cargoTypeCustom: e.target.value })
+                      }
+                      placeholder="Якщо не вказано вище"
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                  </div>
+                  <div className="md:col-span-3">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Опис
+                    </label>
+                    <textarea
+                      value={shipmentForm.description}
+                      onChange={(e) =>
+                        setShipmentForm({
+                          ...shipmentForm,
+                          description: e.target.value,
+                        })
+                      }
+                      rows={3}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 5: Формат та документи */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Формат та документи</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Формат видачі
+                    </label>
+                    <select
+                      value={shipmentForm.deliveryFormat}
+                      onChange={(e) =>
+                        setShipmentForm({
+                          ...shipmentForm,
+                          deliveryFormat: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    >
+                      <option value="">Не вказано</option>
+                      <option value="NOVA_POSHTA">Нова Пошта</option>
+                      <option value="SELF_PICKUP">Самовивіз</option>
+                      <option value="CARGO">Грузоперевізник</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Номер накладної / коментар
+                    </label>
+                    <input
+                      type="text"
+                      value={shipmentForm.deliveryReference}
+                      onChange={(e) =>
+                        setShipmentForm({
+                          ...shipmentForm,
+                          deliveryReference: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 6: Вартості */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Вартості</h3>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Пакування, $
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={shipmentForm.packingCost}
+                      onChange={(e) =>
+                        setShipmentForm({ ...shipmentForm, packingCost: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Локальна доставка, $
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={shipmentForm.localDeliveryCost}
+                      onChange={(e) =>
+                        setShipmentForm({ ...shipmentForm, localDeliveryCost: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Вартість доставки, $
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={(() => {
+                        // Sum delivery costs from items
+                        let total = 0;
+                        shipmentForm.items.forEach((item) => {
+                          if (item.deliveryCost) {
+                            total += parseFloat(item.deliveryCost) || 0;
+                          }
+                        });
+                        return total > 0 ? total.toFixed(2) : "";
+                      })()}
+                      readOnly
+                      className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                    <p className="mt-1 text-[10px] text-slate-500">
+                      Автоматично: сума вартості доставки з місць
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Вартість (загальна), $
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={(() => {
+                        // Calculate total: insuranceCost + deliveryCost + packingCost + localDeliveryCost
+                        let total = 0;
+                        
+                        // Sum insurance costs from items
+                        shipmentForm.items.forEach((item) => {
+                          if (item.insuranceValue && item.insurancePercent) {
+                            const insuranceValue = parseFloat(item.insuranceValue) || 0;
+                            const insurancePercent = parseFloat(item.insurancePercent) || 0;
+                            total += (insuranceValue * insurancePercent) / 100;
+                          }
+                        });
+                        
+                        // Sum delivery costs from items
+                        shipmentForm.items.forEach((item) => {
+                          if (item.deliveryCost) {
+                            total += parseFloat(item.deliveryCost) || 0;
+                          }
+                        });
+                        
+                        // Add packing cost
+                        if (shipmentForm.packingCost) {
+                          total += parseFloat(shipmentForm.packingCost) || 0;
+                        }
+                        
+                        // Add local delivery cost
+                        if (shipmentForm.localDeliveryCost) {
+                          total += parseFloat(shipmentForm.localDeliveryCost) || 0;
+                        }
+                        
+                        return total > 0 ? total.toFixed(2) : "";
+                      })()}
+                      readOnly
+                      className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    />
+                    <p className="mt-1 text-[10px] text-slate-500">
+                      Автоматично: страхування + доставка + пакування + локальна доставка
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 7: Файли */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Файли</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Фото вантажу (можна додати кілька)
+                    </label>
+                    <div
+                      className="flex flex-col gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-3 py-3 text-xs text-slate-600"
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                        if (files.length > 0) {
+                          files.forEach(file => uploadAdditionalFile(file, "create"));
+                        }
+                      }}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span>
+                          Перетягніть фото сюди або оберіть вручну (jpg, png, webp)
+                        </span>
+                        <label className="inline-flex cursor-pointer items-center rounded-md bg-slate-100 px-2 py-1 font-semibold text-slate-700 hover:bg-slate-200">
+                          Обрати фото
+                          <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            className="hidden"
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              if (files) {
+                                Array.from(files).forEach(file => {
+                                  if (file.type.startsWith('image/')) {
+                                    uploadAdditionalFile(file, "create");
+                                  }
+                                });
+                              }
+                            }}
+                          />
+                        </label>
                       </div>
-                    </div>
-                  )}
-                  {shipmentForm.additionalFiles && shipmentForm.additionalFiles.length > 0 && (
-                    <div className="mt-3">
-                      <div className="mb-2 text-[11px] font-semibold text-slate-700">
-                        Завантажені фото ({shipmentForm.additionalFiles.length}):
-                      </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                        {shipmentForm.additionalFiles.map((url, idx) => (
-                          <div key={idx} className="relative group">
+                      {isUploadingAdditionalFilesCreate && (
+                        <span className="text-[11px] text-slate-500">
+                          Завантаження фото...
+                        </span>
+                      )}
+                      {shipmentForm.mainPhotoUrl && (
+                        <div className="mt-3">
+                          <div className="mb-2 text-[11px] font-semibold text-slate-700">
+                            Головне фото:
+                          </div>
+                          <div className="relative inline-block group">
                             <img
-                              src={url}
-                              alt={`Фото ${idx + 1}`}
-                              className="w-full h-24 object-cover rounded-lg border border-slate-200"
+                              src={shipmentForm.mainPhotoUrl}
+                              alt="Головне фото"
+                              className="w-32 h-32 object-cover rounded-lg border border-slate-200"
                               onError={(e) => {
-                                console.error("Error loading image:", url);
+                                console.error("Error loading image:", shipmentForm.mainPhotoUrl);
                                 (e.target as HTMLImageElement).style.display = "none";
                               }}
                             />
                             <button
                               type="button"
                               onClick={() => {
-                                const newFiles = shipmentForm.additionalFiles.filter((_, i) => i !== idx);
                                 setShipmentForm((prev) => ({
                                   ...prev,
-                                  additionalFiles: newFiles,
-                                  mainPhotoUrl: newFiles[0] || "",
+                                  mainPhotoUrl: "",
                                 }));
                               }}
                               className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
@@ -1252,250 +1392,155 @@ export function UserShipments({
                               <X className="h-3 w-3" />
                             </button>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      )}
+                      {shipmentForm.additionalFiles && shipmentForm.additionalFiles.length > 0 && (
+                        <div className="mt-3">
+                          <div className="mb-2 text-[11px] font-semibold text-slate-700">
+                            Завантажені фото ({shipmentForm.additionalFiles.length}):
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                            {shipmentForm.additionalFiles.map((url, idx) => (
+                              <div key={idx} className="relative group">
+                                <img
+                                  src={url}
+                                  alt={`Фото ${idx + 1}`}
+                                  className="w-full h-24 object-cover rounded-lg border border-slate-200"
+                                  onError={(e) => {
+                                    console.error("Error loading image:", url);
+                                    (e.target as HTMLImageElement).style.display = "none";
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newFiles = shipmentForm.additionalFiles.filter((_, i) => i !== idx);
+                                    setShipmentForm((prev) => ({
+                                      ...prev,
+                                      additionalFiles: newFiles,
+                                      mainPhotoUrl: newFiles[0] || "",
+                                    }));
+                                  }}
+                                  className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Додаткові файли (документи, інвойси, тощо - не фото)
+                    </label>
+                    <div
+                      className="flex flex-col gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-3 py-3 text-xs text-slate-600"
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const files = e.dataTransfer.files;
+                        if (files) {
+                          for (let i = 0; i < files.length; i++) {
+                            uploadAdditionalFile(files[i], "create");
+                          }
+                        }
+                      }}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span>
+                          Перетягніть файли сюди або оберіть вручну (PDF, DOC, XLS, JPG, PNG)
+                        </span>
+                        <label className="inline-flex cursor-pointer items-center rounded-md bg-slate-100 px-2 py-1 font-semibold text-slate-700 hover:bg-slate-200">
+                          Обрати файли
+                          <input
+                            type="file"
+                            multiple
+                            className="hidden"
+                            onChange={(e) => {
+                              const files = e.target.files;
+                              if (files) {
+                                for (let i = 0; i < files.length; i++) {
+                                  uploadAdditionalFile(files[i], "create");
+                                }
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                      {isUploadingAdditionalFilesCreate && (
+                        <span className="text-[11px] text-slate-500">
+                          Завантаження файлів...
+                        </span>
+                      )}
+                      {shipmentForm.additionalFiles && shipmentForm.additionalFiles.length > 0 && (
+                        <div className="mt-2 text-[11px] text-slate-500">
+                          <div className="font-semibold">Завантажені файли:</div>
+                          <ul className="list-inside list-disc space-y-1">
+                            {shipmentForm.additionalFiles.map((file, idx) => (
+                              <li key={idx} className="flex items-center justify-between">
+                                <a href={file} target="_blank" rel="noreferrer" className="text-teal-600 underline">
+                                  {file.split('/').pop()}
+                                </a>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setShipmentForm((prev) => ({
+                                      ...prev,
+                                      additionalFiles: prev.additionalFiles.filter((_, i) => i !== idx),
+                                    }));
+                                  }}
+                                  className="ml-2 inline-flex items-center rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold text-red-700 hover:bg-red-200"
+                                >
+                                  Видалити
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="md:col-span-3">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Додаткові файли (документи, інвойси, тощо)
-                </label>
-                <div
-                  className="flex flex-col gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-3 py-3 text-xs text-slate-600"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    const files = e.dataTransfer.files;
-                    if (files) {
-                      for (let i = 0; i < files.length; i++) {
-                        uploadAdditionalFile(files[i], "create");
-                      }
-                    }
-                  }}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span>
-                      Перетягніть файли сюди або оберіть вручну (PDF, DOC, XLS, JPG, PNG)
-                    </span>
-                    <label className="inline-flex cursor-pointer items-center rounded-md bg-slate-100 px-2 py-1 font-semibold text-slate-700 hover:bg-slate-200">
-                      Обрати файли
+
+              {/* Секція 8: Місця вантажу */}
+              <div>
+                <div className="rounded-lg border border-slate-200 bg-white p-4">
+                  <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Місця вантажу</h3>
+                  <div className="mb-3 flex items-center justify-between">
+                    <div className="flex gap-2">
                       <input
-                        type="file"
-                        multiple
-                        className="hidden"
-                        onChange={(e) => {
-                          const files = e.target.files;
-                          if (files) {
-                            for (let i = 0; i < files.length; i++) {
-                              uploadAdditionalFile(files[i], "create");
+                        type="number"
+                        min="1"
+                        placeholder="Кількість місць"
+                        className="w-32 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            const count = parseInt((e.target as HTMLInputElement).value) || 1;
+                            if (count > 0) {
+                              addMultipleItems(count);
+                              (e.target as HTMLInputElement).value = "";
                             }
                           }
                         }}
                       />
-                    </label>
-                  </div>
-                  {isUploadingAdditionalFilesCreate && (
-                    <span className="text-[11px] text-slate-500">
-                      Завантаження файлів...
-                    </span>
-                  )}
-                  {shipmentForm.additionalFiles && shipmentForm.additionalFiles.length > 0 && (
-                    <div className="mt-2 text-[11px] text-slate-500">
-                      <div className="font-semibold">Завантажені файли:</div>
-                      <ul className="list-inside list-disc space-y-1">
-                        {shipmentForm.additionalFiles.map((file, idx) => (
-                          <li key={idx} className="flex items-center justify-between">
-                            <a href={file} target="_blank" rel="noreferrer" className="text-teal-600 underline">
-                              {file.split('/').pop()}
-                            </a>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setShipmentForm((prev) => ({
-                                  ...prev,
-                                  additionalFiles: prev.additionalFiles.filter((_, i) => i !== idx),
-                                }));
-                              }}
-                              className="ml-2 inline-flex items-center rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-semibold text-red-700 hover:bg-red-200"
-                            >
-                              Видалити
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
+                      <button
+                        type="button"
+                        onClick={addItem}
+                        className="inline-flex items-center gap-1 rounded-lg bg-teal-600 px-3 py-1 text-xs font-semibold text-white hover:bg-teal-700"
+                      >
+                        <Plus className="h-3 w-3" />
+                        Додати місце
+                      </button>
                     </div>
-                  )}
-                </div>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Вартість доставки, $
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={(() => {
-                    // Sum delivery costs from items
-                    let total = 0;
-                    shipmentForm.items.forEach((item) => {
-                      if (item.deliveryCost) {
-                        total += parseFloat(item.deliveryCost) || 0;
-                      }
-                    });
-                    return total > 0 ? total.toFixed(2) : "";
-                  })()}
-                  readOnly
-                  className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-                <p className="mt-1 text-[10px] text-slate-500">
-                  Автоматично: сума вартості доставки з місць
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Пакування, $
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={shipmentForm.packingCost}
-                  onChange={(e) =>
-                    setShipmentForm({ ...shipmentForm, packingCost: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Локальна доставка, $
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={shipmentForm.localDeliveryCost}
-                  onChange={(e) =>
-                    setShipmentForm({ ...shipmentForm, localDeliveryCost: e.target.value })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Вартість (загальна), $
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={(() => {
-                    // Calculate total: insuranceCost + deliveryCost + packingCost + localDeliveryCost
-                    let total = 0;
-                    
-                    // Sum insurance costs from items
-                    shipmentForm.items.forEach((item) => {
-                      if (item.insuranceValue && item.insurancePercent) {
-                        const insuranceValue = parseFloat(item.insuranceValue) || 0;
-                        const insurancePercent = parseFloat(item.insurancePercent) || 0;
-                        total += (insuranceValue * insurancePercent) / 100;
-                      }
-                    });
-                    
-                    // Sum delivery costs from items
-                    shipmentForm.items.forEach((item) => {
-                      if (item.deliveryCost) {
-                        total += parseFloat(item.deliveryCost) || 0;
-                      }
-                    });
-                    
-                    // Add packing cost
-                    if (shipmentForm.packingCost) {
-                      total += parseFloat(shipmentForm.packingCost) || 0;
-                    }
-                    
-                    // Add local delivery cost
-                    if (shipmentForm.localDeliveryCost) {
-                      total += parseFloat(shipmentForm.localDeliveryCost) || 0;
-                    }
-                    
-                    return total > 0 ? total.toFixed(2) : "";
-                  })()}
-                  readOnly
-                  className="w-full rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                />
-                <p className="mt-1 text-[10px] text-slate-500">
-                  Автоматично: страхування + доставка + пакування + локальна доставка
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Формат видачі
-                </label>
-                <select
-                  value={shipmentForm.deliveryFormat}
-                  onChange={(e) =>
-                    setShipmentForm({
-                      ...shipmentForm,
-                      deliveryFormat: e.target.value,
-                    })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teал-500/20"
-                >
-                  <option value="">Не вказано</option>
-                  <option value="NOVA_POSHTA">Нова Пошта</option>
-                  <option value="SELF_PICKUP">Самовивіз</option>
-                  <option value="CARGO">Грузоперевізник</option>
-                </select>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Номер накладної / коментар
-                </label>
-                <input
-                  type="text"
-                  value={shipmentForm.deliveryReference}
-                  onChange={(e) =>
-                    setShipmentForm({
-                      ...shipmentForm,
-                      deliveryReference: e.target.value,
-                    })
-                  }
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teал-500/20"
-                />
-              </div>
-              {/* Items Table */}
-              <div className="md:col-span-3">
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-slate-900">Місця вантажу</h3>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      min="1"
-                      placeholder="Кількість місць"
-                      className="w-32 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          const count = parseInt((e.target as HTMLInputElement).value) || 1;
-                          if (count > 0) {
-                            addMultipleItems(count);
-                            (e.target as HTMLInputElement).value = "";
-                          }
-                        }
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={addItem}
-                      className="inline-flex items-center gap-1 rounded-lg bg-teal-600 px-3 py-1 text-xs font-semibold text-white hover:bg-teal-700"
-                    >
-                      <Plus className="h-3 w-3" />
-                      Додати місце
-                    </button>
                   </div>
-                </div>
-                <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-                  <table className="min-w-full text-[10px]">
+                  {shipmentForm.items.length > 0 ? (
+                    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+                      <table className="min-w-full text-[10px]">
                       <thead className="bg-slate-50">
                         <tr>
                           <th className="px-2 py-1.5 text-left font-semibold text-slate-700">№</th>
@@ -1691,7 +1736,7 @@ export function UserShipments({
                                   type="number"
                                   step="0.01"
                                   value={item.deliveryCost}
-                                  onChange={(e) => updateEditItem(index, "deliveryCost", e.target.value)}
+                                  onChange={(e) => updateItem(index, "deliveryCost", e.target.value)}
                                   className="w-20 rounded border border-slate-300 bg-white px-1.5 py-0.5 text-[10px] focus:border-teal-500 focus:outline-none"
                                   placeholder="240.00"
                                   title="Розраховується автоматично: Тариф × кг/м³ (в залежності від вибору). Можна редагувати вручну."
@@ -1701,7 +1746,7 @@ export function UserShipments({
                                 <div className="flex flex-col gap-1">
                                   <select
                                     value={item.cargoType}
-                                    onChange={(e) => updateEditItem(index, "cargoType", e.target.value)}
+                                    onChange={(e) => updateItem(index, "cargoType", e.target.value)}
                                     className="w-full rounded border border-slate-300 bg-white px-1 py-0.5 text-[9px] focus:border-teal-500 focus:outline-none"
                                   >
                                     <option value="">-</option>
@@ -1742,14 +1787,7 @@ export function UserShipments({
                             </tr>
                           );
                         })}
-                        {shipmentForm.items.length === 0 && (
-                          <tr>
-                            <td colSpan={18} className="px-4 py-8 text-center text-xs text-slate-500">
-                              Немає місць. Додайте місця для вантажу.
-                            </td>
-                          </tr>
-                        )}
-                        {shipmentForm.items.length > 0 && (() => {
+                        {(() => {
                           // Calculate totals
                           const totalPlaces = shipmentForm.items.length;
                           let totalInsuranceSum = 0;
@@ -1811,17 +1849,27 @@ export function UserShipments({
                         })()}
                       </tbody>
                     </table>
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-xs text-slate-500">
+                      Немає місць. Додайте місця для вантажу.
+                    </div>
+                  )}
                 </div>
-              <div className="md:col-span-3">
-                <p className="text-xs text-slate-500">
-                  Вартість розраховується автоматично на основі місць, страхування, пакування та локальної доставки
-                </p>
               </div>
-              <div className="md:col-span-3 flex items-end">
+
+              {/* Кнопки дій */}
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setShowAddShipment(false)}
+                  className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                >
+                  Скасувати
+                </button>
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+                  className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
                 >
                   Створити вантаж
                 </button>
@@ -3098,237 +3146,291 @@ export function UserShipments({
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="grid gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-3">
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Внутрішній трек
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.internalTrack}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Маркування
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.cargoLabel || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Статус
-                </label>
-                {(() => {
-                  const statusInfo = getStatusInfoLocal(viewingShipment.status);
-                  const Icon = statusInfo.icon;
-                  return (
-                    <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${statusInfo.bgColor}`}>
-                      <Icon className={`h-4 w-4 ${statusInfo.color}`} />
-                      <span className={`text-sm font-semibold ${statusInfo.color}`}>
-                        {statusInfo.label}
-                      </span>
-                    </div>
-                  );
-                })()}
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Місцезнаходження
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.location || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Маршрут: З
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.routeFrom || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Маршрут: В
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.routeTo || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Тип доставки
-                </label>
-                <p className="text-sm font-semibold text-slate-900">
-                  {viewingShipment.deliveryType === "AIR" ? "Авіа" :
-                   viewingShipment.deliveryType === "SEA" ? "Море" :
-                   viewingShipment.deliveryType === "RAIL" ? "Залізниця" :
-                   viewingShipment.deliveryType === "MULTIMODAL" ? "Мультимодал" :
-                   viewingShipment.deliveryType || "-"}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Тип вантажу
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.cargoType || viewingShipment.cargoTypeCustom || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  ID партії
-                </label>
-                <p className="text-sm font-semibold text-slate-900">
-                  {viewingShipment.batchId ? batches.find(b => b.batchId === viewingShipment.batchId)?.batchId || viewingShipment.batchId : "-"}
-                </p>
-              </div>
-              <div className="md:col-span-3">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Опис
-                </label>
-                <p className="text-sm text-slate-900">{viewingShipment.description || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Вартість доставки, $
-                </label>
-                <p className="text-sm font-semibold text-slate-900">
-                  {(() => {
-                    let total = 0;
-                    viewingShipment.items?.forEach((item) => {
-                      if (item.deliveryCost) {
-                        total += parseFloat(item.deliveryCost) || 0;
-                      }
-                    });
-                    return total > 0 ? total.toFixed(2) : "-";
-                  })()}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Пакування, $
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.packingCost || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Локальна доставка, $
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.localDeliveryCost || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Вартість (загальна), $
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.totalCost || "-"}</p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Дата отримано на складі
-                </label>
-                <p className="text-sm font-semibold text-slate-900">
-                  {viewingShipment.receivedAtWarehouse ? new Date(viewingShipment.receivedAtWarehouse).toLocaleDateString("uk-UA") : "-"}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Дата відправлено
-                </label>
-                <p className="text-sm font-semibold text-slate-900">
-                  {viewingShipment.sentAt ? new Date(viewingShipment.sentAt).toLocaleDateString("uk-UA") : "-"}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Дата доставлено
-                </label>
-                <p className="text-sm font-semibold text-slate-900">
-                  {viewingShipment.deliveredAt ? new Date(viewingShipment.deliveredAt).toLocaleDateString("uk-UA") : "-"}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  ETA (орієнтовна дата прибуття)
-                </label>
-                <p className="text-sm font-semibold text-slate-900">
-                  {viewingShipment.eta ? new Date(viewingShipment.eta).toLocaleDateString("uk-UA") : "-"}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Формат видачі
-                </label>
-                <p className="text-sm font-semibold text-slate-900">
-                  {viewingShipment.deliveryFormat === "NOVA_POSHTA" ? "Нова Пошта" :
-                   viewingShipment.deliveryFormat === "SELF_PICKUP" ? "Самовивіз" :
-                   viewingShipment.deliveryFormat === "CARGO" ? "Грузоперевізник" :
-                   viewingShipment.deliveryFormat || "-"}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  Номер накладної / коментар
-                </label>
-                <p className="text-sm font-semibold text-slate-900">{viewingShipment.deliveryReference || "-"}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className={`h-4 w-4 rounded border-2 ${viewingShipment.packing ? "border-teal-600 bg-teal-600" : "border-slate-300"}`}>
-                  {viewingShipment.packing && <div className="h-full w-full rounded bg-teal-600" />}
+            <div className="space-y-6 rounded-xl border border-slate-200 bg-slate-50 p-6">
+              {/* Секція 1: Основна інформація */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Основна інформація</h3>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      ID партії
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {viewingShipment.batchId ? batches.find(b => b.batchId === viewingShipment.batchId)?.batchId || viewingShipment.batchId : "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Тип доставки
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {viewingShipment.deliveryType === "AIR" ? "Авіа" :
+                       viewingShipment.deliveryType === "SEA" ? "Море" :
+                       viewingShipment.deliveryType === "RAIL" ? "Залізниця" :
+                       viewingShipment.deliveryType === "MULTIMODAL" ? "Мультимодал" :
+                       viewingShipment.deliveryType || "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Маршрут: З
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.routeFrom || "-"}</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Маршрут: В
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.routeTo || "-"}</p>
+                  </div>
+                  <div className="md:col-span-4">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Внутрішній трек
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.internalTrack}</p>
+                  </div>
                 </div>
-                <label className="text-xs font-semibold text-slate-700">Пакування</label>
               </div>
-              <div className="flex items-center gap-2">
-                <div className={`h-4 w-4 rounded border-2 ${viewingShipment.localDeliveryToDepot ? "border-teal-600 bg-teal-600" : "border-slate-300"}`}>
-                  {viewingShipment.localDeliveryToDepot && <div className="h-full w-full rounded bg-teal-600" />}
+
+              {/* Секція 2: Дати */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Дати</h3>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Дата отримано на складі
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {viewingShipment.receivedAtWarehouse ? new Date(viewingShipment.receivedAtWarehouse).toLocaleDateString("uk-UA") : "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Дата відправлено
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {viewingShipment.sentAt ? new Date(viewingShipment.sentAt).toLocaleDateString("uk-UA") : "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      ETA (орієнтовна дата прибуття)
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {viewingShipment.eta ? new Date(viewingShipment.eta).toLocaleDateString("uk-UA") : "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Дата доставлено
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {viewingShipment.deliveredAt ? new Date(viewingShipment.deliveredAt).toLocaleDateString("uk-UA") : "-"}
+                    </p>
+                  </div>
                 </div>
-                <label className="text-xs font-semibold text-slate-700">Локальна доставка до складу</label>
               </div>
-              {viewingShipment.mainPhotoUrl && (
-                <div className="md:col-span-3">
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                    Головне фото
-                  </label>
-                  <img
-                    src={viewingShipment.mainPhotoUrl}
-                    alt="Головне фото вантажу"
-                    className="max-w-md rounded-lg border border-slate-200"
-                  />
-                </div>
-              )}
-              {viewingShipment.additionalFilesUrls && (() => {
-                try {
-                  const files = JSON.parse(viewingShipment.additionalFilesUrls);
-                  if (files && files.length > 0) {
-                    return (
-                      <div className="md:col-span-3">
-                        <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                          Додаткові файли ({files.length})
-                        </label>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                          {files.map((url: string, idx: number) => (
-                            <div key={idx} className="relative">
-                              {url.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
-                                <img
-                                  src={url}
-                                  alt={`Фото ${idx + 1}`}
-                                  className="w-full h-24 object-cover rounded-lg border border-slate-200"
-                                />
-                              ) : (
-                                <a
-                                  href={url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="flex items-center justify-center h-24 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-700 hover:bg-slate-100"
-                                >
-                                  {url.split('/').pop()}
-                                </a>
-                              )}
-                            </div>
-                          ))}
+
+              {/* Секція 3: Статус та місцезнаходження */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Статус та місцезнаходження</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Статус
+                    </label>
+                    {(() => {
+                      const statusInfo = getStatusInfoLocal(viewingShipment.status);
+                      const Icon = statusInfo.icon;
+                      return (
+                        <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${statusInfo.bgColor}`}>
+                          <Icon className={`h-4 w-4 ${statusInfo.color}`} />
+                          <span className={`text-sm font-semibold ${statusInfo.color}`}>
+                            {statusInfo.label}
+                          </span>
                         </div>
-                      </div>
-                    );
-                  }
-                } catch (e) {
-                  return null;
-                }
-                return null;
-              })()}
+                      );
+                    })()}
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Місцезнаходження
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.location || "-"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 4: Деталі вантажу */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Деталі вантажу</h3>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div className="md:col-span-3">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Маркування
+                    </label>
+                    <p className="text-sm text-slate-900">{viewingShipment.cargoLabel || "-"}</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Тип вантажу
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.cargoType || viewingShipment.cargoTypeCustom || "-"}</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Тип вантажу (кастомний)
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.cargoTypeCustom || "-"}</p>
+                  </div>
+                  <div className="md:col-span-3">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Опис
+                    </label>
+                    <p className="text-sm text-slate-900">{viewingShipment.description || "-"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 5: Формат та документи */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Формат та документи</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Формат видачі
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {viewingShipment.deliveryFormat === "NOVA_POSHTA" ? "Нова Пошта" :
+                       viewingShipment.deliveryFormat === "SELF_PICKUP" ? "Самовивіз" :
+                       viewingShipment.deliveryFormat === "CARGO" ? "Грузоперевізник" :
+                       viewingShipment.deliveryFormat || "-"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Номер накладної / коментар
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.deliveryReference || "-"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 6: Вартості */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Вартості</h3>
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Пакування, $
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.packingCost || "-"}</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Локальна доставка, $
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.localDeliveryCost || "-"}</p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Вартість доставки, $
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {(() => {
+                        let total = 0;
+                        viewingShipment.items?.forEach((item) => {
+                          if (item.deliveryCost) {
+                            total += parseFloat(item.deliveryCost) || 0;
+                          }
+                        });
+                        return total > 0 ? total.toFixed(2) : "-";
+                      })()}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      Вартість (загальна), $
+                    </label>
+                    <p className="text-sm font-semibold text-slate-900">{viewingShipment.totalCost || "-"}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`h-4 w-4 rounded border-2 ${viewingShipment.packing ? "border-teal-600 bg-teal-600" : "border-slate-300"}`}>
+                      {viewingShipment.packing && <div className="h-full w-full rounded bg-teal-600" />}
+                    </div>
+                    <label className="text-xs font-semibold text-slate-700">Пакування</label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`h-4 w-4 rounded border-2 ${viewingShipment.localDeliveryToDepot ? "border-teal-600 bg-teal-600" : "border-slate-300"}`}>
+                      {viewingShipment.localDeliveryToDepot && <div className="h-full w-full rounded bg-teal-600" />}
+                    </div>
+                    <label className="text-xs font-semibold text-slate-700">Локальна доставка до складу</label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Секція 7: Файли */}
+              <div className="rounded-lg border border-slate-200 bg-white p-4">
+                <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Файли</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {viewingShipment.mainPhotoUrl && (
+                    <div>
+                      <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                        Головне фото
+                      </label>
+                      <img
+                        src={viewingShipment.mainPhotoUrl}
+                        alt="Головне фото вантажу"
+                        className="max-w-md rounded-lg border border-slate-200"
+                      />
+                    </div>
+                  )}
+                  {viewingShipment.additionalFilesUrls && (() => {
+                    try {
+                      const files = JSON.parse(viewingShipment.additionalFilesUrls);
+                      if (files && files.length > 0) {
+                        return (
+                          <div>
+                            <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+                              Додаткові файли ({files.length})
+                            </label>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                              {files.map((url: string, idx: number) => (
+                                <div key={idx} className="relative">
+                                  {url.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                                    <img
+                                      src={url}
+                                      alt={`Фото ${idx + 1}`}
+                                      className="w-full h-24 object-cover rounded-lg border border-slate-200"
+                                    />
+                                  ) : (
+                                    <a
+                                      href={url}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="flex items-center justify-center h-24 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-700 hover:bg-slate-100"
+                                    >
+                                      {url.split('/').pop()}
+                                    </a>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      }
+                    } catch (e) {
+                      return null;
+                    }
+                    return null;
+                  })()}
+                </div>
+              </div>
+
+              {/* Секція 8: Місця вантажу */}
               {viewingShipment.items && viewingShipment.items.length > 0 && (
-                <div className="md:col-span-3">
-                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                    Місця вантажу ({viewingShipment.items.length})
-                  </label>
+                <div className="rounded-lg border border-slate-200 bg-white p-4">
+                  <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Місця вантажу</h3>
                   <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
                     <table className="min-w-full text-[10px]">
                       <thead className="bg-slate-50">
@@ -3500,11 +3602,11 @@ export function UserShipments({
                   </div>
                 </div>
               )}
+
+              {/* Секція 9: Історія статусів */}
               {viewingShipment.statusHistory && viewingShipment.statusHistory.length > 0 && (
-                <div className="md:col-span-3">
-                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-                    Історія статусів
-                  </label>
+                <div className="rounded-lg border border-slate-200 bg-white p-4">
+                  <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-700">Історія статусів</h3>
                   <ShipmentTimeline 
                     statusHistory={viewingShipment.statusHistory as any} 
                     locale="ua" 

@@ -52,17 +52,17 @@ export function getLocationForStatus(
 ): string {
   switch (status) {
     case "CREATED":
-      return "Китай Склад";
+      return "Китай — склад";
     case "RECEIVED_CN":
-      return "Китай Склад";
+      return "Китай — склад";
     case "CONSOLIDATION":
       return "Дорога"; // Готується до відправлення - в дорозі
     case "IN_TRANSIT":
       return "Дорога"; // В дорозі
     case "ARRIVED_UA":
-      return "Україна склад";
+      return "Україна — склад";
     case "ON_UA_WAREHOUSE":
-      return "Україна склад";
+      return "Україна — склад";
     case "DELIVERED":
       return ""; // Для завершено - не показуємо місцезнаходження (буде іконка галочки)
     case "ARCHIVED":
@@ -136,7 +136,7 @@ export function getAutoStatus(
   if (deliveredAt && now >= deliveredAt) {
     return {
       status: "DELIVERED",
-      location: "Доставлено",
+      location: getLocationForStatus("DELIVERED"),
       description: "Вантаж доставлено",
     };
   }
@@ -145,7 +145,7 @@ export function getAutoStatus(
   if (eta && now >= eta && sentAt) {
     return {
       status: "ARRIVED_UA",
-      location: "Склад Україна",
+      location: getLocationForStatus("ARRIVED_UA"),
       description: "Вантаж прибув на склад України",
     };
   }
@@ -154,7 +154,7 @@ export function getAutoStatus(
   if (sentAt && now >= sentAt) {
     return {
       status: "IN_TRANSIT",
-      location: "В дорозі",
+      location: getLocationForStatus("IN_TRANSIT"),
       description: "Вантаж в дорозі",
     };
   }

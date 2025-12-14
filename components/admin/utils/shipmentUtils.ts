@@ -58,7 +58,7 @@ export const getStatusInfo = (status: string): StatusInfo => {
         label: "Очікується на складі",
         color: "text-blue-600",
         bgColor: "bg-blue-50",
-        location: "",
+        location: "Китай — склад",
       };
     case "RECEIVED_CN":
       return {
@@ -66,15 +66,15 @@ export const getStatusInfo = (status: string): StatusInfo => {
         label: "Отримано на складі (Китай)",
         color: "text-yellow-600",
         bgColor: "bg-yellow-50",
-        location: "CN warehouse",
+        location: "Китай — склад",
       };
     case "CONSOLIDATION":
       return {
-        icon: Warehouse,
+        icon: Truck,
         label: "Готується до відправлення",
-        color: "text-yellow-600",
-        bgColor: "bg-yellow-50",
-        location: "CN warehouse",
+        color: "text-orange-600",
+        bgColor: "bg-orange-50",
+        location: "Дорога",
       };
     case "IN_TRANSIT":
       return {
@@ -82,7 +82,7 @@ export const getStatusInfo = (status: string): StatusInfo => {
         label: "В дорозі",
         color: "text-purple-600",
         bgColor: "bg-purple-50",
-        location: "In transit",
+        location: "Дорога",
       };
     case "ARRIVED_UA":
       return {
@@ -90,28 +90,28 @@ export const getStatusInfo = (status: string): StatusInfo => {
         label: "Доставлено на склад (Україна)",
         color: "text-indigo-600",
         bgColor: "bg-indigo-50",
-        location: "UA warehouse",
+        location: "Україна — склад",
       };
     case "ON_UA_WAREHOUSE":
       return {
         icon: Warehouse,
-        label: "На складі України",
+        label: "Готово до видачі",
         color: "text-teal-600",
         bgColor: "bg-teal-50",
-        location: "UA warehouse",
+        location: "Україна — склад",
       };
     case "DELIVERED":
       return {
         icon: CheckCircle,
-        label: "Доставлено клієнту",
+        label: "Завершено",
         color: "text-green-600",
         bgColor: "bg-green-50",
-        location: "Delivered",
+        location: "",
       };
     case "ARCHIVED":
       return {
         icon: Archive,
-        label: "Завершено",
+        label: "Архів",
         color: "text-slate-600",
         bgColor: "bg-slate-50",
         location: "",

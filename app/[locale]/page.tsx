@@ -23,12 +23,16 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   const t = getTranslations(locale);
+  
+  // Безпечний доступ до перекладів
+  const delivery = t?.delivery || {};
+  const nav = t?.nav || {};
 
   const deliveryLinks = [
     {
       key: "ukraineTurnkey",
       href: `/${locale}/delivery/ukraine-turnkey`,
-      title: t.delivery?.ukraineTurnkey || "Доставка в Україну під ключ",
+      title: delivery.ukraineTurnkey || "Доставка в Україну під ключ",
       description: locale === "ua" 
         ? "Комплексна доставка вантажів з Китаю в Україну під ключ. Ми беремо на себе всі етапи логістичного процесу від отримання вантажу на складі в Китаї до доставки в Україну."
         : locale === "ru"
@@ -38,16 +42,16 @@ export default async function HomePage({
       gradient: "from-blue-500 to-teal-500",
       bgGradient: "from-blue-50 to-teal-50",
       subLinks: [
-        { key: "sea", href: `/${locale}/delivery/sea`, label: t.delivery?.sea || "Морські перевезення" },
-        { key: "air", href: `/${locale}/delivery/air`, label: t.delivery?.air || "Авіа перевезення" },
-        { key: "rail", href: `/${locale}/delivery/rail`, label: t.delivery?.rail || "Залізничні вантажоперевезення" },
-        { key: "multimodal", href: `/${locale}/delivery/multimodal`, label: t.delivery?.multimodal || "Мультимодальна доставка" },
+        { key: "sea", href: `/${locale}/delivery/sea`, label: delivery.sea || "Морські перевезення" },
+        { key: "air", href: `/${locale}/delivery/air`, label: delivery.air || "Авіа перевезення" },
+        { key: "rail", href: `/${locale}/delivery/rail`, label: delivery.rail || "Залізничні вантажоперевезення" },
+        { key: "multimodal", href: `/${locale}/delivery/multimodal`, label: delivery.multimodal || "Мультимодальна доставка" },
       ],
     },
     {
       key: "euWorld",
       href: `/${locale}/delivery/eu-world`,
-      title: t.delivery?.euWorld || "Доставка в країни ЄС та світу",
+      title: delivery.euWorld || "Доставка в країни ЄС та світу",
       description: locale === "ua"
         ? "Доставка вантажів в країни Європейського Союзу та інші країни світу. Широкий спектр логістичних рішень для міжнародної торгівлі."
         : locale === "ru"
@@ -57,17 +61,17 @@ export default async function HomePage({
       gradient: "from-teal-500 to-cyan-500",
       bgGradient: "from-teal-50 to-cyan-50",
       subLinks: [
-        { key: "fba", href: `/${locale}/delivery/fba`, label: t.delivery?.fba || "FBA" },
-        { key: "ddp", href: `/${locale}/delivery/ddp`, label: t.delivery?.ddp || "DDP/DDU" },
-        { key: "express", href: `/${locale}/delivery/express`, label: t.delivery?.express || "Експрес доставка" },
-        { key: "portToPort", href: `/${locale}/delivery/port-to-port`, label: t.delivery?.portToPort || "Порт-до-порту" },
-        { key: "crossBorder", href: `/${locale}/delivery/cross-border`, label: t.delivery?.crossBorder || "Міжкордонна доставка" },
+        { key: "fba", href: `/${locale}/delivery/fba`, label: delivery.fba || "FBA" },
+        { key: "ddp", href: `/${locale}/delivery/ddp`, label: delivery.ddp || "DDP/DDU" },
+        { key: "express", href: `/${locale}/delivery/express`, label: delivery.express || "Експрес доставка" },
+        { key: "portToPort", href: `/${locale}/delivery/port-to-port`, label: delivery.portToPort || "Порт-до-порту" },
+        { key: "crossBorder", href: `/${locale}/delivery/cross-border`, label: delivery.crossBorder || "Міжкордонна доставка" },
       ],
     },
     {
       key: "international",
       href: `/${locale}/delivery/international`,
-      title: t.delivery?.international || "Міжнародне перевезення та експедирування",
+      title: delivery.international || "Міжнародне перевезення та експедирування",
       description: locale === "ua"
         ? "Ми забезпечуємо повний комплекс логістичних рішень для міжнародних вантажних перевезень, поєднуючи надійність, прозорість та індивідуальний підхід."
         : locale === "ru"
@@ -77,10 +81,10 @@ export default async function HomePage({
       gradient: "from-indigo-500 to-purple-500",
       bgGradient: "from-indigo-50 to-purple-50",
       subLinks: [
-        { key: "seaContainer", href: `/${locale}/delivery/sea-container`, label: t.delivery?.seaContainer || "Морський контейнер" },
-        { key: "airCargo", href: `/${locale}/delivery/air-cargo`, label: t.delivery?.airCargo || "Авіа вантаж" },
-        { key: "railCargo", href: `/${locale}/delivery/rail-cargo`, label: t.delivery?.railCargo || "Залізничний вантаж" },
-        { key: "roadCargo", href: `/${locale}/delivery/road-cargo`, label: t.delivery?.roadCargo || "Автомобільний вантаж" },
+        { key: "seaContainer", href: `/${locale}/delivery/sea-container`, label: delivery.seaContainer || "Морський контейнер" },
+        { key: "airCargo", href: `/${locale}/delivery/air-cargo`, label: delivery.airCargo || "Авіа вантаж" },
+        { key: "railCargo", href: `/${locale}/delivery/rail-cargo`, label: delivery.railCargo || "Залізничний вантаж" },
+        { key: "roadCargo", href: `/${locale}/delivery/road-cargo`, label: delivery.roadCargo || "Автомобільний вантаж" },
       ],
     },
   ];
@@ -101,7 +105,7 @@ export default async function HomePage({
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {t.nav.delivery}
+              {nav.delivery || "Доставка"}
             </h2>
             <div className="mx-auto h-1 w-24 bg-gradient-to-r from-teal-500 to-blue-500 rounded-full" />
           </div>

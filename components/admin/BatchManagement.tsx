@@ -405,16 +405,41 @@ export function BatchManagement() {
 
   const getStatusLabel = (status: string) => {
     const labels: Record<string, string> = {
-      CREATED: "Без змін",
-      RECEIVED_CN: "Очікується на складі",
-      CONSOLIDATION: "Отримано на складі (Китай)",
-      IN_TRANSIT: "Готується до відправлення",
-      ARRIVED_UA: "В дорозі",
-      ON_UA_WAREHOUSE: "Доставлено на склад (Україна)",
-      DELIVERED: "На складі України",
-      ARCHIVED: "Доставлено клієнту",
+      CREATED: "Очікується на складі",
+      RECEIVED_CN: "Отримано на складі (Китай)",
+      CONSOLIDATION: "Готується до відправлення",
+      IN_TRANSIT: "В дорозі",
+      ARRIVED_UA: "Доставлено на склад (Україна)",
+      ON_UA_WAREHOUSE: "Готово до видачі",
+      DELIVERED: "Завершено",
+      ARCHIVED: "Архів",
+      FORMING: "Формується",
+      FORMED: "Сформовано",
     };
     return labels[status] || status;
+  };
+
+  const getLocationForStatus = (status: string) => {
+    switch (status) {
+      case "CREATED":
+        return "Китай — склад";
+      case "RECEIVED_CN":
+        return "Китай — склад";
+      case "CONSOLIDATION":
+        return "Дорога";
+      case "IN_TRANSIT":
+        return "Дорога";
+      case "ARRIVED_UA":
+        return "Україна — склад";
+      case "ON_UA_WAREHOUSE":
+        return "Україна — склад";
+      case "DELIVERED":
+        return "";
+      case "ARCHIVED":
+        return "";
+      default:
+        return "";
+    }
   };
 
   return (
@@ -516,14 +541,14 @@ export function BatchManagement() {
                 required
                 className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
               >
-                <option value="CREATED">Без змін</option>
-                <option value="RECEIVED_CN">Очікується на складі</option>
-                <option value="CONSOLIDATION">Отримано на складі (Китай)</option>
-                <option value="IN_TRANSIT">Готується до відправлення</option>
-                <option value="ARRIVED_UA">В дорозі</option>
-                <option value="ON_UA_WAREHOUSE">Доставлено на склад (Україна)</option>
-                <option value="DELIVERED">На складі України</option>
-                <option value="ARCHIVED">Доставлено клієнту</option>
+                <option value="CREATED">Очікується на складі</option>
+                <option value="RECEIVED_CN">Отримано на складі (Китай)</option>
+                <option value="CONSOLIDATION">Готується до відправлення</option>
+                <option value="IN_TRANSIT">В дорозі</option>
+                <option value="ARRIVED_UA">Доставлено на склад (Україна)</option>
+                <option value="ON_UA_WAREHOUSE">Готово до видачі</option>
+                <option value="DELIVERED">Завершено</option>
+                <option value="ARCHIVED">Архів</option>
               </select>
             </div>
             <div>
@@ -612,6 +637,14 @@ export function BatchManagement() {
                         {getStatusLabel(batch.status)}
                       </span>
                     </div>
+                    {getLocationForStatus(batch.status) && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-slate-500">Місцезнаходження:</span>
+                        <span className="text-sm font-semibold text-slate-700">
+                          {getLocationForStatus(batch.status)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   {batch.description && (
                     <p className="mt-1 text-sm text-slate-600">{batch.description}</p>
@@ -654,8 +687,8 @@ export function BatchManagement() {
                         type="button"
                         onClick={() => {
                           setShowStatusUpdateModal(batch);
-                          setNewStatus("");
-                          setNewLocation("");
+                          setNewStatus(batch.status);
+                          setNewLocation(getLocationForStatus(batch.status));
                         }}
                         className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100"
                       >
@@ -826,7 +859,7 @@ export function BatchManagement() {
                                       shipment.status
                                     )}`}
                                   >
-                                    {shipment.status}
+                                    {getStatusLabel(shipment.status)}
                                   </span>
                                 </td>
                                 <td className="px-3 py-2">
@@ -897,7 +930,7 @@ export function BatchManagement() {
                                   shipment.status
                                 )}`}
                               >
-                                {shipment.status}
+                                {getStatusLabel(shipment.status)}
                               </span>
                             </td>
                             <td className="px-3 py-2 text-slate-600">
@@ -982,7 +1015,7 @@ export function BatchManagement() {
                                 shipment.status
                               )}`}
                             >
-                              {shipment.status}
+                              {getStatusLabel(shipment.status)}
                             </span>
                           </td>
                           <td className="px-3 py-2">
@@ -1047,6 +1080,20 @@ export function BatchManagement() {
                 <X className="h-4 w-4" />
               </button>
             </div>
+            <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <p className="text-xs font-semibold text-slate-600">Поточний статус:</p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">
+                {getStatusLabel(showStatusUpdateModal.status)}
+              </p>
+              {getLocationForStatus(showStatusUpdateModal.status) && (
+                <>
+                  <p className="mt-2 text-xs font-semibold text-slate-600">Поточне місцезнаходження:</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-900">
+                    {getLocationForStatus(showStatusUpdateModal.status)}
+                  </p>
+                </>
+              )}
+            </div>
             <p className="mb-4 text-sm text-slate-600">
               Це оновить статус для всіх {showStatusUpdateModal.shipments.length} вантажів в партії
             </p>
@@ -1057,19 +1104,28 @@ export function BatchManagement() {
                 </label>
                 <select
                   value={newStatus}
-                  onChange={(e) => setNewStatus(e.target.value)}
+                  onChange={(e) => {
+                    setNewStatus(e.target.value);
+                    // Автоматично встановлюємо місцезнаходження на основі статусу
+                    if (e.target.value) {
+                      const autoLocation = getLocationForStatus(e.target.value);
+                      setNewLocation(autoLocation);
+                    } else {
+                      setNewLocation("");
+                    }
+                  }}
                   required
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 >
                   <option value="">Оберіть статус</option>
-                  <option value="CREATED">Без змін</option>
-                  <option value="RECEIVED_CN">Очікується на складі</option>
-                  <option value="CONSOLIDATION">Отримано на складі (Китай)</option>
-                  <option value="IN_TRANSIT">Готується до відправлення</option>
-                  <option value="ARRIVED_UA">В дорозі</option>
-                  <option value="ON_UA_WAREHOUSE">Доставлено на склад (Україна)</option>
-                  <option value="DELIVERED">На складі України</option>
-                  <option value="ARCHIVED">Доставлено клієнту</option>
+                  <option value="CREATED">Очікується на складі</option>
+                  <option value="RECEIVED_CN">Отримано на складі (Китай)</option>
+                  <option value="CONSOLIDATION">Готується до відправлення</option>
+                  <option value="IN_TRANSIT">В дорозі</option>
+                  <option value="ARRIVED_UA">Доставлено на склад (Україна)</option>
+                  <option value="ON_UA_WAREHOUSE">Готово до видачі</option>
+                  <option value="DELIVERED">Завершено</option>
+                  <option value="ARCHIVED">Архів</option>
                 </select>
               </div>
               <div>
@@ -1080,9 +1136,12 @@ export function BatchManagement() {
                   type="text"
                   value={newLocation}
                   onChange={(e) => setNewLocation(e.target.value)}
-                  placeholder="Напр. CN warehouse, UA warehouse"
+                  placeholder="Автоматично заповнюється на основі статусу"
                   className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                 />
+                <p className="mt-1 text-xs text-slate-500">
+                  Автоматично заповнюється на основі статусу. Можна редагувати вручну.
+                </p>
               </div>
               <div className="flex gap-3">
                 <button
