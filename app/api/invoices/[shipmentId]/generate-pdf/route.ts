@@ -373,7 +373,8 @@ export async function GET(
     try {
       const puppeteer = await import("puppeteer");
       const browser = await puppeteer.launch({
-        headless: true,
+        headless: 'new',
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
         args: [
           "--no-sandbox",
           "--disable-setuid-sandbox",
@@ -381,8 +382,10 @@ export async function GET(
           "--disable-accelerated-2d-canvas",
           "--no-first-run",
           "--no-zygote",
+          "--single-process",
           "--disable-gpu",
         ],
+        timeout: 60000, // 60 seconds timeout for server environments
       });
 
       const page = await browser.newPage();
@@ -403,28 +406,62 @@ export async function GET(
 
       await browser.close();
 
-      // Validate that pdfBuffer is actually a Buffer
-      if (!pdfBuffer || !Buffer.isBuffer(pdfBuffer)) {
-        console.error("PDF generation failed: Invalid buffer returned");
+      // Validate that pdfBuffer exists
+      if (!pdfBuffer) {
+        console.error("PDF generation failed: No buffer returned from puppeteer");
         return NextResponse.json(
           { 
             error: "PDF generation failed",
-            message: "Invalid PDF buffer returned",
-            details: "The PDF generation process did not return a valid buffer"
+            message: "No PDF buffer returned",
+            details: "The PDF generation process did not return any data"
+          },
+          { status: 500 }
+        );
+      }
+
+      // Convert to Buffer if it's not already (puppeteer may return Uint8Array or Buffer)
+      let buffer: Buffer;
+      if (Buffer.isBuffer(pdfBuffer)) {
+        buffer = pdfBuffer;
+      } else {
+        // Try to convert to Buffer (handles Uint8Array, Array, etc.)
+        try {
+          buffer = Buffer.from(pdfBuffer as any);
+        } catch (e: any) {
+          console.error("PDF generation failed: Cannot convert to Buffer", typeof pdfBuffer, e?.message);
+          return NextResponse.json(
+            { 
+              error: "PDF generation failed",
+              message: "Invalid buffer type returned",
+              details: `Cannot convert ${typeof pdfBuffer} to Buffer: ${e?.message || 'Unknown error'}`
+            },
+            { status: 500 }
+          );
+        }
+      }
+
+      // Validate buffer has content
+      if (buffer.length === 0) {
+        console.error("PDF generation failed: Empty buffer returned");
+        return NextResponse.json(
+          { 
+            error: "PDF generation failed",
+            message: "Empty PDF buffer returned",
+            details: "The PDF generation process returned an empty buffer"
           },
           { status: 500 }
         );
       }
 
       // Validate PDF signature (PDF files start with %PDF)
-      const pdfSignature = pdfBuffer.slice(0, 4).toString();
+      const pdfSignature = buffer.slice(0, 4).toString('ascii');
       if (pdfSignature !== "%PDF") {
-        console.error("PDF generation failed: Invalid PDF signature", pdfSignature);
+        console.error("PDF generation failed: Invalid PDF signature", pdfSignature, "Buffer length:", buffer.length);
         return NextResponse.json(
           { 
             error: "PDF generation failed",
             message: "Invalid PDF file generated",
-            details: "The generated file does not appear to be a valid PDF"
+            details: `The generated file does not appear to be a valid PDF. Signature: ${pdfSignature}`
           },
           { status: 500 }
         );
@@ -432,12 +469,12 @@ export async function GET(
 
       // Return PDF file as binary
       // Convert Buffer to Uint8Array for NextResponse compatibility
-      return new NextResponse(new Uint8Array(pdfBuffer), {
+      return new NextResponse(new Uint8Array(buffer), {
         status: 200,
         headers: {
           "Content-Type": "application/pdf",
           "Content-Disposition": `attachment; filename="invoice_${formatTrackNumber(shipment.internalTrack)}_${new Date().toISOString().split("T")[0]}.pdf"`,
-          "Content-Length": pdfBuffer.length.toString(),
+          "Content-Length": buffer.length.toString(),
         },
       });
     } catch (puppeteerError: any) {
@@ -456,12 +493,31 @@ export async function GET(
         );
       }
 
+      // Check for missing Chromium dependencies (common on Ubuntu servers)
+      if (
+        puppeteerError.message?.includes("Executable doesn't exist") ||
+        puppeteerError.message?.includes("No usable sandbox") ||
+        puppeteerError.message?.includes("Could not find Chrome") ||
+        puppeteerError.message?.includes("Failed to launch")
+      ) {
+        return NextResponse.json(
+          { 
+            error: "PDF generation failed - Chromium dependencies missing",
+            message: "Chromium browser dependencies are not installed on the server",
+            details: "On Ubuntu/Debian servers, install dependencies: sudo apt-get install -y chromium-browser chromium-chromedriver || sudo apt-get install -y google-chrome-stable",
+            serverError: puppeteerError.message
+          },
+          { status: 503 }
+        );
+      }
+
       // Other puppeteer errors - return JSON error, never HTML
       return NextResponse.json(
         { 
           error: "PDF generation failed",
           message: puppeteerError.message || "Unknown error during PDF generation",
-          details: "An error occurred while generating the PDF file. Please try again later."
+          details: "An error occurred while generating the PDF file. Please try again later.",
+          serverError: puppeteerError.stack || puppeteerError.toString()
         },
         { status: 500 }
       );
