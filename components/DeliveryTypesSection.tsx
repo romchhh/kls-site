@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Locale, getTranslations } from "../lib/translations";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Clock, Globe, Package, HandCoins, Warehouse, DollarSign, MapPin, Scale, Home, Users } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -112,6 +112,32 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
     };
   }, [content.types.length]);
 
+  // Мапа іконок для типів доставки
+  const iconMap: Record<string, string> = {
+    air: "/Group.png",
+    sea: "/Group-1.png",
+    rail: "/Group-2.png",
+    multimodal: "/Group-3.png",
+  };
+
+  // Мапа іконок для features
+  const featureIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    clock: Clock,
+    mapPin: MapPin,
+    package: Package,
+    handCoins: HandCoins,
+    warehouse: Warehouse,
+    dollar: DollarSign,
+    scale: Scale,
+    home: Home,
+    users: Users,
+  };
+
+  const getTypeHref = (key: string) => {
+    // Усі типи ведуть на основну сторінку доставки в Україну
+    return `/${locale}/delivery/ukraine-turnkey`;
+  };
+
   const scrollTo = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -142,27 +168,9 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
             {content.title}
           </h2>
-          <p className="text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+          <p className="mx-auto max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
             {content.subtitle}
           </p>
-          
-          {/* Arrow from title to cards */}
-          <div className="mt-8 flex justify-center">
-            <div
-              className={`transition-all duration-700 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={isVisible ? { animationDelay: "0.3s" } : {}}
-            >
-              <Image
-                src="/Arrow.png"
-                alt=""
-                width={120}
-                height={120}
-                className="opacity-40"
-              />
-            </div>
-          </div>
         </div>
 
         {/* Cards Container with Navigation */}
@@ -190,16 +198,16 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           {/* Cards Grid - Horizontal scroll on mobile, grid on desktop */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-2 md:overflow-x-visible md:pb-0 md:snap-none scrollbar-hide -mx-4 md:mx-0"
+            className="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-2 md:items-stretch md:overflow-x-visible md:pb-0 md:snap-none scrollbar-hide -mx-4 md:mx-0"
           >
             {content.types.map((type, index) => (
               <Link
                 key={type.key}
-                href={`/${locale}/delivery/${type.key}`}
-                className={`group relative flex min-h-[300px] w-[78vw] flex-shrink-0 snap-start flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl md:min-w-0 md:w-auto md:snap-none ${
-                  index === 0 ? "ml-6" : ""
+                href={getTypeHref(type.key)}
+                className={`group relative flex min-h-[340px] w-[78vw] flex-shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white transition-all duration-300 hover:scale-[1.01] hover:shadow-lg md:min-w-0 md:w-auto md:h-full md:snap-none ${
+                  index === 0 ? "ml-6 md:ml-0" : ""
                 } ${
-                  index === content.types.length - 1 ? "mr-4" : ""
+                  index === content.types.length - 1 ? "mr-4 md:mr-0" : ""
                 } ${
                   isVisible ? "animate-slide-in-bottom" : ""
                 }`}
@@ -207,52 +215,59 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                   isVisible ? { animationDelay: `${0.4 + index * 0.1}s` } : { opacity: 0 }
                 }
               >
-                {/* Background Image */}
-                <div className="absolute inset-0">
-                  <Image
-                    src={type.image}
-                    alt={type.title}
-                    fill
-                    className="object-cover transition-all duration-500 group-hover:scale-110"
-                    style={{
-                      filter: "brightness(0.85)",
-                    }}
-                  />
-                  {/* Blur overlay on hover */}
-                  <div className="absolute inset-0 delivery-card-blur" />
-                  {/* Dark gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-                </div>
-
                 {/* Content */}
-                <div className="relative z-10 flex h-full flex-col justify-between p-4 md:p-5">
-                  {/* Title */}
-                  <div>
-                    <h3 className="mb-3 break-words text-lg font-black leading-tight text-white md:mb-4 md:text-2xl lg:text-3xl">
+                <div className="relative z-10 flex h-full flex-col justify-between p-6 md:p-8">
+                  <div className="flex flex-col">
+                    {/* Icon in circle with blue background and border */}
+                    <div className="mb-4 flex justify-center">
+                      <div className="flex h-40 w-40 items-center justify-center rounded-full border-2 border-teal-200 bg-teal-50 md:h-44 md:w-44">
+                        <Image
+                          src={iconMap[type.key] || "/Group.png"}
+                          alt={type.title}
+                          width={256}
+                          height={256}
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="mb-4 text-center text-xl font-bold leading-tight text-gray-900 md:text-2xl">
                       {type.title}
                     </h3>
 
-                    {/* Features List */}
-                    <div className="space-y-2.5">
-                      {type.features.map((feature, featureIndex) => (
-                        <div
-                          key={featureIndex}
-                          className="flex items-start gap-2.5"
-                        >
-                          <div className="mt-1.5 flex h-2 w-2 flex-shrink-0 rounded-full bg-white" />
-                          <p className="text-sm font-normal leading-relaxed text-white/95 md:text-base">
-                            {feature.text}
-                          </p>
-                        </div>
-                      ))}
+                    {/* Features (compact, без розділювачів) */}
+                    <div className="flex items-start justify-between gap-3 md:gap-4">
+                      {type.features.map((feature, featureIndex) => {
+                        const FeatureIcon = featureIconMap[feature.icon] || Package;
+                        
+                        return (
+                          <div 
+                            key={featureIndex} 
+                            className="relative flex flex-1 flex-col items-center justify-start"
+                          >
+                            <div className="flex flex-1 flex-col items-center px-2 md:px-4">
+                              {/* Icon */}
+                              <div className="mb-3 flex h-10 w-10 items-center justify-center text-teal-600 md:h-12 md:w-12">
+                                <FeatureIcon className="h-6 w-6 md:h-7 md:w-7" />
+                              </div>
+                              
+                              {/* Text */}
+                              <p className="text-center text-xs font-normal leading-tight text-slate-700 md:text-sm">
+                                {feature.text}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 
-                  {/* Learn More Button - appears on hover */}
-                  <div className="mt-4 opacity-0 transition-all duration-500 group-hover:opacity-100">
-                    <div className="flex items-center gap-2.5 rounded-xl bg-white/95 px-5 py-2.5 text-sm font-semibold text-slate-900 backdrop-blur-sm transition-all duration-300 hover:bg-white hover:gap-3 md:text-base md:px-6 md:py-3">
+                  {/* Learn More Button */}
+                  <div className="mt-4 flex justify-center">
+                    <div className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800 md:px-5 md:py-2.5">
                       <span>{content.learnMore}</span>
-                      <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1 md:w-4 md:h-4" />
+                      <ArrowRight className="h-4 w-4" />
                     </div>
                   </div>
                 </div>

@@ -44,7 +44,7 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
 
     if (scrollContainerRef.current) {
       observer.observe(scrollContainerRef.current);
-    }
+      }
 
     return () => {
       if (scrollContainerRef.current) {
@@ -149,47 +149,23 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
   return (
     <section
       id="services"
-      className="relative overflow-hidden bg-gradient-to-b from-white via-gray-50 to-white py-24"
+      className="relative overflow-hidden bg-gray-100 pt-16 pb-20"
     >
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-400 rounded-full blur-3xl" />
-      </div>
-
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
-        <div className={`mb-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 ${
-          isVisible ? 'animate-slide-in-top' : ''
-        }`}
-        style={isVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
+        <div
+          className={`mb-10 flex flex-col items-center text-center gap-4 ${
+            isVisible ? "animate-slide-in-top" : ""
+          }`}
+          style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
         >
-          <div>
-            <div className="mb-4 inline-flex items-center rounded-full border-2 border-teal-200/60 bg-white/80 backdrop-blur-sm px-6 py-2 text-sm font-semibold uppercase tracking-[0.4em] text-teal-600 shadow-lg">
-              {servicesContent.title}
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+          <div className="max-w-3xl">
+            <h2 className="mb-3 text-3xl md:text-5xl font-bold text-gray-900">
               {servicesContent.mainTitle}
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl leading-relaxed">
+            <p className="text-base md:text-lg text-gray-600 leading-relaxed">
               {servicesContent.mainDescription}
             </p>
-          </div>
-          
-          {/* Navigation buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={scrollLeft}
-              className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-teal-200 bg-white text-teal-600 shadow-md transition-all duration-300 hover:bg-teal-50 hover:border-teal-300 hover:scale-110 hover:shadow-lg"
-            >
-              <ArrowRight className="h-5 w-5 rotate-180" />
-            </button>
-            <button
-              onClick={scrollRight}
-              className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-teal-200 bg-white text-teal-600 shadow-md transition-all duration-300 hover:bg-teal-50 hover:border-teal-300 hover:scale-110 hover:shadow-lg"
-            >
-              <ArrowRight className="h-5 w-5" />
-            </button>
           </div>
         </div>
 
@@ -205,17 +181,17 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
           {/* All Services Card */}
           <Link
             href={`/${locale}/services`}
-            className={`group relative flex-shrink-0 w-[340px] rounded-3xl bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-8 text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-3xl snap-start ${
+            className={`group relative flex-shrink-0 w-[380px] rounded-3xl bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-9 text-white shadow-none transition-all duration-500 hover:scale-105 snap-start ${
               isVisible ? 'animate-slide-in-bottom' : ''
             }`}
             style={isVisible ? { animationDelay: '0.2s' } : { opacity: 0 }}
           >
-            <div className="flex h-full flex-col justify-between min-h-[280px]">
+            <div className="flex h-full flex-col justify-between min-h-[320px]">
               <div>
-                <h3 className="text-3xl font-bold leading-tight mb-2">
+                <h3 className="text-3xl md:text-4xl font-bold leading-tight mb-3">
                   {locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}
                 </h3>
-                <p className="text-white/90 text-sm">
+                <p className="text-white/90 text-base">
                   {locale === "ua" ? "Переглянути всі наші послуги" : locale === "ru" ? "Посмотреть все наши услуги" : "View all our services"}
                 </p>
               </div>
@@ -234,66 +210,75 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
               <Link
                 key={service.key}
                 href={service.href}
-                className={`group relative flex-shrink-0 w-[340px] rounded-3xl border-2 border-gray-200 bg-white p-6 shadow-xl transition-all duration-500 hover:border-teal-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1 snap-start ${
+                className={`group relative flex-shrink-0 w-[380px] rounded-3xl border-2 border-gray-200 bg-white p-7 shadow-none transition-all duration-500 hover:border-teal-300 hover:scale-105 hover:-translate-y-1 snap-start ${
                   isVisible ? 'animate-slide-in-bottom' : ''
                 }`}
                 style={isVisible ? { animationDelay: `${0.3 + index * 0.1}s` } : { opacity: 0 }}
               >
-                <div className="flex h-full flex-col min-h-[280px]">
+                <div className="flex h-full flex-col min-h-[320px]">
                   {/* Icon */}
-                  <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 text-teal-600 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:from-teal-100 group-hover:to-teal-200">
-                    <Icon className="h-7 w-7" />
+                  <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 text-teal-600 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:from-teal-100 group-hover:to-teal-200">
+                    <Icon className="h-8 w-8" />
                   </div>
 
                   {/* Title */}
-                  <h3 className="mb-3 text-xl font-bold text-gray-900 leading-tight">
+                  <h3 className="mb-3 text-2xl font-bold text-gray-900 leading-tight">
                     {service.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="mb-5 text-sm text-gray-600 leading-relaxed flex-grow">
+                  <p className="mb-5 text-base text-gray-600 leading-relaxed flex-grow">
                     {service.description}
                   </p>
 
-                  {/* Cost and Time */}
-                  <div className="mb-5 space-y-3">
+                  {/* Вартість (терміни прибрано за побажанням) */}
+                  <div className="mb-6 space-y-3">
                     {service.cost && (
-                      <div className="flex items-center gap-3 text-sm">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50">
-                          <Tag className="h-4 w-4 text-teal-600" />
+                      <div className="flex items-center gap-3 text-sm md:text-base">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50">
+                          <Tag className="h-4 w-4 text-teal-600 md:h-5 md:w-5" />
                         </div>
                         <span className="text-gray-700 font-semibold">
-                          {locale === "ua" ? "Вартість:" : locale === "ru" ? "Стоимость:" : "Cost:"} <span className="text-teal-600">{service.cost}</span>
-                        </span>
-                      </div>
-                    )}
-                    {service.time && (
-                      <div className="flex items-center gap-3 text-sm">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50">
-                          <Clock className="h-4 w-4 text-teal-600" />
-                        </div>
-                        <span className="text-gray-700 font-semibold">
-                          {locale === "ua" ? "Термін:" : locale === "ru" ? "Срок:" : "Term:"} <span className="text-teal-600">{service.time}</span>
+                          {locale === "ua"
+                            ? "Вартість:"
+                            : locale === "ru"
+                            ? "Стоимость:"
+                            : "Cost:"}{" "}
+                          <span className="text-teal-600">{service.cost}</span>
                         </span>
                       </div>
                     )}
                   </div>
 
-                  {/* Button */}
+                  {/* Кнопка «Детальніше» у стилі інших CTA */}
                   <div className="mt-auto">
-                    <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-teal-50 to-teal-50/50 px-5 py-3.5 transition-all duration-300 group-hover:from-teal-100 group-hover:to-teal-50 group-hover:shadow-md">
-                      <span className="text-sm font-bold text-gray-900">
-                        {servicesContent.readMore}
-                      </span>
-                      <div className="rounded-lg bg-white p-2 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-teal-50">
-                        <ArrowRight className="h-4 w-4 text-teal-600" />
-                      </div>
+                    <div className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-white px-5 py-2.5 text-sm md:text-base font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
+                      <span>{servicesContent.readMore}</span>
+                      <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
                     </div>
                   </div>
                 </div>
               </Link>
             );
           })}
+        </div>
+
+        {/* Navigation buttons під елементами скролу */}
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <button
+            onClick={scrollLeft}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-teal-200 bg-white text-teal-600 shadow-sm transition-all duration-300 ease-out hover:bg-teal-50 hover:border-teal-300 hover:shadow-md hover:-translate-x-0.5"
+            aria-label="Попередні послуги"
+          >
+            <ArrowRight className="h-5 w-5 rotate-180" />
+          </button>
+          <button
+            onClick={scrollRight}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-teal-200 bg-white text-teal-600 shadow-sm transition-all duration-300 ease-out hover:bg-teal-50 hover:border-teal-300 hover:shadow-md hover:translate-x-0.5"
+            aria-label="Наступні послуги"
+          >
+            <ArrowRight className="h-5 w-5" />
+          </button>
         </div>
       </div>
 

@@ -127,6 +127,7 @@ export interface Batch {
   description: string | null;
   status: string;
   deliveryType: string;
+  formationStatus?: "FORMING" | "FORMED";
 }
 
 export interface ShipmentFormItem {

@@ -12,10 +12,37 @@ type SiteFooterProps = {
 
 export function SiteFooter({ locale }: SiteFooterProps) {
   const t = getTranslations(locale);
-  const content = t.footer;
-  const nav = content.navLinks;
-  const services = content.serviceLinks;
-  const support = content.supportLinks;
+  const content = t?.footer || {
+    description: "KLS Logistics",
+    copyright: "© 2024 KLS Logistics. All rights reserved.",
+    navigation: "Навігація",
+    services: "Послуги",
+    support: "Підтримка",
+    addresses: "Адреси",
+    china: "Китай",
+    ukraine: "Україна",
+    tagline: "Глобальна доставка. Локальна експертиза.",
+    developedBy: "Розроблено",
+  };
+  
+  const navT = (t as any)?.nav || {};
+
+  // Посилання з хедера / основних сторінок
+  const nav = [
+    { label: navT.home ?? "Головна", href: `/${locale}` },
+    { label: navT.delivery ?? "Доставка", href: `/${locale}#delivery` },
+    { label: navT.services ?? "Послуги", href: `/${locale}/services` },
+    { label: navT.contacts ?? "Контакти", href: `/${locale}/contacts` },
+    { label: navT.cabinet ?? "Кабінет", href: `/${locale}/cabinet` },
+  ];
+
+  // Контакти (телеграм + пошта)
+  const contactTitle =
+    locale === "ua"
+      ? "Контакти"
+      : locale === "ru"
+      ? "Контакты"
+      : "Contacts";
   const [isVisible, setIsVisible] = useState(false);
   const footerRef = useRef<HTMLElement>(null);
 
@@ -48,7 +75,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(140deg,rgba(20,184,166,0.12)_0%,_rgba(20,184,166,0)_55%),linear-gradient(320deg,rgba(20,184,166,0.2)_0%,_rgba(20,184,166,0)_60%)]" />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[2fr_1fr_1fr_1.5fr_1.5fr]">
+        <div className="grid gap-12 lg:grid-cols-[2fr_1fr_1.5fr]">
           <div className={`space-y-6 ${
             isVisible ? 'animate-slide-in-left' : ''
           }`}
@@ -56,11 +83,11 @@ export function SiteFooter({ locale }: SiteFooterProps) {
           >
             <Link href={`/${locale}`} className="flex items-center" aria-label="KLS home">
               <Image
-                src="/turquoise-transparent-2x.png"
-                alt="KLS"
-                width={240}
-                height={75}
-                className="h-16 w-auto"
+                src="/ЛОГО.png"
+                alt="KLS Logistics"
+                width={140}
+                height={42}
+                className="h-8 w-auto md:h-10"
                 priority
               />
             </Link>
@@ -89,44 +116,6 @@ export function SiteFooter({ locale }: SiteFooterProps) {
             </div>
           </div>
 
-          <div className={isVisible ? 'animate-slide-in-bottom' : ''}
-            style={isVisible ? { animationDelay: '0.3s' } : { opacity: 0 }}
-          >
-            <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">
-              {content.services}
-            </h4>
-            <div className="mt-6 space-y-3 text-sm text-white/75">
-              {services.map((link, index) => (
-                <Link
-                  key={`service-${link.href}-${index}`}
-                  href={link.href}
-                  className="block transition-colors duration-300 hover:text-teal-400"
-                >
-                  {link.label}
-                </Link>
-                  ))}
-                </div>
-            </div>
-
-          <div className={isVisible ? 'animate-slide-in-bottom' : ''}
-            style={isVisible ? { animationDelay: '0.4s' } : { opacity: 0 }}
-          >
-            <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">
-              {content.support}
-            </h4>
-            <div className="mt-6 space-y-3 text-sm text-white/75">
-              {support.map((link, index) => (
-                <Link
-                  key={`support-${link.href}-${index}`}
-                  href={link.href}
-                  className="block transition-colors duration-300 hover:text-teal-400"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-
           <div className={`space-y-8 ${
             isVisible ? 'animate-slide-in-right' : ''
           }`}
@@ -134,52 +123,28 @@ export function SiteFooter({ locale }: SiteFooterProps) {
           >
             <div>
               <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">
-                {content.addresses}
+                {contactTitle}
               </h4>
-              <div className="mt-6 space-y-6 text-sm text-white/75">
-                <div>
-                  <p className="mb-2 flex items-center gap-2 font-medium text-white">
-                    <MapPin size={14} /> {content.china}
-                  </p>
-                  <p className="mb-1">
-                    Room 1203, Tower A, Jin Mao Building, 88 Century Avenue, Pudong New Area,
-                    Shanghai, 200120, China
-                  </p>
-                  <a
-                    href="tel:+862155551234"
-                    className="flex items-center gap-2 transition-colors hover:text-teal-400"
-                  >
-                    <Phone size={14} /> +86 21 5555 1234
-                  </a>
-                  <a
-                    href="mailto:info@klslogistics.cn"
-                    className="flex items-center gap-2 transition-colors hover:text-teal-400"
-                  >
-                    <Mail size={14} /> info@klslogistics.cn
-                  </a>
-                </div>
-
-                <div>
-                  <p className="mb-2 flex items-center gap-2 font-medium text-white">
-                    <MapPin size={14} /> {content.ukraine}
-                  </p>
-                  <p className="mb-1">
-                    Office 402, Business Center "Optima Plaza", 38 Naukova Street, Lviv, 79060,
-                    Ukraine
-                  </p>
-                  <a
-                    href="tel:+380322294567"
-                    className="flex items-center gap-2 transition-colors hover:text-teal-400"
-                  >
-                    <Phone size={14} /> +380 32 229 4567
-                  </a>
-                  <a
-                    href="mailto:support@klslogistics.ua"
-                    className="flex items-center gap-2 transition-colors hover:text-teal-400"
-                  >
-                    <Mail size={14} /> support@klslogistics.ua
-                  </a>
-                </div>
+              <div className="mt-6 space-y-4 text-sm text-white/75">
+                <a
+                  href="https://t.me/KlsInternationalBot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                >
+                  <MapPin size={14} className="hidden" />
+                  <span className="inline-flex items-center gap-2">
+                    <span className="inline-block h-2 w-2 rounded-full bg-teal-400" />
+                    Telegram: @KlsInternationalBot
+                  </span>
+                </a>
+                <a
+                  href="mailto:support@kls.international"
+                  className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                >
+                  <Mail size={14} />
+                  support@kls.international
+                </a>
               </div>
             </div>
           </div>
@@ -190,18 +155,21 @@ export function SiteFooter({ locale }: SiteFooterProps) {
         }`}
         style={isVisible ? { animationDelay: '0.6s' } : { opacity: 0 }}
         >
-          <p className="mb-4 text-sm text-white/60">{content.tagline}</p>
-          <p className="text-xs text-white/50">
-            {content.developedBy}{" "}
+          <p className="mb-3 text-xs text-white/50">{content.tagline}</p>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-white/30">
+              {content.developedBy}
+            </span>
             <a
-              href="https://telebots.site/"
+              href="https://new.telebots.site/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-teal-400"
+              className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.25em] text-white/50 transition-colors duration-200 hover:text-white hover:border-white/20"
             >
-              TeleBots
+              <span>TELEBOTS</span>
+              <ArrowUpRight size={10} />
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </footer>

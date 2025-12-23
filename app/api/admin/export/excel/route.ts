@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
     const users = await prisma.user.findMany({
       orderBy: { createdAt: "desc" },
     });
-    users.forEach((user) => {
+    users.forEach((user: (typeof users)[number]) => {
       usersSheet.addRow({
         id: user.id,
         email: user.email,
@@ -113,13 +113,13 @@ export async function GET(req: NextRequest) {
       },
       orderBy: { createdAt: "desc" },
     });
-    shipments.forEach((shipment) => {
+    shipments.forEach((shipment: (typeof shipments)[number]) => {
       // Calculate weight and volume from items
-      const totalWeight = shipment.items.reduce((sum, item) => {
+      const totalWeight = shipment.items.reduce((sum: number, item: (typeof shipment.items)[number]) => {
         const weight = item.weightKg ? Number(item.weightKg) : 0;
         return sum + (isNaN(weight) ? 0 : weight);
       }, 0);
-      const totalVolume = shipment.items.reduce((sum, item) => {
+      const totalVolume = shipment.items.reduce((sum: number, item: (typeof shipment.items)[number]) => {
         const volume = item.volumeM3 ? Number(item.volumeM3) : 0;
         return sum + (isNaN(volume) ? 0 : volume);
       }, 0);
@@ -168,9 +168,12 @@ export async function GET(req: NextRequest) {
       { header: "Примітка", key: "note", width: 30 },
     ];
     const items = await prisma.shipmentItem.findMany({
-      orderBy: { shipmentId: "asc", placeNumber: "asc" },
+      orderBy: [
+        { shipmentId: "asc" },
+        { placeNumber: "asc" },
+      ],
     });
-    items.forEach((item) => {
+    items.forEach((item: (typeof items)[number]) => {
       itemsSheet.addRow({
         id: item.id,
         shipmentId: item.shipmentId,
@@ -217,7 +220,7 @@ export async function GET(req: NextRequest) {
       },
       orderBy: { createdAt: "desc" },
     });
-    invoices.forEach((invoice) => {
+    invoices.forEach((invoice: (typeof invoices)[number]) => {
       invoicesSheet.addRow({
         id: invoice.id,
         invoiceNumber: invoice.invoiceNumber,
@@ -250,7 +253,7 @@ export async function GET(req: NextRequest) {
       },
       orderBy: { createdAt: "desc" },
     });
-    transactions.forEach((transaction) => {
+    transactions.forEach((transaction: (typeof transactions)[number]) => {
       transactionsSheet.addRow({
         id: transaction.id,
         clientCode: transaction.user.clientCode,
@@ -275,7 +278,7 @@ export async function GET(req: NextRequest) {
     const actions = await prisma.adminAction.findMany({
       orderBy: { createdAt: "desc" },
     });
-    actions.forEach((action) => {
+    actions.forEach((action: (typeof actions)[number]) => {
       actionsSheet.addRow({
         id: action.id,
         adminId: action.adminId,
@@ -302,7 +305,7 @@ export async function GET(req: NextRequest) {
     const warehouses = await prisma.warehouse.findMany({
       orderBy: { createdAt: "desc" },
     });
-    warehouses.forEach((warehouse) => {
+    warehouses.forEach((warehouse: (typeof warehouses)[number]) => {
       warehousesSheet.addRow({
         id: warehouse.id,
         name: warehouse.name,

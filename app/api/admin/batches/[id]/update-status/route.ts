@@ -86,6 +86,18 @@ export async function PUT(
       data: statusHistoryEntries,
     });
 
+    // Автоматично створюємо інвойси для вантажів, якщо статус змінився на ON_UA_WAREHOUSE
+    if (status === "ON_UA_WAREHOUSE") {
+      try {
+        const { createInvoiceForShipment } = await import("@/lib/utils/invoiceGeneration");
+        for (const shipment of shipments) {
+          await createInvoiceForShipment(shipment.id);
+        }
+      } catch (invoiceError) {
+        console.error("Failed to create invoices for batch (non-critical):", invoiceError);
+      }
+    }
+
     // Log admin action
     await prisma.adminAction.create({
       data: {

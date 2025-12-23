@@ -42,10 +42,10 @@ export default async function HomePage({
       gradient: "from-blue-500 to-teal-500",
       bgGradient: "from-blue-50 to-teal-50",
       subLinks: [
-        { key: "sea", href: `/${locale}/delivery/sea`, label: delivery.sea || "Морські перевезення" },
-        { key: "air", href: `/${locale}/delivery/air`, label: delivery.air || "Авіа перевезення" },
-        { key: "rail", href: `/${locale}/delivery/rail`, label: delivery.rail || "Залізничні вантажоперевезення" },
-        { key: "multimodal", href: `/${locale}/delivery/multimodal`, label: delivery.multimodal || "Мультимодальна доставка" },
+        { key: "sea", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.sea || "Морські перевезення" },
+        { key: "air", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.air || "Авіа перевезення" },
+        { key: "rail", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.rail || "Залізничні вантажоперевезення" },
+        { key: "multimodal", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.multimodal || "Мультимодальна доставка" },
       ],
     },
     {
@@ -61,11 +61,11 @@ export default async function HomePage({
       gradient: "from-teal-500 to-cyan-500",
       bgGradient: "from-teal-50 to-cyan-50",
       subLinks: [
-        { key: "fba", href: `/${locale}/delivery/fba`, label: delivery.fba || "FBA" },
-        { key: "ddp", href: `/${locale}/delivery/ddp`, label: delivery.ddp || "DDP/DDU" },
-        { key: "express", href: `/${locale}/delivery/express`, label: delivery.express || "Експрес доставка" },
-        { key: "portToPort", href: `/${locale}/delivery/port-to-port`, label: delivery.portToPort || "Порт-до-порту" },
-        { key: "crossBorder", href: `/${locale}/delivery/cross-border`, label: delivery.crossBorder || "Міжкордонна доставка" },
+        { key: "fba", href: `/${locale}/delivery/eu-world`, label: delivery.fba || "FBA" },
+        { key: "ddp", href: `/${locale}/delivery/eu-world`, label: delivery.ddp || "DDP/DDU" },
+        { key: "express", href: `/${locale}/delivery/eu-world`, label: delivery.express || "Експрес доставка" },
+        { key: "portToPort", href: `/${locale}/delivery/eu-world`, label: delivery.portToPort || "Порт-до-порту" },
+        { key: "crossBorder", href: `/${locale}/delivery/eu-world`, label: delivery.crossBorder || "Міжкордонна доставка" },
       ],
     },
     {
@@ -81,10 +81,10 @@ export default async function HomePage({
       gradient: "from-indigo-500 to-purple-500",
       bgGradient: "from-indigo-50 to-purple-50",
       subLinks: [
-        { key: "seaContainer", href: `/${locale}/delivery/sea-container`, label: delivery.seaContainer || "Морський контейнер" },
-        { key: "airCargo", href: `/${locale}/delivery/air-cargo`, label: delivery.airCargo || "Авіа вантаж" },
-        { key: "railCargo", href: `/${locale}/delivery/rail-cargo`, label: delivery.railCargo || "Залізничний вантаж" },
-        { key: "roadCargo", href: `/${locale}/delivery/road-cargo`, label: delivery.roadCargo || "Автомобільний вантаж" },
+        { key: "seaContainer", href: `/${locale}/delivery/international`, label: delivery.seaContainer || "Морські контейнерні перевезення (FCL / LCL)" },
+        { key: "airCargo", href: `/${locale}/delivery/international`, label: delivery.airCargo || "Авіаційні вантажні перевезення (FCL / LCL)" },
+        { key: "railCargo", href: `/${locale}/delivery/international`, label: delivery.railCargo || "Залізничні вантажні перевезення FCL / LCL" },
+        { key: "roadCargo", href: `/${locale}/delivery/international`, label: delivery.roadCargo || "Автомобільні вантажні перевезення (FTL / LTL)" },
       ],
     },
   ];
@@ -107,7 +107,6 @@ export default async function HomePage({
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               {nav.delivery || "Доставка"}
             </h2>
-            <div className="mx-auto h-1 w-24 bg-gradient-to-r from-teal-500 to-blue-500 rounded-full" />
           </div>
           
           <div className="grid gap-8 md:grid-cols-3">

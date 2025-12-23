@@ -10,12 +10,23 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Mont", "system-ui", "sans-serif"],
+        // Основний шрифт для тексту — Unbounded (через CSS-змінну), з системним fallback
+        sans: ["var(--font-unbounded)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
       },
       fontWeight: {
-        normal: '400', // Mont Regular
-        semibold: '600', // Mont SemiBold
-        black: '900', // Mont Black
+        normal: "400",
+        semibold: "600",
+        black: "900",
+      },
+      colors: {
+        // Брендова палітра
+        brand: {
+          DEFAULT: "#006D77", // Бірюза (основний)
+          gray: "#EAEAEA", // Додатковий сірий
+          light: "#EBFDFB", // Світла бірюза
+          dark: "#0E172A", // Темно-синій
+          white: "#FFFFFF", // Білий
+        },
       },
     },
   },

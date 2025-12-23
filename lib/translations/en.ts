@@ -9,10 +9,10 @@ export const en = {
     contact: "Contact",
   },
   hero: {
-    title: "Global Shipping. Local Expertise.",
-    titleShort: "Your cargo. Your cabinet. Your control.",
+    title: "Global Shipping from China to Ukraine and the World",
+    titleShort: "Your logistics - without extra worries",
     description:
-      "From China to Ukraine and beyond — reliable freight forwarding, seamless customs, and real-time tracking. Let us simplify your logistics so you can focus on growing your business.",
+      "Your logistics - without extra worries",
     calculateCost: "Calculate Cost",
     getInTouch: "Get in Touch",
     trusted: "Trusted by 500+ businesses worldwide",
@@ -106,7 +106,6 @@ export const en = {
   },
   whyChooseUs: {
     title: "Why Choose KLS?",
-    subtitle: "We offer the best logistics solutions for your business",
     features: [
       {
         title: "Reliability",
@@ -147,7 +146,7 @@ export const en = {
       international: "International Shipping",
       reliable: "Reliable Logistics",
     },
-    cardText: "Quickly, manage your logistics operations easily",
+    cardText: "Quickly and easily manage your logistics operations every day",
     contactButton: "Contact Us",
   },
   services: {
@@ -528,15 +527,15 @@ export const en = {
     multimodal: "Multimodal Delivery",
     // Delivery to EU Countries and the World
     fba: "Delivery to FBA Warehouses",
-    ddp: "Delivery of Goods on DDP / DDU Terms",
+    ddp: "Delivery of Goods on DDP and DDU Terms",
     express: "Express Delivery",
     portToPort: "PORT-TO-PORT",
     crossBorder: "Cross-Border",
     // International Transportation and Forwarding
-    seaContainer: "Sea Container Transportation (FCL / LCL)",
-    airCargo: "Air Cargo Transportation (FCL / LCL)",
-    railCargo: "Rail Freight Transportation FCL / LCL",
-    roadCargo: "Road Freight Transportation (FTL / LTL)",
+    seaContainer: "Sea Container Transportation (FCL and LCL)",
+    airCargo: "Air Cargo Transportation (FCL and LCL)",
+    railCargo: "Rail Freight Transportation FCL and LCL",
+    roadCargo: "Road Freight Transportation (FTL and LTL)",
   },
   about: {
     title: "About Us",

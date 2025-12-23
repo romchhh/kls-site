@@ -66,7 +66,7 @@ export default async function CabinetHelpPage({
   const content = helpContent[locale] || helpContent.ua;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white font-segoe">
       <Navigation locale={locale} />
 
       <main className="mx-auto flex min-h-[calc(100vh-200px)] max-w-3xl flex-col px-4 py-16 sm:px-6 lg:px-8">

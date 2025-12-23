@@ -773,6 +773,256 @@ console.log(data);
 
 ---
 
+## 7. Generate Invoice (Excel)
+
+### Endpoint
+```
+GET /api/invoices/:shipmentId/generate
+```
+
+**Base URL:** `http://localhost:3000` або `https://kls.international`
+
+### Description
+Генерація інвойсу в форматі Excel для вантажу. Повертає Excel файл (.xlsx) з детальною інформацією про вантаж, включаючи всі місця, вартості, страхування та підсумки.
+
+**⚠️ Вимагає Bearer token авторизації або сесії адміна/користувача**
+
+### Headers
+```
+Authorization: Bearer kls_your_token_here
+```
+
+### Path Parameters
+- `shipmentId` (string, required) - ID вантажу або трек номер (internalTrack). API автоматично шукає спочатку за ID, потім за трек номером.
+
+**Приклади:**
+- ID вантажу: `cmink2ief0000u0oifboul1qi`
+- Трек номер: `00100-2491R0006`
+
+### Success Response (200)
+Повертає Excel файл (.xlsx) з наступною структурою:
+
+- **Заголовок:**
+  - Логотип KLS (правый верхній кут)
+  - Код клієнта, Маркування, Тип доставки, Напрям, Дати (отримано, відправлено, доставлено)
+
+- **Таблиця місць вантажу:**
+  - № Місця
+  - Трек номер (без ID партії)
+  - Опис
+  - Кількість ШТ
+  - Страхування (Сума, %, Вартість)
+  - Вага KG
+  - Об'єм м³
+  - Щільність
+  - Тариф кг/м³
+  - Вартість
+
+- **Підсумки:**
+  - Вартість доставки
+  - Вартість пакування
+  - Вартість локальної доставки
+  - Вартість страхування
+  - Загалом (USD)
+  - Баланс клієнта
+  - Загалом до сплати (USD)
+
+### Response Headers
+```
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+Content-Disposition: attachment; filename="invoice_2491R0006_2025-12-23.xlsx"
+```
+
+### Error Response (401)
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+### Error Response (404)
+```json
+{
+  "error": "Вантаж не знайдено за ID або трек номером",
+  "searched": {
+    "id": "00100-2491R0006",
+    "original": "00100-2491R0006"
+  }
+}
+```
+
+### Error Response (403)
+```json
+{
+  "error": "Forbidden"
+}
+```
+
+### Example Request (cURL)
+```bash
+# За ID вантажу
+curl -X GET "http://localhost:3000/api/invoices/cmink2ief0000u0oifboul1qi/generate" \
+  -H "Authorization: Bearer kls_your_token_here" \
+  --output invoice.xlsx
+
+# За трек номером
+curl -X GET "http://localhost:3000/api/invoices/00100-2491R0006/generate" \
+  -H "Authorization: Bearer kls_your_token_here" \
+  --output invoice.xlsx
+```
+
+### Example Request (JavaScript)
+```javascript
+const shipmentId = '00100-2491R0006'; // або ID вантажу
+const response = await fetch(`http://localhost:3000/api/invoices/${encodeURIComponent(shipmentId)}/generate`, {
+  headers: {
+    'Authorization': 'Bearer kls_your_token_here'
+  }
+});
+
+if (response.ok) {
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `invoice_${shipmentId}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+```
+
+---
+
+## 8. Generate Invoice (PDF)
+
+### Endpoint
+```
+GET /api/invoices/:shipmentId/generate-pdf
+```
+
+**Base URL:** `http://localhost:3000` або `https://kls.international`
+
+### Description
+Генерація інвойсу в форматі PDF для вантажу. Повертає PDF файл з детальною інформацією про вантаж, включаючи всі місця, вартості, страхування та підсумки. PDF генерується з HTML за допомогою Puppeteer, тому має точно такий самий вигляд як Excel версія.
+
+**⚠️ Вимагає Bearer token авторизації або сесії адміна/користувача**
+
+**⚠️ Для роботи потрібен встановлений `puppeteer` пакет**
+
+### Headers
+```
+Authorization: Bearer kls_your_token_here
+```
+
+### Path Parameters
+- `shipmentId` (string, required) - ID вантажу або трек номер (internalTrack). API автоматично шукає спочатку за ID, потім за трек номером.
+
+**Приклади:**
+- ID вантажу: `cmink2ief0000u0oifboul1qi`
+- Трек номер: `00100-2491R0006`
+
+### Success Response (200)
+Повертає PDF файл з тією ж структурою, що й Excel версія:
+
+- **Заголовок:**
+  - Логотип KLS (правый верхній кут)
+  - Код клієнта, Маркування, Тип доставки, Напрям, Дати
+
+- **Таблиця місць вантажу:**
+  - Всі ті самі поля, що й в Excel версії
+
+- **Підсумки:**
+  - Всі ті самі підсумки, що й в Excel версії
+
+### Response Headers
+```
+Content-Type: application/pdf
+Content-Disposition: attachment; filename="invoice_2491R0006_2025-12-23.pdf"
+```
+
+### Error Response (401)
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+### Error Response (404)
+```json
+{
+  "error": "Вантаж не знайдено за ID або трек номером",
+  "searched": {
+    "id": "00100-2491R0006",
+    "original": "00100-2491R0006"
+  }
+}
+```
+
+### Error Response (403)
+```json
+{
+  "error": "Forbidden"
+}
+```
+
+### Error Response (503)
+```json
+{
+  "error": "PDF generation requires puppeteer package",
+  "message": "Please install puppeteer: npm install puppeteer",
+  "details": "For API usage, puppeteer must be installed to generate PDF files"
+}
+```
+
+### Example Request (cURL)
+```bash
+# За ID вантажу
+curl -X GET "http://localhost:3000/api/invoices/cmink2ief0000u0oifboul1qi/generate-pdf" \
+  -H "Authorization: Bearer kls_your_token_here" \
+  --output invoice.pdf
+
+# За трек номером
+curl -X GET "http://localhost:3000/api/invoices/00100-2491R0006/generate-pdf" \
+  -H "Authorization: Bearer kls_your_token_here" \
+  --output invoice.pdf
+```
+
+### Example Request (JavaScript)
+```javascript
+const shipmentId = '00100-2491R0006'; // або ID вантажу
+const response = await fetch(`http://localhost:3000/api/invoices/${encodeURIComponent(shipmentId)}/generate-pdf`, {
+  headers: {
+    'Authorization': 'Bearer kls_your_token_here'
+  }
+});
+
+if (response.ok) {
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `invoice_${shipmentId}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+```
+
+### Примітки
+
+1. **Автоматичний пошук:** API автоматично шукає вантаж спочатку за ID, потім за трек номером (internalTrack), тому можна використовувати будь-який з них.
+
+2. **URL-кодування:** Рекомендується використовувати `encodeURIComponent()` для безпечного кодування `shipmentId` в URL, особливо якщо використовується трек номер зі спеціальними символами.
+
+3. **Формат трек номерів:** Трек номери в інвойсі відображаються без ID партії (наприклад, `2491R0006-2` замість `00100-2491R0006-2`).
+
+4. **Автентифікація:** Endpoints підтримують як API токени (Bearer token), так і сесії адмінів/користувачів. Для API токенів доступ дозволено (токени створюються адмінами), для сесій перевіряється право доступу до вантажу.
+
+---
+
 ## Status Codes
 
 - `200` - Успішний запит

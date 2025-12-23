@@ -185,6 +185,7 @@ export function UserShipments({
           description: batch.description,
           status: batch.status || "CREATED",
           deliveryType: batch.deliveryType || "AIR",
+          formationStatus: batch.formationStatus || "FORMING",
         })));
       }
     } catch (error) {
@@ -851,7 +852,7 @@ export function UserShipments({
                     >
                       <option value="">Оберіть партію</option>
                       {batches
-                        .filter((batch) => batch.status === "CREATED" || batch.status === "RECEIVED_CN" || batch.status === "CONSOLIDATION")
+                        .filter((batch) => (batch as any).formationStatus === "FORMING")
                         .map((batch) => (
                           <option key={batch.id} value={batch.batchId}>
                             {batch.batchId} {batch.description ? `- ${batch.description}` : ""}
@@ -2118,7 +2119,7 @@ export function UserShipments({
                     >
                       <option value="">Оберіть партію</option>
                       {batches
-                        .filter((batch) => batch.status === "CREATED" || batch.status === "RECEIVED_CN" || batch.status === "CONSOLIDATION")
+                        .filter((batch) => (batch as any).formationStatus === "FORMING")
                         .map((batch) => (
                           <option key={batch.id} value={batch.batchId}>
                             {batch.batchId} {batch.description ? `- ${batch.description}` : ""}
@@ -3138,13 +3139,71 @@ export function UserShipments({
                   Перегляд вантажу {viewingShipment.internalTrack}
                 </h2>
               </div>
-              <button
-                type="button"
-                onClick={() => setViewingShipment(null)}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-              >
-                <X className="h-4 w-4" />
-              </button>
+              <div className="flex items-center gap-3">
+                {/* Invoice download buttons - show if status is ON_UA_WAREHOUSE */}
+                {viewingShipment.status === "ON_UA_WAREHOUSE" && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/invoices/${viewingShipment.id}/generate`);
+                          if (!response.ok) {
+                            throw new Error("Failed to generate invoice");
+                          }
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = `invoice_${viewingShipment.internalTrack}_${new Date().toISOString().split("T")[0]}.xlsx`;
+                          document.body.appendChild(a);
+                          a.click();
+                          window.URL.revokeObjectURL(url);
+                          document.body.removeChild(a);
+                        } catch (error) {
+                          console.error("Error downloading invoice:", error);
+                          onError("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
+                        }
+                      }}
+                      className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>Інвойс Excel</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/invoices/${viewingShipment.id}/generate-pdf`);
+                          if (!response.ok) {
+                            throw new Error("Failed to generate PDF invoice");
+                          }
+                          // Open PDF in new window for printing/saving
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          window.open(url, "_blank");
+                          // Clean up after a delay
+                          setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                        } catch (error) {
+                          console.error("Error downloading PDF invoice:", error);
+                          onError("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
+                        }
+                      }}
+                      className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>Інвойс PDF</span>
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setViewingShipment(null)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
             </div>
             <div className="space-y-6 rounded-xl border border-slate-200 bg-slate-50 p-6">
               {/* Секція 1: Основна інформація */}

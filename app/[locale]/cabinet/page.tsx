@@ -16,5 +16,9 @@ export default async function CabinetPage({
     redirect(`/${locale}/cabinet/login`);
   }
 
-  return <UserCabinet locale={locale} />;
+  return (
+    <div className="font-segoe">
+      <UserCabinet locale={locale} />
+    </div>
+  );
 }

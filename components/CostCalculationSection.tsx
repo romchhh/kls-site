@@ -3,10 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Locale, getTranslations } from "../lib/translations";
 import { 
-  Plane, 
-  Ship, 
-  Train, 
-  Globe, 
   MapPin,
   Weight,
   Box,
@@ -17,6 +13,7 @@ import {
   CheckCircle2,
   Info
 } from "lucide-react";
+import Image from "next/image";
 
 type CostCalculationSectionProps = {
   locale: Locale;
@@ -122,26 +119,22 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     { 
       value: "air", 
       label: costCalc.deliveryTypes.air, 
-      icon: Plane,
-      color: "from-teal-500 to-teal-600"
+      icon: "/авіодоставка.png",
     },
     { 
       value: "sea", 
       label: costCalc.deliveryTypes.sea, 
-      icon: Ship,
-      color: "from-teal-500 to-teal-600"
+      icon: "/морські перевезення.png",
     },
     { 
       value: "rail", 
       label: costCalc.deliveryTypes.rail, 
-      icon: Train,
-      color: "from-teal-500 to-teal-600"
+      icon: "/залізниця.png",
     },
     { 
       value: "multimodal", 
       label: costCalc.deliveryTypes.multimodal, 
-      icon: Globe,
-      color: "from-teal-500 to-teal-600"
+      icon: "/перевезення.png",
     },
   ];
 
@@ -169,32 +162,78 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     
     setIsSubmitting(true);
     
-    // Симуляція відправки
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
+    try {
+      // Розрахунок орієнтовної вартості та терміну
+      let estimatedCost = 0;
+      let estimatedDays = 0;
+      
+      if (deliveryType === "air") {
+        estimatedCost = weight ? parseFloat(weight) * 8 : (volume ? parseFloat(volume) * 1200 : 0);
+        estimatedDays = 20;
+      } else if (deliveryType === "sea") {
+        estimatedCost = weight ? parseFloat(weight) * 2 : (volume ? parseFloat(volume) * 300 : 0);
+        estimatedDays = 75;
+      } else if (deliveryType === "rail") {
+        estimatedCost = weight ? parseFloat(weight) * 3 : (volume ? parseFloat(volume) * 400 : 0);
+        estimatedDays = 45;
+      } else if (deliveryType === "multimodal") {
+        estimatedCost = weight ? parseFloat(weight) * 4 : (volume ? parseFloat(volume) * 500 : 0);
+        estimatedDays = 35;
+      }
+      
+      // Відправка в Telegram
+      const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+      
+      await fetch("/api/telegram/send-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "cost_calculation",
+          data: {
+            name,
+            phone,
+            phoneCode,
+            deliveryType,
+            origin,
+            destination,
+            weight,
+            volume,
+            productName,
+            estimatedCost: estimatedCost.toFixed(2),
+            estimatedDays,
+            contactFormat,
+          },
+          locale,
+          pageUrl,
+        }),
+      });
+    } catch (error) {
+      console.error("Error sending to Telegram:", error);
+    }
+    
+    setIsSubmitting(false);
+    setIsSubmitted(true);
 
-      // Скидання форми через 3 секунди
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setCurrentStep(1);
-        setDeliveryType("");
-        setOrigin("");
-        setDestination("");
-        setWeight("");
-        setVolume("");
-        setProductName("");
-        setName("");
-        setPhone("");
-        setPhoneCode("+380");
-        setContactFormat("");
-        setRecaptchaChecked(false);
-      }, 3000);
-    }, 1500);
+    // Скидання форми через 3 секунди
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setCurrentStep(1);
+      setDeliveryType("");
+      setOrigin("");
+      setDestination("");
+      setWeight("");
+      setVolume("");
+      setProductName("");
+      setName("");
+      setPhone("");
+      setPhoneCode("+380");
+      setContactFormat("");
+      setRecaptchaChecked(false);
+    }, 3000);
   };
 
   return (
-    <section id="cost-calculation" className="relative bg-white pb-20">
+    <section id="cost-calculation" className="relative bg-gray-100 pt-6 pb-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
 
         {/* Прогрес-бар */}
@@ -290,7 +329,6 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
             <div className="space-y-8">
               <div className="grid grid-cols-2 gap-6">
                 {deliveryTypes.map((type) => {
-                  const Icon = type.icon;
                   const isSelected = deliveryType === type.value;
                   return (
                     <button
@@ -298,14 +336,20 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                       onClick={() => setDeliveryType(type.value)}
                       className={`group relative flex flex-col items-center justify-center gap-4 rounded-2xl border-2 p-8 transition-all duration-300 ${
                         isSelected
-                          ? "border-teal-500 bg-teal-50 shadow-lg scale-105"
-                          : "border-gray-200 bg-white hover:border-teal-300 hover:bg-teal-50/50 hover:shadow-md"
+                          ? "border-teal-500 bg-[#E8FDF8] shadow-lg scale-105"
+                          : "border-gray-200 bg-gray-50 hover:border-teal-300 hover:bg-[#E8FDF8] hover:shadow-md"
                       }`}
                     >
-                      <div className={`rounded-full bg-gradient-to-br ${type.color} p-4 shadow-md transition-transform ${
-                        isSelected ? "opacity-100 scale-110" : "opacity-80 group-hover:scale-105"
-                      }`}>
-                        <Icon className="h-10 w-10 text-white" />
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:scale-105">
+                        <Image
+                          src={type.icon}
+                          alt={type.label}
+                          width={40}
+                          height={40}
+                          className={`object-contain transition-all duration-300 ${
+                            isSelected ? "opacity-100" : "opacity-90 group-hover:opacity-100"
+                          }`}
+                        />
                       </div>
                       <span className={`text-center text-base font-semibold transition-colors ${
                         isSelected ? "text-teal-700" : "text-gray-700 group-hover:text-teal-600"

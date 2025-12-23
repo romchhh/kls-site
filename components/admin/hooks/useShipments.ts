@@ -23,6 +23,7 @@ export function useShipments(userId: string) {
             description: batch.description,
             status: batch.status || "CREATED",
             deliveryType: batch.deliveryType || "AIR",
+            formationStatus: batch.formationStatus || "FORMING",
           }))
         );
       }

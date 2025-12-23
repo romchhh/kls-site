@@ -10,7 +10,10 @@ type CTASectionProps = {
 
 export function CTASection({ locale }: CTASectionProps) {
   const t = getTranslations(locale);
-  const content = t.cta;
+  const content = t?.cta || {
+    title: "Готові почати?",
+    subtitle: "Зв'яжіться з нами сьогодні",
+  };
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -40,7 +43,7 @@ export function CTASection({ locale }: CTASectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-white py-16 md:py-20"
+      className="relative overflow-hidden bg-gray-100 pt-16 pb-8 md:pt-20 md:pb-10"
     >
       <div className="relative mx-auto max-w-7xl px-4 lg:px-6">
         <div className="mx-auto max-w-5xl text-center">
@@ -53,32 +56,7 @@ export function CTASection({ locale }: CTASectionProps) {
             {content.title}
           </h2>
 
-          <p
-            className={`mb-8 text-lg leading-relaxed text-gray-600 md:text-xl ${
-              isVisible ? "animate-slide-in-bottom" : ""
-            }`}
-            style={isVisible ? { animationDelay: "0.2s" } : { opacity: 0 }}
-          >
-            {content.subtitle}
-          </p>
-          
-          {/* Arrow */}
-          <div className="mb-8 flex justify-center">
-            <div
-              className={`transition-all duration-700 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={isVisible ? { animationDelay: "0.3s" } : {}}
-            >
-              <Image
-                src="/Arrow 01.png"
-                alt=""
-                width={100}
-                height={100}
-                className="opacity-30"
-              />
-            </div>
-          </div>
+          {/* Subtitle та стрілка приховані за побажанням */}
         </div>
       </div>
     </section>

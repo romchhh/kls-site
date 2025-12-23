@@ -445,6 +445,16 @@ export async function PUT(
       } catch (historyError) {
         console.error("Failed to create status history (non-critical):", historyError);
       }
+
+      // Автоматично створюємо інвойс, якщо статус змінився на ON_UA_WAREHOUSE
+      if (status === "ON_UA_WAREHOUSE") {
+        try {
+          const { createInvoiceForShipment } = await import("@/lib/utils/invoiceGeneration");
+          await createInvoiceForShipment(shipment.id);
+        } catch (invoiceError) {
+          console.error("Failed to create invoice (non-critical):", invoiceError);
+        }
+      }
     }
 
     await prisma.adminAction.create({

@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { description, deliveryType } = body;
+    const { description, deliveryType, formationStatus } = body;
 
     if (!deliveryType) {
       return NextResponse.json(
@@ -117,6 +117,7 @@ export async function POST(req: NextRequest) {
         description: description || null,
         deliveryType,
         status: "CREATED", // Default status for new batches
+        formationStatus: formationStatus || "FORMING",
       },
       include: {
         shipments: {
@@ -163,7 +164,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { id, description, deliveryType, status } = body;
+    const { id, description, deliveryType, status, formationStatus } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -183,12 +184,35 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Validate status if provided
-    if (status !== undefined) {
-      const validStatuses = ["CREATED", "RECEIVED_CN", "CONSOLIDATION", "IN_TRANSIT", "ARRIVED_UA", "ON_UA_WAREHOUSE", "DELIVERED", "ARCHIVED"];
-      if (!validStatuses.includes(status)) {
+    // Validate status if provided.
+    // Якщо статус передано, але він не входить до списку валідних статусів відправлень,
+    // ми логуватимемо попередження і ПРОПУСКАТИМЕМО оновлення статусу, щоб не ламати
+    // оновлення formationStatus.
+    const validStatuses = [
+      "CREATED",
+      "RECEIVED_CN",
+      "CONSOLIDATION",
+      "IN_TRANSIT",
+      "ARRIVED_UA",
+      "ON_UA_WAREHOUSE",
+      "DELIVERED",
+      "ARCHIVED",
+    ];
+
+    let statusToUpdate: string | undefined = status;
+    if (statusToUpdate !== undefined && !validStatuses.includes(statusToUpdate)) {
+      console.warn(
+        `Skipping invalid batch status value "${statusToUpdate}". Allowed: ${validStatuses.join(", ")}`
+      );
+      statusToUpdate = undefined;
+    }
+
+    // Validate formationStatus if provided
+    if (formationStatus !== undefined) {
+      const validFormationStatuses = ["FORMING", "FORMED"];
+      if (!validFormationStatuses.includes(formationStatus)) {
         return NextResponse.json(
-          { error: `Невірний статус. Дозволені значення: ${validStatuses.join(", ")}` },
+          { error: `Невірний статус формування. Дозволені значення: ${validFormationStatuses.join(", ")}` },
           { status: 400 }
         );
       }
@@ -200,7 +224,8 @@ export async function PUT(req: NextRequest) {
       data: {
         description: description !== undefined ? description : existing.description,
         deliveryType: deliveryType !== undefined ? deliveryType : existing.deliveryType,
-        status: status !== undefined ? status : existing.status,
+        status: statusToUpdate !== undefined ? statusToUpdate : existing.status,
+        formationStatus: formationStatus !== undefined ? formationStatus : existing.formationStatus,
       },
       include: {
         shipments: {
@@ -218,15 +243,15 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    // Якщо статус партії змінився, синхронізуємо статуси всіх вантажів в партії
-    if (status !== undefined && status !== existing.status) {
+    // Якщо статус партії змінився (і є валідним), синхронізуємо статуси всіх вантажів в партії
+    if (statusToUpdate !== undefined && statusToUpdate !== existing.status) {
       const firstShipment = batch.shipments && batch.shipments.length > 0 ? batch.shipments[0] : null;
       const routeFrom = firstShipment?.routeFrom || null;
       const routeTo = firstShipment?.routeTo || null;
       
       // Автоматично встановлюємо місцезнаходження на основі статусу
       const { getLocationForStatus } = await import("@/lib/utils/shipmentAutomation");
-      const finalLocation = getLocationForStatus(status as any, routeFrom, routeTo);
+      const finalLocation = getLocationForStatus(statusToUpdate as any, routeFrom, routeTo);
 
       // Update all shipments in batch to match batch status
       await prisma.shipment.updateMany({
@@ -234,7 +259,7 @@ export async function PUT(req: NextRequest) {
           batchId: batch.id,
         },
         data: {
-          status: status as any,
+          status: statusToUpdate as any,
           location: finalLocation || undefined,
         },
       });
@@ -245,9 +270,9 @@ export async function PUT(req: NextRequest) {
         select: { id: true },
       });
 
-      const statusHistoryEntries = shipments.map((shipment) => ({
+      const statusHistoryEntries = shipments.map((shipment: { id: string }) => ({
         shipmentId: shipment.id,
-        status: status as any,
+        status: statusToUpdate as any,
         location: finalLocation || null,
         description: `Синхронізація статусу з партією ${batch.batchId}`,
       }));

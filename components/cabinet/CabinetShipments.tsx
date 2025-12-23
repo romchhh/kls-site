@@ -92,7 +92,11 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
     load();
   }, []);
 
-  const haveShipments = shipments.length > 0;
+  // Фільтруємо посилки, виключаючи DELIVERED та ARCHIVED
+  const activeShipments = shipments.filter(
+    (s) => s.status !== "DELIVERED" && s.status !== "ARCHIVED"
+  );
+  const haveShipments = activeShipments.length > 0;
   const formatDate = (d: string | Date | null) =>
     d ? new Date(d).toLocaleDateString("uk-UA", {
       day: "2-digit",
@@ -313,7 +317,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {shipments.map((s) => {
+                  {activeShipments.map((s) => {
                     const latestStatus = s.statusHistory[0];
                     const statusColor = getStatusColorClass(s.status);
                     
@@ -447,12 +451,68 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                   {selectedShipment.cargoLabel || (t.cabinet as any)?.shipmentModal?.noLabel || "Без маркування"}
                 </p>
               </div>
-              <button
-                onClick={() => setSelectedShipment(null)}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-3">
+                {/* Invoice download buttons - show if status is ON_UA_WAREHOUSE */}
+                {selectedShipment.status === "ON_UA_WAREHOUSE" && (
+                  <>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/invoices/${selectedShipment.id}/generate`);
+                          if (!response.ok) {
+                            throw new Error("Failed to generate invoice");
+                          }
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = `invoice_${selectedShipment.internalTrack}_${new Date().toISOString().split("T")[0]}.xlsx`;
+                          document.body.appendChild(a);
+                          a.click();
+                          window.URL.revokeObjectURL(url);
+                          document.body.removeChild(a);
+                        } catch (error) {
+                          console.error("Error downloading invoice:", error);
+                          alert("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
+                        }
+                      }}
+                      className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>Інвойс Excel</span>
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/invoices/${selectedShipment.id}/generate-pdf`);
+                          if (!response.ok) {
+                            throw new Error("Failed to generate PDF invoice");
+                          }
+                          // Open PDF in new window for printing/saving
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          window.open(url, "_blank");
+                          // Clean up after a delay
+                          setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                        } catch (error) {
+                          console.error("Error downloading PDF invoice:", error);
+                          alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
+                        }
+                      }}
+                      className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>Інвойс PDF</span>
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={() => setSelectedShipment(null)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
             {/* Status Timeline Visualization */}
@@ -1264,10 +1324,17 @@ function calculateSummary(shipments: ShipmentWithRelations[]): ShipmentsSummary 
     received: 0,
     inTransit: 0,
     readyForPickup: 0,
-    total: shipments.length,
+    total: 0,
   };
 
-  for (const s of shipments) {
+  // Фільтруємо посилки, виключаючи DELIVERED та ARCHIVED
+  const activeShipments = shipments.filter(
+    (s) => s.status !== "DELIVERED" && s.status !== "ARCHIVED"
+  );
+
+  summary.total = activeShipments.length;
+
+  for (const s of activeShipments) {
     switch (s.status) {
       case "RECEIVED_CN":
       case "CONSOLIDATION":
@@ -1278,7 +1345,6 @@ function calculateSummary(shipments: ShipmentWithRelations[]): ShipmentsSummary 
         summary.inTransit += 1;
         break;
       case "ON_UA_WAREHOUSE":
-      case "DELIVERED":
         summary.readyForPickup += 1;
         break;
       default:

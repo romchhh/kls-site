@@ -165,6 +165,12 @@ export function Navigation({ locale }: NavigationProps) {
     return `/${newLocale}${pathWithoutLocale}`;
   };
 
+  // Логотипи
+  const primaryLogoSrc = "/ЛОГО.png";
+  const secondaryLogoSrc = "/ЛОГО (1).png";
+  // Білий логотип тільки на головній і тільки поки не проскролили
+  const usePrimaryLogo = isHomePage && scrollY <= 50;
+
   return (
     <nav className="fixed z-50 w-full transition-all duration-300 pt-4 px-4">
       <div
@@ -177,21 +183,21 @@ export function Navigation({ locale }: NavigationProps) {
         <div className="flex items-center">
           <Link href={`/${locale}`} aria-label="KLS home">
             <Image
-              src="/turquoise-transparent-2x.png"
-              alt="KLS"
-              width={280}
-              height={84}
+              src={usePrimaryLogo ? primaryLogoSrc : secondaryLogoSrc}
+              alt="KLS Logistics"
+              width={140}
+              height={42}
               priority
-              className={`h-20 w-auto transition-opacity ${
-                isHomePage && scrollY > 50 
-                  ? "opacity-80 hover:opacity-100" 
-                  : "opacity-100"
+              className={`h-8 w-auto md:h-10 transition-opacity ${
+                isHomePage && scrollY <= 50
+                  ? "opacity-100"
+                  : "opacity-90 hover:opacity-100"
               }`}
             />
           </Link>
         </div>
 
-        <div className="hidden items-center space-x-6 lg:flex">
+        <div className="hidden items-center space-x-6 lg:flex lg:ml-6">
           <div
             className="relative"
             onMouseEnter={handleDeliveryMouseEnter}
@@ -218,14 +224,19 @@ export function Navigation({ locale }: NavigationProps) {
                   }, 100);
                 }
               }}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
+              className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
                 isHomePage && scrollY <= 50
-                  ? "text-white/90 hover:bg-white/10 hover:text-white"
-                  : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
+                  ? "text-white/90 hover:text-white"
+                  : "text-gray-700 hover:text-gray-900"
               }`}
             >
-              {t.nav.delivery}
-              <ChevronDown size={18} className={`transition-transform duration-200 ${isDeliveryOpen ? "rotate-180" : ""}`} />
+              <span className="inline-flex items-center justify-center gap-2">
+                {t.nav.delivery}
+                <ChevronDown
+                  size={18}
+                  className={`transition-transform duration-200 ${isDeliveryOpen ? "rotate-180" : ""}`}
+                />
+              </span>
             </Link>
             {isDeliveryOpen && (
               <div 
@@ -260,18 +271,23 @@ export function Navigation({ locale }: NavigationProps) {
           >
             <Link
               href={`/${locale}/services`}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
+              className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
                 isHomePage && scrollY <= 50
                   ? pathname?.includes("/services")
-                    ? "bg-white/20 text-white backdrop-blur-sm"
-                    : "text-white/90 hover:bg-white/10 hover:text-white"
+                    ? "text-white"
+                    : "text-white/90 hover:text-white"
                   : pathname?.includes("/services")
-                  ? "bg-teal-100 text-teal-700 shadow-sm"
-                  : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
+                  ? "text-teal-700"
+                  : "text-gray-700 hover:text-teal-700"
               }`}
             >
-              {t.nav.services}
-              <ChevronDown size={18} className={`transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`} />
+              <span className="inline-flex items-center justify-center gap-2">
+                {t.nav.services}
+                <ChevronDown
+                  size={18}
+                  className={`transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`}
+                />
+              </span>
             </Link>
             {isServicesOpen && (
               <div 
@@ -304,11 +320,11 @@ export function Navigation({ locale }: NavigationProps) {
             className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
               isHomePage && scrollY <= 50
                 ? pathname === `/${locale}/contacts`
-                  ? "bg-white/20 text-white backdrop-blur-sm"
-                  : "text-white/90 hover:bg-white/10 hover:text-white"
+                  ? "text-white"
+                  : "text-white/90 hover:text-white"
                 : pathname === `/${locale}/contacts`
-                ? "bg-teal-100 text-teal-700 shadow-sm"
-                : "text-gray-700 hover:bg-gray-100/50 hover:text-gray-900"
+                ? "text-teal-700"
+                : "text-gray-700 hover:text-teal-700"
             }`}
           >
             {t.nav.contacts}
@@ -393,12 +409,12 @@ export function Navigation({ locale }: NavigationProps) {
           <div className="fixed top-4 left-4 lg:hidden z-50 flex items-center" style={{ height: '96px' }}>
             <Link href={`/${locale}`} aria-label="KLS home" onClick={() => setIsMenuOpen(false)}>
               <Image
-                src="/turquoise-transparent-2x.png"
-                alt="KLS"
-                width={280}
-                height={84}
+                src={usePrimaryLogo ? primaryLogoSrc : secondaryLogoSrc}
+                alt="KLS Logistics"
+                width={140}
+                height={42}
                 priority
-                className="h-24 w-auto transition-opacity opacity-100"
+                className="h-10 w-auto transition-opacity opacity-100"
               />
             </Link>
           </div>

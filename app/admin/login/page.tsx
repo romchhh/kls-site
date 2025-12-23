@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4 font-segoe">
       <div className="w-full max-w-md">
         <div className="rounded-2xl bg-white p-8 shadow-2xl">
           <div className="mb-8 text-center">
@@ -118,7 +118,7 @@ export default function AdminLoginPage() {
             <p className="text-xs text-slate-500">
               Розроблено{" "}
               <a
-                href="https://telebots.site/"
+                href="https://new.telebots.site/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold text-teal-600 transition-colors hover:text-teal-700"

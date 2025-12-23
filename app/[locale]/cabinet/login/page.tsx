@@ -69,7 +69,7 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 font-segoe">
       {/* Logo */}
       <Link
         href={`/${locale}`}
@@ -97,7 +97,7 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
         {/* Left image panel */}
         <div className="relative hidden w-full overflow-hidden bg-black md:block md:w-1/2">
           <Image
-            src="/hero-image-1.jpg"
+            src="/pramo-nad-kommerceskim-dokom 1.png"
             alt="KLS Logistics"
             fill
             priority
@@ -106,9 +106,6 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/10" />
           <div className="relative flex h-full flex-col justify-between px-10 pb-10 pt-32 text-slate-50">
             <div className="max-w-md space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-teal-300/90">
-                KLS Logistics
-              </p>
               <h2 className="text-3xl font-black leading-tight md:text-4xl">
                 {t.hero?.titleShort || "Ваш вантаж. Ваш кабінет. Ваш контроль."}
               </h2>
@@ -237,7 +234,7 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full rounded-full bg-teal-500 px-4 py-3.5 text-base font-semibold text-white shadow-[0_18px_40px_rgba(20,184,166,0.55)] transition hover:bg-teal-600 hover:shadow-[0_22px_50px_rgba(20,184,166,0.7)] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-full bg-teal-500 px-4 py-3.5 text-base font-semibold text-white shadow-md transition hover:bg-teal-600 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -249,19 +246,20 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
                   )}
                 </button>
 
-                <div className="flex justify-start">
-                  <Link
-                    href={`/${locale}/cabinet/help#forgot-password`}
-                    className="text-sm font-medium text-slate-600 hover:text-slate-900"
-                  >
-                    {t.cabinet?.forgotPassword || "Не пам'ятаю пароль"}
-                  </Link>
+                <div className="mt-4 border-t border-slate-200 pt-3 space-y-2">
+                  <div className="flex justify-start">
+                    <Link
+                      href={`/${locale}/cabinet/help#forgot-password`}
+                      className="text-sm font-medium text-slate-600 hover:text-slate-900"
+                    >
+                      {t.cabinet?.forgotPassword || "Не пам'ятаю пароль"}
+                    </Link>
+                  </div>
+                  <p className="text-xs leading-relaxed text-slate-500">
+                    {t.cabinet?.managerInfo ||
+                      "Реєстрація нового клієнта, відновлення паролю та зміна даних здійснюються через вашого персонального менеджера KLS."}
+                  </p>
                 </div>
-
-                <p className="text-xs leading-relaxed text-slate-500">
-                  {t.cabinet?.managerInfo ||
-                    "Реєстрація нового клієнта, відновлення паролю та зміна даних здійснюються через вашого персонального менеджера KLS."}
-                </p>
               </form>
             </div>
           </div>

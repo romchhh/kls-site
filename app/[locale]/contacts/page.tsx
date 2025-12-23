@@ -72,7 +72,7 @@ export default async function ContactsPage({
           <p className="mb-12 text-lg text-gray-600">{content.description}</p>
 
           <div className="grid gap-8 md:grid-cols-2">
-            <div className="rounded-lg border border-gray-200 p-8">
+            <div className="rounded-2xl border border-gray-200 p-8">
               <h2 className="mb-6 text-2xl font-semibold text-gray-900">
                 {content.china}
               </h2>
@@ -108,7 +108,7 @@ export default async function ContactsPage({
               </div>
             </div>
 
-            <div className="rounded-lg border border-gray-200 p-8">
+            <div className="rounded-2xl border border-gray-200 p-8">
               <h2 className="mb-6 text-2xl font-semibold text-gray-900">
                 {content.ukraine}
               </h2>

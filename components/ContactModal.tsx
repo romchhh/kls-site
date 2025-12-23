@@ -46,8 +46,29 @@ export function ContactModal({ locale, isOpen, onClose, calculationResult }: Con
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Відправка в Telegram
+      const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+      
+      await fetch("/api/telegram/send-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "contact_modal",
+          data: {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+            calculationResult,
+          },
+          locale,
+          pageUrl,
+        }),
+      });
+    } catch (error) {
+      console.error("Error sending to Telegram:", error);
+    }
     
     setIsSubmitting(false);
     setShowSuccess(true);

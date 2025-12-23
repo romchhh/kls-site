@@ -72,7 +72,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             }`}
             style={isVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
           >
-            {hero.title ?? "Міжнародна логістика для вашого бізнесу"}
+            {hero.title ?? "Доставка з Китаю в Україну та по всьому світу"}
           </h1>
 
           <p 
@@ -82,7 +82,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             style={isVisible ? { animationDelay: '0.3s' } : { opacity: 0 }}
           >
             {hero.description ??
-              "Організуємо доставку вантажів з Китаю та інших країн з повним супроводом і прозорими умовами."}
+              "Твоя логістика — без зайвих турбот: беремо на себе весь шлях від постачальника до дверей клієнта."}
           </p>
 
           <div 
@@ -93,7 +93,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
           >
             <button
               onClick={() => setIsContactModalOpen(true)}
-              className="group relative overflow-hidden rounded-xl bg-teal-600 px-4 py-4 text-sm font-semibold text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-teal-700 btn-primary sm:px-8 sm:text-base flex-1 sm:flex-none text-center flex items-center justify-center"
+              className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-teal-600 px-6 text-sm font-semibold text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-teal-700 btn-primary sm:h-14 sm:w-[230px] sm:text-base"
             >
               <span className="relative z-10">
                 {hero.getInTouch ?? "Звʼязатися з менеджером"}
@@ -107,11 +107,11 @@ export function HeroSection({ locale }: HeroSectionProps) {
                   element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
               }}
-              className="group relative overflow-hidden rounded-xl border border-white/30 bg-white/10 backdrop-blur-sm px-4 py-4 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white/20 hover:border-white/40 sm:px-8 sm:text-base flex-1 sm:flex-none text-center flex items-center justify-center"
+              className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl border border-white/30 bg-white/10 px-6 text-sm font-semibold text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/40 hover:bg-white/20 sm:h-14 sm:w-[230px] sm:text-base"
               style={{
-                background: "rgba(255, 255, 255, 0.1)",
-                backdropFilter: "blur(20px) saturate(180%)",
-                WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                background: "rgba(255, 255, 255, 0.14)",
+                backdropFilter: "blur(30px) saturate(200%)",
+                WebkitBackdropFilter: "blur(30px) saturate(200%)",
                 boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.3)",
               }}
             >
@@ -121,14 +121,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
             </button>
           </div>
 
-          <p 
-            className={`mt-8 text-sm text-white/80 ${
-              isVisible ? 'animate-slide-in-top' : ''
-            }`}
-            style={isVisible ? { animationDelay: '0.7s' } : { opacity: 0 }}
-          >
-            {hero.trusted ?? "Нам довіряють компанії з України, ЄС та США."}
-          </p>
+          {/* Додатковий текст під кнопками тимчасово прихований за побажанням */}
         </div>
       </div>
 

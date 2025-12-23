@@ -305,7 +305,7 @@ const roadCargoContent = {
     ],
   },
   en: {
-    title: "Road Freight Transportation (FTL / LTL)",
+    title: "Road Freight Transportation (FTL and LTL)",
     intro: "Flexible and fast delivery method from China to Ukraine, EU countries and on individual international routes.",
     ftlTitle: "FTL (Full Truck Load) — full truck loading",
     ftlFeatures: [
@@ -334,7 +334,7 @@ const mainContent = {
     intro: "Ми забезпечуємо повний комплекс логістичних рішень для міжнародних вантажних перевезень, поєднуючи надійність, прозорість та індивідуальний підхід. Наша команда організовує доставку будь-яким видом транспорту — морським, авіаційним, залізничним та автомобільним, а також бере на себе всі експедиторські операції.",
     whatIncludes: "Що входить у наші послуги",
     services: [
-      "організація міжнародних перевезень FCL / LCL, FTL / LTL",
+      "організація міжнародних перевезень FCL і LCL, FTL і LTL",
       "підбір оптимального маршруту за вартістю та термінами",
       "експедирування в портах, аеропортах, терміналах",
       "митне оформлення та суправа документації",
@@ -361,7 +361,7 @@ const mainContent = {
     intro: "Мы обеспечиваем полный комплекс логистических решений для международных грузовых перевозок, сочетая надежность, прозрачность и индивидуальный подход. Наша команда организует доставку любым видом транспорта — морским, авиационным, железнодорожным и автомобильным, а также берет на себя все экспедиторские операции.",
     whatIncludes: "Что входит в наши услуги",
     services: [
-      "организация международных перевозок FCL / LCL, FTL / LTL",
+      "организация международных перевозок FCL и LCL, FTL и LTL",
       "подбор оптимального маршрута по стоимости и срокам",
       "экспедирование в портах, аэропортах, терминалах",
       "таможенное оформление и сопровождение документации",
@@ -388,7 +388,7 @@ const mainContent = {
     intro: "We provide a full range of logistics solutions for international freight transportation, combining reliability, transparency and individual approach. Our team organizes delivery by any type of transport — sea, air, rail and road, and also takes on all forwarding operations.",
     whatIncludes: "What is included in our services",
     services: [
-      "organization of international transportation FCL / LCL, FTL / LTL",
+      "organization of international transportation FCL and LCL, FTL and LTL",
       "selection of optimal route by cost and terms",
       "forwarding in ports, airports, terminals",
       "customs clearance and document support",

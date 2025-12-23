@@ -113,10 +113,10 @@ export default async function ServicesPage({
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           {/* Header */}
           <div className="mb-16 text-center">
-            <h1 className="mb-4 text-5xl font-bold text-gray-900 md:text-6xl">
+            <h1 className="mb-3 text-3xl md:text-5xl font-bold text-gray-900">
               {t.services.mainTitle}
             </h1>
-            <p className="mx-auto max-w-3xl text-xl text-gray-600">
+            <p className="mx-auto max-w-3xl text-base md:text-lg text-gray-600 leading-relaxed">
               {t.services.mainDescription}
             </p>
           </div>

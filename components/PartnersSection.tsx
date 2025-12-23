@@ -82,18 +82,20 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
               return (
                 <div
                   key={`${partner.name}-${index}`}
-                  className="group relative flex w-[45vw] shrink-0 items-center justify-center overflow-hidden transition-all duration-500 hover:scale-105 md:w-72"
+                  className="group relative flex h-32 w-40 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-gray-50 transition-all duration-500 md:h-40 md:w-56"
                 >
                   <PartnerWrapper>
-                    <Image
-                      src={partner.logo}
-                      alt={`${partner.name} flag`}
-                      width={160}
-                      height={120}
-                      className="relative z-10 h-10 w-auto object-cover transition-all duration-500 md:h-16"
-                      priority={index === 0}
-                      unoptimized={true}
-                    />
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Image
+                        src={partner.logo}
+                        alt={partner.name}
+                        width={160}
+                        height={120}
+                        className="relative z-10 max-h-20 w-auto object-contain md:max-h-24"
+                        priority={index === 0}
+                        unoptimized={true}
+                      />
+                    </div>
                   </PartnerWrapper>
                 </div>
               );

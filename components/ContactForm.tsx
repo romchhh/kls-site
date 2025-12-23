@@ -93,8 +93,27 @@ export function ContactForm({ locale }: ContactFormProps) {
     setErrors({});
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Відправка в Telegram
+      const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+      
+      await fetch("/api/telegram/send-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "contact",
+          data: {
+            name: formData.name,
+            phone: formData.phone,
+            phoneCode: formData.phoneCode,
+          },
+          locale,
+          pageUrl,
+        }),
+      });
+    } catch (error) {
+      console.error("Error sending to Telegram:", error);
+    }
     
     setIsSubmitting(false);
     setShowSuccess(true);

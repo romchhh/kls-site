@@ -48,14 +48,15 @@ model AdminAction {
 }
 
 model Batch {
-  id          String      @id @default(cuid())
-  batchId     String      @unique
-  description String?
-  deliveryType DeliveryType
-  status      BatchStatus @default(FORMING)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  shipments   Shipment[]
+  id              String      @id @default(cuid())
+  batchId         String      @unique
+  description     String?
+  deliveryType    DeliveryType
+  status          ShipmentStatusEnum @default(CREATED)
+  formationStatus BatchStatus @default(FORMING)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  shipments       Shipment[]
 
   @@map("batches")
 }

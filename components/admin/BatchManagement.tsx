@@ -24,6 +24,7 @@ interface Batch {
   description: string | null;
   deliveryType: "AIR" | "SEA" | "RAIL" | "MULTIMODAL";
   status: "CREATED" | "RECEIVED_CN" | "CONSOLIDATION" | "IN_TRANSIT" | "ARRIVED_UA" | "ON_UA_WAREHOUSE" | "DELIVERED" | "ARCHIVED";
+  formationStatus: "FORMING" | "FORMED";
   createdAt: string;
   shipments: Shipment[];
 }
@@ -38,6 +39,7 @@ export function BatchManagement() {
   const [newBatchDescription, setNewBatchDescription] = useState("");
   const [newBatchDeliveryType, setNewBatchDeliveryType] = useState<"AIR" | "SEA" | "RAIL" | "MULTIMODAL">("AIR");
   const [newBatchStatus, setNewBatchStatus] = useState<"CREATED" | "RECEIVED_CN" | "CONSOLIDATION" | "IN_TRANSIT" | "ARRIVED_UA" | "ON_UA_WAREHOUSE" | "DELIVERED" | "ARCHIVED">("CREATED");
+  const [newBatchFormationStatus, setNewBatchFormationStatus] = useState<"FORMING" | "FORMED">("FORMING");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [showStatusUpdateModal, setShowStatusUpdateModal] = useState<Batch | null>(null);
   const [newStatus, setNewStatus] = useState("");
@@ -105,6 +107,7 @@ export function BatchManagement() {
           description: newBatchDescription || null,
           deliveryType: newBatchDeliveryType,
           status: newBatchStatus,
+          formationStatus: newBatchFormationStatus,
         }),
       });
 
@@ -143,6 +146,7 @@ export function BatchManagement() {
           description: newBatchDescription || null,
           deliveryType: newBatchDeliveryType,
           status: newBatchStatus,
+          formationStatus: newBatchFormationStatus,
         }),
       });
 
@@ -154,6 +158,7 @@ export function BatchManagement() {
         setNewBatchId("");
         setNewBatchDescription("");
         setNewBatchDeliveryType("AIR");
+        setNewBatchFormationStatus("FORMING");
         fetchBatches();
       } else {
         setMessage({ type: "error", text: data.error || "Помилка оновлення партії" });
@@ -305,6 +310,7 @@ export function BatchManagement() {
     setNewBatchDescription(batch.description || "");
     setNewBatchDeliveryType(batch.deliveryType || "AIR");
     setNewBatchStatus(batch.status || "CREATED");
+    setNewBatchFormationStatus(batch.formationStatus || "FORMING");
     fetchAvailableShipments();
   };
 
@@ -314,6 +320,7 @@ export function BatchManagement() {
     setNewBatchDescription("");
     setNewBatchDeliveryType("AIR");
     setNewBatchStatus("CREATED");
+    setNewBatchFormationStatus("FORMING");
     setAvailableShipments([]);
     setShowAddShipmentModal(false);
   };
@@ -413,8 +420,6 @@ export function BatchManagement() {
       ON_UA_WAREHOUSE: "Готово до видачі",
       DELIVERED: "Завершено",
       ARCHIVED: "Архів",
-      FORMING: "Формується",
-      FORMED: "Сформовано",
     };
     return labels[status] || status;
   };
@@ -553,6 +558,20 @@ export function BatchManagement() {
             </div>
             <div>
               <label className="mb-1 block text-sm font-semibold text-slate-700">
+                Статус формування *
+              </label>
+              <select
+                value={newBatchFormationStatus}
+                onChange={(e) => setNewBatchFormationStatus(e.target.value as "FORMING" | "FORMED")}
+                required
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+              >
+                <option value="FORMING">Формується</option>
+                <option value="FORMED">Сформовано</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-semibold text-slate-700">
                 Опис (опціонально)
               </label>
               <input
@@ -619,7 +638,7 @@ export function BatchManagement() {
                     <Package className="h-5 w-5 text-teal-600" />
                     <h3 className="text-xl font-black text-slate-900">Партія {batch.batchId}</h3>
                   </div>
-                  <div className="mt-1 flex items-center gap-4">
+                  <div className="mt-3 space-y-1.5">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-semibold text-slate-500">Тип доставки:</span>
                       <span className="text-sm font-semibold text-slate-700">
@@ -635,6 +654,18 @@ export function BatchManagement() {
                         className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${getStatusColor(batch.status)}`}
                       >
                         {getStatusLabel(batch.status)}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-slate-500">Формування:</span>
+                      <span
+                        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          batch.formationStatus === "FORMING"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {batch.formationStatus === "FORMING" ? "Формується" : "Сформовано"}
                       </span>
                     </div>
                     {getLocationForStatus(batch.status) && (
@@ -756,14 +787,28 @@ export function BatchManagement() {
                         required
                         className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                       >
-                        <option value="CREATED">Без змін</option>
-                        <option value="RECEIVED_CN">Очікується на складі</option>
-                        <option value="CONSOLIDATION">Отримано на складі (Китай)</option>
-                        <option value="IN_TRANSIT">Готується до відправлення</option>
-                        <option value="ARRIVED_UA">В дорозі</option>
-                        <option value="ON_UA_WAREHOUSE">Доставлено на склад (Україна)</option>
-                        <option value="DELIVERED">На складі України</option>
-                        <option value="ARCHIVED">Доставлено клієнту</option>
+                        <option value="CREATED">Очікується на складі</option>
+                        <option value="RECEIVED_CN">Отримано на складі (Китай)</option>
+                        <option value="CONSOLIDATION">Готується до відправлення</option>
+                        <option value="IN_TRANSIT">В дорозі</option>
+                        <option value="ARRIVED_UA">Доставлено на склад (Україна)</option>
+                        <option value="ON_UA_WAREHOUSE">Готово до видачі</option>
+                        <option value="DELIVERED">Завершено</option>
+                        <option value="ARCHIVED">Архів</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-semibold text-slate-700">
+                        Статус формування *
+                      </label>
+                      <select
+                        value={newBatchFormationStatus}
+                        onChange={(e) => setNewBatchFormationStatus(e.target.value as "FORMING" | "FORMED")}
+                        required
+                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                      >
+                        <option value="FORMING">Формується</option>
+                        <option value="FORMED">Сформовано</option>
                       </select>
                     </div>
                     <div>

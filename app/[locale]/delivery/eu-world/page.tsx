@@ -181,7 +181,7 @@ const ddpContent = {
     cta: "Свяжитесь с нами — сделаем точный расчет под вашу партию.",
   },
   en: {
-    title: "Delivery of Goods on DDP / DDU Terms",
+    title: "Delivery of Goods on DDP and DDU Terms",
     dduTitle: "DDU — delivery to recipient country without payment of duties and taxes",
     dduIntro: "We deliver your goods to the destination, and you pay import payments and customs clearance.",
     dduWhatIncludes: "What DDU may include:",

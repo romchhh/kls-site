@@ -21,6 +21,7 @@ import type {
   UserDetailProps,
   User,
   ShipmentRow,
+  Batch,
 } from "./types/userDetail.types";
 import {
   getDeliveryTypeCode,
@@ -42,7 +43,7 @@ export function UserDetail({ userId }: UserDetailProps) {
   const [shipments, setShipments] = useState<ShipmentRow[]>([]);
   const [loadingShipments, setLoadingShipments] = useState(false);
   const [showAddShipment, setShowAddShipment] = useState(false);
-  const [batches, setBatches] = useState<Array<{ id: string; batchId: string; description: string | null; status: string; deliveryType: string }>>([]);
+  const [batches, setBatches] = useState<Batch[]>([]);
   const [shipmentForm, setShipmentForm] = useState({
     cargoLabel: "",
     status: "",
@@ -654,6 +655,7 @@ export function UserDetail({ userId }: UserDetailProps) {
             description: batch.description,
             status: batch.status || "CREATED",
             deliveryType: batch.deliveryType || "AIR",
+            formationStatus: (batch.formationStatus as "FORMING" | "FORMED" | undefined) || "FORMING",
           }))
         );
       }

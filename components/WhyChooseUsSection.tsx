@@ -127,33 +127,10 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
           }`}
           style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
         >
-          <div className="mb-4 inline-flex items-center rounded-full border-2 border-teal-200/60 bg-white/80 backdrop-blur-sm px-6 py-2 text-sm font-semibold uppercase tracking-[0.4em] text-teal-600 shadow-lg">
-            {content.title}
-          </div>
-          <h2 className="mb-6 mt-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+          <h2 className="mb-4 text-3xl md:text-5xl font-bold text-gray-900">
             {content.title}
           </h2>
-          <p className="mb-8 text-lg font-normal leading-relaxed text-slate-600 md:text-xl">
-            {content.subtitle}
-          </p>
-          
-          {/* Arrow */}
-          <div className="mt-8 flex justify-center">
-            <div
-              className={`transition-all duration-700 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-              style={isVisible ? { animationDelay: "0.3s" } : {}}
-            >
-              <Image
-                src="/Arrow 01.png"
-                alt=""
-                width={120}
-                height={120}
-                className="opacity-30"
-              />
-            </div>
-          </div>
+          {/* Subtitle та стрілка приховані за побажанням */}
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2 lg:items-stretch">
@@ -164,58 +141,62 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
             }`}
             style={isVisible ? { animationDelay: "0.3s" } : { opacity: 0 }}
           >
-            <div className="group relative flex h-full min-h-[600px] overflow-hidden rounded-3xl border-2 border-white/20 bg-gradient-to-br from-amber-100 via-yellow-50 to-amber-50 shadow-2xl transition-all duration-500 hover:border-teal-200/40 hover:shadow-3xl">
+            <div className="group relative flex h-full min-h-[520px] overflow-hidden rounded-3xl border-2 border-white/20 bg-gradient-to-br from-amber-100 via-yellow-50 to-amber-50 shadow-2xl transition-all duration-500 hover:border-teal-200/40 hover:shadow-3xl">
               {/* Blurred background image */}
               <div className="absolute inset-0">
                 <Image
-                  src="/hero-image-1.jpg"
+                  src="/koncepcia-transporta-i-logistiki 2.png"
                   alt="KLS Logistics"
                   fill
                   className="object-cover transition-all duration-700 group-hover:scale-110"
                   style={{
-                    filter: "blur(12px) brightness(0.6) saturate(0.85)",
-                    transform: "scale(1.15)",
+                    filter: "blur(6px) brightness(0.7) saturate(0.9)",
+                    transform: "scale(1.08)",
                   }}
                 />
               </div>
               
               {/* Gradient overlay with animated shine */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/15 transition-opacity duration-500 group-hover:from-black/85 group-hover:via-black/45" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10 transition-opacity duration-500 group-hover:from-black/80 group-hover:via-black/40" />
               
               {/* Animated shine effect */}
               <div className="pointer-events-none absolute -inset-[50%] rotate-12 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 transition-opacity duration-1000 group-hover:opacity-100 group-hover:animate-[shimmer_3s_ease-in-out_infinite]" />
               
               {/* Content overlay */}
-              <div className="relative z-10 flex h-full flex-col justify-center p-10 md:p-12">
-                <div className="mb-4 inline-flex items-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-white/90">
-                  KLS Logistics
+              <div className="relative z-10 flex h-full flex-col justify-between p-10 md:p-12">
+                <div>
+                  <div className="mb-4 inline-flex items-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-white/90">
+                    KLS Logistics
+                  </div>
+                  <h3 className="mb-3 text-4xl font-black tracking-tight text-white drop-shadow-lg md:text-5xl lg:text-6xl">
+                    {content.imageLabels.international}
+                  </h3>
+                  <p className="text-lg font-normal leading-relaxed text-white/95 drop-shadow-md md:text-xl">
+                    {content.cardText}
+                  </p>
                 </div>
-                <h3 className="mb-3 text-4xl font-black tracking-tight text-white drop-shadow-lg md:text-5xl lg:text-6xl">
-                  {content.imageLabels.international}
-                </h3>
-                <p className="mb-8 text-lg font-normal leading-relaxed text-white/95 drop-shadow-md md:text-xl">
-                  {content.cardText}
-                </p>
                 
-                {/* Contact button with enhanced styling */}
-                <button
-                  onClick={() => setIsContactModalOpen(true)}
-                  className="group/btn relative inline-block w-fit overflow-hidden rounded-2xl bg-white/95 px-8 py-4 text-base font-semibold text-slate-900 shadow-xl backdrop-blur-sm transition-all duration-300 hover:bg-white hover:scale-[1.02] hover:shadow-2xl md:px-10 md:py-4.5"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    {content.contactButton}
-                    <svg className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
-                </button>
+                {/* Contact button larger and centered */}
+                <div className="mt-6 flex justify-center">
+                  <button
+                    onClick={() => setIsContactModalOpen(true)}
+                    className="group/btn relative inline-flex w-full max-w-xs items-center justify-center overflow-hidden rounded-2xl bg-white/95 px-10 py-4 text-base font-semibold text-slate-900 shadow-xl backdrop-blur-sm transition-all duration-300 hover:bg-white hover:scale-[1.02] hover:shadow-2xl md:max-w-sm md:px-12 md:py-5"
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      {content.contactButton}
+                      <svg className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-teal-500/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Right side - Three feature cards with dynamic change */}
-          <div className="flex h-full flex-col justify-center space-y-6">
+          <div className="flex h-full flex-col justify-between space-y-6">
             {[0, 1, 2].map((cardIndex) => {
               const currentIndex = currentFeatureIndexes[cardIndex];
               const currentFeature = features[currentIndex];
@@ -242,7 +223,7 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
                   <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 bg-gradient-to-br from-teal-50/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   
                   {/* Icon in top right with flip animation */}
-                  <div className="absolute top-6 right-6">
+                  <div className="absolute top-6 left-6">
                     <div
                       className={`flip-container ${
                         flipping ? "flip" : ""
@@ -269,7 +250,7 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
                   </div>
 
                   {/* Content with smooth flip animation */}
-                  <div className="relative min-h-[140px] pr-20">
+                  <div className="relative min-h-[150px] pl-20">
                     <div
                       className={`flip-container ${
                         flipping ? "flip" : ""
