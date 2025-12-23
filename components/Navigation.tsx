@@ -167,7 +167,7 @@ export function Navigation({ locale }: NavigationProps) {
 
   // Логотипи
   const primaryLogoSrc = "/ЛОГО.png";
-  const secondaryLogoSrc = "/ЛОГО (1).png";
+  const secondaryLogoSrc = "/ЛОГО(1).png";
   // Білий логотип тільки на головній і тільки поки не проскролили
   const usePrimaryLogo = isHomePage && scrollY <= 50;
 

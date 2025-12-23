@@ -135,14 +135,60 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
   ];
 
   const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -400, behavior: "smooth" });
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const cards = Array.from(container.querySelectorAll("a")) as HTMLElement[];
+    if (cards.length === 0) return;
+
+    // Find the first card that is at least partially visible
+    const containerRect = container.getBoundingClientRect();
+    let currentIndex = 0;
+    
+    for (let i = 0; i < cards.length; i++) {
+      const cardRect = cards[i].getBoundingClientRect();
+      if (cardRect.left >= containerRect.left) {
+        currentIndex = i;
+        break;
+      }
+    }
+
+    // Scroll to previous card
+    if (currentIndex > 0) {
+      cards[currentIndex - 1].scrollIntoView({ 
+        behavior: "smooth", 
+        block: "nearest",
+        inline: "center"
+      });
     }
   };
 
   const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 400, behavior: "smooth" });
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const cards = Array.from(container.querySelectorAll("a")) as HTMLElement[];
+    if (cards.length === 0) return;
+
+    // Find the last card that is at least partially visible
+    const containerRect = container.getBoundingClientRect();
+    let currentIndex = cards.length - 1;
+    
+    for (let i = cards.length - 1; i >= 0; i--) {
+      const cardRect = cards[i].getBoundingClientRect();
+      if (cardRect.right <= containerRect.right) {
+        currentIndex = i;
+        break;
+      }
+    }
+
+    // Scroll to next card
+    if (currentIndex < cards.length - 1) {
+      cards[currentIndex + 1].scrollIntoView({ 
+        behavior: "smooth", 
+        block: "nearest",
+        inline: "center"
+      });
     }
   };
 
@@ -151,7 +197,7 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
       id="services"
       className="relative overflow-hidden bg-gray-100 pt-16 pb-20"
     >
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div
           className={`mb-10 flex flex-col items-center text-center gap-4 ${
@@ -172,26 +218,28 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         {/* Services Scroll Container */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
+          className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory scroll-smooth"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
+            scrollPaddingLeft: '1rem',
+            scrollPaddingRight: '1rem',
           }}
         >
           {/* All Services Card */}
           <Link
             href={`/${locale}/services`}
-            className={`group relative flex-shrink-0 w-[380px] rounded-3xl bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-9 text-white shadow-none transition-all duration-500 hover:scale-105 snap-start ${
+            className={`group relative flex-shrink-0 w-[calc(100%-2rem)] sm:w-[380px] rounded-3xl bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-6 sm:p-9 text-white shadow-none transition-all duration-500 hover:scale-105 snap-center first:ml-4 last:mr-4 sm:first:ml-0 sm:last:mr-0 ${
               isVisible ? 'animate-slide-in-bottom' : ''
             }`}
             style={isVisible ? { animationDelay: '0.2s' } : { opacity: 0 }}
           >
-            <div className="flex h-full flex-col justify-between min-h-[320px]">
+            <div className="flex h-full flex-col justify-between min-h-[280px] sm:min-h-[320px]">
               <div>
-                <h3 className="text-3xl md:text-4xl font-bold leading-tight mb-3">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-3">
                   {locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}
                 </h3>
-                <p className="text-white/90 text-base">
+                <p className="text-white/90 text-sm sm:text-base">
                   {locale === "ua" ? "Переглянути всі наші послуги" : locale === "ru" ? "Посмотреть все наши услуги" : "View all our services"}
                 </p>
               </div>
@@ -210,24 +258,24 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
               <Link
                 key={service.key}
                 href={service.href}
-                className={`group relative flex-shrink-0 w-[380px] rounded-3xl border-2 border-gray-200 bg-white p-7 shadow-none transition-all duration-500 hover:border-teal-300 hover:scale-105 hover:-translate-y-1 snap-start ${
+                className={`group relative flex-shrink-0 w-[calc(100%-2rem)] sm:w-[380px] rounded-3xl border-2 border-gray-200 bg-white p-5 sm:p-7 shadow-none transition-all duration-500 hover:border-teal-300 hover:scale-105 hover:-translate-y-1 snap-center first:ml-4 last:mr-4 sm:first:ml-0 sm:last:mr-0 ${
                   isVisible ? 'animate-slide-in-bottom' : ''
                 }`}
                 style={isVisible ? { animationDelay: `${0.3 + index * 0.1}s` } : { opacity: 0 }}
               >
-                <div className="flex h-full flex-col min-h-[320px]">
+                <div className="flex h-full flex-col min-h-[280px] sm:min-h-[320px]">
                   {/* Icon */}
-                  <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 text-teal-600 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:from-teal-100 group-hover:to-teal-200">
-                    <Icon className="h-8 w-8" />
+                  <div className="mb-4 sm:mb-6 inline-flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 text-teal-600 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:from-teal-100 group-hover:to-teal-200">
+                    <Icon className="h-6 w-6 sm:h-8 sm:w-8" />
                   </div>
 
                   {/* Title */}
-                  <h3 className="mb-3 text-2xl font-bold text-gray-900 leading-tight">
+                  <h3 className="mb-2 sm:mb-3 text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
                     {service.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="mb-5 text-base text-gray-600 leading-relaxed flex-grow">
+                  <p className="mb-4 sm:mb-5 text-sm sm:text-base text-gray-600 leading-relaxed flex-grow">
                     {service.description}
                   </p>
 

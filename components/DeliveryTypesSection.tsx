@@ -142,8 +142,11 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const cardWidth = container.querySelector("a")?.offsetWidth || 0;
-    const gap = 24;
+    const firstCard = container.querySelector("a") as HTMLElement;
+    if (!firstCard) return;
+
+    const cardWidth = firstCard.offsetWidth;
+    const gap = 16; // gap-4 = 16px
     const scrollAmount = cardWidth + gap;
 
     container.scrollBy({
@@ -157,7 +160,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
       ref={sectionRef}
       className="relative overflow-hidden bg-white py-24 md:py-32"
     >
-      <div className="relative mx-auto max-w-7xl px-4 lg:px-6">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div
           className={`relative mx-auto mb-16 max-w-3xl text-center ${
@@ -198,17 +201,17 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           {/* Cards Grid - Horizontal scroll on mobile, grid on desktop */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-2 md:items-stretch md:overflow-x-visible md:pb-0 md:snap-none scrollbar-hide -mx-4 md:mx-0"
+            className="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-2 md:items-stretch md:overflow-x-visible md:pb-0 md:snap-none scrollbar-hide"
+            style={{
+              scrollPaddingLeft: '1rem',
+              scrollPaddingRight: '1rem',
+            }}
           >
             {content.types.map((type, index) => (
               <Link
                 key={type.key}
                 href={getTypeHref(type.key)}
-                className={`group relative flex min-h-[340px] w-[78vw] flex-shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white transition-all duration-300 hover:scale-[1.01] hover:shadow-lg md:min-w-0 md:w-auto md:h-full md:snap-none ${
-                  index === 0 ? "ml-6 md:ml-0" : ""
-                } ${
-                  index === content.types.length - 1 ? "mr-4 md:mr-0" : ""
-                } ${
+                className={`group relative flex min-h-[300px] sm:min-h-[340px] w-[calc(100%-2rem)] flex-shrink-0 snap-center flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-gray-200 bg-white transition-all duration-300 hover:scale-[1.01] hover:shadow-lg md:min-w-0 md:w-auto md:h-full md:snap-none first:ml-4 last:mr-4 md:first:ml-0 md:last:mr-0 ${
                   isVisible ? "animate-slide-in-bottom" : ""
                 }`}
                 style={
@@ -216,28 +219,28 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                 }
               >
                 {/* Content */}
-                <div className="relative z-10 flex h-full flex-col justify-between p-6 md:p-8">
+                <div className="relative z-10 flex h-full flex-col justify-between p-4 sm:p-6 md:p-8">
                   <div className="flex flex-col">
                     {/* Icon in circle with blue background and border */}
-                    <div className="mb-4 flex justify-center">
-                      <div className="flex h-40 w-40 items-center justify-center rounded-full border-2 border-teal-200 bg-teal-50 md:h-44 md:w-44">
+                    <div className="mb-3 sm:mb-4 flex justify-center">
+                      <div className="flex h-32 w-32 sm:h-40 sm:w-40 items-center justify-center rounded-full border-2 border-teal-200 bg-teal-50 md:h-44 md:w-44">
                         <Image
                           src={iconMap[type.key] || "/Group.png"}
                           alt={type.title}
                           width={256}
                           height={256}
-                          className="object-contain"
+                          className="object-contain w-20 h-20 sm:w-24 sm:h-24 md:w-auto md:h-auto"
                         />
                       </div>
                     </div>
 
                     {/* Title */}
-                    <h3 className="mb-4 text-center text-xl font-bold leading-tight text-gray-900 md:text-2xl">
+                    <h3 className="mb-3 sm:mb-4 text-center text-lg sm:text-xl font-bold leading-tight text-gray-900 md:text-2xl">
                       {type.title}
                     </h3>
 
                     {/* Features (compact, без розділювачів) */}
-                    <div className="flex items-start justify-between gap-3 md:gap-4">
+                    <div className="flex items-start justify-between gap-2 sm:gap-3 md:gap-4">
                       {type.features.map((feature, featureIndex) => {
                         const FeatureIcon = featureIconMap[feature.icon] || Package;
                         
@@ -246,14 +249,14 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                             key={featureIndex} 
                             className="relative flex flex-1 flex-col items-center justify-start"
                           >
-                            <div className="flex flex-1 flex-col items-center px-2 md:px-4">
+                            <div className="flex flex-1 flex-col items-center px-1 sm:px-2 md:px-4">
                               {/* Icon */}
-                              <div className="mb-3 flex h-10 w-10 items-center justify-center text-teal-600 md:h-12 md:w-12">
-                                <FeatureIcon className="h-6 w-6 md:h-7 md:w-7" />
+                              <div className="mb-2 sm:mb-3 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center text-teal-600 md:h-12 md:w-12">
+                                <FeatureIcon className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                               </div>
                               
                               {/* Text */}
-                              <p className="text-center text-xs font-normal leading-tight text-slate-700 md:text-sm">
+                              <p className="text-center text-[10px] sm:text-xs font-normal leading-tight text-slate-700 md:text-sm">
                                 {feature.text}
                               </p>
                             </div>
@@ -264,10 +267,10 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                   </div>
 
                   {/* Learn More Button */}
-                  <div className="mt-4 flex justify-center">
-                    <div className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800 md:px-5 md:py-2.5">
+                  <div className="mt-3 sm:mt-4 flex justify-center">
+                    <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl border border-teal-200 bg-white px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800 md:px-5 md:py-2.5">
                       <span>{content.learnMore}</span>
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </div>
                   </div>
                 </div>
@@ -287,7 +290,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                   if (!firstCard) return;
                   
                   const cardWidth = firstCard.offsetWidth;
-                  const gap = 24;
+                  const gap = 16; // gap-4 = 16px
                   const scrollPosition = index * (cardWidth + gap);
                   
                   container.scrollTo({

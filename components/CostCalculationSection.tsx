@@ -124,7 +124,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     { 
       value: "sea", 
       label: costCalc.deliveryTypes.sea, 
-      icon: "/морські перевезення.png",
+      icon: "/морськіперевезення.png",
     },
     { 
       value: "rail", 
@@ -233,28 +233,28 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
   };
 
   return (
-    <section id="cost-calculation" className="relative bg-gray-100 pt-6 pb-20">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <section id="cost-calculation" className="relative bg-gray-100 pt-4 pb-12 sm:pt-6 sm:pb-20">
+      <div className="mx-auto max-w-4xl px-3 sm:px-4 lg:px-8">
 
         {/* Прогрес-бар */}
-        <div className="mb-12 flex items-center justify-center">
-          <div className="flex items-center gap-4">
+        <div className="mb-6 flex items-center justify-center sm:mb-12">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Крок 1 */}
             <div className="flex flex-col items-center">
               <div className="flex items-center">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+                <div className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border-2 ${
                   currentStep >= 1 
                     ? "border-teal-500 bg-teal-500 text-white" 
                     : "border-gray-300 bg-transparent text-gray-400"
                 }`}>
                   {currentStep > 1 ? (
-                    <CheckCircle2 className="h-6 w-6" />
+                    <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6" />
                   ) : (
-                    <span className="text-sm font-bold">1</span>
+                    <span className="text-xs sm:text-sm font-bold">1</span>
                   )}
                 </div>
               </div>
-              <span className={`mt-2 text-sm font-medium ${
+              <span className={`mt-1 sm:mt-2 text-xs sm:text-sm font-medium ${
                 currentStep === 1 ? "text-gray-900" : "text-gray-500"
               }`}>
                 {costCalc.step1}
@@ -265,26 +265,26 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
             </div>
 
             {/* Лінія */}
-            <div className={`h-0.5 w-16 ${
+            <div className={`h-0.5 w-8 sm:w-16 ${
               currentStep >= 2 ? "bg-teal-500" : "bg-gray-300"
             }`} />
 
             {/* Крок 2 */}
             <div className="flex flex-col items-center">
               <div className="flex items-center">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+                <div className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border-2 ${
                   currentStep >= 2 
                     ? "border-teal-500 bg-teal-500 text-white" 
                     : "border-gray-300 bg-transparent text-gray-400"
                 }`}>
                   {currentStep > 2 ? (
-                    <CheckCircle2 className="h-6 w-6" />
+                    <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6" />
                   ) : (
-                    <span className="text-sm font-bold">2</span>
+                    <span className="text-xs sm:text-sm font-bold">2</span>
                   )}
                 </div>
               </div>
-              <span className={`mt-2 text-sm font-medium ${
+              <span className={`mt-1 sm:mt-2 text-xs sm:text-sm font-medium ${
                 currentStep === 2 ? "text-gray-900" : "text-gray-500"
               }`}>
                 {costCalc.step2}
@@ -295,22 +295,22 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
             </div>
             
             {/* Лінія */}
-            <div className={`h-0.5 w-16 ${
+            <div className={`h-0.5 w-8 sm:w-16 ${
               currentStep >= 3 ? "bg-teal-500" : "bg-gray-300"
             }`} />
 
             {/* Крок 3 */}
             <div className="flex flex-col items-center">
               <div className="flex items-center">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+                <div className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full border-2 ${
                   currentStep >= 3 
                     ? "border-teal-500 bg-teal-500 text-white" 
                     : "border-gray-300 bg-transparent text-gray-400"
                 }`}>
-                  <span className="text-sm font-bold">3</span>
+                  <span className="text-xs sm:text-sm font-bold">3</span>
                 </div>
               </div>
-              <span className={`mt-2 text-sm font-medium ${
+              <span className={`mt-1 sm:mt-2 text-xs sm:text-sm font-medium ${
                 currentStep === 3 ? "text-gray-900" : "text-gray-500"
               }`}>
                 {costCalc.step3}
@@ -323,42 +323,42 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
           </div>
 
         {/* Контент кроків */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
+        <div className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 lg:p-8 shadow-lg">
           {/* Крок 1: Вибір типу доставки */}
           {currentStep === 1 && (
-            <div className="space-y-8">
-              <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-4 sm:space-y-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                 {deliveryTypes.map((type) => {
                   const isSelected = deliveryType === type.value;
                   return (
                     <button
                       key={type.value}
                       onClick={() => setDeliveryType(type.value)}
-                      className={`group relative flex flex-col items-center justify-center gap-4 rounded-2xl border-2 p-8 transition-all duration-300 ${
+                      className={`group relative flex flex-col items-center justify-center gap-2 sm:gap-4 rounded-xl sm:rounded-2xl border-2 p-4 sm:p-6 lg:p-8 transition-all duration-300 ${
                         isSelected
-                          ? "border-teal-500 bg-[#E8FDF8] shadow-lg scale-105"
+                          ? "border-teal-500 bg-[#E8FDF8] shadow-lg sm:scale-105"
                           : "border-gray-200 bg-gray-50 hover:border-teal-300 hover:bg-[#E8FDF8] hover:shadow-md"
                       }`}
                     >
-                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:scale-105">
+                      <div className="flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-white shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:scale-105">
                         <Image
                           src={type.icon}
                           alt={type.label}
                           width={40}
                           height={40}
-                          className={`object-contain transition-all duration-300 ${
+                          className={`object-contain transition-all duration-300 w-8 h-8 sm:w-10 sm:h-10 ${
                             isSelected ? "opacity-100" : "opacity-90 group-hover:opacity-100"
                           }`}
                         />
                       </div>
-                      <span className={`text-center text-base font-semibold transition-colors ${
+                      <span className={`text-center text-sm sm:text-base font-semibold transition-colors ${
                         isSelected ? "text-teal-700" : "text-gray-700 group-hover:text-teal-600"
                       }`}>
                         {type.label}
                     </span>
                       {isSelected && (
-                        <div className="absolute top-3 right-3">
-                          <CheckCircle2 className="h-6 w-6 text-teal-600" />
+                        <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
+                          <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 text-teal-600" />
                         </div>
                       )}
                     </button>
@@ -370,18 +370,18 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
 
           {/* Крок 2: Деталі доставки */}
           {currentStep === 2 && (
-            <div className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
                 {/* Звідки */}
                 <div>
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <MapPin className="h-4 w-4 text-teal-600" />
+                  <label className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-700">
+                    <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                     {costCalc.origin}*
                   </label>
                   <select
                     value={origin}
                     onChange={(e) => setOrigin(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   >
                     <option value="">{costCalc.selectCountry}</option>
                     {originCountries.map((country) => (
@@ -394,14 +394,14 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
 
                 {/* Куди */}
                 <div>
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <MapPin className="h-4 w-4 text-teal-600" />
+                  <label className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-700">
+                    <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                     {costCalc.destination}*
                   </label>
                   <select
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   >
                     <option value="">{costCalc.selectCountry}</option>
                     {destinationCountries.map((country) => (
@@ -414,8 +414,8 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
 
                 {/* Вага */}
                 <div>
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <Weight className="h-4 w-4 text-teal-600" />
+                  <label className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-700">
+                    <Weight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                     {costCalc.weight}*
                   </label>
                   <input
@@ -423,14 +423,14 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
                     placeholder="0"
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   />
                 </div>
 
                 {/* Об'єм */}
                 <div>
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <Box className="h-4 w-4 text-teal-600" />
+                  <label className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-700">
+                    <Box className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                     {costCalc.volume}
                   </label>
                   <input
@@ -438,14 +438,14 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     value={volume}
                     onChange={(e) => setVolume(e.target.value)}
                     placeholder="0"
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   />
                 </div>
 
                 {/* Найменування товару */}
                 <div className="md:col-span-2">
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <Package className="h-4 w-4 text-teal-600" />
+                  <label className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-700">
+                    <Package className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                     {costCalc.productName}
                   </label>
                   <input
@@ -453,13 +453,13 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                     placeholder={costCalc.productName}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <Info className="h-4 w-4 text-teal-600" />
+              <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500">
+                <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                 {costCalc.requiredFields}
               </div>
             </div>
@@ -467,12 +467,12 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
 
           {/* Крок 3: Контактні данні */}
           {currentStep === 3 && (
-            <div className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
                 {/* Ім'я */}
                 <div>
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <User className="h-4 w-4 text-teal-600" />
+                  <label className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-700">
+                    <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                     {costCalc.name}
                   </label>
                   <input
@@ -480,21 +480,21 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder={costCalc.name}
-                    className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                   />
                 </div>
 
                 {/* Телефон */}
                 <div>
-                  <label className="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <Phone className="h-4 w-4 text-teal-600" />
+                  <label className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-700">
+                    <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                     {costCalc.phone}*
                   </label>
                   <div className="flex gap-2">
                     <select
                       value={phoneCode}
                       onChange={(e) => setPhoneCode(e.target.value)}
-                      className="w-32 rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                      className="w-24 sm:w-32 rounded-lg border border-gray-300 bg-white px-2 py-2 sm:px-3 sm:py-3 text-xs sm:text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                     >
                       {countryCodes.map((country) => (
                         <option key={country.code} value={country.code}>
@@ -507,17 +507,17 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="000000000"
-                      className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                      className="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
                     />
                   </div>
                 </div>
 
                 {/* Формат зв'язку */}
                 <div className="md:col-span-2">
-                  <label className="mb-2 text-sm font-medium text-gray-700">
+                  <label className="mb-1.5 sm:mb-2 text-xs sm:text-sm font-medium text-gray-700">
                     {costCalc.contactFormat}
                   </label>
-                  <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4">
                     {Object.entries(costCalc.contactFormats)
                       .filter(([key]) => key !== "py") // Виключаємо PY
                       .map(([key, value]) => (
@@ -525,7 +525,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                           key={key}
                           type="button"
                           onClick={() => setContactFormat(contactFormat === key ? "" : key)}
-                          className={`rounded-lg border-2 px-4 py-2 text-sm font-medium transition-all ${
+                          className={`rounded-lg border-2 px-2 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium transition-all ${
                             contactFormat === key
                               ? "border-teal-500 bg-teal-50 text-teal-700"
                               : "border-gray-200 bg-white text-gray-600 hover:border-teal-300 hover:bg-teal-50/50"
@@ -539,18 +539,18 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
               </div>
 
               {/* reCAPTCHA */}
-              <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
+              <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3 sm:p-4">
                 <input
                   type="checkbox"
                   id="recaptcha"
                   checked={recaptchaChecked}
                   onChange={(e) => setRecaptchaChecked(e.target.checked)}
-                  className="h-5 w-5 rounded border-gray-300 bg-white text-teal-600 focus:ring-2 focus:ring-teal-500/20"
+                  className="h-4 w-4 sm:h-5 sm:w-5 rounded border-gray-300 bg-white text-teal-600 focus:ring-2 focus:ring-teal-500/20"
                 />
-                <label htmlFor="recaptcha" className="flex-1 cursor-pointer text-sm text-gray-700">
+                <label htmlFor="recaptcha" className="flex-1 cursor-pointer text-xs sm:text-sm text-gray-700">
                   {costCalc.recaptcha}
                 </label>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-gray-500 hidden sm:block">
                   reCAPTCHA
                 </div>
               </div>
@@ -563,11 +563,11 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
           )}
 
           {/* Кнопки навігації */}
-          <div className="mt-8 flex items-center justify-between">
+          <div className="mt-4 sm:mt-8 flex items-center justify-between gap-2 sm:gap-4">
             {currentStep > 1 && (
               <button
                 onClick={handleBack}
-                className="rounded-lg border border-gray-300 bg-white px-6 py-3 text-gray-700 transition-all hover:bg-gray-50"
+                className="rounded-lg border border-gray-300 bg-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base text-gray-700 transition-all hover:bg-gray-50"
               >
                 {costCalc.back}
               </button>
@@ -580,7 +580,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                     (currentStep === 1 && !canProceedStep1) ||
                     (currentStep === 2 && !canProceedStep2)
                   }
-                  className={`flex items-center gap-2 rounded-lg px-12 py-4 text-lg font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 sm:gap-2 rounded-lg px-6 py-2.5 sm:px-12 sm:py-4 text-sm sm:text-lg font-semibold transition-all ${
                     (currentStep === 1 && canProceedStep1) ||
                     (currentStep === 2 && canProceedStep2)
                       ? "bg-teal-600 text-white hover:bg-teal-700 shadow-lg hover:shadow-xl"
@@ -588,13 +588,13 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                   }`}
                 >
                   {costCalc.next}
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
               ) : (
                 <button
                   onClick={handleSubmit}
                   disabled={!canProceedStep3 || isSubmitting || isSubmitted}
-                  className={`flex items-center gap-2 rounded-lg px-8 py-3 font-medium transition-all ${
+                  className={`flex items-center gap-1.5 sm:gap-2 rounded-lg px-4 py-2 sm:px-8 sm:py-3 text-sm sm:text-base font-medium transition-all ${
                     canProceedStep3 && !isSubmitting && !isSubmitted
                       ? "bg-teal-600 text-white hover:bg-teal-700"
                       : "cursor-not-allowed bg-gray-300 text-gray-500"

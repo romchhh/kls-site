@@ -403,12 +403,41 @@ export async function GET(
 
       await browser.close();
 
+      // Validate that pdfBuffer is actually a Buffer
+      if (!pdfBuffer || !Buffer.isBuffer(pdfBuffer)) {
+        console.error("PDF generation failed: Invalid buffer returned");
+        return NextResponse.json(
+          { 
+            error: "PDF generation failed",
+            message: "Invalid PDF buffer returned",
+            details: "The PDF generation process did not return a valid buffer"
+          },
+          { status: 500 }
+        );
+      }
+
+      // Validate PDF signature (PDF files start with %PDF)
+      const pdfSignature = pdfBuffer.slice(0, 4).toString();
+      if (pdfSignature !== "%PDF") {
+        console.error("PDF generation failed: Invalid PDF signature", pdfSignature);
+        return NextResponse.json(
+          { 
+            error: "PDF generation failed",
+            message: "Invalid PDF file generated",
+            details: "The generated file does not appear to be a valid PDF"
+          },
+          { status: 500 }
+        );
+      }
+
       // Return PDF file as binary
       // Convert Buffer to Uint8Array for NextResponse compatibility
       return new NextResponse(new Uint8Array(pdfBuffer), {
+        status: 200,
         headers: {
           "Content-Type": "application/pdf",
           "Content-Disposition": `attachment; filename="invoice_${formatTrackNumber(shipment.internalTrack)}_${new Date().toISOString().split("T")[0]}.pdf"`,
+          "Content-Length": pdfBuffer.length.toString(),
         },
       });
     } catch (puppeteerError: any) {
@@ -427,25 +456,15 @@ export async function GET(
         );
       }
 
-      // Other errors - return HTML fallback
-      const htmlWithPrintScript = htmlContent.replace(
-        "</body>",
-        `
-  <script>
-    window.onload = function() {
-      setTimeout(function() {
-        window.print();
-      }, 500);
-    };
-  </script>
-</body>`
-      );
-
-      return new NextResponse(htmlWithPrintScript, {
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
+      // Other puppeteer errors - return JSON error, never HTML
+      return NextResponse.json(
+        { 
+          error: "PDF generation failed",
+          message: puppeteerError.message || "Unknown error during PDF generation",
+          details: "An error occurred while generating the PDF file. Please try again later."
         },
-      });
+        { status: 500 }
+      );
     }
   } catch (error: any) {
     console.error("Error generating PDF invoice:", error);
