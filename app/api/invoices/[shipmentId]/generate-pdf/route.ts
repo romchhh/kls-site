@@ -373,7 +373,7 @@ export async function GET(
     try {
       const puppeteer = await import("puppeteer");
       const browser = await puppeteer.launch({
-        headless: 'new',
+        headless: true,
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
         args: [
           "--no-sandbox",
