@@ -9,10 +9,10 @@ import path from "path";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ shipmentId: string }> }
+  { params }: { params: Promise<{ invoiceId: string }> }
 ) {
   try {
-    const { shipmentId } = await params;
+    const { invoiceId } = await params;
     
     // Try to authenticate via session first
     const session = await getServerSession(authOptions);
@@ -34,51 +34,43 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get shipment with all related data
-    // Try to find by ID first, then by internalTrack if not found
-    let shipment = await prisma.shipment.findUnique({
-      where: { id: shipmentId },
+    // Get invoice with shipment and related data
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: invoiceId },
       include: {
-        user: {
-          select: {
-            id: true,
-            clientCode: true,
-            name: true,
-            email: true,
+        shipment: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                clientCode: true,
+                name: true,
+                email: true,
+              },
+            },
+            items: {
+              orderBy: [{ placeNumber: "asc" }],
+            },
           },
-        },
-        items: {
-          orderBy: [{ placeNumber: "asc" }],
         },
       },
     });
 
-    // If not found by ID, try to find by internalTrack
-    if (!shipment) {
-      shipment = await prisma.shipment.findUnique({
-        where: { internalTrack: shipmentId },
-        include: {
-          user: {
-            select: {
-              id: true,
-              clientCode: true,
-              name: true,
-              email: true,
-            },
-          },
-          items: {
-            orderBy: [{ placeNumber: "asc" }],
-          },
-        },
-      });
-    }
-
-    if (!shipment) {
+    if (!invoice) {
       return NextResponse.json(
-        { error: "Вантаж не знайдено за ID або трек номером" },
+        { error: "Інвойс не знайдено" },
         { status: 404 }
       );
     }
+
+    if (!invoice.shipment) {
+      return NextResponse.json(
+        { error: "Вантаж не знайдено для цього інвойсу" },
+        { status: 404 }
+      );
+    }
+
+    const shipment = invoice.shipment;
 
     // Check permissions
     // For API tokens, allow access (they're already verified)
@@ -692,12 +684,21 @@ export async function GET(
     // Generate buffer
     const buffer = await workbook.xlsx.writeBuffer();
 
+    // Sanitize filename to ASCII only (remove non-ASCII characters)
+    const sanitizedInvoiceNumber = invoice.invoiceNumber.replace(/[^\x00-\x7F]/g, "");
+    const dateStr = new Date().toISOString().split("T")[0];
+    const filename = `invoice_${sanitizedInvoiceNumber}_${dateStr}.xlsx`;
+    
+    // Use RFC 5987 encoding for filename with non-ASCII characters
+    const encodedFilename = encodeURIComponent(filename);
+    const asciiFilename = filename; // ASCII-only version
+
     // Return Excel file
     return new NextResponse(buffer, {
       headers: {
         "Content-Type":
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="invoice_${shipment.internalTrack}_${new Date().toISOString().split("T")[0]}.xlsx"`,
+        "Content-Disposition": `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodedFilename}`,
       },
     });
   } catch (error: any) {
@@ -708,3 +709,4 @@ export async function GET(
     );
   }
 }
+

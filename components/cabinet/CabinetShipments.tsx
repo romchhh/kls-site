@@ -92,11 +92,10 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
     load();
   }, []);
 
-  // Фільтруємо посилки, виключаючи DELIVERED та ARCHIVED
-  const activeShipments = shipments.filter(
-    (s) => s.status !== "DELIVERED" && s.status !== "ARCHIVED"
-  );
-  const haveShipments = activeShipments.length > 0;
+  // Показуємо всі вантажі (включаючи DELIVERED та ARCHIVED)
+  // Статистика рахує тільки активні вантажі (без DELIVERED та ARCHIVED)
+  const allShipments = shipments;
+  const haveShipments = allShipments.length > 0;
   const formatDate = (d: string | Date | null) =>
     d ? new Date(d).toLocaleDateString("uk-UA", {
       day: "2-digit",
@@ -317,7 +316,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {activeShipments.map((s) => {
+                  {allShipments.map((s) => {
                     const latestStatus = s.statusHistory[0];
                     const statusColor = getStatusColorClass(s.status);
                     
@@ -345,12 +344,19 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                                              s.deliveryType === "MULTIMODAL" ? "Мультимодал" :
                                              s.deliveryType || "-";
                     
+                    // Визначаємо, чи вантаж архівований або завершений
+                    const isArchivedOrDelivered = s.status === "DELIVERED" || s.status === "ARCHIVED";
+                    
                     return (
                       <tr
                         key={s.id}
                         id={`shipment-${s.id}`}
                         onClick={() => setSelectedShipment(s)}
-                        className="cursor-pointer bg-white transition-all duration-200 hover:bg-gradient-to-r hover:from-teal-50 hover:to-emerald-50 hover:shadow-md"
+                        className={`cursor-pointer transition-all duration-200 ${
+                          isArchivedOrDelivered
+                            ? "bg-slate-50 opacity-75 hover:bg-slate-100"
+                            : "bg-white hover:bg-gradient-to-r hover:from-teal-50 hover:to-emerald-50 hover:shadow-md"
+                        }`}
                       >
                         <td className="whitespace-nowrap px-3 py-4 lg:px-4">
                           <span className="text-sm font-black text-slate-900 lg:text-base">
@@ -452,60 +458,66 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                {/* Invoice download buttons - show if status is ON_UA_WAREHOUSE */}
-                {selectedShipment.status === "ON_UA_WAREHOUSE" && (
-                  <>
-                    <button
-                      onClick={async () => {
-                        try {
-                          const response = await fetch(`/api/invoices/${selectedShipment.id}/generate`);
-                          if (!response.ok) {
-                            throw new Error("Failed to generate invoice");
+                {/* Invoice download buttons - show if invoice exists for this shipment */}
+                {(() => {
+                  // Find invoice for this shipment
+                  const invoice = invoices.find((inv: any) => inv.shipmentId === selectedShipment.id);
+                  if (!invoice) return null;
+                  
+                  return (
+                    <>
+                      <button
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`/api/invoices/${invoice.id}/generate`);
+                            if (!response.ok) {
+                              throw new Error("Failed to generate invoice");
+                            }
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `invoice_${invoice.invoiceNumber}_${new Date().toISOString().split("T")[0]}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                          } catch (error) {
+                            console.error("Error downloading invoice:", error);
+                            alert("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
                           }
-                          const blob = await response.blob();
-                          const url = window.URL.createObjectURL(blob);
-                          const a = document.createElement("a");
-                          a.href = url;
-                          a.download = `invoice_${selectedShipment.internalTrack}_${new Date().toISOString().split("T")[0]}.xlsx`;
-                          document.body.appendChild(a);
-                          a.click();
-                          window.URL.revokeObjectURL(url);
-                          document.body.removeChild(a);
-                        } catch (error) {
-                          console.error("Error downloading invoice:", error);
-                          alert("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
-                        }
-                      }}
-                      className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
-                    >
-                      <FileText className="h-4 w-4" />
-                      <span>Інвойс Excel</span>
-                    </button>
-                    <button
-                      onClick={async () => {
-                        try {
-                          const response = await fetch(`/api/invoices/${selectedShipment.id}/generate-pdf`);
-                          if (!response.ok) {
-                            throw new Error("Failed to generate PDF invoice");
+                        }}
+                        className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
+                      >
+                        <FileText className="h-4 w-4" />
+                        <span>Інвойс Excel</span>
+                      </button>
+                      <button
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`/api/invoices/${invoice.id}/generate-pdf`);
+                            if (!response.ok) {
+                              throw new Error("Failed to generate PDF invoice");
+                            }
+                            // Open PDF in new window for printing/saving
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            window.open(url, "_blank");
+                            // Clean up after a delay
+                            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                          } catch (error) {
+                            console.error("Error downloading PDF invoice:", error);
+                            alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
                           }
-                          // Open PDF in new window for printing/saving
-                          const blob = await response.blob();
-                          const url = window.URL.createObjectURL(blob);
-                          window.open(url, "_blank");
-                          // Clean up after a delay
-                          setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-                        } catch (error) {
-                          console.error("Error downloading PDF invoice:", error);
-                          alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
-                        }
-                      }}
-                      className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
-                    >
-                      <FileText className="h-4 w-4" />
-                      <span>Інвойс PDF</span>
-                    </button>
-                  </>
-                )}
+                        }}
+                        className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                      >
+                        <FileText className="h-4 w-4" />
+                        <span>Інвойс PDF</span>
+                      </button>
+                    </>
+                  );
+                })()}
                 <button
                   onClick={() => setSelectedShipment(null)}
                   className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600"
@@ -1327,13 +1339,15 @@ function calculateSummary(shipments: ShipmentWithRelations[]): ShipmentsSummary 
     total: 0,
   };
 
-  // Фільтруємо посилки, виключаючи DELIVERED та ARCHIVED
+  // Загальна кількість - ВСІ вантажі (включаючи DELIVERED та ARCHIVED)
+  summary.total = shipments.length;
+
+  // Фільтруємо посилки, виключаючи DELIVERED та ARCHIVED для категорій статистики
   const activeShipments = shipments.filter(
     (s) => s.status !== "DELIVERED" && s.status !== "ARCHIVED"
   );
 
-  summary.total = activeShipments.length;
-
+  // Рахуємо категорії тільки для активних вантажів
   for (const s of activeShipments) {
     switch (s.status) {
       case "RECEIVED_CN":

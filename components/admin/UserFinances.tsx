@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useLayoutEffect, useCallback } from "react";
-import { DollarSign, Loader2, Plus, X, Trash2 } from "lucide-react";
+import { DollarSign, Loader2, Plus, X, Trash2, FileText, Download } from "lucide-react";
 import { useBalance } from "./hooks/useBalance";
 import { useInvoices } from "./hooks/useInvoices";
 import { generateInvoiceNumber } from "./utils/shipmentUtils";
@@ -679,13 +679,65 @@ export function UserFinances({
                         <option value="ARCHIVED">Архів</option>
                       </select>
                     </td>
-                    <td className="px-3 py-2 text-right">
-                      <button
-                        onClick={() => handleDeleteInvoice(inv.id)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                    <td className="px-3 py-2">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/invoices/${inv.id}/generate`);
+                              if (!response.ok) {
+                                throw new Error("Failed to generate invoice");
+                              }
+                              const blob = await response.blob();
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement("a");
+                              a.href = url;
+                              a.download = `invoice_${inv.invoiceNumber}_${new Date().toISOString().split("T")[0]}.xlsx`;
+                              document.body.appendChild(a);
+                              a.click();
+                              window.URL.revokeObjectURL(url);
+                              document.body.removeChild(a);
+                            } catch (error) {
+                              console.error("Error downloading invoice:", error);
+                              onError("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
+                            }
+                          }}
+                          className="flex items-center gap-1 rounded-md bg-teal-600 px-2 py-1 text-[10px] font-semibold text-white hover:bg-teal-700 transition-colors"
+                          title="Завантажити Excel"
+                        >
+                          <FileText className="h-3 w-3" />
+                          <span className="hidden sm:inline">Excel</span>
+                        </button>
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/invoices/${inv.id}/generate-pdf`);
+                              if (!response.ok) {
+                                throw new Error("Failed to generate PDF invoice");
+                              }
+                              const blob = await response.blob();
+                              const url = window.URL.createObjectURL(blob);
+                              window.open(url, "_blank");
+                              setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                            } catch (error) {
+                              console.error("Error downloading PDF invoice:", error);
+                              onError("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
+                            }
+                          }}
+                          className="flex items-center gap-1 rounded-md bg-red-600 px-2 py-1 text-[10px] font-semibold text-white hover:bg-red-700 transition-colors"
+                          title="Завантажити PDF"
+                        >
+                          <FileText className="h-3 w-3" />
+                          <span className="hidden sm:inline">PDF</span>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteInvoice(inv.id)}
+                          className="text-red-600 hover:text-red-700"
+                          title="Видалити"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

@@ -8,13 +8,10 @@ import path from "path";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ shipmentId: string }> }
+  { params }: { params: Promise<{ invoiceId: string }> }
 ) {
   try {
-    const { shipmentId } = await params;
-    
-    // Decode URL-encoded shipmentId (handles special characters)
-    const decodedShipmentId = decodeURIComponent(shipmentId);
+    const { invoiceId } = await params;
     
     // Try to authenticate via session first
     const session = await getServerSession(authOptions);
@@ -33,8 +30,6 @@ export async function GET(
       const tokenVerification = await verifyApiToken(req);
       if (tokenVerification.valid) {
         authenticated = true;
-        // For API tokens, we need to check shipment ownership differently
-        // API tokens don't have direct user association, so we'll check shipment access after loading it
       }
     }
 
@@ -42,77 +37,43 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get shipment with all related data
-    // Try to find by ID first, then by internalTrack if not found
-    let shipment = await prisma.shipment.findUnique({
-      where: { id: decodedShipmentId },
+    // Get invoice with shipment and related data
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: invoiceId },
       include: {
-        user: {
-          select: {
-            id: true,
-            clientCode: true,
-            name: true,
-            email: true,
+        shipment: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                clientCode: true,
+                name: true,
+                email: true,
+              },
+            },
+            items: {
+              orderBy: [{ placeNumber: "asc" }],
+            },
           },
-        },
-        items: {
-          orderBy: [{ placeNumber: "asc" }],
         },
       },
     });
 
-    // If not found by ID, try to find by internalTrack (both original and decoded)
-    if (!shipment) {
-      shipment = await prisma.shipment.findUnique({
-        where: { internalTrack: decodedShipmentId },
-        include: {
-          user: {
-            select: {
-              id: true,
-              clientCode: true,
-              name: true,
-              email: true,
-            },
-          },
-          items: {
-            orderBy: [{ placeNumber: "asc" }],
-          },
-        },
-      });
-    }
-
-    // If still not found, try with original shipmentId (in case it wasn't URL-encoded)
-    if (!shipment && shipmentId !== decodedShipmentId) {
-      shipment = await prisma.shipment.findUnique({
-        where: { internalTrack: shipmentId },
-        include: {
-          user: {
-            select: {
-              id: true,
-              clientCode: true,
-              name: true,
-              email: true,
-            },
-          },
-          items: {
-            orderBy: [{ placeNumber: "asc" }],
-          },
-        },
-      });
-    }
-
-    if (!shipment) {
+    if (!invoice) {
       return NextResponse.json(
-        { 
-          error: "Вантаж не знайдено за ID або трек номером",
-          searched: {
-            id: decodedShipmentId,
-            original: shipmentId
-          }
-        },
+        { error: "Інвойс не знайдено" },
         { status: 404 }
       );
     }
+
+    if (!invoice.shipment) {
+      return NextResponse.json(
+        { error: "Вантаж не знайдено для цього інвойсу" },
+        { status: 404 }
+      );
+    }
+
+    const shipment = invoice.shipment;
 
     // Check permissions
     // For API tokens, allow access (they're already verified)
@@ -372,9 +333,42 @@ export async function GET(
     // Try to generate PDF using puppeteer
     try {
       const puppeteer = await import("puppeteer");
-      const browser = await puppeteer.launch({
+      
+      // Determine executable path
+      let executablePath: string | undefined;
+      const customPath = process.env.PUPPETEER_EXECUTABLE_PATH;
+      
+      if (customPath) {
+        // Check if custom path exists
+        if (fs.existsSync(customPath)) {
+          executablePath = customPath;
+        } else {
+          console.warn(`Custom Puppeteer executable path not found: ${customPath}, using bundled Chromium`);
+        }
+      } else {
+        // Try common paths
+        const commonPaths = [
+          '/usr/bin/chromium-browser',
+          '/usr/bin/chromium',
+          '/usr/bin/google-chrome',
+          '/usr/bin/google-chrome-stable',
+        ];
+        
+        for (const path of commonPaths) {
+          if (fs.existsSync(path)) {
+            executablePath = path;
+            break;
+          }
+        }
+        
+        // If no path found, use bundled Chromium (puppeteer will handle it)
+        if (!executablePath) {
+          console.log("No system Chromium found, using Puppeteer's bundled Chromium");
+        }
+      }
+      
+      const launchOptions: any = {
         headless: true,
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
         args: [
           "--no-sandbox",
           "--disable-setuid-sandbox",
@@ -386,7 +380,14 @@ export async function GET(
           "--disable-gpu",
         ],
         timeout: 60000, // 60 seconds timeout for server environments
-      });
+      };
+      
+      // Only set executablePath if we found one
+      if (executablePath) {
+        launchOptions.executablePath = executablePath;
+      }
+      
+      const browser = await puppeteer.launch(launchOptions);
 
       const page = await browser.newPage();
       await page.setContent(htmlContent, { waitUntil: "networkidle0" });
@@ -473,7 +474,7 @@ export async function GET(
         status: 200,
         headers: {
           "Content-Type": "application/pdf",
-          "Content-Disposition": `attachment; filename="invoice_${formatTrackNumber(shipment.internalTrack)}_${new Date().toISOString().split("T")[0]}.pdf"`,
+          "Content-Disposition": `attachment; filename="invoice_${invoice.invoiceNumber}_${new Date().toISOString().split("T")[0]}.pdf"`,
           "Content-Length": buffer.length.toString(),
         },
       });

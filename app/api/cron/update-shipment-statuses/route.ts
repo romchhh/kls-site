@@ -79,15 +79,8 @@ export async function GET(req: NextRequest) {
           },
         });
 
-        // Автоматично створюємо інвойс, якщо статус змінився на ON_UA_WAREHOUSE
-        if (autoStatusData.status === "ON_UA_WAREHOUSE") {
-          try {
-            const { createInvoiceForShipment } = await import("@/lib/utils/invoiceGeneration");
-            await createInvoiceForShipment(shipment.id);
-          } catch (invoiceError) {
-            console.error(`Failed to create invoice for shipment ${shipment.id} (non-critical):`, invoiceError);
-          }
-        }
+        // Інвойси тепер створюються через бота при зміні статусу на ON_UA_WAREHOUSE
+        // Автоматичне створення прибрано - адмін буде перепитаний ботом про створення інвойсу
 
         updatedCount++;
       }

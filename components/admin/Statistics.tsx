@@ -385,7 +385,7 @@ export function Statistics() {
                   className="rounded-lg border border-slate-200 bg-slate-50 p-3"
                 >
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="flex-1">
                       <p className="font-semibold text-slate-900">
                         {invoice.invoiceNumber}
                       </p>
@@ -393,20 +393,69 @@ export function Statistics() {
                         {invoice.user.name} ({invoice.user.clientCode})
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold text-slate-900">
-                        {formatCurrency(Number(invoice.amount))}
-                      </p>
-                      <span
-                        className={`mt-1 inline-flex items-center rounded-full border px-2 py-1 text-xs font-bold ${getStatusColor(
-                          invoice.status
-                        )}`}
-                      >
-                        {getStatusLabel(invoice.status)}
-                      </span>
-                      <p className="mt-1 text-xs text-slate-500">
-                        {formatDate(invoice.createdAt)}
-                      </p>
+                    <div className="flex items-center gap-2">
+                      <div className="text-right">
+                        <p className="font-bold text-slate-900">
+                          {formatCurrency(Number(invoice.amount))}
+                        </p>
+                        <span
+                          className={`mt-1 inline-flex items-center rounded-full border px-2 py-1 text-xs font-bold ${getStatusColor(
+                            invoice.status
+                          )}`}
+                        >
+                          {getStatusLabel(invoice.status)}
+                        </span>
+                        <p className="mt-1 text-xs text-slate-500">
+                          {formatDate(invoice.createdAt)}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/invoices/${invoice.id}/generate`);
+                              if (!response.ok) {
+                                throw new Error("Failed to generate invoice");
+                              }
+                              const blob = await response.blob();
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement("a");
+                              a.href = url;
+                              a.download = `invoice_${invoice.invoiceNumber}_${new Date().toISOString().split("T")[0]}.xlsx`;
+                              document.body.appendChild(a);
+                              a.click();
+                              window.URL.revokeObjectURL(url);
+                              document.body.removeChild(a);
+                            } catch (error) {
+                              console.error("Error downloading invoice:", error);
+                            }
+                          }}
+                          className="rounded-md bg-teal-600 p-1.5 text-white hover:bg-teal-700 transition-colors"
+                          title="Завантажити Excel"
+                        >
+                          <FileText className="h-3 w-3" />
+                        </button>
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/invoices/${invoice.id}/generate-pdf`);
+                              if (!response.ok) {
+                                throw new Error("Failed to generate PDF invoice");
+                              }
+                              const blob = await response.blob();
+                              const url = window.URL.createObjectURL(blob);
+                              window.open(url, "_blank");
+                              setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                            } catch (error) {
+                              console.error("Error downloading PDF invoice:", error);
+                            }
+                          }}
+                          className="rounded-md bg-red-600 p-1.5 text-white hover:bg-red-700 transition-colors"
+                          title="Завантажити PDF"
+                        >
+                          <FileText className="h-3 w-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

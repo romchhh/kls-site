@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Locale, getTranslations } from "@/lib/translations";
-import { FileText, Loader2, Package } from "lucide-react";
+import { FileText, Loader2, Package, Download } from "lucide-react";
 
 type CabinetInvoicesProps = {
   locale: Locale;
@@ -161,8 +161,11 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
                   <th className="px-4 py-3.5 text-right font-bold">
                     {t.cabinet?.invoiceAmount || "Сума до сплати"}
                   </th>
-                  <th className="px-4 py-3.5 text-left font-bold rounded-tr-xl">
+                  <th className="px-4 py-3.5 text-left font-bold">
                     {t.cabinet?.invoiceStatus || "Статус"}
+                  </th>
+                  <th className="px-4 py-3.5 text-center font-bold rounded-tr-xl">
+                    {locale === "ua" ? "Дії" : locale === "ru" ? "Действия" : "Actions"}
                   </th>
                 </tr>
               </thead>
@@ -229,6 +232,59 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
                       >
                         {getStatusLabel(inv.status)}
                       </span>
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/invoices/${inv.id}/generate`);
+                              if (!response.ok) {
+                                throw new Error("Failed to generate invoice");
+                              }
+                              const blob = await response.blob();
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement("a");
+                              a.href = url;
+                              a.download = `invoice_${inv.invoiceNumber}_${new Date().toISOString().split("T")[0]}.xlsx`;
+                              document.body.appendChild(a);
+                              a.click();
+                              window.URL.revokeObjectURL(url);
+                              document.body.removeChild(a);
+                            } catch (error) {
+                              console.error("Error downloading invoice:", error);
+                              alert("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
+                            }
+                          }}
+                          className="flex items-center gap-1.5 rounded-lg bg-teal-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-teal-700"
+                          title="Завантажити Excel"
+                        >
+                          <FileText className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Excel</span>
+                        </button>
+                        <button
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/invoices/${inv.id}/generate-pdf`);
+                              if (!response.ok) {
+                                throw new Error("Failed to generate PDF invoice");
+                              }
+                              const blob = await response.blob();
+                              const url = window.URL.createObjectURL(blob);
+                              window.open(url, "_blank");
+                              setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                            } catch (error) {
+                              console.error("Error downloading PDF invoice:", error);
+                              alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
+                            }
+                          }}
+                          className="flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-red-700"
+                          title="Завантажити PDF"
+                        >
+                          <FileText className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">PDF</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

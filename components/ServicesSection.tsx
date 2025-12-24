@@ -132,6 +132,19 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
       cost: locale === "ua" ? "Індивідуально" : locale === "ru" ? "Индивидуально" : "Individual",
       time: locale === "ua" ? "За запитом" : locale === "ru" ? "По запросу" : "On request",
     },
+    {
+      key: "local",
+      title: servicesContent.local,
+      description: locale === "ua"
+        ? "Швидка та надійна локальна доставка по всьому Китаю"
+        : locale === "ru"
+        ? "Быстрая и надежная локальная доставка по всему Китаю"
+        : "Fast and reliable local delivery across China",
+      href: `/${locale}/services/local`,
+      icon: Truck,
+      cost: locale === "ua" ? "Індивідуально" : locale === "ru" ? "Индивидуально" : "Individual",
+      time: locale === "ua" ? "1-3 дні" : locale === "ru" ? "1-3 дня" : "1-3 days",
+    },
   ];
 
   const scrollLeft = () => {

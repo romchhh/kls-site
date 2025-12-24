@@ -56,7 +56,7 @@ export function getLocationForStatus(
     case "RECEIVED_CN":
       return "Китай — склад";
     case "CONSOLIDATION":
-      return "Дорога"; // Готується до відправлення - в дорозі
+      return "Китай — склад"; // Готується до відправлення - на складі в Китаї
     case "IN_TRANSIT":
       return "Дорога"; // В дорозі
     case "ARRIVED_UA":

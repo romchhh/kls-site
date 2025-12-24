@@ -173,7 +173,7 @@ export function UserDetail({ userId }: UserDetailProps) {
           label: "Готується до відправлення",
           color: "text-orange-600",
           bgColor: "bg-orange-50",
-          location: "Дорога",
+          location: "Китай — склад",
         };
       case "IN_TRANSIT":
         return {

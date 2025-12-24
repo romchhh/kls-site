@@ -118,7 +118,7 @@ export function UserShipments({
       case "RECEIVED_CN":
         return { icon: Warehouse, label: "Отримано на складі (Китай)", color: "text-yellow-600", bgColor: "bg-yellow-50", location: "Китай — склад" };
       case "CONSOLIDATION":
-        return { icon: Truck, label: "Готується до відправлення", color: "text-orange-600", bgColor: "bg-orange-50", location: "Дорога" };
+        return { icon: Truck, label: "Готується до відправлення", color: "text-orange-600", bgColor: "bg-orange-50", location: "Китай — склад" };
       case "IN_TRANSIT":
         return { icon: Truck, label: "В дорозі", color: "text-purple-600", bgColor: "bg-purple-50", location: "Дорога" };
       case "ARRIVED_UA":
@@ -683,6 +683,29 @@ export function UserShipments({
     if (!editingShipment) return;
     onError("");
     onSuccess("");
+    
+    // Перевіряємо, чи статус змінюється на ON_UA_WAREHOUSE
+    const newStatus = editingShipmentForm.status || editingShipment.status;
+    const statusChanged = newStatus !== editingShipment.status;
+    const isReadyForPickup = newStatus === "ON_UA_WAREHOUSE";
+    
+    // Перевіряємо, чи інвойс вже існує для цього вантажу
+    const existingInvoice = invoices.find(inv => inv.shipmentId === editingShipment.id);
+    
+    // Якщо статус змінюється на "Готово до видачі" і інвойсу ще немає, питаємо про створення
+    let createInvoice = false;
+    if (statusChanged && isReadyForPickup && !existingInvoice) {
+      const confirmed = window.confirm(
+        "Статус вантажу змінюється на 'Готово до видачі'.\n\n" +
+        "Створити інвойс на оплату для цього вантажу?"
+      );
+      if (!confirmed) {
+        // Користувач скасував, не оновлюємо статус
+        return;
+      }
+      createInvoice = true;
+    }
+    
     try {
       const res = await fetch(`/api/admin/shipments/${editingShipment.id}`, {
         method: "PUT",
@@ -690,7 +713,7 @@ export function UserShipments({
         body: JSON.stringify({
           internalTrack: editingShipmentForm.internalTrack,
           cargoLabel: editingShipmentForm.cargoLabel || null,
-          status: editingShipmentForm.status || editingShipment.status,
+          status: newStatus,
           location: editingShipmentForm.location || null,
           routeFrom: editingShipmentForm.routeFrom || null,
           routeTo: editingShipmentForm.routeTo || null,
@@ -712,6 +735,7 @@ export function UserShipments({
           cargoTypeCustom: editingShipmentForm.cargoType ? null : (editingShipmentForm.cargoTypeCustom || null),
           additionalFiles: editingShipmentForm.additionalFiles || [],
           items: editingShipmentForm.items || [],
+          createInvoice: createInvoice,
         }),
       });
       const data = await res.json();
@@ -722,7 +746,10 @@ export function UserShipments({
       setEditingShipment(null);
       await fetchShipments();
       onShipmentsChange();
-      onSuccess("Вантаж оновлено");
+      const successMessage = createInvoice 
+        ? "Вантаж оновлено та інвойс створено"
+        : "Вантаж оновлено";
+      onSuccess(successMessage);
     } catch {
       onError("Сталася помилка при оновленні вантажу");
     }
@@ -3140,62 +3167,68 @@ export function UserShipments({
                 </h2>
               </div>
               <div className="flex items-center gap-3">
-                {/* Invoice download buttons - show if status is ON_UA_WAREHOUSE */}
-                {viewingShipment.status === "ON_UA_WAREHOUSE" && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        try {
-                          const response = await fetch(`/api/invoices/${viewingShipment.id}/generate`);
-                          if (!response.ok) {
-                            throw new Error("Failed to generate invoice");
+                {/* Invoice download buttons - show if invoice exists for this shipment */}
+                {(() => {
+                  // Find invoice for this shipment
+                  const invoice = invoices.find((inv: any) => inv.shipmentId === viewingShipment.id);
+                  if (!invoice) return null;
+                  
+                  return (
+                    <>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`/api/invoices/${invoice.id}/generate`);
+                            if (!response.ok) {
+                              throw new Error("Failed to generate invoice");
+                            }
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `invoice_${invoice.invoiceNumber}_${new Date().toISOString().split("T")[0]}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                          } catch (error) {
+                            console.error("Error downloading invoice:", error);
+                            onError("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
                           }
-                          const blob = await response.blob();
-                          const url = window.URL.createObjectURL(blob);
-                          const a = document.createElement("a");
-                          a.href = url;
-                          a.download = `invoice_${viewingShipment.internalTrack}_${new Date().toISOString().split("T")[0]}.xlsx`;
-                          document.body.appendChild(a);
-                          a.click();
-                          window.URL.revokeObjectURL(url);
-                          document.body.removeChild(a);
-                        } catch (error) {
-                          console.error("Error downloading invoice:", error);
-                          onError("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
-                        }
-                      }}
-                      className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
-                    >
-                      <FileText className="h-4 w-4" />
-                      <span>Інвойс Excel</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        try {
-                          const response = await fetch(`/api/invoices/${viewingShipment.id}/generate-pdf`);
-                          if (!response.ok) {
-                            throw new Error("Failed to generate PDF invoice");
+                        }}
+                        className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
+                      >
+                        <FileText className="h-4 w-4" />
+                        <span>Інвойс Excel</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`/api/invoices/${invoice.id}/generate-pdf`);
+                            if (!response.ok) {
+                              throw new Error("Failed to generate PDF invoice");
+                            }
+                            // Open PDF in new window for printing/saving
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            window.open(url, "_blank");
+                            // Clean up after a delay
+                            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                          } catch (error) {
+                            console.error("Error downloading PDF invoice:", error);
+                            onError("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
                           }
-                          // Open PDF in new window for printing/saving
-                          const blob = await response.blob();
-                          const url = window.URL.createObjectURL(blob);
-                          window.open(url, "_blank");
-                          // Clean up after a delay
-                          setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-                        } catch (error) {
-                          console.error("Error downloading PDF invoice:", error);
-                          onError("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
-                        }
-                      }}
-                      className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
-                    >
-                      <FileText className="h-4 w-4" />
-                      <span>Інвойс PDF</span>
-                    </button>
-                  </>
-                )}
+                        }}
+                        className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                      >
+                        <FileText className="h-4 w-4" />
+                        <span>Інвойс PDF</span>
+                      </button>
+                    </>
+                  );
+                })()}
                 <button
                   type="button"
                   onClick={() => setViewingShipment(null)}

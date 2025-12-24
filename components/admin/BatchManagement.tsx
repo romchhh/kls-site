@@ -195,6 +195,25 @@ export function BatchManagement() {
     e.preventDefault();
     if (!showStatusUpdateModal || !newStatus) return;
 
+    // Перевіряємо, чи статус змінюється на ON_UA_WAREHOUSE
+    const statusChanged = newStatus !== showStatusUpdateModal.status;
+    const isReadyForPickup = newStatus === "ON_UA_WAREHOUSE";
+    
+    // Якщо статус змінюється на "Готово до видачі", питаємо про створення інвойсів
+    let createInvoice = false;
+    if (statusChanged && isReadyForPickup) {
+      const confirmed = window.confirm(
+        `Статус партії ${showStatusUpdateModal.batchId} змінюється на 'Готово до видачі'.\n\n` +
+        `Це оновить статус для всіх ${showStatusUpdateModal.shipments.length} вантажів в партії.\n\n` +
+        `Створити інвойси на оплату для всіх вантажів, які ще не мають інвойсів?`
+      );
+      if (!confirmed) {
+        // Користувач скасував, не оновлюємо статус
+        return;
+      }
+      createInvoice = true;
+    }
+
     setUpdatingStatus(true);
     setMessage(null);
 
@@ -206,13 +225,17 @@ export function BatchManagement() {
           status: newStatus,
           location: newLocation || null,
           description: `Масове оновлення статусу для партії ${showStatusUpdateModal.batchId}`,
+          createInvoice: createInvoice,
         }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        setMessage({ type: "success", text: `Статус оновлено для ${data.updatedCount} вантажів` });
+        const successMessage = createInvoice 
+          ? `Статус оновлено для ${data.updatedCount} вантажів. Інвойси створено для ${data.invoicesCreated || 0} вантажів.`
+          : `Статус оновлено для ${data.updatedCount} вантажів`;
+        setMessage({ type: "success", text: successMessage });
         setShowStatusUpdateModal(null);
         setNewStatus("");
         setNewLocation("");

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { getLocationForStatus } from "@/lib/utils/shipmentAutomation";
 import { getDeliveryTypeCode } from "@/components/admin/utils/shipmentUtils";
+import { createInvoiceForShipment } from "@/lib/utils/invoiceGeneration";
 
 export async function PUT(
   req: NextRequest,
@@ -63,6 +64,7 @@ export async function PUT(
       cargoTypeCustom,
       additionalFiles,
       items, // Array of shipment items
+      createInvoice, // Флаг для створення інвойсу
     } = body;
 
     // Helper function to convert to Decimal
@@ -446,13 +448,18 @@ export async function PUT(
         console.error("Failed to create status history (non-critical):", historyError);
       }
 
-      // Автоматично створюємо інвойс, якщо статус змінився на ON_UA_WAREHOUSE
-      if (status === "ON_UA_WAREHOUSE") {
+      // Створюємо інвойс, якщо статус змінюється на ON_UA_WAREHOUSE і адмін підтвердив створення
+      if (status === "ON_UA_WAREHOUSE" && createInvoice === true) {
         try {
-          const { createInvoiceForShipment } = await import("@/lib/utils/invoiceGeneration");
-          await createInvoiceForShipment(shipment.id);
+          const invoiceId = await createInvoiceForShipment(shipment.id);
+          if (invoiceId) {
+            console.log(`Invoice created for shipment ${shipment.id}: ${invoiceId}`);
+          } else {
+            console.warn(`Failed to create invoice for shipment ${shipment.id}`);
+          }
         } catch (invoiceError) {
-          console.error("Failed to create invoice (non-critical):", invoiceError);
+          console.error("Error creating invoice:", invoiceError);
+          // Не блокуємо оновлення вантажу, якщо створення інвойсу не вдалося
         }
       }
     }

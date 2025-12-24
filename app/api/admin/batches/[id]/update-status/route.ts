@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getLocationForStatus } from "@/lib/utils/shipmentAutomation";
+import { createInvoiceForShipment } from "@/lib/utils/invoiceGeneration";
 
 // PUT - Update status for all shipments in a batch
 export async function PUT(
@@ -18,7 +19,7 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
-    const { status, location: providedLocation, description } = body;
+    const { status, location: providedLocation, description, createInvoice } = body;
 
     if (!status) {
       return NextResponse.json(
@@ -86,15 +87,26 @@ export async function PUT(
       data: statusHistoryEntries,
     });
 
-    // Автоматично створюємо інвойси для вантажів, якщо статус змінився на ON_UA_WAREHOUSE
-    if (status === "ON_UA_WAREHOUSE") {
-      try {
-        const { createInvoiceForShipment } = await import("@/lib/utils/invoiceGeneration");
-        for (const shipment of shipments) {
-          await createInvoiceForShipment(shipment.id);
+    // Створюємо інвойси, якщо статус змінюється на ON_UA_WAREHOUSE і адмін підтвердив створення
+    let invoicesCreated = 0;
+    if (status === "ON_UA_WAREHOUSE" && createInvoice === true) {
+      // Створюємо інвойси тільки для вантажів, які ще не мають інвойсів
+      for (const shipment of shipments) {
+        const hasInvoice = await prisma.invoice.findFirst({
+          where: { shipmentId: shipment.id },
+        });
+
+        if (!hasInvoice) {
+          try {
+            const invoiceId = await createInvoiceForShipment(shipment.id);
+            if (invoiceId) {
+              invoicesCreated++;
+            }
+          } catch (invoiceError) {
+            console.error(`Error creating invoice for shipment ${shipment.id}:`, invoiceError);
+            // Продовжуємо для інших вантажів, навіть якщо один не вдався
+          }
         }
-      } catch (invoiceError) {
-        console.error("Failed to create invoices for batch (non-critical):", invoiceError);
       }
     }
 
@@ -113,6 +125,7 @@ export async function PUT(
       {
         message: `Статус оновлено для ${updatedShipments.count} вантажів`,
         updatedCount: updatedShipments.count,
+        invoicesCreated: invoicesCreated,
       },
       { status: 200 }
     );

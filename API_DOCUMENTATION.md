@@ -777,15 +777,17 @@ console.log(data);
 
 ### Endpoint
 ```
-GET /api/invoices/:shipmentId/generate
+GET /api/invoices/:invoiceId/generate
 ```
 
 **Base URL:** `http://localhost:3000` або `https://kls.international`
 
 ### Description
-Генерація інвойсу в форматі Excel для вантажу. Повертає Excel файл (.xlsx) з детальною інформацією про вантаж, включаючи всі місця, вартості, страхування та підсумки.
+Генерація інвойсу в форматі Excel для інвойсу на оплату. Повертає Excel файл (.xlsx) з детальною інформацією про вантаж, включаючи всі місця, вартості, страхування та підсумки.
 
 **⚠️ Вимагає Bearer token авторизації або сесії адміна/користувача**
+
+**⚠️ Інвойси-файли тепер прив'язані до інвойсів на оплату, а не до вантажів. Інвойс на оплату повинен бути створений для вантажу перед генерацією файлу.**
 
 ### Headers
 ```
@@ -793,11 +795,10 @@ Authorization: Bearer kls_your_token_here
 ```
 
 ### Path Parameters
-- `shipmentId` (string, required) - ID вантажу або трек номер (internalTrack). API автоматично шукає спочатку за ID, потім за трек номером.
+- `invoiceId` (string, required) - ID інвойсу на оплату.
 
 **Приклади:**
-- ID вантажу: `cmink2ief0000u0oifboul1qi`
-- Трек номер: `00100-2491R0006`
+- ID інвойсу: `cmink2ief0000u0oifboul1qi`
 
 ### Success Response (200)
 Повертає Excel файл (.xlsx) з наступною структурою:
@@ -830,7 +831,7 @@ Authorization: Bearer kls_your_token_here
 ### Response Headers
 ```
 Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-Content-Disposition: attachment; filename="invoice_2491R0006_2025-12-23.xlsx"
+Content-Disposition: attachment; filename="invoice_INV-2491R0006-20251223_2025-12-23.xlsx"
 ```
 
 ### Error Response (401)
@@ -843,11 +844,15 @@ Content-Disposition: attachment; filename="invoice_2491R0006_2025-12-23.xlsx"
 ### Error Response (404)
 ```json
 {
-  "error": "Вантаж не знайдено за ID або трек номером",
-  "searched": {
-    "id": "00100-2491R0006",
-    "original": "00100-2491R0006"
-  }
+  "error": "Інвойс не знайдено"
+}
+```
+
+або
+
+```json
+{
+  "error": "Вантаж не знайдено для цього інвойсу"
 }
 ```
 
@@ -860,21 +865,16 @@ Content-Disposition: attachment; filename="invoice_2491R0006_2025-12-23.xlsx"
 
 ### Example Request (cURL)
 ```bash
-# За ID вантажу
+# За ID інвойсу
 curl -X GET "http://localhost:3000/api/invoices/cmink2ief0000u0oifboul1qi/generate" \
-  -H "Authorization: Bearer kls_your_token_here" \
-  --output invoice.xlsx
-
-# За трек номером
-curl -X GET "http://localhost:3000/api/invoices/00100-2491R0006/generate" \
   -H "Authorization: Bearer kls_your_token_here" \
   --output invoice.xlsx
 ```
 
 ### Example Request (JavaScript)
 ```javascript
-const shipmentId = '00100-2491R0006'; // або ID вантажу
-const response = await fetch(`http://localhost:3000/api/invoices/${encodeURIComponent(shipmentId)}/generate`, {
+const invoiceId = 'cmink2ief0000u0oifboul1qi'; // ID інвойсу на оплату
+const response = await fetch(`http://localhost:3000/api/invoices/${encodeURIComponent(invoiceId)}/generate`, {
   headers: {
     'Authorization': 'Bearer kls_your_token_here'
   }
@@ -885,7 +885,7 @@ if (response.ok) {
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `invoice_${shipmentId}.xlsx`;
+  a.download = `invoice_${invoiceId}.xlsx`;
   document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);
@@ -899,17 +899,19 @@ if (response.ok) {
 
 ### Endpoint
 ```
-GET /api/invoices/:shipmentId/generate-pdf
+GET /api/invoices/:invoiceId/generate-pdf
 ```
 
 **Base URL:** `http://localhost:3000` або `https://kls.international`
 
 ### Description
-Генерація інвойсу в форматі PDF для вантажу. Повертає PDF файл з детальною інформацією про вантаж, включаючи всі місця, вартості, страхування та підсумки. PDF генерується з HTML за допомогою Puppeteer, тому має точно такий самий вигляд як Excel версія.
+Генерація інвойсу в форматі PDF для інвойсу на оплату. Повертає PDF файл з детальною інформацією про вантаж, включаючи всі місця, вартості, страхування та підсумки. PDF генерується з HTML за допомогою Puppeteer, тому має точно такий самий вигляд як Excel версія.
 
 **⚠️ Вимагає Bearer token авторизації або сесії адміна/користувача**
 
 **⚠️ Для роботи потрібен встановлений `puppeteer` пакет**
+
+**⚠️ Інвойси-файли тепер прив'язані до інвойсів на оплату, а не до вантажів. Інвойс на оплату повинен бути створений для вантажу перед генерацією файлу.**
 
 ### Headers
 ```
@@ -917,11 +919,10 @@ Authorization: Bearer kls_your_token_here
 ```
 
 ### Path Parameters
-- `shipmentId` (string, required) - ID вантажу або трек номер (internalTrack). API автоматично шукає спочатку за ID, потім за трек номером.
+- `invoiceId` (string, required) - ID інвойсу на оплату.
 
 **Приклади:**
-- ID вантажу: `cmink2ief0000u0oifboul1qi`
-- Трек номер: `00100-2491R0006`
+- ID інвойсу: `cmink2ief0000u0oifboul1qi`
 
 ### Success Response (200)
 Повертає PDF файл з тією ж структурою, що й Excel версія:
@@ -939,7 +940,7 @@ Authorization: Bearer kls_your_token_here
 ### Response Headers
 ```
 Content-Type: application/pdf
-Content-Disposition: attachment; filename="invoice_2491R0006_2025-12-23.pdf"
+Content-Disposition: attachment; filename="invoice_INV-2491R0006-20251223_2025-12-23.pdf"
 ```
 
 ### Error Response (401)
@@ -952,11 +953,15 @@ Content-Disposition: attachment; filename="invoice_2491R0006_2025-12-23.pdf"
 ### Error Response (404)
 ```json
 {
-  "error": "Вантаж не знайдено за ID або трек номером",
-  "searched": {
-    "id": "00100-2491R0006",
-    "original": "00100-2491R0006"
-  }
+  "error": "Інвойс не знайдено"
+}
+```
+
+або
+
+```json
+{
+  "error": "Вантаж не знайдено для цього інвойсу"
 }
 ```
 
@@ -978,21 +983,16 @@ Content-Disposition: attachment; filename="invoice_2491R0006_2025-12-23.pdf"
 
 ### Example Request (cURL)
 ```bash
-# За ID вантажу
+# За ID інвойсу
 curl -X GET "http://localhost:3000/api/invoices/cmink2ief0000u0oifboul1qi/generate-pdf" \
-  -H "Authorization: Bearer kls_your_token_here" \
-  --output invoice.pdf
-
-# За трек номером
-curl -X GET "http://localhost:3000/api/invoices/00100-2491R0006/generate-pdf" \
   -H "Authorization: Bearer kls_your_token_here" \
   --output invoice.pdf
 ```
 
 ### Example Request (JavaScript)
 ```javascript
-const shipmentId = '00100-2491R0006'; // або ID вантажу
-const response = await fetch(`http://localhost:3000/api/invoices/${encodeURIComponent(shipmentId)}/generate-pdf`, {
+const invoiceId = 'cmink2ief0000u0oifboul1qi'; // ID інвойсу на оплату
+const response = await fetch(`http://localhost:3000/api/invoices/${encodeURIComponent(invoiceId)}/generate-pdf`, {
   headers: {
     'Authorization': 'Bearer kls_your_token_here'
   }
@@ -1001,13 +1001,9 @@ const response = await fetch(`http://localhost:3000/api/invoices/${encodeURIComp
 if (response.ok) {
   const blob = await response.blob();
   const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `invoice_${shipmentId}.pdf`;
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+  window.open(url, '_blank');
+  // Clean up after a delay
+  setTimeout(() => window.URL.revokeObjectURL(url), 1000);
 }
 ```
 
