@@ -468,13 +468,22 @@ export async function GET(
         );
       }
 
+      // Sanitize filename to ASCII only (remove non-ASCII characters)
+      const sanitizedInvoiceNumber = invoice.invoiceNumber.replace(/[^\x00-\x7F]/g, "");
+      const dateStr = new Date().toISOString().split("T")[0];
+      const filename = `invoice_${sanitizedInvoiceNumber}_${dateStr}.pdf`;
+      
+      // Use RFC 5987 encoding for filename with non-ASCII characters
+      const encodedFilename = encodeURIComponent(filename);
+      const asciiFilename = filename; // ASCII-only version
+
       // Return PDF file as binary
       // Convert Buffer to Uint8Array for NextResponse compatibility
       return new NextResponse(new Uint8Array(buffer), {
         status: 200,
         headers: {
           "Content-Type": "application/pdf",
-          "Content-Disposition": `attachment; filename="invoice_${invoice.invoiceNumber}_${new Date().toISOString().split("T")[0]}.pdf"`,
+          "Content-Disposition": `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodedFilename}`,
           "Content-Length": buffer.length.toString(),
         },
       });
