@@ -169,14 +169,27 @@ export async function GET(
     }
     .info-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       margin-bottom: 5px;
       font-weight: bold;
       font-size: 11px;
     }
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+      min-width: 180px;
+    }
     .info-label {
       background-color: #D9D9D9;
       padding: 3px 8px;
+      min-width: 120px;
+      text-align: left;
+      margin-right: 8px;
+    }
+    .info-value {
+      text-align: left;
+      min-width: 60px;
     }
     table {
       width: 100%;
@@ -208,12 +221,28 @@ export async function GET(
     }
     .summary {
       margin-top: 20px;
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
     }
-    .summary-item {
-      margin: 5px 0;
-      font-weight: bold;
+    .summary-table {
+      width: 400px;
+      border-collapse: collapse;
       font-size: 11px;
+    }
+    .summary-table td {
+      padding: 5px 8px;
+      border: 1px solid #000;
+    }
+    .summary-table td.label {
+      background-color: #D9D9D9;
+      font-weight: bold;
+      text-align: right;
+      width: 60%;
+    }
+    .summary-table td.value {
+      text-align: right;
+      font-weight: bold;
+      width: 40%;
     }
     .summary-total {
       background-color: #D9D9D9;
@@ -222,6 +251,25 @@ export async function GET(
       font-weight: bold;
       border: 1px solid #000;
       margin-top: 10px;
+      text-align: right;
+    }
+    .services-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 10px;
+    }
+    .services-table th {
+      background-color: #D9D9D9;
+      border: 1px solid #000;
+      padding: 5px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .services-table td {
+      border: 1px solid #000;
+      padding: 4px;
+      text-align: right;
     }
   </style>
 </head>
@@ -231,24 +279,36 @@ export async function GET(
   </div>
 
   <div class="info-row">
-    <div>
-      <span class="info-label">Код Клієнта:</span> ${shipment.user.clientCode}
-      <span class="info-label" style="margin-left: 20px;">Тип:</span> ${shipment.deliveryType === "AIR" ? "АВІА" : shipment.deliveryType === "SEA" ? "МОРЕ" : shipment.deliveryType === "RAIL" ? "ЗАЛІЗНИЦЯ" : "МУЛЬТИМОДАЛЬНА"}
-      <span class="info-label" style="margin-left: 20px;">Напрям:</span> ${shipment.routeFrom || "CN"} ${shipment.routeTo || "UA"}
-      <span class="info-label" style="margin-left: 20px;">Отримано:</span> ${formatDate(shipment.receivedAtWarehouse)}
+    <div class="info-item">
+      <span class="info-label">Код Клієнта:</span>
+      <span class="info-value">${shipment.user.clientCode}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Тип:</span>
+      <span class="info-value">${shipment.deliveryType === "AIR" ? "АВІА" : shipment.deliveryType === "SEA" ? "МОРЕ" : shipment.deliveryType === "RAIL" ? "ЗАЛІЗНИЦЯ" : "МУЛЬТИМОДАЛЬНА"}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Напрям:</span>
+      <span class="info-value">${shipment.routeFrom || "CN"} ${shipment.routeTo || "UA"}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Отримано:</span>
+      <span class="info-value">${formatDate(shipment.receivedAtWarehouse)}</span>
     </div>
   </div>
 
   <div class="info-row">
-    <div>
-      <span class="info-label">Маркування:</span> ${shipment.cargoLabel || ""}
-      <span class="info-label" style="margin-left: 20px;">Відправлено:</span> ${formatDate(shipment.sentAt)}
+    <div class="info-item">
+      <span class="info-label">Маркування:</span>
+      <span class="info-value">${shipment.cargoLabel || ""}</span>
     </div>
-  </div>
-
-  <div class="info-row">
-    <div>
-      <span class="info-label" style="margin-left: 20px;">Доставлено:</span> ${formatDate(shipment.deliveredAt)}
+    <div class="info-item">
+      <span class="info-label">Відправлено:</span>
+      <span class="info-value">${formatDate(shipment.sentAt)}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Доставлено:</span>
+      <span class="info-value">${formatDate(shipment.deliveredAt)}</span>
     </div>
   </div>
 
@@ -317,15 +377,59 @@ export async function GET(
     </tbody>
   </table>
 
+  <table class="services-table">
+    <thead>
+      <tr>
+        <th>Послуга</th>
+        <th>Сума (USD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${totalDeliveryCost > 0 ? `
+      <tr>
+        <td>Вартість доставки</td>
+        <td>${totalDeliveryCost.toFixed(2).replace(".", ",")}</td>
+      </tr>
+      ` : ""}
+      ${packingCost > 0 ? `
+      <tr>
+        <td>Вартість пакування</td>
+        <td>${packingCost.toFixed(2).replace(".", ",")}</td>
+      </tr>
+      ` : ""}
+      ${localDeliveryCost > 0 ? `
+      <tr>
+        <td>Вартість локальної доставки</td>
+        <td>${localDeliveryCost.toFixed(2).replace(".", ",")}</td>
+      </tr>
+      ` : ""}
+      ${totalInsuranceCost > 0 ? `
+      <tr>
+        <td>Вартість страхування</td>
+        <td>${totalInsuranceCost.toFixed(2).replace(".", ",")}</td>
+      </tr>
+      ` : ""}
+    </tbody>
+  </table>
+
   <div class="summary">
-    <div class="summary-item">Вартість доставки: ${totalDeliveryCost.toFixed(1).replace(".", ",")} USD</div>
-    <div class="summary-item">Вартість пакування: ${packingCost.toFixed(2).replace(".", ",")} USD</div>
-    <div class="summary-item">Вартість локальної доставки: ${localDeliveryCost.toFixed(2).replace(".", ",")} USD</div>
-    <div class="summary-item">Вартість страхування: ${totalInsuranceCost.toFixed(1).replace(".", ",")} USD</div>
-    <div class="summary-item" style="margin-top: 10px; font-size: 12px;">Загалом (USD) ${totalCost.toFixed(1).replace(".", ",")} USD</div>
-    <div class="summary-item">Баланс клієнта ${shipment.user.clientCode} 0,00 USD</div>
-    <div class="summary-total">Загалом до сплати (USD): ${totalCost.toFixed(1).replace(".", ",")} USD</div>
+    <table class="summary-table">
+      <tr>
+        <td class="label">Загалом (USD):</td>
+        <td class="value">${totalCost.toFixed(2).replace(".", ",")} USD</td>
+      </tr>
+      <tr>
+        <td class="label">Баланс клієнта:</td>
+        <td class="value">0,00 USD</td>
+      </tr>
+      <tr>
+        <td class="label">Код клієнта:</td>
+        <td class="value">${shipment.user.clientCode}</td>
+      </tr>
+    </table>
   </div>
+
+  <div class="summary-total">Загалом до сплати (USD): ${totalCost.toFixed(2).replace(".", ",")} USD</div>
 </body>
 </html>
     `;

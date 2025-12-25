@@ -149,14 +149,22 @@ export async function GET(
       }
     }
 
-    // Row 6: Код Клієнта + Маркування (СІРИЙ ФОН)
+    // Row 6-7: Інформаційні поля вирівняні по лівому краю з однаковою шириною
     let currentRow = 6;
     
     // Set row height for header rows
     worksheet.getRow(currentRow).height = 22;
     worksheet.getRow(currentRow + 1).height = 22;
-    worksheet.getRow(currentRow + 2).height = 22;
     
+    // Визначаємо ширину для лейблів та значень (вирівняні по лівому краю)
+    // Лейбли: колонки A-B (однакова ширина)
+    // Значення: колонки C-D (однакова ширина)
+    // Наступна пара: E-F (лейбл), G-H (значення)
+    // І так далі
+    
+    // Row 6: Код Клієнта, Тип, Напрям, Отримано
+    // Код Клієнта
+    worksheet.mergeCells(`A${currentRow}:B${currentRow}`);
     worksheet.getCell(`A${currentRow}`).value = "Код Клієнта:";
     worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
     worksheet.getCell(`A${currentRow}`).fill = {
@@ -164,59 +172,76 @@ export async function GET(
       pattern: "solid",
       fgColor: { argb: "FFD9D9D9" },
     };
+    worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.getCell(`B${currentRow}`).value = shipment.user.clientCode;
-    worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.mergeCells(`C${currentRow}:D${currentRow}`);
+    worksheet.getCell(`C${currentRow}`).value = shipment.user.clientCode;
+    worksheet.getCell(`C${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`C${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.getCell(`G${currentRow}`).value = "Тип:";
-    worksheet.getCell(`G${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`G${currentRow}`).fill = {
+    // Тип
+    worksheet.mergeCells(`E${currentRow}:F${currentRow}`);
+    worksheet.getCell(`E${currentRow}`).value = "Тип:";
+    worksheet.getCell(`E${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`E${currentRow}`).fill = {
       type: "pattern",
       pattern: "solid",
       fgColor: { argb: "FFD9D9D9" },
     };
+    worksheet.getCell(`E${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.getCell(`H${currentRow}`).value = 
+    worksheet.mergeCells(`G${currentRow}:H${currentRow}`);
+    worksheet.getCell(`G${currentRow}`).value = 
       shipment.deliveryType === "AIR" ? "АВІА" : 
       shipment.deliveryType === "SEA" ? "МОРЕ" :
       shipment.deliveryType === "RAIL" ? "ЗАЛІЗНИЦЯ" : "МУЛЬТИМОДАЛЬНА";
-    worksheet.getCell(`H${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`G${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`G${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.getCell(`I${currentRow}`).value = "Напрям:";
-    worksheet.getCell(`I${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`I${currentRow}`).fill = {
+    // Напрям
+    worksheet.mergeCells(`A${currentRow + 1}:B${currentRow + 1}`);
+    worksheet.getCell(`A${currentRow + 1}`).value = "Напрям:";
+    worksheet.getCell(`A${currentRow + 1}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`A${currentRow + 1}`).fill = {
       type: "pattern",
       pattern: "solid",
       fgColor: { argb: "FFD9D9D9" },
     };
+    worksheet.getCell(`A${currentRow + 1}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.getCell(`J${currentRow}`).value = shipment.routeFrom || "CN";
-    worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.mergeCells(`C${currentRow + 1}:D${currentRow + 1}`);
+    worksheet.getCell(`C${currentRow + 1}`).value = `${shipment.routeFrom || "CN"} ${shipment.routeTo || "UA"}`;
+    worksheet.getCell(`C${currentRow + 1}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`C${currentRow + 1}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.getCell(`K${currentRow}`).value = shipment.routeTo || "UA";
-    worksheet.getCell(`K${currentRow}`).font = { bold: true, size: 12 };
-    
-    worksheet.getCell(`L${currentRow}`).value = "Отримано:";
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).fill = {
+    // Отримано
+    worksheet.mergeCells(`E${currentRow + 1}:F${currentRow + 1}`);
+    worksheet.getCell(`E${currentRow + 1}`).value = "Отримано:";
+    worksheet.getCell(`E${currentRow + 1}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`E${currentRow + 1}`).fill = {
       type: "pattern",
       pattern: "solid",
       fgColor: { argb: "FFD9D9D9" },
     };
+    worksheet.getCell(`E${currentRow + 1}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.mergeCells(`M${currentRow}:N${currentRow}`);
-    worksheet.getCell(`M${currentRow}`).value = shipment.receivedAtWarehouse
+    worksheet.mergeCells(`G${currentRow + 1}:H${currentRow + 1}`);
+    worksheet.getCell(`G${currentRow + 1}`).value = shipment.receivedAtWarehouse
       ? new Date(shipment.receivedAtWarehouse).toLocaleDateString("uk-UA", {
           day: "numeric",
           month: "numeric",
           year: "2-digit",
         })
       : "";
-    worksheet.getCell(`M${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`M${currentRow}`).alignment = { horizontal: "right" };
+    worksheet.getCell(`G${currentRow + 1}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`G${currentRow + 1}`).alignment = { horizontal: "left", vertical: "middle" };
 
-    // Row 7: Маркування + Відправлено
-    currentRow++;
+    // Row 8: Маркування, Відправлено, Доставлено
+    currentRow += 2;
+    worksheet.getRow(currentRow).height = 22;
+    
+    // Маркування
+    worksheet.mergeCells(`A${currentRow}:B${currentRow}`);
     worksheet.getCell(`A${currentRow}`).value = "Маркування:";
     worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
     worksheet.getCell(`A${currentRow}`).fill = {
@@ -224,54 +249,63 @@ export async function GET(
       pattern: "solid",
       fgColor: { argb: "FFD9D9D9" },
     };
+    worksheet.getCell(`A${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.mergeCells(`B${currentRow}:F${currentRow}`);
-    worksheet.getCell(`B${currentRow}`).value = shipment.cargoLabel || "";
-    worksheet.getCell(`B${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.mergeCells(`C${currentRow}:D${currentRow}`);
+    worksheet.getCell(`C${currentRow}`).value = shipment.cargoLabel || "";
+    worksheet.getCell(`C${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`C${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.getCell(`L${currentRow}`).value = "Відправлено:";
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).fill = {
+    // Відправлено
+    worksheet.mergeCells(`E${currentRow}:F${currentRow}`);
+    worksheet.getCell(`E${currentRow}`).value = "Відправлено:";
+    worksheet.getCell(`E${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`E${currentRow}`).fill = {
       type: "pattern",
       pattern: "solid",
       fgColor: { argb: "FFD9D9D9" },
     };
+    worksheet.getCell(`E${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.mergeCells(`M${currentRow}:N${currentRow}`);
-    worksheet.getCell(`M${currentRow}`).value = shipment.sentAt
+    worksheet.mergeCells(`G${currentRow}:H${currentRow}`);
+    worksheet.getCell(`G${currentRow}`).value = shipment.sentAt
       ? new Date(shipment.sentAt).toLocaleDateString("uk-UA", {
           day: "numeric",
           month: "numeric",
           year: "2-digit",
         })
       : "";
-    worksheet.getCell(`M${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`M${currentRow}`).alignment = { horizontal: "right" };
+    worksheet.getCell(`G${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`G${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
 
-    // Row 8: Порожній рядок + Доставлено
+    // Row 9: Доставлено
     currentRow++;
-    worksheet.getCell(`L${currentRow}`).value = "Доставлено:";
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).fill = {
+    worksheet.getRow(currentRow).height = 22;
+    
+    worksheet.mergeCells(`E${currentRow}:F${currentRow}`);
+    worksheet.getCell(`E${currentRow}`).value = "Доставлено:";
+    worksheet.getCell(`E${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`E${currentRow}`).fill = {
       type: "pattern",
       pattern: "solid",
       fgColor: { argb: "FFD9D9D9" },
     };
+    worksheet.getCell(`E${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
     
-    worksheet.mergeCells(`M${currentRow}:N${currentRow}`);
-    worksheet.getCell(`M${currentRow}`).value = shipment.deliveredAt
+    worksheet.mergeCells(`G${currentRow}:H${currentRow}`);
+    worksheet.getCell(`G${currentRow}`).value = shipment.deliveredAt
       ? new Date(shipment.deliveredAt).toLocaleDateString("uk-UA", {
           day: "numeric",
           month: "numeric",
           year: "2-digit",
         })
       : "";
-    worksheet.getCell(`M${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`M${currentRow}`).alignment = { horizontal: "right" };
+    worksheet.getCell(`G${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`G${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
 
     currentRow += 2; // Пропускаємо рядок
 
-    // ЗАГОЛОВОК ТАБЛИЦІ - Row 10-11
+    // ЗАГОЛОВОК ТАБЛИЦІ - Row 11-12 (після оновлення інформаційних полів)
     const headerStartRow = currentRow;
     
     // Set header row heights
@@ -572,101 +606,247 @@ export async function GET(
 
     currentRow += 3;
 
-    // SUMMARY SECTION (right side)
+    // SUMMARY SECTION - Таблиця послуг та підсумки
     const packingCost = shipment.packingCost ? Number(shipment.packingCost) : 0;
     const localDeliveryCost = shipment.localDeliveryCost ? Number(shipment.localDeliveryCost) : 0;
     const totalCost = totalDeliveryCost + packingCost + localDeliveryCost + totalInsuranceCost;
 
-    // Set row heights for summary section
-    worksheet.getRow(currentRow).height = 22;
-    worksheet.getRow(currentRow + 1).height = 22;
-    worksheet.getRow(currentRow + 2).height = 22;
-    worksheet.getRow(currentRow + 3).height = 22;
-    worksheet.getRow(currentRow + 5).height = 25;
-    worksheet.getRow(currentRow + 7).height = 25;
-    worksheet.getRow(currentRow + 9).height = 28;
+    currentRow += 2;
 
-    // Вартість доставки
-    worksheet.mergeCells(`J${currentRow}:K${currentRow}`);
-    worksheet.getCell(`J${currentRow}`).value = "Вартість доставки:";
-    worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
+    // Таблиця послуг
+    const servicesStartRow = currentRow;
+    worksheet.getRow(servicesStartRow).height = 25;
     
-    worksheet.mergeCells(`L${currentRow}:M${currentRow}`);
-    worksheet.getCell(`L${currentRow}`).value = `${totalDeliveryCost.toFixed(1).replace(".", ",")} USD`;
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    // Заголовок таблиці послуг
+    worksheet.mergeCells(`J${servicesStartRow}:K${servicesStartRow}`);
+    worksheet.getCell(`J${servicesStartRow}`).value = "Послуга";
+    worksheet.getCell(`J${servicesStartRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`J${servicesStartRow}`).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getCell(`J${servicesStartRow}`).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFD9D9D9" },
+    };
+    worksheet.getCell(`J${servicesStartRow}`).border = {
+      top: { style: "thin", color: { argb: "FF000000" } },
+      left: { style: "thin", color: { argb: "FF000000" } },
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+      right: { style: "thin", color: { argb: "FF000000" } },
+    };
+    
+    worksheet.mergeCells(`L${servicesStartRow}:M${servicesStartRow}`);
+    worksheet.getCell(`L${servicesStartRow}`).value = "Сума (USD)";
+    worksheet.getCell(`L${servicesStartRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`L${servicesStartRow}`).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getCell(`L${servicesStartRow}`).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFD9D9D9" },
+    };
+    worksheet.getCell(`L${servicesStartRow}`).border = {
+      top: { style: "thin", color: { argb: "FF000000" } },
+      left: { style: "thin", color: { argb: "FF000000" } },
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+      right: { style: "thin", color: { argb: "FF000000" } },
+    };
+
+    let servicesRow = servicesStartRow + 1;
+    
+    // Вартість доставки
+    if (totalDeliveryCost > 0) {
+      worksheet.getRow(servicesRow).height = 22;
+      worksheet.mergeCells(`J${servicesRow}:K${servicesRow}`);
+      worksheet.getCell(`J${servicesRow}`).value = "Вартість доставки";
+      worksheet.getCell(`J${servicesRow}`).font = { bold: true, size: 12 };
+      worksheet.getCell(`J${servicesRow}`).alignment = { horizontal: "left", vertical: "middle" };
+      worksheet.getCell(`J${servicesRow}`).border = {
+        left: { style: "thin", color: { argb: "FF000000" } },
+        bottom: { style: "thin", color: { argb: "FF000000" } },
+        right: { style: "thin", color: { argb: "FF000000" } },
+      };
+      
+      worksheet.mergeCells(`L${servicesRow}:M${servicesRow}`);
+      worksheet.getCell(`L${servicesRow}`).value = `${totalDeliveryCost.toFixed(2).replace(".", ",")}`;
+      worksheet.getCell(`L${servicesRow}`).font = { bold: true, size: 12 };
+      worksheet.getCell(`L${servicesRow}`).alignment = { horizontal: "right", vertical: "middle" };
+      worksheet.getCell(`L${servicesRow}`).border = {
+        left: { style: "thin", color: { argb: "FF000000" } },
+        bottom: { style: "thin", color: { argb: "FF000000" } },
+        right: { style: "thin", color: { argb: "FF000000" } },
+      };
+      servicesRow++;
+    }
 
     // Вартість пакування
-    currentRow++;
-    worksheet.mergeCells(`J${currentRow}:K${currentRow}`);
-    worksheet.getCell(`J${currentRow}`).value = "Вартість пакування:";
-    worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
-    
-    worksheet.mergeCells(`L${currentRow}:M${currentRow}`);
-    worksheet.getCell(`L${currentRow}`).value = `${packingCost.toFixed(2).replace(".", ",")} USD`;
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    if (packingCost > 0) {
+      worksheet.getRow(servicesRow).height = 22;
+      worksheet.mergeCells(`J${servicesRow}:K${servicesRow}`);
+      worksheet.getCell(`J${servicesRow}`).value = "Вартість пакування";
+      worksheet.getCell(`J${servicesRow}`).font = { bold: true, size: 12 };
+      worksheet.getCell(`J${servicesRow}`).alignment = { horizontal: "left", vertical: "middle" };
+      worksheet.getCell(`J${servicesRow}`).border = {
+        left: { style: "thin", color: { argb: "FF000000" } },
+        bottom: { style: "thin", color: { argb: "FF000000" } },
+        right: { style: "thin", color: { argb: "FF000000" } },
+      };
+      
+      worksheet.mergeCells(`L${servicesRow}:M${servicesRow}`);
+      worksheet.getCell(`L${servicesRow}`).value = `${packingCost.toFixed(2).replace(".", ",")}`;
+      worksheet.getCell(`L${servicesRow}`).font = { bold: true, size: 12 };
+      worksheet.getCell(`L${servicesRow}`).alignment = { horizontal: "right", vertical: "middle" };
+      worksheet.getCell(`L${servicesRow}`).border = {
+        left: { style: "thin", color: { argb: "FF000000" } },
+        bottom: { style: "thin", color: { argb: "FF000000" } },
+        right: { style: "thin", color: { argb: "FF000000" } },
+      };
+      servicesRow++;
+    }
 
     // Вартість локальної доставки
-    currentRow++;
-    worksheet.mergeCells(`J${currentRow}:K${currentRow}`);
-    worksheet.getCell(`J${currentRow}`).value = "Вартість локальної доставки:";
-    worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
-    
-    worksheet.mergeCells(`L${currentRow}:M${currentRow}`);
-    worksheet.getCell(`L${currentRow}`).value = `${localDeliveryCost.toFixed(2).replace(".", ",")} USD`;
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    if (localDeliveryCost > 0) {
+      worksheet.getRow(servicesRow).height = 22;
+      worksheet.mergeCells(`J${servicesRow}:K${servicesRow}`);
+      worksheet.getCell(`J${servicesRow}`).value = "Вартість локальної доставки";
+      worksheet.getCell(`J${servicesRow}`).font = { bold: true, size: 12 };
+      worksheet.getCell(`J${servicesRow}`).alignment = { horizontal: "left", vertical: "middle" };
+      worksheet.getCell(`J${servicesRow}`).border = {
+        left: { style: "thin", color: { argb: "FF000000" } },
+        bottom: { style: "thin", color: { argb: "FF000000" } },
+        right: { style: "thin", color: { argb: "FF000000" } },
+      };
+      
+      worksheet.mergeCells(`L${servicesRow}:M${servicesRow}`);
+      worksheet.getCell(`L${servicesRow}`).value = `${localDeliveryCost.toFixed(2).replace(".", ",")}`;
+      worksheet.getCell(`L${servicesRow}`).font = { bold: true, size: 12 };
+      worksheet.getCell(`L${servicesRow}`).alignment = { horizontal: "right", vertical: "middle" };
+      worksheet.getCell(`L${servicesRow}`).border = {
+        left: { style: "thin", color: { argb: "FF000000" } },
+        bottom: { style: "thin", color: { argb: "FF000000" } },
+        right: { style: "thin", color: { argb: "FF000000" } },
+      };
+      servicesRow++;
+    }
 
     // Вартість страхування
-    currentRow++;
-    worksheet.mergeCells(`J${currentRow}:K${currentRow}`);
-    worksheet.getCell(`J${currentRow}`).value = "Вартість страхування:";
-    worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
-    
-    worksheet.mergeCells(`L${currentRow}:M${currentRow}`);
-    worksheet.getCell(`L${currentRow}`).value = `${totalInsuranceCost.toFixed(1).replace(".", ",")} USD`;
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    if (totalInsuranceCost > 0) {
+      worksheet.getRow(servicesRow).height = 22;
+      worksheet.mergeCells(`J${servicesRow}:K${servicesRow}`);
+      worksheet.getCell(`J${servicesRow}`).value = "Вартість страхування";
+      worksheet.getCell(`J${servicesRow}`).font = { bold: true, size: 12 };
+      worksheet.getCell(`J${servicesRow}`).alignment = { horizontal: "left", vertical: "middle" };
+      worksheet.getCell(`J${servicesRow}`).border = {
+        left: { style: "thin", color: { argb: "FF000000" } },
+        bottom: { style: "thin", color: { argb: "FF000000" } },
+        right: { style: "thin", color: { argb: "FF000000" } },
+      };
+      
+      worksheet.mergeCells(`L${servicesRow}:M${servicesRow}`);
+      worksheet.getCell(`L${servicesRow}`).value = `${totalInsuranceCost.toFixed(2).replace(".", ",")}`;
+      worksheet.getCell(`L${servicesRow}`).font = { bold: true, size: 12 };
+      worksheet.getCell(`L${servicesRow}`).alignment = { horizontal: "right", vertical: "middle" };
+      worksheet.getCell(`L${servicesRow}`).border = {
+        left: { style: "thin", color: { argb: "FF000000" } },
+        bottom: { style: "thin", color: { argb: "FF000000" } },
+        right: { style: "thin", color: { argb: "FF000000" } },
+      };
+      servicesRow++;
+    }
 
-    currentRow += 2;
+    currentRow = servicesRow + 2;
+
+    // Таблиця підсумків
+    const summaryStartRow = currentRow;
+    worksheet.getRow(summaryStartRow).height = 25;
+    worksheet.getRow(summaryStartRow + 1).height = 25;
+    worksheet.getRow(summaryStartRow + 2).height = 25;
 
     // Загалом (USD)
-    worksheet.mergeCells(`J${currentRow}:K${currentRow}`);
-    worksheet.getCell(`J${currentRow}`).value = "Загалом (USD)";
-    worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 13 };
-    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
+    worksheet.mergeCells(`J${summaryStartRow}:K${summaryStartRow}`);
+    worksheet.getCell(`J${summaryStartRow}`).value = "Загалом (USD):";
+    worksheet.getCell(`J${summaryStartRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`J${summaryStartRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    worksheet.getCell(`J${summaryStartRow}`).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFD9D9D9" },
+    };
+    worksheet.getCell(`J${summaryStartRow}`).border = {
+      top: { style: "thin", color: { argb: "FF000000" } },
+      left: { style: "thin", color: { argb: "FF000000" } },
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+      right: { style: "thin", color: { argb: "FF000000" } },
+    };
     
-    worksheet.mergeCells(`L${currentRow}:M${currentRow}`);
-    worksheet.getCell(`L${currentRow}`).value = `${totalCost.toFixed(1).replace(".", ",")} USD`;
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 13 };
-    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
-
-    currentRow += 2;
+    worksheet.mergeCells(`L${summaryStartRow}:M${summaryStartRow}`);
+    worksheet.getCell(`L${summaryStartRow}`).value = `${totalCost.toFixed(2).replace(".", ",")} USD`;
+    worksheet.getCell(`L${summaryStartRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`L${summaryStartRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    worksheet.getCell(`L${summaryStartRow}`).border = {
+      top: { style: "thin", color: { argb: "FF000000" } },
+      left: { style: "thin", color: { argb: "FF000000" } },
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+      right: { style: "thin", color: { argb: "FF000000" } },
+    };
 
     // Баланс клієнта
+    currentRow++;
     worksheet.mergeCells(`J${currentRow}:K${currentRow}`);
-    worksheet.getCell(`J${currentRow}`).value = "Баланс клієнта";
+    worksheet.getCell(`J${currentRow}`).value = "Баланс клієнта:";
     worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "left", vertical: "middle" };
+    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    worksheet.getCell(`J${currentRow}`).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFD9D9D9" },
+    };
+    worksheet.getCell(`J${currentRow}`).border = {
+      left: { style: "thin", color: { argb: "FF000000" } },
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+      right: { style: "thin", color: { argb: "FF000000" } },
+    };
     
+    worksheet.mergeCells(`L${currentRow}:M${currentRow}`);
+    worksheet.getCell(`L${currentRow}`).value = "0,00 USD";
+    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    worksheet.getCell(`L${currentRow}`).border = {
+      left: { style: "thin", color: { argb: "FF000000" } },
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+      right: { style: "thin", color: { argb: "FF000000" } },
+    };
+
+    // Код клієнта
+    currentRow++;
+    worksheet.mergeCells(`J${currentRow}:K${currentRow}`);
+    worksheet.getCell(`J${currentRow}`).value = "Код клієнта:";
+    worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 12 };
+    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    worksheet.getCell(`J${currentRow}`).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFD9D9D9" },
+    };
+    worksheet.getCell(`J${currentRow}`).border = {
+      left: { style: "thin", color: { argb: "FF000000" } },
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+      right: { style: "thin", color: { argb: "FF000000" } },
+    };
+    
+    worksheet.mergeCells(`L${currentRow}:M${currentRow}`);
     worksheet.getCell(`L${currentRow}`).value = shipment.user.clientCode;
     worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "center", vertical: "middle" };
-    
-    worksheet.getCell(`M${currentRow}`).value = "0,00 USD";
-    worksheet.getCell(`M${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`M${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
+    worksheet.getCell(`L${currentRow}`).border = {
+      left: { style: "thin", color: { argb: "FF000000" } },
+      bottom: { style: "thin", color: { argb: "FF000000" } },
+      right: { style: "thin", color: { argb: "FF000000" } },
+    };
 
     currentRow += 2;
 
     // Загалом до сплати (USD) with gray background
     worksheet.mergeCells(`J${currentRow}:M${currentRow}`);
-    worksheet.getCell(`J${currentRow}`).value = `Загалом до сплати (USD):               ${totalCost.toFixed(1).replace(".", ",")} USD`;
+    worksheet.getCell(`J${currentRow}`).value = `Загалом до сплати (USD):               ${totalCost.toFixed(2).replace(".", ",")} USD`;
     worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 14 };
     worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
     worksheet.getCell(`J${currentRow}`).fill = {
