@@ -75,8 +75,6 @@ export async function POST(req: NextRequest) {
         if (data.weight) message += `⚖️ <b>Вага:</b> ${data.weight} кг\n`;
         if (data.volume) message += `📦 <b>Об'єм:</b> ${data.volume} м³\n`;
         if (data.productName) message += `🏷️ <b>Назва товару:</b> ${data.productName}\n`;
-        if (data.estimatedCost) message += `💰 <b>Орієнтовна вартість:</b> $${data.estimatedCost}\n`;
-        if (data.estimatedDays) message += `⏱️ <b>Орієнтовний термін:</b> ${data.estimatedDays} днів\n`;
         if (data.contactFormat) message += `💬 <b>Формат зв'язку:</b> ${data.contactFormat}\n`;
         break;
 

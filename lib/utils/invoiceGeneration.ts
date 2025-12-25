@@ -52,9 +52,21 @@ export async function createInvoiceForShipment(shipmentId: string): Promise<stri
 
     const totalAmount = deliveryCost + packingCost + localDeliveryCost + insuranceCost;
 
-    // Генеруємо номер інвойсу на основі трек номера та дати
-    const dateStr = new Date().toISOString().split("T")[0].replace(/-/g, "");
-    const invoiceNumber = `INV-${shipment.internalTrack}-${dateStr}`;
+    // Генеруємо номер інвойсу на основі трек номера (без ID партії)
+    // Формат: 00001-2053В0001 → INV-2053В0001
+    let invoiceNumber = "";
+    if (shipment.internalTrack && shipment.internalTrack.includes("-")) {
+      const parts = shipment.internalTrack.split("-");
+      if (parts.length >= 2) {
+        // Беремо частину після першого дефісу (без ID партії)
+        const afterDash = parts.slice(1).join("-");
+        invoiceNumber = `INV-${afterDash}`;
+      } else {
+        invoiceNumber = `INV-${shipment.internalTrack}`;
+      }
+    } else {
+      invoiceNumber = `INV-${shipment.internalTrack || "UNKNOWN"}`;
+    }
 
     // Перевіряємо унікальність номера
     let finalInvoiceNumber = invoiceNumber;
