@@ -165,11 +165,8 @@ export function Navigation({ locale }: NavigationProps) {
     return `/${newLocale}${pathWithoutLocale}`;
   };
 
-  // Логотипи
-  const primaryLogoSrc = "/ЛОГО.png";
-  const secondaryLogoSrc = "/ЛОГО(1).png";
-  // Білий логотип тільки на головній і тільки поки не проскролили
-  const usePrimaryLogo = isHomePage && scrollY <= 50;
+  // Логотип - завжди використовуємо ЛОГО(1).png
+  const logoSrc = "/ЛОГО(1).png";
 
   return (
     <nav className="fixed z-50 w-full transition-all duration-300 pt-4 px-4">
@@ -183,12 +180,12 @@ export function Navigation({ locale }: NavigationProps) {
         <div className="flex items-center">
           <Link href={`/${locale}`} aria-label="KLS home">
             <Image
-              src={usePrimaryLogo ? primaryLogoSrc : secondaryLogoSrc}
+              src={logoSrc}
               alt="KLS Logistics"
-              width={140}
-              height={42}
+              width={120}
+              height={36}
               priority
-              className={`h-8 w-auto md:h-10 transition-opacity ${
+              className={`h-7 w-auto md:h-8 transition-opacity ${
                 isHomePage && scrollY <= 50
                   ? "opacity-100"
                   : "opacity-90 hover:opacity-100"
@@ -197,141 +194,140 @@ export function Navigation({ locale }: NavigationProps) {
           </Link>
         </div>
 
-        <div className="hidden items-center space-x-6 lg:flex lg:ml-6">
-          <div
-            className="relative"
-            onMouseEnter={handleDeliveryMouseEnter}
-            onMouseLeave={handleDeliveryMouseLeave}
-          >
-            <Link
-              href={isHomePage ? "#delivery" : `/${locale}#delivery`}
-              onClick={(e) => {
-                if (isHomePage) {
-                  e.preventDefault();
-                  const element = document.getElementById('delivery');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                } else {
-                  // Якщо не на головній, переходимо на головну і скролимо
-                  e.preventDefault();
-                  window.location.href = `/${locale}#delivery`;
-                  setTimeout(() => {
+        <div className="hidden items-center gap-4 lg:flex">
+          <div className="hidden items-center space-x-6 lg:flex">
+            <div
+              className="relative"
+              onMouseEnter={handleDeliveryMouseEnter}
+              onMouseLeave={handleDeliveryMouseLeave}
+            >
+              <Link
+                href={isHomePage ? "#delivery" : `/${locale}#delivery`}
+                onClick={(e) => {
+                  if (isHomePage) {
+                    e.preventDefault();
                     const element = document.getElementById('delivery');
                     if (element) {
                       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
-                  }, 100);
-                }
-              }}
-              className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
-                isHomePage && scrollY <= 50
-                  ? "text-white/90 hover:text-white"
-                  : "text-gray-700 hover:text-gray-900"
-              }`}
-            >
-              <span className="inline-flex items-center justify-center gap-2">
-                {t.nav.delivery}
-                <ChevronDown
-                  size={18}
-                  className={`transition-transform duration-200 ${isDeliveryOpen ? "rotate-180" : ""}`}
-                />
-              </span>
-            </Link>
-            {isDeliveryOpen && (
-              <div 
-                className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-2 z-50"
-                style={{
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)"
+                  } else {
+                    // Якщо не на головній, переходимо на головну і скролимо
+                    e.preventDefault();
+                    window.location.href = `/${locale}#delivery`;
+                    setTimeout(() => {
+                      const element = document.getElementById('delivery');
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 100);
+                  }
                 }}
-                onMouseEnter={handleDeliveryMouseEnter}
-                onMouseLeave={handleDeliveryMouseLeave}
+                className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
+                  isHomePage && scrollY <= 50
+                    ? "text-white/90 hover:text-white"
+                    : "text-gray-700 hover:text-gray-900"
+                }`}
               >
-                {deliveryCategories.map((category, index) => (
-                  <Link
-                    key={index}
-                    href={category.href}
-                    className={`block px-4 py-3 text-base rounded-lg mx-2 transition-all duration-200 ${
-                      pathname === category.href
-                        ? "bg-teal-50/80 text-teal-700 font-medium"
-                        : "text-gray-700 hover:bg-teal-50/80 hover:text-teal-700"
-                    }`}
-                  >
-                    {category.name}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+                <span className="inline-flex items-center justify-center gap-2">
+                  {t.nav.delivery}
+                  <ChevronDown
+                    size={18}
+                    className={`transition-transform duration-200 ${isDeliveryOpen ? "rotate-180" : ""}`}
+                  />
+                </span>
+              </Link>
+              {isDeliveryOpen && (
+                <div 
+                  className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-2 z-50"
+                  style={{
+                    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)"
+                  }}
+                  onMouseEnter={handleDeliveryMouseEnter}
+                  onMouseLeave={handleDeliveryMouseLeave}
+                >
+                  {deliveryCategories.map((category, index) => (
+                    <Link
+                      key={index}
+                      href={category.href}
+                      className={`block px-4 py-3 text-base rounded-lg mx-2 transition-all duration-200 ${
+                        pathname === category.href
+                          ? "bg-teal-50/80 text-teal-700 font-medium"
+                          : "text-gray-700 hover:bg-teal-50/80 hover:text-teal-700"
+                      }`}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          <div
-            className="relative"
-            onMouseEnter={handleServicesMouseEnter}
-            onMouseLeave={handleServicesMouseLeave}
-          >
+            <div
+              className="relative"
+              onMouseEnter={handleServicesMouseEnter}
+              onMouseLeave={handleServicesMouseLeave}
+            >
+              <Link
+                href={`/${locale}/services`}
+                className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
+                  isHomePage && scrollY <= 50
+                    ? pathname?.includes("/services")
+                      ? "text-white"
+                      : "text-white/90 hover:text-white"
+                    : pathname?.includes("/services")
+                    ? "text-teal-700"
+                    : "text-gray-700 hover:text-teal-700"
+                }`}
+              >
+                <span className="inline-flex items-center justify-center gap-2">
+                  {t.nav.services}
+                  <ChevronDown
+                    size={18}
+                    className={`transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`}
+                  />
+                </span>
+              </Link>
+              {isServicesOpen && (
+                <div 
+                  className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-2 z-50"
+                  style={{
+                    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)"
+                  }}
+                  onMouseEnter={handleServicesMouseEnter}
+                  onMouseLeave={handleServicesMouseLeave}
+                >
+                  {servicesCategories.map((category, index) => (
+                    <Link
+                      key={index}
+                      href={category.href}
+                      className={`block px-4 py-3 text-base rounded-lg mx-2 transition-all duration-200 ${
+                        pathname === category.href
+                          ? "bg-teal-50/80 text-teal-700 font-medium"
+                          : "text-gray-700 hover:bg-teal-50/80 hover:text-teal-700"
+                      }`}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Link
-              href={`/${locale}/services`}
+              href={`/${locale}/contacts`}
               className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
                 isHomePage && scrollY <= 50
-                  ? pathname?.includes("/services")
+                  ? pathname === `/${locale}/contacts`
                     ? "text-white"
                     : "text-white/90 hover:text-white"
-                  : pathname?.includes("/services")
+                  : pathname === `/${locale}/contacts`
                   ? "text-teal-700"
                   : "text-gray-700 hover:text-teal-700"
               }`}
             >
-              <span className="inline-flex items-center justify-center gap-2">
-                {t.nav.services}
-                <ChevronDown
-                  size={18}
-                  className={`transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`}
-                />
-              </span>
+              {t.nav.contacts}
             </Link>
-            {isServicesOpen && (
-              <div 
-                className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/30 py-2 z-50"
-                style={{
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)"
-                }}
-                onMouseEnter={handleServicesMouseEnter}
-                onMouseLeave={handleServicesMouseLeave}
-              >
-                {servicesCategories.map((category, index) => (
-                  <Link
-                    key={index}
-                    href={category.href}
-                    className={`block px-4 py-3 text-base rounded-lg mx-2 transition-all duration-200 ${
-                      pathname === category.href
-                        ? "bg-teal-50/80 text-teal-700 font-medium"
-                        : "text-gray-700 hover:bg-teal-50/80 hover:text-teal-700"
-                    }`}
-                  >
-                    {category.name}
-                  </Link>
-                ))}
-              </div>
-            )}
           </div>
-
-          <Link
-            href={`/${locale}/contacts`}
-            className={`rounded-xl px-4 py-2 text-lg font-semibold transition-all duration-300 ${
-              isHomePage && scrollY <= 50
-                ? pathname === `/${locale}/contacts`
-                  ? "text-white"
-                  : "text-white/90 hover:text-white"
-                : pathname === `/${locale}/contacts`
-                ? "text-teal-700"
-                : "text-gray-700 hover:text-teal-700"
-            }`}
-          >
-            {t.nav.contacts}
-          </Link>
-        </div>
-
-        <div className="hidden items-center gap-4 lg:flex">
           <div
             className="relative"
             onMouseEnter={handleLangMouseEnter}
@@ -376,7 +372,14 @@ export function Navigation({ locale }: NavigationProps) {
 
           <Link
             href={`/${locale}/cabinet`}
-            className="group relative overflow-hidden flex items-center gap-2 rounded-xl bg-gray-800 px-6 py-3.5 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:bg-gray-700 hover:scale-105"
+            className="group relative overflow-hidden flex items-center gap-2 rounded-xl px-6 py-3.5 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105"
+            style={{ backgroundColor: '#006D77' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#005a63';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#006D77';
+            }}
           >
             <User size={18} className="relative z-10" />
             <span className="relative z-10">{t.nav.cabinet}</span>
@@ -409,12 +412,12 @@ export function Navigation({ locale }: NavigationProps) {
           <div className="fixed top-4 left-4 lg:hidden z-50 flex items-center" style={{ height: '96px' }}>
             <Link href={`/${locale}`} aria-label="KLS home" onClick={() => setIsMenuOpen(false)}>
               <Image
-                src={usePrimaryLogo ? primaryLogoSrc : secondaryLogoSrc}
+                src={logoSrc}
                 alt="KLS Logistics"
-                width={140}
-                height={42}
+                width={120}
+                height={36}
                 priority
-                className="h-10 w-auto transition-opacity opacity-100"
+                className="h-8 w-auto transition-opacity opacity-100"
               />
             </Link>
           </div>
@@ -561,7 +564,14 @@ export function Navigation({ locale }: NavigationProps) {
                 <div className="pt-2">
                   <Link
                     href={`/${locale}/cabinet`}
-                    className="group relative overflow-hidden flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gray-800 text-white font-semibold shadow-lg transition-all duration-300 hover:bg-gray-700 active:scale-95"
+                    className="group relative overflow-hidden flex items-center justify-center gap-2 w-full py-3.5 rounded-xl text-white font-semibold shadow-lg transition-all duration-300 active:scale-95"
+                    style={{ backgroundColor: '#006D77' }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#005a63';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#006D77';
+                    }}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <User size={18} className="relative z-10" />

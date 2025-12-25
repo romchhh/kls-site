@@ -61,9 +61,9 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
           </p>
         </div>
 
-        <div className="relative mx-auto max-w-7xl overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white via-white/95 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white via-white/95 to-transparent" />
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gray-50 p-6 md:p-8">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-gray-50 via-gray-50/95 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-gray-50 via-gray-50/95 to-transparent" />
           <div className="flex animate-[partners-marquee_10s_linear_infinite] gap-4 md:gap-12" style={{ display: 'inline-flex', width: 'max-content' }}>
             {marqueePartners.map((partner, index) => {
               const PartnerWrapper = partner.url 
@@ -82,7 +82,7 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
               return (
                 <div
                   key={`${partner.name}-${index}`}
-                  className="group relative flex h-32 w-40 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-gray-50 transition-all duration-500 md:h-40 md:w-56"
+                  className="group relative flex h-32 w-40 shrink-0 items-center justify-center overflow-hidden rounded-3xl transition-all duration-500 md:h-40 md:w-56"
                 >
                   <PartnerWrapper>
                     <div className="flex h-full w-full items-center justify-center">

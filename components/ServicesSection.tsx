@@ -1,18 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Locale, getTranslations } from "../lib/translations";
 import { 
-  DollarSign, 
-  Package, 
-  Search, 
-  Shield, 
-  Truck, 
-  FileText, 
-  ArrowRight,
-  Tag,
-  Clock
+  ArrowRight
 } from "lucide-react";
 
 type ServicesSectionProps = {
@@ -53,6 +46,26 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
     };
   }, []);
 
+  const iconMap: Record<string, string> = {
+    payments: "/money-transfers.svg",
+    warehousing: "/warehousing-services.svg",
+    sourcing: "/sourcing-service.svg",
+    insurance: "/cargo-insurance.svg",
+    customs: "/customs-brokerage.svg",
+    forwarding: "/cargo-forwarding.svg",
+    local: "/local-delivery.svg",
+  };
+
+  const whiteIconMap: Record<string, string> = {
+    payments: "/money-transfers-white.svg",
+    warehousing: "/warehousing-services-white.svg",
+    sourcing: "/sourcing-service-white.svg",
+    insurance: "/cargo-insurance-white.svg",
+    customs: "/customs-brokerage-white.svg",
+    forwarding: "/cargo-forwarding-white.svg",
+    local: "/local-delivery-white.svg",
+  };
+
   const services = [
     {
       key: "payments",
@@ -63,7 +76,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         ? "Быстрые, безопасные и выгодные денежные переводы в Китай"
         : "Fast, secure and profitable money transfers to China",
       href: `/${locale}/services/payments`,
-      icon: DollarSign,
       cost: locale === "ua" ? "Від 0.5%" : locale === "ru" ? "От 0.5%" : "From 0.5%",
       time: locale === "ua" ? "До 12 годин" : locale === "ru" ? "До 12 часов" : "Up to 12 hours",
     },
@@ -76,7 +88,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         ? "Комплексные складские услуги для хранения и обработки грузов"
         : "Comprehensive warehousing services for storage and cargo processing",
       href: `/${locale}/services/warehousing`,
-      icon: Package,
       cost: locale === "ua" ? "Від 0.5$/кг/міс" : locale === "ru" ? "От 0.5$/кг/мес" : "From $0.5/kg/month",
       time: locale === "ua" ? "Без обмежень" : locale === "ru" ? "Без ограничений" : "Unlimited",
     },
@@ -89,7 +100,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         ? "Профессиональный поиск и закупка товаров в Китае и Корее"
         : "Professional search and procurement of goods in China and Korea",
       href: `/${locale}/services/sourcing`,
-      icon: Search,
       cost: locale === "ua" ? "Від 1000$ за партію" : locale === "ru" ? "От 1000$ за партию" : "From $1000 per batch",
       time: locale === "ua" ? "7-14 днів" : locale === "ru" ? "7-14 дней" : "7-14 days",
     },
@@ -102,7 +112,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         ? "Полное страхование груза на всем маршруте доставки"
         : "Complete insurance coverage for cargo throughout the delivery route",
       href: `/${locale}/services/insurance`,
-      icon: Shield,
       cost: locale === "ua" ? "Від 0.3% від вартості" : locale === "ru" ? "От 0.3% от стоимости" : "From 0.3% of value",
       time: locale === "ua" ? "На весь період" : locale === "ru" ? "На весь период" : "For entire period",
     },
@@ -115,7 +124,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         ? "Полный комплекс таможенно-брокерских услуг"
         : "Full range of customs brokerage services",
       href: `/${locale}/services/customs`,
-      icon: FileText,
       cost: locale === "ua" ? "Від 50$ за декларацію" : locale === "ru" ? "От 50$ за декларацию" : "From $50 per declaration",
       time: locale === "ua" ? "1-3 дні" : locale === "ru" ? "1-3 дня" : "1-3 days",
     },
@@ -128,7 +136,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         ? "Экспедирование грузов с полным сопровождением"
         : "Cargo forwarding with full support",
       href: `/${locale}/services/forwarding`,
-      icon: Truck,
       cost: locale === "ua" ? "Індивідуально" : locale === "ru" ? "Индивидуально" : "Individual",
       time: locale === "ua" ? "За запитом" : locale === "ru" ? "По запросу" : "On request",
     },
@@ -141,7 +148,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         ? "Быстрая и надежная локальная доставка по всему Китаю"
         : "Fast and reliable local delivery across China",
       href: `/${locale}/services/local`,
-      icon: Truck,
       cost: locale === "ua" ? "Індивідуально" : locale === "ru" ? "Индивидуально" : "Individual",
       time: locale === "ua" ? "1-3 дні" : locale === "ru" ? "1-3 дня" : "1-3 days",
     },
@@ -252,9 +258,24 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-3">
                   {locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}
                 </h3>
-                <p className="text-white/90 text-sm sm:text-base">
+                <p className="text-white/90 text-sm sm:text-base mb-6">
                   {locale === "ua" ? "Переглянути всі наші послуги" : locale === "ru" ? "Посмотреть все наши услуги" : "View all our services"}
                 </p>
+                {/* Білі іконки послуг */}
+                <div className="grid grid-cols-4 gap-3 mb-6">
+                  {services.slice(0, 7).map((service) => (
+                    <div key={service.key} className="flex justify-center">
+                      <div className="relative h-16 w-16 sm:h-20 sm:w-20">
+                        <Image
+                          src={whiteIconMap[service.key] || "/money-transfers-white.svg"}
+                          alt={service.title}
+                          fill
+                          className="object-contain opacity-90"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="mt-auto flex items-center justify-end">
                 <div className="rounded-xl bg-white/20 p-3 backdrop-blur-sm transition-all duration-300 group-hover:bg-white/30 group-hover:scale-110 group-hover:rotate-3">
@@ -266,7 +287,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
 
           {/* Service Cards */}
           {services.map((service, index) => {
-            const Icon = service.icon;
             return (
               <Link
                 key={service.key}
@@ -278,8 +298,15 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
               >
                 <div className="flex h-full flex-col min-h-[280px] sm:min-h-[320px]">
                   {/* Icon */}
-                  <div className="mb-4 sm:mb-6 inline-flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 text-teal-600 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:from-teal-100 group-hover:to-teal-200">
-                    <Icon className="h-6 w-6 sm:h-8 sm:w-8" />
+                  <div className="mb-4 sm:mb-6 flex justify-center transition-transform duration-500 group-hover:scale-110">
+                    <div className="relative h-24 w-24 sm:h-28 sm:w-28">
+                      <Image
+                        src={iconMap[service.key] || "/money-transfers.svg"}
+                        alt={service.title}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
                   </div>
 
                   {/* Title */}
@@ -291,25 +318,6 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
                   <p className="mb-4 sm:mb-5 text-sm sm:text-base text-gray-600 leading-relaxed flex-grow">
                     {service.description}
                   </p>
-
-                  {/* Вартість (терміни прибрано за побажанням) */}
-                  <div className="mb-6 space-y-3">
-                    {service.cost && (
-                      <div className="flex items-center gap-3 text-sm md:text-base">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50">
-                          <Tag className="h-4 w-4 text-teal-600 md:h-5 md:w-5" />
-                        </div>
-                        <span className="text-gray-700 font-semibold">
-                          {locale === "ua"
-                            ? "Вартість:"
-                            : locale === "ru"
-                            ? "Стоимость:"
-                            : "Cost:"}{" "}
-                          <span className="text-teal-600">{service.cost}</span>
-                        </span>
-                      </div>
-                    )}
-                  </div>
 
                   {/* Кнопка «Детальніше» у стилі інших CTA */}
                   <div className="mt-auto">

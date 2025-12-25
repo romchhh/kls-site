@@ -10,25 +10,67 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  /* Основний текстовий шрифт — Unbounded по всьому сайту */
-  font-family: var(--font-unbounded), system-ui, sans-serif;
+  /* Основний текстовий шрифт — Roboto по всьому сайту */
+  font-family: var(--font-roboto), system-ui, sans-serif;
   font-weight: 400;
 }
 
-/* Заголовки — лишаємо жирнішими, шрифт успадковується (Unbounded) */
+/* Всі текстові елементи використовують Roboto */
+p,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select,
+label,
+li,
+td,
+th,
+blockquote,
+strong,
+em,
+small,
+b,
+i,
+ul,
+ol {
+  font-family: var(--font-roboto), system-ui, sans-serif;
+}
+
+/* Заголовки використовують Unbounded */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
+  font-family: var(--font-unbounded), system-ui, sans-serif !important;
   font-weight: 700;
 }
 
-/* Підзаголовки використовують той самий шрифт, без окремого Mont */
+/* Елементи всередині заголовків також використовують Unbounded */
+h1 *,
+h2 *,
+h3 *,
+h4 *,
+h5 *,
+h6 *,
+h1 span,
+h2 span,
+h3 span,
+h4 span,
+h5 span,
+h6 span {
+  font-family: var(--font-unbounded), system-ui, sans-serif !important;
+}
+
+/* Підзаголовки використовують Unbounded */
 .subtitle,
 p.lead,
 .text-subtitle {
+  font-family: var(--font-unbounded), system-ui, sans-serif !important;
   font-weight: 400;
 }
 

@@ -10,8 +10,10 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        // Основний шрифт для тексту — Unbounded (через CSS-змінну), з системним fallback
-        sans: ["var(--font-unbounded)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        // Основний шрифт для тексту — Roboto (через CSS-змінну), з системним fallback
+        sans: ["var(--font-roboto)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        // Шрифт для заголовків — Unbounded
+        heading: ["var(--font-unbounded)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
       },
       fontWeight: {
         normal: "400",

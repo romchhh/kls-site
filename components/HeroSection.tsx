@@ -65,21 +65,37 @@ export function HeroSection({ locale }: HeroSectionProps) {
       <div className="absolute inset-0 z-[5] bg-black/50" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-32 pt-40 lg:px-8">
-        <div className="max-w-4xl">
+        <div>
           <h1 
-            className={`mb-6 text-5xl font-bold leading-tight text-white md:text-6xl lg:text-7xl ${
+            className={`mb-6 text-5xl font-bold leading-tight text-white md:text-6xl lg:text-7xl font-heading ${
               isVisible ? 'animate-slide-in-left' : ''
             }`}
-            style={isVisible ? { animationDelay: '0.1s' } : { opacity: 0 }}
+            style={{
+              ...(isVisible ? { animationDelay: '0.1s' } : { opacity: 0 }),
+              fontFamily: 'var(--font-unbounded), system-ui, sans-serif',
+            }}
           >
-            {hero.title ?? "Доставка з Китаю в Україну та по всьому світу"}
+            {(hero.title ?? "Доставка з Китаю в Україну та по всьому світу").split(" та по ").map((part: string, index: number) => (
+              index === 0 ? (
+                <span key={index}>{part} та </span>
+              ) : (
+                <span key={index}>
+                  <br />
+                  по {part}
+                </span>
+              )
+            ))}
           </h1>
 
           <p 
-            className={`mb-12 max-w-3xl text-lg leading-relaxed text-white/95 md:text-xl lg:text-2xl ${
+            className={`mb-12 max-w-3xl text-base leading-relaxed text-white/95 md:text-lg lg:text-xl font-heading font-light ${
               isVisible ? 'animate-slide-in-right' : ''
             }`}
-            style={isVisible ? { animationDelay: '0.3s' } : { opacity: 0 }}
+            style={{
+              ...(isVisible ? { animationDelay: '0.3s' } : { opacity: 0 }),
+              fontFamily: 'var(--font-unbounded), system-ui, sans-serif',
+              fontWeight: 300,
+            }}
           >
             {hero.description ??
               "Твоя логістика — без зайвих турбот: беремо на себе весь шлях від постачальника до дверей клієнта."}
@@ -93,7 +109,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
           >
             <button
               onClick={() => setIsContactModalOpen(true)}
-              className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-teal-600 px-6 text-sm font-semibold text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-teal-700 btn-primary sm:h-14 sm:w-[230px] sm:text-base"
+              className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 px-6 text-sm font-semibold text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:from-teal-600 hover:via-teal-700 hover:to-teal-800 sm:h-14 sm:w-[230px] sm:text-base"
             >
               <span className="relative z-10">
                 {hero.getInTouch ?? "Звʼязатися з менеджером"}

@@ -158,9 +158,10 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-white py-24 md:py-32"
+      className="relative overflow-visible bg-white py-24 md:py-32"
+      style={{ overflow: 'visible' }}
     >
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" style={{ overflow: 'visible' }}>
         {/* Header Section */}
         <div
           className={`relative mx-auto mb-16 max-w-3xl text-center ${
@@ -177,71 +178,75 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
         </div>
 
         {/* Cards Container with Navigation */}
-        <div className="relative">
-          {/* Left Arrow - Mobile only */}
+        <div className="relative overflow-visible" style={{ overflow: 'visible', overflowY: 'visible' }}>
+          {/* Left Arrow - Mobile only - Hidden */}
           <button
             onClick={() => scrollTo("left")}
             disabled={!canScrollLeft}
-            className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed md:hidden"
+            className="hidden absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed md:hidden"
             aria-label="Scroll left"
           >
             <ChevronLeft size={24} className="text-teal-600" />
           </button>
 
-          {/* Right Arrow - Mobile only */}
+          {/* Right Arrow - Mobile only - Hidden */}
           <button
             onClick={() => scrollTo("right")}
             disabled={!canScrollRight}
-            className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed md:hidden"
+            className="hidden absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed md:hidden"
             aria-label="Scroll right"
           >
             <ChevronRight size={24} className="text-teal-600" />
           </button>
 
-          {/* Cards Grid - Horizontal scroll on mobile, grid on desktop */}
+          {/* Cards Grid - Horizontal scroll on all devices */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-2 md:items-stretch md:overflow-x-visible md:pb-0 md:snap-none scrollbar-hide"
+            className="flex gap-4 overflow-x-auto overflow-y-visible pb-4 pt-20 sm:pt-24 scroll-smooth snap-x snap-mandatory scrollbar-hide"
             style={{
               scrollPaddingLeft: '1rem',
               scrollPaddingRight: '1rem',
+              overflowY: 'visible',
             }}
           >
             {content.types.map((type, index) => (
               <Link
                 key={type.key}
                 href={getTypeHref(type.key)}
-                className={`group relative flex min-h-[300px] sm:min-h-[340px] w-[calc(100%-2rem)] flex-shrink-0 snap-center flex-col overflow-hidden rounded-2xl sm:rounded-3xl border border-gray-200 bg-white transition-all duration-300 hover:scale-[1.01] hover:shadow-lg md:min-w-0 md:w-auto md:h-full md:snap-none first:ml-4 last:mr-4 md:first:ml-0 md:last:mr-0 ${
+                className={`group relative flex min-h-[380px] sm:min-h-[420px] w-[calc(100%-1rem)] sm:w-[450px] flex-shrink-0 snap-center flex-col overflow-visible rounded-2xl sm:rounded-3xl border border-gray-200 bg-white transition-all duration-300 hover:scale-[1.01] hover:shadow-lg first:ml-2 last:mr-2 ${
                   isVisible ? "animate-slide-in-bottom" : ""
                 }`}
                 style={
-                  isVisible ? { animationDelay: `${0.4 + index * 0.1}s` } : { opacity: 0 }
+                  isVisible 
+                    ? { animationDelay: `${0.4 + index * 0.1}s`, overflow: 'visible', overflowY: 'visible', overflowX: 'visible' } 
+                    : { opacity: 0, overflow: 'visible', overflowY: 'visible', overflowX: 'visible' }
                 }
               >
+                {/* Icon - positioned absolutely at the top, extending beyond block */}
+                <div className="absolute -top-6 sm:-top-8 left-1/2 -translate-x-1/2 z-30 flex justify-center">
+                  <div className="flex h-44 w-44 sm:h-48 sm:w-48 items-center justify-center">
+                    <Image
+                      src={iconMap[type.key] || "/Group.png"}
+                      alt={type.title}
+                      width={256}
+                      height={256}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+                </div>
+
                 {/* Content */}
-                <div className="relative z-10 flex h-full flex-col justify-between p-4 sm:p-6 md:p-8">
-                  <div className="flex flex-col">
-                    {/* Icon in circle with blue background and border */}
-                    <div className="mb-3 sm:mb-4 flex justify-center">
-                      <div className="flex h-32 w-32 sm:h-40 sm:w-40 items-center justify-center rounded-full border-2 border-teal-200 bg-teal-50 md:h-44 md:w-44">
-                        <Image
-                          src={iconMap[type.key] || "/Group.png"}
-                          alt={type.title}
-                          width={256}
-                          height={256}
-                          className="object-contain w-20 h-20 sm:w-24 sm:h-24 md:w-auto md:h-auto"
-                        />
-                      </div>
-                    </div>
+                <div className="relative z-10 flex h-full flex-col justify-between p-6 sm:p-8 md:p-10 pt-44 sm:pt-52">
+                  <div className="flex flex-col mt-4 sm:mt-32">
 
                     {/* Title */}
-                    <h3 className="mb-3 sm:mb-4 text-center text-lg sm:text-xl font-bold leading-tight text-gray-900 md:text-2xl">
+                    <h3 className="mb-3 sm:mb-4 text-center text-2xl sm:text-xl font-bold leading-tight text-gray-900 md:text-2xl">
                       {type.title}
                     </h3>
 
-                    {/* Features (compact, без розділювачів) */}
+                    {/* Features - only first and last (2 items) */}
                     <div className="flex items-start justify-between gap-2 sm:gap-3 md:gap-4">
-                      {type.features.map((feature, featureIndex) => {
+                      {type.features.filter((_, idx) => idx === 0 || idx === type.features.length - 1).map((feature, featureIndex) => {
                         const FeatureIcon = featureIconMap[feature.icon] || Package;
                         
                         return (
@@ -251,12 +256,12 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                           >
                             <div className="flex flex-1 flex-col items-center px-1 sm:px-2 md:px-4">
                               {/* Icon */}
-                              <div className="mb-2 sm:mb-3 flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center text-teal-600 md:h-12 md:w-12">
-                                <FeatureIcon className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
+                              <div className="mb-2 sm:mb-3 flex h-12 w-12 sm:h-10 sm:w-10 items-center justify-center text-teal-600 md:h-12 md:w-12">
+                                <FeatureIcon className="h-7 w-7 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                               </div>
                               
                               {/* Text */}
-                              <p className="text-center text-[10px] sm:text-xs font-normal leading-tight text-slate-700 md:text-sm">
+                              <p className="text-center text-sm sm:text-xs font-normal leading-tight text-slate-700 md:text-sm">
                                 {feature.text}
                               </p>
                             </div>
@@ -268,9 +273,9 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
 
                   {/* Learn More Button */}
                   <div className="mt-3 sm:mt-4 flex justify-center">
-                    <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl border border-teal-200 bg-white px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800 md:px-5 md:py-2.5">
+                    <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2 sm:px-4 sm:py-2 text-base sm:text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800 md:px-5 md:py-2.5">
                       <span>{content.learnMore}</span>
-                      <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                      <ArrowRight className="h-5 w-5 sm:h-4 sm:w-4" />
                     </div>
                   </div>
                 </div>
@@ -306,6 +311,27 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
+          </div>
+
+          {/* Bottom Navigation Arrows - Desktop and Mobile */}
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <button
+              onClick={() => scrollTo("left")}
+              disabled={!canScrollLeft}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white border-2 border-teal-200 text-teal-600 shadow-md transition-all duration-300 hover:bg-teal-50 hover:border-teal-300 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            
+            <button
+              onClick={() => scrollTo("right")}
+              disabled={!canScrollRight}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white border-2 border-teal-200 text-teal-600 shadow-md transition-all duration-300 hover:bg-teal-50 hover:border-teal-300 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+              aria-label="Scroll right"
+            >
+              <ChevronRight size={20} />
+            </button>
           </div>
         </div>
       </div>

@@ -11,7 +11,8 @@ import { ScrollToTop } from "../../components/ScrollToTop";
 import { ContactButton } from "../../components/ContactButton";
 import { Locale, getTranslations } from "../../lib/translations";
 import Link from "next/link";
-import { ArrowRight, MapPin, Globe, Truck } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 
 // Дозволяємо динамічний рендеринг для правильної роботи відео
 export const dynamic = 'force-dynamic';
@@ -38,7 +39,7 @@ export default async function HomePage({
         : locale === "ru"
         ? "Комплексная доставка грузов из Китая в Украину под ключ. Мы берем на себя все этапы логистического процесса от получения груза на складе в Китае до доставки в Украину."
         : "Comprehensive delivery of cargo from China to Ukraine turnkey. We take care of all stages of the logistics process from receiving cargo at the warehouse in China to delivery to Ukraine.",
-      icon: MapPin,
+      image: "/delivery-ukraine.svg",
       gradient: "from-blue-500 to-teal-500",
       bgGradient: "from-blue-50 to-teal-50",
       subLinks: [
@@ -57,7 +58,7 @@ export default async function HomePage({
         : locale === "ru"
         ? "Доставка грузов в страны Европейского Союза и другие страны мира. Широкий спектр логистических решений для международной торговли."
         : "Delivery of cargo to European Union countries and other countries around the world. A wide range of logistics solutions for international trade.",
-      icon: Globe,
+      image: "/delivery-eu-world.svg",
       gradient: "from-teal-500 to-cyan-500",
       bgGradient: "from-teal-50 to-cyan-50",
       subLinks: [
@@ -77,7 +78,7 @@ export default async function HomePage({
         : locale === "ru"
         ? "Мы обеспечиваем полный комплекс логистических решений для международных грузовых перевозок, сочетая надежность, прозрачность и индивидуальный подход."
         : "We provide a full range of logistics solutions for international cargo transportation, combining reliability, transparency and an individual approach.",
-      icon: Truck,
+      image: "/delivery-international.svg",
       gradient: "from-indigo-500 to-purple-500",
       bgGradient: "from-indigo-50 to-purple-50",
       subLinks: [
@@ -111,36 +112,45 @@ export default async function HomePage({
           
           <div className="grid gap-8 md:grid-cols-3">
             {deliveryLinks.map((link) => {
-              const Icon = link.icon;
               return (
                 <div
                   key={link.key}
-                  className="group relative overflow-hidden rounded-3xl border-2 border-gray-200 bg-white transition-all duration-500 hover:border-transparent hover:shadow-2xl hover:-translate-y-2"
+                  className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200/60 bg-gradient-to-br from-white via-white to-slate-50/50 shadow-lg backdrop-blur-sm transition-all duration-500 hover:border-teal-200/60 hover:shadow-2xl hover:-translate-y-1"
                 >
-                  {/* Градієнтний фон при hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${link.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  {/* Animated gradient accent on left */}
+                  <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-teal-500 via-teal-400 to-teal-600 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:shadow-[0_0_20px_rgba(20,184,166,0.5)]" />
+                  
+                  {/* Decorative corner element */}
+                  <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 bg-gradient-to-br from-teal-50/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   
                   {/* Контент */}
-                  <div className="relative z-10 p-8">
+                  <div className="relative z-10 flex flex-col h-full p-8">
                     {/* Іконка */}
-                    <div className={`mb-6 inline-flex rounded-2xl bg-gradient-to-br ${link.gradient} p-4 shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
-                      <Icon className="h-8 w-8 text-white" />
+                    <div className="mb-6 flex justify-center transition-transform duration-500 group-hover:scale-110">
+                      <div className="relative h-20 w-20 sm:h-24 sm:w-24">
+                        <Image
+                          src={link.image}
+                          alt={link.title}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
                     </div>
                     
                     {/* Заголовок */}
                     <Link href={link.href}>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors cursor-pointer">
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 transition-colors duration-300 group-hover:text-teal-700 cursor-pointer">
                         {link.title}
                       </h3>
                     </Link>
                     
                     {/* Опис */}
-                    <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+                    <p className="text-gray-600 text-sm mb-6 leading-relaxed transition-colors duration-300 group-hover:text-slate-700">
                       {link.description}
                     </p>
                     
                     {/* Підпосилання */}
-                    <div className="space-y-2 mb-6">
+                    <div className="space-y-2 mb-6 flex-grow">
                       {link.subLinks.map((subLink) => (
                         <Link
                           key={subLink.key}
@@ -155,14 +165,20 @@ export default async function HomePage({
                       ))}
                     </div>
                     
-                    {/* Стрілка */}
-                    <Link href={link.href} className="flex items-center text-teal-600 font-semibold group-hover:text-teal-700 transition-colors">
-                      <span className="text-sm mr-2">
+                    {/* Стрілка - зафіксована знизу */}
+                    <Link 
+                      href={link.href} 
+                      className="group/btn mt-auto inline-flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out hover:bg-teal-50 hover:border-teal-300 hover:text-teal-800"
+                    >
+                      <span>
                         {locale === "ua" ? "Дізнатися більше" : locale === "ru" ? "Узнать больше" : "Learn more"}
                       </span>
-                      <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                     </Link>
                   </div>
+                  
+                  {/* Subtle glow effect on hover */}
+                  <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-500/0 via-teal-500/0 to-teal-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-5" />
                 </div>
               );
             })}

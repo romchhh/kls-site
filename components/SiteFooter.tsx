@@ -13,15 +13,23 @@ type SiteFooterProps = {
 export function SiteFooter({ locale }: SiteFooterProps) {
   const t = getTranslations(locale);
   const content = t?.footer || {
-    description: "KLS Logistics",
-    copyright: "© 2024 KLS Logistics. All rights reserved.",
+    description: locale === "ua"
+      ? "KLS Logistics — провідна логістична компанія, яка надає комплексні рішення для міжнародної доставки та логістики."
+      : locale === "ru"
+      ? "KLS Logistics — ведущая логистическая компания, предоставляющая комплексные решения для международной доставки и логистики."
+      : "KLS Logistics is a leading logistics company providing comprehensive solutions for international shipping and logistics.",
+    copyright: "© 2025 KLS. Всі права захищені.",
     navigation: "Навігація",
     services: "Послуги",
     support: "Підтримка",
     addresses: "Адреси",
     china: "Китай",
     ukraine: "Україна",
-    tagline: "Глобальна доставка. Локальна експертиза.",
+    tagline: locale === "ua"
+      ? "Рухаємось відстанями, об'єднуємо доставкою."
+      : locale === "ru"
+      ? "Движемся расстояниями, объединяем доставкой."
+      : "Driven by Distance, United by Delivery.",
     developedBy: "Розроблено",
   };
   
@@ -83,18 +91,24 @@ export function SiteFooter({ locale }: SiteFooterProps) {
           >
             <Link href={`/${locale}`} className="flex items-center" aria-label="KLS home">
               <Image
-                src="/ЛОГО.png"
+                src="/ЛОГО(1).png"
                 alt="KLS Logistics"
-                width={140}
-                height={42}
-                className="h-8 w-auto md:h-10"
+                width={120}
+                height={36}
+                className="h-8 w-auto md:h-10 brightness-0 invert"
                 priority
               />
             </Link>
             <p className="max-w-md text-sm leading-relaxed text-white/70">
               {content.description}
             </p>
-            <p className="text-xs text-white/60">{content.copyright}</p>
+            <p className="text-xs text-white/60">
+              {locale === "ua"
+                ? "© 2025 KLS. Всі права захищені."
+                : locale === "ru"
+                ? "© 2025 KLS. Все права защищены."
+                : "© 2025 KLS. All rights reserved."}
+            </p>
           </div>
 
           <div className={isVisible ? 'animate-slide-in-bottom' : ''}
@@ -116,33 +130,101 @@ export function SiteFooter({ locale }: SiteFooterProps) {
             </div>
           </div>
 
-          <div className={`space-y-8 ${
+          <div className={`space-y-6 ${
             isVisible ? 'animate-slide-in-right' : ''
           }`}
           style={isVisible ? { animationDelay: '0.5s' } : { opacity: 0 }}
           >
+            {/* Соціальні мережі зверху */}
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.instagram.com/klslogistics"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center transition-all duration-200 hover:opacity-80"
+                aria-label="Instagram"
+              >
+                <Image
+                  src="/InstagramLogo.svg"
+                  alt="Instagram"
+                  width={32}
+                  height={32}
+                  className="brightness-0 invert transition-transform duration-200 group-hover:scale-110"
+                />
+              </a>
+              <a
+                href="https://www.tiktok.com/@klslogistics"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center transition-all duration-200 hover:opacity-80"
+                aria-label="TikTok"
+              >
+                <Image
+                  src="/TiktokLogo.svg"
+                  alt="TikTok"
+                  width={32}
+                  height={32}
+                  className="brightness-0 invert transition-transform duration-200 group-hover:scale-110"
+                />
+              </a>
+              <a
+                href="https://t.me/klslogistics"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center transition-all duration-200 hover:opacity-80"
+                aria-label="Telegram"
+              >
+                <Image
+                  src="/TelegramLogo.svg"
+                  alt="Telegram"
+                  width={32}
+                  height={32}
+                  className="brightness-0 invert transition-transform duration-200 group-hover:scale-110"
+                />
+              </a>
+              <a
+                href="https://www.facebook.com/klslogistics"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center transition-all duration-200 hover:opacity-80"
+                aria-label="Facebook"
+              >
+                <Image
+                  src="/FacebookLogo.svg"
+                  alt="Facebook"
+                  width={32}
+                  height={32}
+                  className="brightness-0 invert transition-transform duration-200 group-hover:scale-110"
+                />
+              </a>
+            </div>
+
+            {/* Контакти */}
             <div>
-              <h4 className="text-xs uppercase tracking-[0.35em] text-white/50">
+              <h4 className="text-xs uppercase tracking-[0.35em] text-white/50 mb-4">
                 {contactTitle}
               </h4>
-              <div className="mt-6 space-y-4 text-sm text-white/75">
+              <div className="space-y-4">
                 <a
                   href="https://t.me/KlsInternationalBot"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 text-white text-sm font-medium"
                 >
-                  <MapPin size={14} className="hidden" />
-                  <span className="inline-flex items-center gap-2">
-                    <span className="inline-block h-2 w-2 rounded-full bg-teal-400" />
-                    Telegram: @KlsInternationalBot
-                  </span>
+                  <Image
+                    src="/TelegramLogo.svg"
+                    alt="Telegram"
+                    width={20}
+                    height={20}
+                    className="brightness-0 invert"
+                  />
+                  <span>TELEGRAM-BOT</span>
                 </a>
                 <a
                   href="mailto:support@kls.international"
-                  className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                  className="flex items-center gap-2 text-sm text-white/75 transition-colors hover:text-white"
                 >
-                  <Mail size={14} />
+                  <Mail size={16} />
                   support@kls.international
                 </a>
               </div>
@@ -155,19 +237,19 @@ export function SiteFooter({ locale }: SiteFooterProps) {
         }`}
         style={isVisible ? { animationDelay: '0.6s' } : { opacity: 0 }}
         >
-          <p className="mb-3 text-xs text-white/50">{content.tagline}</p>
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-[10px] uppercase tracking-[0.25em] text-white/30">
+          <p className="mb-4 text-sm text-white/70">{content.tagline}</p>
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-xs uppercase tracking-[0.25em] text-white/50">
               {content.developedBy}
             </span>
             <a
               href="https://new.telebots.site/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.25em] text-white/50 transition-colors duration-200 hover:text-white hover:border-white/20"
+              className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium uppercase tracking-[0.25em] text-white transition-all duration-200 hover:bg-white/20 hover:border-white/30"
             >
               <span>TELEBOTS</span>
-              <ArrowUpRight size={10} />
+              <ArrowUpRight size={14} />
             </a>
           </div>
         </div>

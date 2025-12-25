@@ -119,22 +119,22 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     { 
       value: "air", 
       label: costCalc.deliveryTypes.air, 
-      icon: "/авіодоставка.png",
+      icon: "/air-delivery.svg",
     },
     { 
       value: "sea", 
       label: costCalc.deliveryTypes.sea, 
-      icon: "/морськіперевезення.png",
+      icon: "/sea-delivery.svg",
     },
     { 
       value: "rail", 
       label: costCalc.deliveryTypes.rail, 
-      icon: "/залізниця.png",
+      icon: "/rail-delivery.svg",
     },
     { 
       value: "multimodal", 
       label: costCalc.deliveryTypes.multimodal, 
-      icon: "/перевезення.png",
+      icon: "/multimodal-delivery.svg",
     },
   ];
 
@@ -340,13 +340,13 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                           : "border-gray-200 bg-gray-50 hover:border-teal-300 hover:bg-[#E8FDF8] hover:shadow-md"
                       }`}
                     >
-                      <div className="flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-white shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:scale-105">
+                      <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center transition-all duration-300 group-hover:scale-105">
                         <Image
                           src={type.icon}
                           alt={type.label}
-                          width={40}
-                          height={40}
-                          className={`object-contain transition-all duration-300 w-8 h-8 sm:w-10 sm:h-10 ${
+                          width={80}
+                          height={80}
+                          className={`object-contain transition-all duration-300 w-12 h-12 sm:w-16 sm:h-16 ${
                             isSelected ? "opacity-100" : "opacity-90 group-hover:opacity-100"
                           }`}
                         />
@@ -356,6 +356,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                       }`}>
                         {type.label}
                     </span>
+                      
                       {isSelected && (
                         <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
                           <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 text-teal-600" />

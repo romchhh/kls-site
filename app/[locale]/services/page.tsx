@@ -2,7 +2,8 @@ import { Navigation } from "../../../components/Navigation";
 import { SiteFooter } from "../../../components/SiteFooter";
 import { Locale, getTranslations } from "../../../lib/translations";
 import Link from "next/link";
-import { ArrowRight, Package, DollarSign, Search, Shield, Truck, FileText } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 
 export default async function ServicesPage({
   params,
@@ -11,6 +12,16 @@ export default async function ServicesPage({
 }) {
   const { locale } = await params;
   const t = getTranslations(locale);
+
+  const iconMap: Record<string, string> = {
+    payments: "/money-transfers.svg",
+    warehousing: "/warehousing-services.svg",
+    sourcing: "/sourcing-service.svg",
+    insurance: "/cargo-insurance.svg",
+    customs: "/customs-brokerage.svg",
+    forwarding: "/cargo-forwarding.svg",
+    local: "/local-delivery.svg",
+  };
 
   const services = [
     {
@@ -22,9 +33,6 @@ export default async function ServicesPage({
         ? "Комплексные складские услуги для хранения, обработки и подготовки ваших грузов"
         : "Comprehensive warehousing services for storage, processing and preparation of your cargo",
       href: `/${locale}/services/warehousing`,
-      icon: Package,
-      color: "from-blue-500 to-cyan-500",
-      bgColor: "from-blue-50 to-cyan-50",
     },
     {
       key: "payments",
@@ -35,9 +43,6 @@ export default async function ServicesPage({
         ? "Быстрые, безопасные и выгодные денежные переводы в Китай для бизнеса и частных лиц"
         : "Fast, secure and profitable money transfers to China for businesses and individuals",
       href: `/${locale}/services/payments`,
-      icon: DollarSign,
-      color: "from-emerald-500 to-teal-500",
-      bgColor: "from-emerald-50 to-teal-50",
     },
     {
       key: "sourcing",
@@ -48,9 +53,6 @@ export default async function ServicesPage({
         ? "Профессиональный поиск и закупка товаров в Китае и Корее. Контроль качества и проверка поставщиков"
         : "Professional search and procurement of goods in China and Korea. Quality control and supplier verification",
       href: `/${locale}/services/sourcing`,
-      icon: Search,
-      color: "from-purple-500 to-pink-500",
-      bgColor: "from-purple-50 to-pink-50",
     },
     {
       key: "insurance",
@@ -61,9 +63,6 @@ export default async function ServicesPage({
         ? "Полное страхование вашего груза на всем маршруте доставки. Защита от непредвиденных ситуаций"
         : "Complete insurance coverage for your cargo throughout the delivery route. Protection from unforeseen situations",
       href: `/${locale}/services/insurance`,
-      icon: Shield,
-      color: "from-orange-500 to-amber-500",
-      bgColor: "from-orange-50 to-amber-50",
     },
     {
       key: "local",
@@ -74,9 +73,6 @@ export default async function ServicesPage({
         ? "Быстрая и надежная доставка по Украине и другим странам. Логистические решения для последней мили"
         : "Fast and reliable delivery across Ukraine and other countries. Logistics solutions for the last mile",
       href: `/${locale}/services/local`,
-      icon: Truck,
-      color: "from-pink-500 to-rose-500",
-      bgColor: "from-pink-50 to-rose-50",
     },
     {
       key: "customs",
@@ -87,9 +83,6 @@ export default async function ServicesPage({
         ? "Полный комплекс таможенно-брокерских услуг для импортных и экспортных грузов"
         : "Full range of customs brokerage services for import and export cargo",
       href: `/${locale}/services/customs`,
-      icon: FileText,
-      color: "from-indigo-500 to-blue-500",
-      bgColor: "from-indigo-50 to-blue-50",
     },
     {
       key: "forwarding",
@@ -100,9 +93,6 @@ export default async function ServicesPage({
         ? "Экспедирование грузов с полным сопровождением и организацией международных перевозок"
         : "Cargo forwarding with full support and organization of international transportation",
       href: `/${locale}/services/forwarding`,
-      icon: Truck,
-      color: "from-teal-500 to-cyan-500",
-      bgColor: "from-teal-50 to-cyan-50",
     },
   ];
 
@@ -124,39 +114,41 @@ export default async function ServicesPage({
           {/* Services Grid */}
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => {
-              const Icon = service.icon;
               return (
                 <Link
                   key={service.key}
                   href={service.href}
-                  className="group relative overflow-hidden rounded-3xl border-2 border-gray-200 bg-white p-8 transition-all duration-500 hover:border-transparent hover:shadow-2xl hover:-translate-y-2"
+                  className="group relative flex-shrink-0 rounded-3xl border-2 border-gray-200 bg-white p-5 sm:p-7 shadow-none transition-all duration-500 hover:border-teal-300 hover:scale-105 hover:-translate-y-1"
                 >
-                  {/* Gradient background on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.bgColor} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} />
-                  
-                  {/* Content */}
-                  <div className="relative z-10">
+                  <div className="flex h-full flex-col min-h-[280px] sm:min-h-[320px]">
                     {/* Icon */}
-                    <div className={`mb-6 inline-flex rounded-2xl bg-gradient-to-br ${service.color} p-4 shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
-                      <Icon className="h-8 w-8 text-white" />
+                    <div className="mb-4 sm:mb-6 flex justify-center transition-transform duration-500 group-hover:scale-110">
+                      <div className="relative h-24 w-24 sm:h-28 sm:w-28">
+                        <Image
+                          src={iconMap[service.key] || "/money-transfers.svg"}
+                          alt={service.title}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
                     </div>
 
                     {/* Title */}
-                    <h2 className="mb-4 text-2xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors">
+                    <h3 className="mb-2 sm:mb-3 text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
                       {service.title}
-                    </h2>
+                    </h3>
 
                     {/* Description */}
-                    <p className="mb-6 text-gray-600 leading-relaxed">
+                    <p className="mb-4 sm:mb-5 text-sm sm:text-base text-gray-600 leading-relaxed flex-grow">
                       {service.description}
                     </p>
 
-                    {/* Arrow */}
-                    <div className="flex items-center text-teal-600 font-semibold group-hover:text-teal-700 transition-colors">
-                      <span className="text-sm mr-2">
-                        {locale === "ua" ? "Дізнатися більше" : locale === "ru" ? "Узнать больше" : "Learn more"}
-                      </span>
-                      <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />
+                    {/* Кнопка «Детальніше» у стилі інших CTA */}
+                    <div className="mt-auto">
+                      <div className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-white px-5 py-2.5 text-sm md:text-base font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
+                        <span>{t.services.readMore}</span>
+                        <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
+                      </div>
                     </div>
                   </div>
                 </Link>
