@@ -134,8 +134,8 @@ export async function GET(
       });
     };
 
-    // Get logo as base64
-    const logoBase64 = await getLogoBase64();
+    // Get banner as base64
+    const bannerBase64 = await getBannerBase64();
 
     // Generate HTML for PDF
     const htmlContent = `
@@ -155,20 +155,13 @@ export async function GET(
       padding: 0;
     }
     .header {
-      background-color: #006D77;
-      height: 100px;
-      position: relative;
+      width: 100%;
       margin-bottom: 10px;
     }
-    .logo {
-      position: absolute;
-      top: -30px;
-      left: 10px;
-      width: 280px;
-      height: 120px;
-      background-color: #006D77;
-      padding: 10px;
-      box-sizing: border-box;
+    .banner {
+      width: 100%;
+      height: auto;
+      display: block;
     }
     .info-row {
       display: flex;
@@ -278,7 +271,7 @@ export async function GET(
 </head>
 <body>
   <div class="header">
-    <img src="data:image/png;base64,${logoBase64}" class="logo" alt="KLS Logo">
+    <img src="data:image/png;base64,${bannerBase64}" class="banner" alt="KLS Banner">
   </div>
 
   <div class="info-row">
@@ -644,16 +637,16 @@ export async function GET(
   }
 }
 
-// Helper function to get logo as base64
-async function getLogoBase64(): Promise<string> {
+// Helper function to get banner as base64
+async function getBannerBase64(): Promise<string> {
   try {
-    const logoPath = path.join(process.cwd(), "public", "білий на бірюзовому@2x.png");
-    if (fs.existsSync(logoPath)) {
-      const logoBuffer = fs.readFileSync(logoPath);
-      return logoBuffer.toString("base64");
+    const bannerPath = path.join(process.cwd(), "public", "banner.png");
+    if (fs.existsSync(bannerPath)) {
+      const bannerBuffer = fs.readFileSync(bannerPath);
+      return bannerBuffer.toString("base64");
     }
   } catch (error) {
-    console.error("Error loading logo:", error);
+    console.error("Error loading banner:", error);
   }
   return "";
 }
