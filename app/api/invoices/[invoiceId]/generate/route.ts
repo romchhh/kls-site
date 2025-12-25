@@ -815,33 +815,6 @@ export async function GET(
       right: { style: "thin", color: { argb: "FF000000" } },
     };
 
-    // Код клієнта
-    currentRow++;
-    worksheet.mergeCells(`J${currentRow}:K${currentRow}`);
-    worksheet.getCell(`J${currentRow}`).value = "Код клієнта:";
-    worksheet.getCell(`J${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`J${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
-    worksheet.getCell(`J${currentRow}`).fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "FFD9D9D9" },
-    };
-    worksheet.getCell(`J${currentRow}`).border = {
-      left: { style: "thin", color: { argb: "FF000000" } },
-      bottom: { style: "thin", color: { argb: "FF000000" } },
-      right: { style: "thin", color: { argb: "FF000000" } },
-    };
-    
-    worksheet.mergeCells(`L${currentRow}:M${currentRow}`);
-    worksheet.getCell(`L${currentRow}`).value = shipment.user.clientCode;
-    worksheet.getCell(`L${currentRow}`).font = { bold: true, size: 12 };
-    worksheet.getCell(`L${currentRow}`).alignment = { horizontal: "right", vertical: "middle" };
-    worksheet.getCell(`L${currentRow}`).border = {
-      left: { style: "thin", color: { argb: "FF000000" } },
-      bottom: { style: "thin", color: { argb: "FF000000" } },
-      right: { style: "thin", color: { argb: "FF000000" } },
-    };
-
     currentRow += 2;
 
     // Загалом до сплати (USD) with gray background

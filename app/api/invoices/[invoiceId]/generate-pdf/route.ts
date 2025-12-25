@@ -166,6 +166,9 @@ export async function GET(
       left: 10px;
       width: 280px;
       height: 120px;
+      background-color: #006D77;
+      padding: 10px;
+      box-sizing: border-box;
     }
     .info-row {
       display: flex;
@@ -421,10 +424,6 @@ export async function GET(
       <tr>
         <td class="label">Баланс клієнта:</td>
         <td class="value">0,00 USD</td>
-      </tr>
-      <tr>
-        <td class="label">Код клієнта:</td>
-        <td class="value">${shipment.user.clientCode}</td>
       </tr>
     </table>
   </div>
