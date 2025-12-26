@@ -372,20 +372,20 @@ export default async function UkraineTurnkeyPage({
       <Navigation locale={locale} />
       <main className="pt-32 pb-20">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-blue-50 via-teal-50 to-white py-20 overflow-hidden">
+        <section className="relative bg-gradient-to-br from-blue-50 via-teal-50 to-white py-12 sm:py-16 md:py-20 overflow-hidden">
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-400 rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-400 rounded-full blur-3xl" />
           </div>
           
-          <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-8 lg:grid-cols-3">
               {/* Left column - Title and Description */}
               <div className="lg:col-span-2">
-                <h1 className="mb-6 text-5xl md:text-6xl font-bold text-gray-900">
+                <h1 className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 break-words">
                   {t.delivery.ukraineTurnkey}
                 </h1>
-                <p className="text-xl text-gray-700 leading-relaxed">
+                <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed break-words">
                   {locale === "ua" &&
                     "Комплексна доставка вантажів з Китаю в Україну під ключ. Ми беремо на себе всі етапи логістичного процесу від отримання вантажу на складі в Китаї до доставки в Україну."}
                   {locale === "ru" &&
@@ -404,9 +404,9 @@ export default async function UkraineTurnkeyPage({
         </section>
 
         {/* Content with Sidebar */}
-        <section id="content-section" className="py-20 relative">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="grid gap-8 lg:grid-cols-4">
+        <section id="content-section" className="py-12 sm:py-20 relative">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid gap-6 sm:gap-8 lg:grid-cols-4">
               {/* Left Sidebar Navigation - Desktop only */}
               <DeliverySidebarNav deliveryTypes={deliveryTypes} locale={locale} />
 
@@ -418,36 +418,36 @@ export default async function UkraineTurnkeyPage({
                     <div className="rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3">
                       <Ship className="h-6 w-6 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-900">{seaData.title}</h2>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{seaData.title}</h2>
                   </div>
-                  <p className="mb-6 text-xl text-gray-600">{seaData.subtitle}</p>
+                  <p className="mb-6 text-lg sm:text-xl text-gray-600 break-words">{seaData.subtitle}</p>
                   
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-teal-50 to-blue-50 p-8">
-                    <p className="text-lg text-gray-700">{seaData.intro}</p>
+                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-teal-50 to-blue-50 p-4 sm:p-6 md:p-8">
+                    <p className="text-base sm:text-lg text-gray-700 break-words">{seaData.intro}</p>
                   </div>
 
-                  <div className="space-y-8 mb-8">
+                  <div className="space-y-6 sm:space-y-8 mb-8">
                     {seaData.sections.map((section, index) => (
-                      <div key={index} className="border-l-4 border-teal-500 pl-6">
-                        <h3 className="mb-3 text-2xl font-semibold text-gray-900">{section.title}</h3>
-                        <p className="text-gray-600 leading-relaxed">{section.text}</p>
+                      <div key={index} className="border-l-4 border-teal-500 pl-4 sm:pl-6">
+                        <h3 className="mb-3 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{section.title}</h3>
+                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words">{section.text}</p>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mb-8 rounded-2xl bg-gray-50 p-8">
-                    <p className="mb-6 text-lg font-semibold text-gray-900">{seaData.cta}</p>
+                  <div className="mb-8 rounded-2xl bg-gray-50 p-4 sm:p-6 md:p-8">
+                    <p className="mb-6 text-base sm:text-lg font-semibold text-gray-900 break-words">{seaData.cta}</p>
                   </div>
 
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900">{seaData.tariffs}</h3>
-                      <p className="mb-2 text-2xl font-bold text-teal-600">{seaData.tariffFrom}</p>
-                      <p className="text-sm text-gray-600">{seaData.tariffFcl}</p>
+                  <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{seaData.tariffs}</h3>
+                      <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">{seaData.tariffFrom}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 break-words">{seaData.tariffFcl}</p>
                     </div>
-                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900">{seaData.terms}</h3>
-                      <p className="text-2xl font-bold text-teal-600">{seaData.termsValue}</p>
+                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{seaData.terms}</h3>
+                      <p className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600 break-words">{seaData.termsValue}</p>
                     </div>
                   </div>
                 </section>
@@ -458,35 +458,35 @@ export default async function UkraineTurnkeyPage({
                     <div className="rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 p-3">
                       <Plane className="h-6 w-6 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-900">{airData.title}</h2>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{airData.title}</h2>
                   </div>
-                  <p className="mb-6 text-xl text-gray-600">{airData.subtitle}</p>
+                  <p className="mb-6 text-lg sm:text-xl text-gray-600 break-words">{airData.subtitle}</p>
                   
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
-                    <p className="text-lg text-gray-700">{airData.intro}</p>
+                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 md:p-8">
+                    <p className="text-base sm:text-lg text-gray-700 break-words">{airData.intro}</p>
                   </div>
 
-                  <div className="space-y-8 mb-8">
+                  <div className="space-y-6 sm:space-y-8 mb-8">
                     {airData.sections.map((section, index) => (
-                      <div key={index} className="border-l-4 border-blue-500 pl-6">
-                        <h3 className="mb-3 text-2xl font-semibold text-gray-900">{section.title}</h3>
-                        <p className="text-gray-600 leading-relaxed">{section.text}</p>
+                      <div key={index} className="border-l-4 border-blue-500 pl-4 sm:pl-6">
+                        <h3 className="mb-3 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{section.title}</h3>
+                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words">{section.text}</p>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mb-8 rounded-2xl bg-gray-50 p-8">
-                    <p className="mb-6 text-lg font-semibold text-gray-900">{airData.cta}</p>
+                  <div className="mb-8 rounded-2xl bg-gray-50 p-4 sm:p-6 md:p-8">
+                    <p className="mb-6 text-base sm:text-lg font-semibold text-gray-900 break-words">{airData.cta}</p>
                   </div>
 
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900">{airData.tariffs}</h3>
-                      <p className="text-2xl font-bold text-blue-600">{airData.tariffFrom}</p>
+                  <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{airData.tariffs}</h3>
+                      <p className="text-xl sm:text-2xl font-bold text-blue-600 break-words">{airData.tariffFrom}</p>
                     </div>
-                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900">{airData.terms}</h3>
-                      <p className="text-lg font-bold text-blue-600">{airData.termsValue}</p>
+                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{airData.terms}</h3>
+                      <p className="text-base sm:text-lg font-bold text-blue-600 break-words">{airData.termsValue}</p>
                     </div>
                   </div>
                 </section>
@@ -497,46 +497,46 @@ export default async function UkraineTurnkeyPage({
                     <div className="rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-3">
                       <Train className="h-6 w-6 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-900">{railData.title}</h2>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{railData.title}</h2>
                   </div>
                   
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 p-8">
-                    <p className="text-lg text-gray-700">{railData.intro}</p>
+                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 sm:p-6 md:p-8">
+                    <p className="text-base sm:text-lg text-gray-700 break-words">{railData.intro}</p>
                   </div>
 
-                  <div className="mb-8 grid gap-8 md:grid-cols-2">
+                  <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
                     <div>
-                      <h3 className="mb-4 text-2xl font-semibold text-gray-900">{railData.whatWeDo}</h3>
-                      <ul className="space-y-3">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railData.whatWeDo}</h3>
+                      <ul className="space-y-2 sm:space-y-3">
                         {railData.services.map((service, index) => (
-                          <li key={index} className="flex items-start gap-3">
-                            <span className="mt-1 text-teal-600">•</span>
-                            <span className="text-gray-600">{service}</span>
+                          <li key={index} className="flex items-start gap-2 sm:gap-3">
+                            <span className="mt-1 text-teal-600 flex-shrink-0">•</span>
+                            <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h3 className="mb-4 text-2xl font-semibold text-gray-900">{railData.forWhom}</h3>
-                      <ul className="space-y-3">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railData.forWhom}</h3>
+                      <ul className="space-y-2 sm:space-y-3">
                         {railData.clients.map((client, index) => (
-                          <li key={index} className="flex items-start gap-3">
-                            <span className="mt-1 text-teal-600">•</span>
-                            <span className="text-gray-600">{client}</span>
+                          <li key={index} className="flex items-start gap-2 sm:gap-3">
+                            <span className="mt-1 text-teal-600 flex-shrink-0">•</span>
+                            <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
 
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900">{railData.tariffs}</h3>
-                      <p className="text-2xl font-bold text-teal-600">{railData.tariffFrom}</p>
+                  <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{railData.tariffs}</h3>
+                      <p className="text-xl sm:text-2xl font-bold text-teal-600 break-words">{railData.tariffFrom}</p>
                     </div>
-                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900">{railData.terms}</h3>
-                      <p className="text-lg font-bold text-teal-600">{railData.termsValue}</p>
+                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{railData.terms}</h3>
+                      <p className="text-base sm:text-lg font-bold text-teal-600 break-words">{railData.termsValue}</p>
                     </div>
                   </div>
                 </section>
@@ -547,60 +547,60 @@ export default async function UkraineTurnkeyPage({
                     <div className="rounded-xl bg-gradient-to-br from-orange-500 to-red-500 p-3">
                       <Globe className="h-6 w-6 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-900">{multimodalData.title}</h2>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{multimodalData.title}</h2>
                   </div>
-                  <p className="mb-2 text-xl font-semibold text-gray-700">{multimodalData.subtitle}</p>
-                  <p className="mb-6 text-lg text-gray-600">{multimodalData.intro}</p>
+                  <p className="mb-2 text-lg sm:text-xl font-semibold text-gray-700 break-words">{multimodalData.subtitle}</p>
+                  <p className="mb-6 text-base sm:text-lg text-gray-600 break-words">{multimodalData.intro}</p>
                   
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 p-8">
-                    <p className="text-lg text-gray-700">{multimodalData.description}</p>
+                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 sm:p-6 md:p-8">
+                    <p className="text-base sm:text-lg text-gray-700 break-words">{multimodalData.description}</p>
                   </div>
 
-                  <div className="mb-8 grid gap-8 md:grid-cols-2">
+                  <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
                     <div>
-                      <h3 className="mb-4 text-2xl font-semibold text-gray-900">{multimodalData.whatIncludes}</h3>
-                      <ul className="space-y-3">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{multimodalData.whatIncludes}</h3>
+                      <ul className="space-y-2 sm:space-y-3">
                         {multimodalData.services.map((service, index) => (
-                          <li key={index} className="flex items-start gap-3">
-                            <span className="mt-1 text-purple-600">•</span>
-                            <span className="text-gray-600">{service}</span>
+                          <li key={index} className="flex items-start gap-2 sm:gap-3">
+                            <span className="mt-1 text-purple-600 flex-shrink-0">•</span>
+                            <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h3 className="mb-4 text-2xl font-semibold text-gray-900">{multimodalData.combinations}</h3>
-                      <ul className="space-y-3">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{multimodalData.combinations}</h3>
+                      <ul className="space-y-2 sm:space-y-3">
                         {multimodalData.comboList.map((combo, index) => (
-                          <li key={index} className="flex items-start gap-3">
-                            <span className="mt-1 text-purple-600">•</span>
-                            <span className="text-gray-600">{combo}</span>
+                          <li key={index} className="flex items-start gap-2 sm:gap-3">
+                            <span className="mt-1 text-purple-600 flex-shrink-0">•</span>
+                            <span className="text-sm sm:text-base text-gray-600 break-words">{combo}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-6">
-                    <h3 className="mb-4 text-2xl font-semibold text-gray-900">{multimodalData.advantages}</h3>
+                  <div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{multimodalData.advantages}</h3>
                     <ul className="space-y-2">
                       {multimodalData.advantagesList.map((advantage, index) => (
-                        <li key={index} className="flex items-center gap-3">
-                          <span className="text-green-600 font-bold">✔</span>
-                          <span className="text-gray-700">{advantage}</span>
+                        <li key={index} className="flex items-center gap-2 sm:gap-3">
+                          <span className="text-green-600 font-bold flex-shrink-0">✔</span>
+                          <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900">{multimodalData.tariffs}</h3>
-                      <p className="text-2xl font-bold text-purple-600">{multimodalData.tariffFrom}</p>
+                  <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{multimodalData.tariffs}</h3>
+                      <p className="text-xl sm:text-2xl font-bold text-purple-600 break-words">{multimodalData.tariffFrom}</p>
                     </div>
-                    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900">{multimodalData.terms}</h3>
-                      <p className="text-lg font-bold text-purple-600">{multimodalData.termsValue}</p>
+                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{multimodalData.terms}</h3>
+                      <p className="text-base sm:text-lg font-bold text-purple-600 break-words">{multimodalData.termsValue}</p>
                     </div>
                   </div>
                 </section>
