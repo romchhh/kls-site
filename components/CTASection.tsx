@@ -43,12 +43,13 @@ export function CTASection({ locale }: CTASectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-gray-100 pt-16 pb-8 md:pt-20 md:pb-10"
+      className="relative overflow-hidden pt-16 pb-8 md:pt-20 md:pb-10"
+      style={{ backgroundColor: '#052430' }}
     >
       <div className="relative mx-auto max-w-7xl px-4 lg:px-6">
         <div className="mx-auto max-w-5xl text-center">
           <h2
-            className={`mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl ${
+            className={`mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl ${
               isVisible ? "animate-slide-in-top" : ""
             }`}
             style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}

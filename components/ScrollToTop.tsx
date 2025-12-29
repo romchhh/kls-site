@@ -61,7 +61,7 @@ export function ScrollToTop() {
       }}
       aria-label="Scroll to top"
     >
-      <ArrowUp size={24} className="drop-shadow-lg text-black" />
+      <ArrowUp size={24} className="drop-shadow-lg text-white" />
     </button>
   );
 }

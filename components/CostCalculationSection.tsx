@@ -119,22 +119,22 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     { 
       value: "air", 
       label: costCalc.deliveryTypes.air, 
-      icon: "/air-delivery.svg",
+      icon: "/calculator/air-delivery.svg",
     },
     { 
       value: "sea", 
       label: costCalc.deliveryTypes.sea, 
-      icon: "/sea-delivery.svg",
+      icon: "/calculator/sea-delivery.svg",
     },
     { 
       value: "rail", 
       label: costCalc.deliveryTypes.rail, 
-      icon: "/rail-delivery.svg",
+      icon: "/calculator/rail-delivery.svg",
     },
     { 
       value: "multimodal", 
       label: costCalc.deliveryTypes.multimodal, 
-      icon: "/multimodal-delivery.svg",
+      icon: "/calculator/multimodal-delivery.svg",
     },
   ];
 
@@ -232,9 +232,20 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
     }, 3000);
   };
 
+  const ctaContent = t?.cta || {
+    title: "Готові почати?",
+    subtitle: "Зв'яжіться з нами сьогодні",
+  };
+
   return (
-    <section id="cost-calculation" className="relative bg-gray-100 pt-4 pb-12 sm:pt-6 sm:pb-20">
-      <div className="mx-auto max-w-4xl px-3 sm:px-4 lg:px-8">
+    <section id="cost-calculation" className="relative overflow-hidden pt-[160px] pb-20" style={{ backgroundColor: '#052430' }}>
+      <div className="relative mx-auto max-w-4xl px-3 sm:px-4 lg:px-8">
+        {/* Заголовок "Готові розпочати?" */}
+        <div className="mb-20 text-center">
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+            {ctaContent.title}
+          </h2>
+        </div>
 
         {/* Прогрес-бар */}
         <div className="mb-6 flex items-center justify-center sm:mb-12">
@@ -255,7 +266,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                 </div>
               </div>
               <span className={`mt-1 sm:mt-2 text-xs sm:text-sm font-medium ${
-                currentStep === 1 ? "text-gray-900" : "text-gray-500"
+                currentStep === 1 ? "text-white" : "text-white/60"
               }`}>
                 {costCalc.step1}
               </span>
@@ -285,7 +296,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                 </div>
               </div>
               <span className={`mt-1 sm:mt-2 text-xs sm:text-sm font-medium ${
-                currentStep === 2 ? "text-gray-900" : "text-gray-500"
+                currentStep === 2 ? "text-white" : "text-white/60"
               }`}>
                 {costCalc.step2}
               </span>
@@ -311,7 +322,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                 </div>
               </div>
               <span className={`mt-1 sm:mt-2 text-xs sm:text-sm font-medium ${
-                currentStep === 3 ? "text-gray-900" : "text-gray-500"
+                currentStep === 3 ? "text-white" : "text-white/60"
               }`}>
                 {costCalc.step3}
               </span>

@@ -139,7 +139,7 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
   }, [isVisible, features.length]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/50 to-white py-24 md:py-32">
+    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/50 to-white pt-[160px] pb-20">
       {/* Background decorative elements */}
       <div className="pointer-events-none absolute left-1/4 top-20 h-96 w-96 -translate-x-1/2 rounded-full bg-teal-100/30 blur-3xl" />
       <div className="pointer-events-none absolute right-1/4 bottom-20 h-96 w-96 translate-x-1/2 rounded-full bg-amber-100/20 blur-3xl" />
@@ -186,9 +186,9 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
                     <span className="relative z-10">
                       {content.contactButton || "Зв'язатися з нами"}
                     </span>
-                    <svg className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
+                      <svg className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
                   </button>
                 </div>
               </div>

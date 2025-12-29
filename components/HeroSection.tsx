@@ -64,10 +64,10 @@ export function HeroSection({ locale }: HeroSectionProps) {
 
       <div className="absolute inset-0 z-[5] bg-black/50" aria-hidden="true" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-32 pt-40 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 py-32 pt-40" style={{ marginLeft: '7rem' }}>
         <div>
           <h1 
-            className={`mb-6 text-5xl font-bold leading-tight text-white md:text-6xl lg:text-7xl font-heading ${
+            className={`mb-6 text-left text-5xl font-bold leading-tight text-white md:text-6xl lg:text-7xl font-heading ${
               isVisible ? 'animate-slide-in-left' : ''
             }`}
             style={{
@@ -75,16 +75,25 @@ export function HeroSection({ locale }: HeroSectionProps) {
               fontFamily: 'var(--font-unbounded), system-ui, sans-serif',
             }}
           >
-            {(hero.title ?? "Доставка з Китаю в Україну та по всьому світу").split(" та по ").map((part: string, index: number) => (
-              index === 0 ? (
-                <span key={index}>{part} та </span>
-              ) : (
-                <span key={index}>
-                  <br />
-                  по {part}
-                </span>
-              )
-            ))}
+            {locale === "ua" ? (
+              <>
+                Доставка з Китаю<br />
+                в Україну та<br />
+                по всьому світу
+              </>
+            ) : locale === "ru" ? (
+              <>
+                Доставка из Китая<br />
+                в Украину и<br />
+                по всему миру
+              </>
+            ) : (
+              <>
+                Delivery from China<br />
+                to Ukraine and<br />
+                worldwide
+              </>
+            )}
           </h1>
 
           <p 

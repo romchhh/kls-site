@@ -14,13 +14,13 @@ export default async function ServicesPage({
   const t = getTranslations(locale);
 
   const iconMap: Record<string, string> = {
-    payments: "/money-transfers.svg",
-    warehousing: "/warehousing-services.svg",
-    sourcing: "/sourcing-service.svg",
-    insurance: "/cargo-insurance.svg",
-    customs: "/customs-brokerage.svg",
-    forwarding: "/cargo-forwarding.svg",
-    local: "/local-delivery.svg",
+    payments: "/services/payments.svg",
+    warehousing: "/services/warehousing.svg",
+    sourcing: "/services/sourcing.svg",
+    insurance: "/services/insurance.svg",
+    customs: "/services/customs.svg",
+    forwarding: "/services/forwarding.svg",
+    local: "/services/local.svg",
   };
 
   const services = [
@@ -99,14 +99,14 @@ export default async function ServicesPage({
   return (
     <div className="min-h-screen bg-white">
       <Navigation locale={locale} />
-      <main className="pt-32 pb-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <main className="pt-[160px] pb-20" style={{ backgroundColor: '#052430' }}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="mb-16 text-center">
-            <h1 className="mb-3 text-3xl md:text-5xl font-bold text-gray-900">
+          <div className="mb-20 text-center">
+            <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
               {t.services.mainTitle}
             </h1>
-            <p className="mx-auto max-w-3xl text-base md:text-lg text-gray-600 leading-relaxed">
+            <p className="mx-auto mb-20 max-w-2xl text-base font-normal leading-relaxed text-white/80 md:text-lg">
               {t.services.mainDescription}
             </p>
           </div>
@@ -122,8 +122,8 @@ export default async function ServicesPage({
                 >
                   <div className="flex h-full flex-col min-h-[280px] sm:min-h-[320px]">
                     {/* Icon */}
-                    <div className="mb-4 sm:mb-6 flex justify-center transition-transform duration-300 group-hover:scale-105">
-                      <div className="relative h-24 w-24">
+                    <div className="mb-4 sm:mb-6 flex justify-start transition-transform duration-300 group-hover:scale-105">
+                      <div className="relative h-16 w-16">
                         <Image
                           src={iconMap[service.key] || "/money-transfers.svg"}
                           alt={service.title}

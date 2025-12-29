@@ -45,10 +45,10 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-20">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white pt-[160px] pb-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div
-          className={`relative mx-auto mb-16 max-w-3xl text-center ${
+          className={`relative mx-auto mb-20 max-w-3xl text-center ${
             isVisible ? "animate-slide-in-top" : ""
           }`}
           style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
@@ -56,7 +56,7 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
           <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
             {content.title}
           </h2>
-          <p className="mx-auto max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+          <p className="mx-auto mb-20 max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
             {content.subtitle}
           </p>
         </div>

@@ -47,23 +47,23 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
   }, []);
 
   const iconMap: Record<string, string> = {
-    payments: "/money-transfers.svg",
-    warehousing: "/warehousing-services.svg",
-    sourcing: "/sourcing-service.svg",
-    insurance: "/cargo-insurance.svg",
-    customs: "/customs-brokerage.svg",
-    forwarding: "/cargo-forwarding.svg",
-    local: "/local-delivery.svg",
+    payments: "/services/payments.svg",
+    warehousing: "/services/warehousing.svg",
+    sourcing: "/services/sourcing.svg",
+    insurance: "/services/insurance.svg",
+    customs: "/services/customs.svg",
+    forwarding: "/services/forwarding.svg",
+    local: "/services/local.svg",
   };
 
   const whiteIconMap: Record<string, string> = {
-    payments: "/money-transfers-white.svg",
-    warehousing: "/warehousing-services-white.svg",
-    sourcing: "/sourcing-service-white.svg",
-    insurance: "/cargo-insurance-white.svg",
-    customs: "/customs-brokerage-white.svg",
-    forwarding: "/cargo-forwarding-white.svg",
-    local: "/local-delivery-white.svg",
+    payments: "/services/payments.svg",
+    warehousing: "/services/warehousing.svg",
+    sourcing: "/services/sourcing.svg",
+    insurance: "/services/insurance.svg",
+    customs: "/services/customs.svg",
+    forwarding: "/services/forwarding.svg",
+    local: "/services/local.svg",
   };
 
   const services = [
@@ -214,20 +214,21 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
   return (
     <section
       id="services"
-      className="relative overflow-hidden bg-gray-100 pt-16 pb-20"
+      className="relative overflow-hidden pt-[160px] pb-20"
+      style={{ backgroundColor: '#052430' }}
     >
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div
-          className={`relative mx-auto mb-16 max-w-3xl text-center ${
+          className={`relative mx-auto mb-20 max-w-3xl text-center ${
             isVisible ? "animate-slide-in-top" : ""
           }`}
           style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
         >
-          <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
               {servicesContent.mainTitle}
             </h2>
-          <p className="mx-auto max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+          <p className="mx-auto mb-20 max-w-2xl text-base font-normal leading-relaxed text-white/80 md:text-lg">
               {servicesContent.mainDescription}
             </p>
         </div>
@@ -251,30 +252,13 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
             }`}
             style={isVisible ? { animationDelay: '0.2s' } : { opacity: 0 }}
           >
-            <div className="flex h-full flex-col justify-between min-h-[320px]">
-              <div>
-                <h3 className="text-3xl md:text-4xl font-bold leading-tight mb-3">
-                  {locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}
-                </h3>
-                {/* Білі іконки послуг */}
-                <div className="grid grid-cols-4 gap-3 mb-6">
-                  {services.slice(0, 7).map((service) => (
-                    <div key={service.key} className="flex justify-center">
-                      <div className="relative h-20 w-20">
-                        <Image
-                          src={whiteIconMap[service.key] || "/money-transfers-white.svg"}
-                          alt={service.title}
-                          fill
-                          className="object-contain opacity-90"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-auto">
+            <div className="flex h-full flex-col justify-center items-center min-h-[320px]">
+              <h3 className="text-3xl md:text-4xl font-bold leading-tight mb-6 text-center">
+                {locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}
+              </h3>
+              <div className="mt-auto w-full">
                 <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
-                  <span>{locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}</span>
+                  <span>{locale === "ua" ? "Переглянути" : locale === "ru" ? "Просмотреть" : "View"}</span>
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </div>
@@ -294,8 +278,8 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
               >
                 <div className="flex h-full flex-col min-h-[280px] sm:min-h-[320px]">
                   {/* Icon */}
-                  <div className="mb-4 sm:mb-6 flex justify-center transition-transform duration-300 group-hover:scale-105">
-                    <div className="relative h-24 w-24">
+                  <div className="mb-4 sm:mb-6 flex justify-start transition-transform duration-300 group-hover:scale-105">
+                    <div className="relative h-16 w-16">
                       <Image
                         src={iconMap[service.key] || "/money-transfers.svg"}
                         alt={service.title}
@@ -332,14 +316,14 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
         <div className="mt-6 flex items-center justify-center gap-3">
           <button
             onClick={scrollLeft}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-teal-200 bg-white text-teal-600 shadow-sm transition-all duration-300 ease-out hover:bg-teal-50 hover:border-teal-300 hover:shadow-md hover:-translate-x-0.5"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 text-white shadow-lg transition-all duration-300 ease-out hover:from-teal-600 hover:via-teal-700 hover:to-teal-800 hover:shadow-xl hover:-translate-x-0.5"
             aria-label="Попередні послуги"
           >
             <ArrowRight className="h-5 w-5 rotate-180" />
           </button>
           <button
             onClick={scrollRight}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-teal-200 bg-white text-teal-600 shadow-sm transition-all duration-300 ease-out hover:bg-teal-50 hover:border-teal-300 hover:shadow-md hover:translate-x-0.5"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 text-white shadow-lg transition-all duration-300 ease-out hover:from-teal-600 hover:via-teal-700 hover:to-teal-800 hover:shadow-xl hover:translate-x-0.5"
             aria-label="Наступні послуги"
           >
             <ArrowRight className="h-5 w-5" />

@@ -78,9 +78,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
   }, []);
 
   return (
-    <footer ref={footerRef} id="site-footer" data-footer-id="site-footer" className="relative overflow-hidden bg-slate-950 py-20 text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(20,184,166,0.18)_0%,_rgba(2,6,23,0)_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(140deg,rgba(20,184,166,0.12)_0%,_rgba(20,184,166,0)_55%),linear-gradient(320deg,rgba(20,184,166,0.2)_0%,_rgba(20,184,166,0)_60%)]" />
+    <footer ref={footerRef} id="site-footer" data-footer-id="site-footer" className="relative overflow-hidden py-20 text-white" style={{ backgroundColor: '#052430' }}>
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[2fr_1fr_1.5fr]">

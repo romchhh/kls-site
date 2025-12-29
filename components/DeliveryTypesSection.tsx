@@ -78,23 +78,51 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
 
   // Мапа іконок для типів доставки
   const iconMap: Record<string, string> = {
-    air: "/Group.png",
-    sea: "/Group-1.png",
-    rail: "/Group-2.png",
-    multimodal: "/Group-3.png",
+    air: "/delivery_types/icons/air.svg",
+    sea: "/delivery_types/icons/sea.svg",
+    rail: "/delivery_types/icons/rail.svg",
+    multimodal: "/delivery_types/icons/multimodal.svg",
   };
 
   // Мапа іконок для features - using SVG files
-  const featureIconMap: Record<string, string> = {
-    clock: "/delivery_types/fast-delivery.svg",
-    mapPin: "/why-choose-us/global-network.svg",
-    package: "/delivery_types/luggage.svg",
-    handCoins: "/why-choose-us/affordable-prices.svg",
-    warehouse: "/why-choose-us/reliability.svg", // Using reliability as warehouse alternative
-    dollar: "/why-choose-us/affordable-prices.svg",
-    scale: "/why-choose-us/quality.svg", // Using quality as scale alternative
-    home: "/why-choose-us/personal-approach.svg", // Using personal approach as home alternative
-    users: "/why-choose-us/personal-manager.svg",
+  const getFeatureIcon = (iconKey: string, text: string): string => {
+    // Спеціальні випадки на основі тексту
+    if (text.toLowerCase().includes("точність") || text.toLowerCase().includes("графік") || text.toLowerCase().includes("точность") || text.toLowerCase().includes("график")) {
+      return "/delivery_types/features/schedule-accuracy.svg";
+    }
+    if (text.toLowerCase().includes("найшвидша") || text.toLowerCase().includes("самая быстрая") || text.toLowerCase().includes("fastest")) {
+      return "/delivery_types/features/fastest-delivery.svg";
+    }
+    if (text.toLowerCase().includes("всі типи") || text.toLowerCase().includes("все типы") || text.toLowerCase().includes("all types")) {
+      return "/delivery_types/features/all-cargo-types.svg";
+    }
+    if (text.toLowerCase().includes("економ") || text.toLowerCase().includes("экономич") || text.toLowerCase().includes("econom")) {
+      return "/delivery_types/features/economy.svg";
+    }
+    if (text.toLowerCase().includes("переваги") || text.toLowerCase().includes("преимущества") || text.toLowerCase().includes("advantages")) {
+      return "/delivery_types/features/advantages.svg";
+    }
+    if (text.toLowerCase().includes("персональний") || text.toLowerCase().includes("персональный") || text.toLowerCase().includes("personal") || text.toLowerCase().includes("індивідуальний") || text.toLowerCase().includes("индивидуальный") || text.toLowerCase().includes("individual")) {
+      return "/delivery_types/features/personal-approach.svg";
+    }
+    if (text.toLowerCase().includes("розрахунок") || text.toLowerCase().includes("расчет") || text.toLowerCase().includes("calculation")) {
+      return "/delivery_types/features/quick-calculation.svg";
+    }
+    
+    // Базовий мапінг на основі icon key
+    const baseIconMap: Record<string, string> = {
+      clock: "/delivery_types/features/fastest-delivery.svg",
+      mapPin: "/why-choose-us/global-network.svg",
+      package: "/delivery_types/features/all-cargo-types.svg",
+      handCoins: "/delivery_types/features/economy.svg",
+      warehouse: "/why-choose-us/reliability.svg",
+      dollar: "/delivery_types/features/economy.svg",
+      scale: "/delivery_types/features/advantages.svg",
+      home: "/delivery_types/features/personal-approach.svg",
+      users: "/delivery_types/features/quick-calculation.svg",
+    };
+    
+    return baseIconMap[iconKey] || "/delivery_types/features/luggage.svg";
   };
 
   const getTypeHref = (key: string) => {
@@ -122,13 +150,13 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-visible bg-white py-24 md:py-32"
+      className="relative overflow-visible bg-white pt-[160px] pb-20"
       style={{ overflow: 'visible' }}
     >
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" style={{ overflow: 'visible' }}>
         {/* Header Section */}
         <div
-          className={`relative mx-auto mb-16 max-w-3xl text-center ${
+          className={`relative mx-auto mb-20 max-w-3xl text-center ${
             isVisible ? "animate-slide-in-top" : ""
           }`}
           style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
@@ -136,7 +164,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
             {content.title}
           </h2>
-          <p className="mx-auto max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+          <p className="mx-auto mb-20 max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
             {content.subtitle}
           </p>
         </div>
@@ -146,7 +174,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           {/* Cards - Scroll on mobile, Grid on desktop */}
           <div
             ref={scrollContainerRef}
-            className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 pt-20 sm:pt-24 scroll-smooth snap-x snap-mandatory scrollbar-hide"
+            className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 scroll-smooth snap-x snap-mandatory scrollbar-hide"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -188,57 +216,50 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
 
                 {/* Content */}
                 <div className="relative z-10 flex h-full flex-col justify-between p-4 sm:p-6 md:p-8 pt-44 sm:pt-52">
-                  <div className="flex flex-col mt-4 sm:mt-32 flex-1 min-h-0">
-
-                    {/* Title */}
-                    <h3 className="mb-3 sm:mb-4 text-center text-xl sm:text-lg md:text-xl font-bold leading-tight text-gray-900 break-words hyphens-auto">
+                  {/* Title - fixed height */}
+                  <div className="mb-4 mt-8 sm:mt-32">
+                    <h3 className="text-center text-xl sm:text-lg md:text-xl font-bold leading-tight text-gray-900 break-words hyphens-auto min-h-[3.5rem] flex items-center justify-center">
                       {type.title}
                     </h3>
+                  </div>
 
-                    {/* Features - only first and last (2 items) */}
-                    <div className="flex items-start justify-between gap-2 sm:gap-3 md:gap-4 relative">
+                  {/* Features - only first and last (2 items) - fixed position from top */}
+                  <div className="flex flex-col gap-2">
                       {type.features.filter((_, idx) => idx === 0 || idx === type.features.length - 1).map((feature, featureIndex) => {
                         return (
-                          <div 
-                            key={featureIndex} 
-                            className="relative flex flex-1 flex-col items-center justify-start min-w-0"
-                          >
-                            <div className="flex flex-1 flex-col items-center px-1 sm:px-2 md:px-4 w-full">
+                          <div key={featureIndex} className={featureIndex === 0 ? "h-16 flex items-center" : ""}>
+                            {featureIndex > 0 && (
+                              <div 
+                                className="w-full h-px mb-1 -mt-1"
+                                style={{
+                                  borderTop: '1px dashed rgb(209, 213, 219)',
+                                }}
+                              />
+                            )}
+                            <div className="relative flex items-center gap-2 sm:gap-3 w-full">
                               {/* Icon */}
-                              <div className="mb-2 sm:mb-3 flex h-12 w-12 sm:h-10 sm:w-10 items-center justify-center md:h-12 md:w-12 flex-shrink-0">
-                                {featureIconMap[feature.icon] ? (
-                                  <Image
-                                    src={featureIconMap[feature.icon]}
-                                    alt={feature.text}
-                                    width={28}
-                                    height={28}
-                                    className="object-contain h-7 w-7 sm:h-6 sm:w-6 md:h-7 md:w-7"
-                                  />
-                                ) : (
-                                  <div className="h-7 w-7 sm:h-6 sm:w-6 md:h-7 md:w-7" />
-                                )}
+                              <div className="flex h-12 w-12 sm:h-10 sm:w-10 items-center justify-center md:h-12 md:w-12 flex-shrink-0">
+                                <Image
+                                  src={getFeatureIcon(feature.icon, feature.text)}
+                                  alt={feature.text}
+                                  width={28}
+                                  height={28}
+                                  className="object-contain h-7 w-7 sm:h-6 sm:w-6 md:h-7 md:w-7"
+                                />
                               </div>
                               
                               {/* Text */}
-                              <p className="text-center text-xs sm:text-[11px] md:text-xs font-normal leading-relaxed text-slate-700 break-words hyphens-auto w-full" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+                              <p className="flex-1 text-left text-xs sm:text-[11px] md:text-xs font-normal leading-relaxed text-slate-700 break-words hyphens-auto" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                                 {feature.text}
                               </p>
                             </div>
                           </div>
                         );
                       })}
-                      {/* Vertical divider between features - dashed */}
-                      <div 
-                        className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2"
-                        style={{
-                          borderLeft: '1px dashed rgb(209, 213, 219)',
-                        }}
-                      />
                     </div>
-                  </div>
 
                   {/* Learn More Button */}
-                  <div className="mt-auto sm:mt-4 md:mt-6">
+                  <div className="mt-6 sm:mt-4 md:mt-6">
                     <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
                       <span>{content.learnMore}</span>
                       <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />

@@ -5,7 +5,6 @@ import { WhyChooseUsSection } from "../../components/WhyChooseUsSection";
 import { ServicesSection } from "../../components/ServicesSection";
 import { PartnersSection } from "../../components/PartnersSection";
 import { CostCalculationSection } from "../../components/CostCalculationSection";
-import { CTASection } from "../../components/CTASection";
 import { SiteFooter } from "../../components/SiteFooter";
 import { ScrollToTop } from "../../components/ScrollToTop";
 import { ContactButton } from "../../components/ContactButton";
@@ -70,13 +69,13 @@ export default async function HomePage({
         : locale === "ru"
         ? "Комплексная доставка грузов из Китая в Украину под ключ. Мы берем на себя все этапы логистического процесса от получения груза на складе в Китае до доставки в Украину."
         : "Comprehensive delivery of cargo from China to Ukraine turnkey. We take care of all stages of the logistics process from receiving cargo at the warehouse in China to delivery to Ukraine.",
-      image: "/delivery-ukraine.svg",
+      image: "/delivery/ukraine-turnkey.svg",
       gradient: "from-blue-500 to-teal-500",
       bgGradient: "from-blue-50 to-teal-50",
       subLinks: [
         { key: "sea", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.sea || "Морські перевезення" },
         { key: "air", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.air || "Авіа перевезення" },
-        { key: "rail", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.rail || "Залізничні вантажоперевезення" },
+        { key: "rail", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.rail || "Залізничні перевезення" },
         { key: "multimodal", href: `/${locale}/delivery/ukraine-turnkey`, label: delivery.multimodal || "Мультимодальна доставка" },
       ],
     },
@@ -89,7 +88,7 @@ export default async function HomePage({
         : locale === "ru"
         ? "Доставка грузов в страны Европейского Союза и другие страны мира. Широкий спектр логистических решений для международной торговли."
         : "Delivery of cargo to European Union countries and other countries around the world. A wide range of logistics solutions for international trade.",
-      image: "/delivery-eu-world.svg",
+      image: "/delivery/eu-world.svg",
       gradient: "from-teal-500 to-cyan-500",
       bgGradient: "from-teal-50 to-cyan-50",
       subLinks: [
@@ -109,7 +108,7 @@ export default async function HomePage({
         : locale === "ru"
         ? "Мы обеспечиваем полный комплекс логистических решений для международных грузовых перевозок, сочетая надежность, прозрачность и индивидуальный подход."
         : "We provide a full range of logistics solutions for international cargo transportation, combining reliability, transparency and an individual approach.",
-      image: "/delivery-international.svg",
+      image: "/delivery/international.svg",
       gradient: "from-indigo-500 to-purple-500",
       bgGradient: "from-indigo-50 to-purple-50",
       subLinks: [
@@ -214,7 +213,6 @@ export default async function HomePage({
       <ServicesSection locale={locale} />
       <PartnersSection locale={locale} />
       <DeliveryTypesSection locale={locale} />
-      <CTASection locale={locale} />
       <CostCalculationSection locale={locale} />
       <SiteFooter locale={locale} />
       <ScrollToTop />

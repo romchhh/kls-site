@@ -64,7 +64,7 @@ export const ua = {
       },
       {
         key: "rail",
-        title: "Залізничні вантажоперевезення",
+        title: "Залізничні перевезення",
         icon: "rail",
         image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOnGN4EJBCzRAa1JdcUM8TL345eYPqLA7d6g&s",
         features: [

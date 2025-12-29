@@ -9,6 +9,7 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Locale, getTranslations } from "@/lib/translations";
 import { PasswordInput } from "@/components/ui/PasswordInput";
+import { ContactQuickModal } from "@/components/ContactQuickModal";
 
 type CabinetLoginPageProps = {
   params: Promise<{ locale: Locale }>;
@@ -21,6 +22,7 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
   const [error, setError] = useState("");
   const [isHuman, setIsHuman] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -87,15 +89,16 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
       {/* Help icon in top-right corner */}
       <Link
         href={`/${locale}/cabinet/help`}
-        className="fixed right-4 top-4 z-20 inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-md backdrop-blur-sm hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700 md:right-8 md:top-6"
+        className="fixed right-16 top-4 z-20 inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-600 shadow-md backdrop-blur-sm hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700 md:right-24 md:top-6"
         aria-label={t.cabinet?.helpAria || "Як увійти в кабінет"}
       >
         <HelpCircle className="h-6 w-6" />
       </Link>
 
       <main className="flex min-h-[calc(100vh-120px)] flex-col md:flex-row">
+        <div className="mx-auto w-full max-w-7xl flex flex-col md:flex-row">
         {/* Left image panel */}
-        <div className="relative hidden w-full overflow-hidden bg-black md:block md:w-1/2">
+        <div className="relative hidden w-full overflow-hidden rounded-3xl bg-black md:block md:w-1/2 md:mx-4 md:my-4">
           <Image
             src="/pramo-nad-kommerceskim-dokom 1.png"
             alt="KLS Logistics"
@@ -103,10 +106,10 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
             priority
             className="scale-105 object-cover blur-sm"
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/10" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/10 rounded-3xl" />
           <div className="relative flex h-full flex-col justify-between px-10 pb-10 pt-32 text-slate-50">
             <div className="max-w-md space-y-3">
-              <h2 className="text-3xl font-black leading-tight md:text-4xl">
+              <h2 className="text-3xl font-bold leading-tight md:text-4xl lg:text-5xl">
                 {t.hero?.titleShort || "Ваш вантаж. Ваш кабінет. Ваш контроль."}
               </h2>
               <p className="text-sm text-slate-200/85">
@@ -125,14 +128,9 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
 
         {/* Right form panel */}
         <div className="flex w-full items-stretch bg-slate-50 md:w-1/2">
-          <div className="flex w-full items-start justify-center px-4 pt-16 pb-16 md:items-start md:px-14 md:pt-24">
-            <div className="w-full max-w-lg space-y-10">
+          <div className="flex w-full items-start justify-center px-6 pt-16 pb-16 md:items-start md:px-8 md:pt-24">
+            <div className="w-full max-w-md space-y-10">
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-3 rounded-full bg-teal-50 px-4 py-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-500">
-                    <LogIn className="h-4 w-4 text-white" />
-                  </div>
-                </div>
                 <h1 className="text-[2.1rem] font-black text-slate-900 md:text-[2.4rem]">
                   {t.cabinet?.loginTitle || "Вхід до кабінету клієнта"}
                   </h1>
@@ -199,6 +197,14 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
                       t.cabinet?.passwordPlaceholder || "Введіть пароль"
                     }
                   />
+                  <div className="pt-1">
+                    <Link
+                      href={`/${locale}/cabinet/help#forgot-password`}
+                      className="text-sm font-medium text-slate-600 hover:text-slate-900"
+                    >
+                      {t.cabinet?.forgotPassword || "Не пам'ятаю пароль"}
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Simple captcha styled similar to reCAPTCHA */}
@@ -246,15 +252,7 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
                   )}
                 </button>
 
-                <div className="mt-4 border-t border-slate-200 pt-3 space-y-2">
-                  <div className="flex justify-start">
-                    <Link
-                      href={`/${locale}/cabinet/help#forgot-password`}
-                      className="text-sm font-medium text-slate-600 hover:text-slate-900"
-                    >
-                      {t.cabinet?.forgotPassword || "Не пам'ятаю пароль"}
-                    </Link>
-                  </div>
+                <div className="mt-4 border-t border-slate-200 pt-3">
                   <p className="text-xs leading-relaxed text-slate-500">
                     {t.cabinet?.managerInfo ||
                       "Реєстрація нового клієнта, відновлення паролю та зміна даних здійснюються через вашого персонального менеджера KLS."}
@@ -264,16 +262,49 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
             </div>
           </div>
         </div>
+        </div>
       </main>
 
       {/* Floating chat button */}
       <button
         type="button"
-        className="fixed bottom-6 right-6 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-slate-900 text-teal-300 shadow-xl hover:bg-slate-800"
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-24 right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-2xl transition-all duration-300 hover:scale-110 hover:shadow-3xl"
+        style={{
+          background: "rgba(20, 184, 166, 0.7)",
+          backdropFilter: "blur(20px) saturate(180%)",
+          WebkitBackdropFilter: "blur(20px) saturate(180%)",
+          border: "1px solid rgba(255, 255, 255, 0.3)",
+          boxShadow: 
+            "0 8px 32px 0 rgba(0, 0, 0, 0.2), " +
+            "inset 0 1px 0 0 rgba(255, 255, 255, 0.5), " +
+            "0 0 20px rgba(20, 184, 166, 0.3)",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "rgba(20, 184, 166, 0.85)";
+          e.currentTarget.style.boxShadow = 
+            "0 12px 40px 0 rgba(0, 0, 0, 0.3), " +
+            "inset 0 1px 0 0 rgba(255, 255, 255, 0.6), " +
+            "0 0 30px rgba(20, 184, 166, 0.5)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "rgba(20, 184, 166, 0.7)";
+          e.currentTarget.style.boxShadow = 
+            "0 8px 32px 0 rgba(0, 0, 0, 0.2), " +
+            "inset 0 1px 0 0 rgba(255, 255, 255, 0.5), " +
+            "0 0 20px rgba(20, 184, 166, 0.3)";
+        }}
         aria-label="Написати в підтримку"
       >
-        <MessageCircle className="h-5 w-5" />
+        <Image src="/Чат-кіл.svg" alt="Contact us" width={24} height={24} className="drop-shadow-lg object-contain" />
       </button>
+
+      {/* Contact Quick Modal */}
+      <ContactQuickModal 
+        locale={locale} 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
 
       <SiteFooter locale={locale} />
     </div>
