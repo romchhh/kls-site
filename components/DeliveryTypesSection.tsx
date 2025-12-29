@@ -169,13 +169,19 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
               >
                 {/* Icon - positioned absolutely at the top, extending beyond block */}
                 <div className="absolute -top-6 sm:-top-8 left-1/2 -translate-x-1/2 z-30 flex justify-center">
-                  <div className="flex h-44 w-44 sm:h-48 sm:w-48 items-center justify-center">
+                  <div className={`flex items-center justify-center ${
+                    type.key === 'rail' 
+                      ? 'h-52 w-52 sm:h-56 sm:w-56' 
+                      : 'h-44 w-44 sm:h-48 sm:w-48'
+                  }`}>
                     <Image
                       src={iconMap[type.key] || "/Group.png"}
                       alt={type.title}
                       width={256}
                       height={256}
-                      className="object-contain w-full h-full"
+                      className={`object-contain w-full h-full ${
+                        type.key === 'rail' ? 'scale-110' : ''
+                      }`}
                     />
                   </div>
                 </div>
