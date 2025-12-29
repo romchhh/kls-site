@@ -79,8 +79,14 @@ export function SiteFooter({ locale }: SiteFooterProps) {
 
   return (
     <footer ref={footerRef} id="site-footer" data-footer-id="site-footer" className="relative overflow-hidden py-20 text-white" style={{ backgroundColor: '#052430' }}>
+      {/* Декоративні градієнтні елементи */}
+      <div className="absolute inset-0 z-[1] opacity-20">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-400 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-400 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-0 w-72 h-72 bg-cyan-400 rounded-full blur-3xl" />
+      </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[2fr_1fr_1.5fr]">
           <div className={`space-y-6 ${
             isVisible ? 'animate-slide-in-left' : ''

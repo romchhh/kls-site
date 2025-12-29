@@ -150,7 +150,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-visible bg-white pt-[160px] pb-20"
+      className="relative overflow-visible bg-white pt-[160px] sm:pt-[0px] pb-20"
       style={{ overflow: 'visible' }}
     >
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" style={{ overflow: 'visible' }}>
@@ -164,7 +164,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
             {content.title}
           </h2>
-          <p className="mx-auto mb-20 max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+          <p className="mx-auto mb-12 sm:mb-20 max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
             {content.subtitle}
           </p>
         </div>
@@ -174,7 +174,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           {/* Cards - Scroll on mobile, Grid on desktop */}
           <div
             ref={scrollContainerRef}
-            className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 scroll-smooth snap-x snap-mandatory scrollbar-hide"
+            className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 pt-4 sm:pt-0 overflow-x-auto sm:overflow-x-visible overflow-y-visible scroll-smooth snap-x snap-mandatory scrollbar-hide"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",

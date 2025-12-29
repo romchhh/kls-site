@@ -92,16 +92,16 @@ export default async function CabinetHelpPage({
           </h2>
           <ol className="mt-3 space-y-2 text-sm text-slate-700 sm:text-base">
             {content.steps.map((step, index) => (
-              <li key={index} className="flex gap-2">
-                <span className="mt-[2px] inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-teal-100 text-xs font-semibold text-teal-700">
-                  {index + 1}
+              <li key={index} className="flex gap-3">
+                <span className="font-semibold text-teal-600">
+                  {index + 1}.
                 </span>
                 <span>{step}</span>
               </li>
             ))}
           </ol>
 
-          <p className="mt-6 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+          <p className="mt-6 rounded-xl bg-slate-50 px-4 py-3 text-sm text-teal-600">
             {content.note}
           </p>
         </section>

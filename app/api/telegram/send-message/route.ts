@@ -96,6 +96,13 @@ export async function POST(req: NextRequest) {
         message += `📞 <b>Телефон:</b> ${data.phone || "Не вказано"}\n`;
         break;
 
+      case "contact-full":
+        message += `👤 <b>Ім'я:</b> ${data.name || "Не вказано"}\n`;
+        message += `📧 <b>Email:</b> ${data.email || "Не вказано"}\n`;
+        message += `📞 <b>Телефон:</b> ${data.phoneCode || ""} ${data.phone || "Не вказано"}\n`;
+        if (data.message) message += `💬 <b>Повідомлення:</b> ${data.message}\n`;
+        break;
+
       default:
         // Загальний випадок - виводимо всі дані
         Object.entries(data).forEach(([key, value]) => {

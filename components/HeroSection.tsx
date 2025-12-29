@@ -64,7 +64,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
 
       <div className="absolute inset-0 z-[5] bg-black/50" aria-hidden="true" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 py-32 pt-40" style={{ marginLeft: '7rem' }}>
+      <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-32 pt-40">
         <div>
           <h1 
             className={`mb-6 text-left text-5xl font-bold leading-tight text-white md:text-6xl lg:text-7xl font-heading ${
@@ -78,14 +78,14 @@ export function HeroSection({ locale }: HeroSectionProps) {
             {locale === "ua" ? (
               <>
                 Доставка з Китаю<br />
-                в Україну та<br />
-                по всьому світу
+                в Україну<br />
+                та по всьому світу
               </>
             ) : locale === "ru" ? (
               <>
                 Доставка из Китая<br />
-                в Украину и<br />
-                по всему миру
+                в Украину<br />
+                и по всему миру
               </>
             ) : (
               <>

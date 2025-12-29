@@ -152,11 +152,12 @@ export default async function HomePage({
                   <div className="relative z-10 flex flex-col h-full p-8">
                     {/* Іконка */}
                     <div className="mb-6 flex justify-center transition-transform duration-300 group-hover:scale-105">
-                      <div className="relative h-24 w-24">
+                      <div className="flex items-center justify-center h-24 w-24">
                         <Image
                           src={link.image}
                           alt={link.title}
-                          fill
+                          width={80}
+                          height={80}
                           className="object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
                         />
                       </div>

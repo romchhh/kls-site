@@ -139,7 +139,7 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
   }, [isVisible, features.length]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/50 to-white pt-[160px] pb-20">
+    <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/50 to-white pt-[160px] pb-32">
       {/* Background decorative elements */}
       <div className="pointer-events-none absolute left-1/4 top-20 h-96 w-96 -translate-x-1/2 rounded-full bg-teal-100/30 blur-3xl" />
       <div className="pointer-events-none absolute right-1/4 bottom-20 h-96 w-96 translate-x-1/2 rounded-full bg-amber-100/20 blur-3xl" />

@@ -214,7 +214,7 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
   return (
     <section
       id="services"
-      className="relative overflow-hidden pt-[160px] pb-20"
+      className="relative overflow-hidden pt-20 pb-20"
       style={{ backgroundColor: '#052430' }}
     >
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -290,12 +290,12 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
                   </div>
 
                   {/* Title */}
-                  <h3 className="mb-2 sm:mb-3 text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
+                  <h3 className="mb-2 sm:mb-3 text-2xl sm:text-2xl font-bold text-gray-900 leading-tight">
                     {service.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="mb-4 sm:mb-5 text-sm sm:text-base text-gray-600 leading-relaxed flex-grow">
+                  <p className="mb-4 sm:mb-5 text-base sm:text-base text-gray-600 leading-relaxed flex-grow">
                     {service.description}
                   </p>
 

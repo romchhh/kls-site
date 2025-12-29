@@ -1,5 +1,6 @@
 import { Navigation } from "../../../components/Navigation";
 import { SiteFooter } from "../../../components/SiteFooter";
+import { ContactFormFull } from "../../../components/ContactFormFull";
 import { Locale, getTranslations } from "../../../lib/translations";
 
 const contactsContent = {
@@ -66,12 +67,16 @@ export default async function ContactsPage({
       <Navigation locale={locale} />
       <main className="pt-32 pb-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <h1 className="mb-4 text-4xl font-bold text-gray-900">
-            {content.title}
-          </h1>
-          <p className="mb-12 text-lg text-gray-600">{content.description}</p>
+          <div className="relative mx-auto mb-16 max-w-3xl text-center">
+            <h1 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+              {content.title}
+            </h1>
+            <p className="mx-auto mb-12 max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+              {content.description}
+            </p>
+          </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid gap-8 md:grid-cols-2 mb-12">
             <div className="rounded-2xl border border-gray-200 p-8">
               <h2 className="mb-6 text-2xl font-semibold text-gray-900">
                 {content.china}
@@ -143,6 +148,10 @@ export default async function ContactsPage({
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="max-w-2xl mx-auto">
+            <ContactFormFull locale={locale} />
           </div>
         </div>
       </main>
