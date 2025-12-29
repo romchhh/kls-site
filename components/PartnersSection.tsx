@@ -48,15 +48,15 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
     <section ref={sectionRef} className="relative overflow-hidden bg-white py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div
-          className={`mb-16 text-center ${
+          className={`relative mx-auto mb-16 max-w-3xl text-center ${
             isVisible ? "animate-slide-in-top" : ""
           }`}
           style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
         >
-          <h2 className="mb-4 text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
             {content.title}
           </h2>
-          <p className="text-lg leading-relaxed text-slate-600/80">
+          <p className="mx-auto max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
             {content.subtitle}
           </p>
         </div>

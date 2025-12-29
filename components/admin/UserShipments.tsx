@@ -3167,68 +3167,6 @@ export function UserShipments({
                 </h2>
               </div>
               <div className="flex items-center gap-3">
-                {/* Invoice download buttons - show if invoice exists for this shipment */}
-                {(() => {
-                  // Find invoice for this shipment
-                  const invoice = invoices.find((inv: any) => inv.shipmentId === viewingShipment.id);
-                  if (!invoice) return null;
-                  
-                  return (
-                    <>
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          try {
-                            const response = await fetch(`/api/invoices/${invoice.id}/generate`);
-                            if (!response.ok) {
-                              throw new Error("Failed to generate invoice");
-                            }
-                            const blob = await response.blob();
-                            const url = window.URL.createObjectURL(blob);
-                            const a = document.createElement("a");
-                            a.href = url;
-                            a.download = `invoice_${invoice.invoiceNumber}_${new Date().toISOString().split("T")[0]}.xlsx`;
-                            document.body.appendChild(a);
-                            a.click();
-                            window.URL.revokeObjectURL(url);
-                            document.body.removeChild(a);
-                          } catch (error) {
-                            console.error("Error downloading invoice:", error);
-                            onError("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
-                          }
-                        }}
-                        className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
-                      >
-                        <FileText className="h-4 w-4" />
-                        <span>Інвойс Excel</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          try {
-                            const response = await fetch(`/api/invoices/${invoice.id}/generate-pdf`);
-                            if (!response.ok) {
-                              throw new Error("Failed to generate PDF invoice");
-                            }
-                            // Open PDF in new window for printing/saving
-                            const blob = await response.blob();
-                            const url = window.URL.createObjectURL(blob);
-                            window.open(url, "_blank");
-                            // Clean up after a delay
-                            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-                          } catch (error) {
-                            console.error("Error downloading PDF invoice:", error);
-                            onError("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
-                          }
-                        }}
-                        className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
-                      >
-                        <FileText className="h-4 w-4" />
-                        <span>Інвойс PDF</span>
-                      </button>
-                    </>
-                  );
-                })()}
                 <button
                   type="button"
                   onClick={() => setViewingShipment(null)}

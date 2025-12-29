@@ -88,13 +88,13 @@ export function HeroSection({ locale }: HeroSectionProps) {
           </h1>
 
           <p 
-            className={`mb-12 max-w-3xl text-base leading-relaxed text-white/95 md:text-lg lg:text-xl font-heading font-light ${
+            className={`mb-6 max-w-3xl text-base leading-relaxed text-white/95 md:text-lg lg:text-xl ${
               isVisible ? 'animate-slide-in-right' : ''
             }`}
             style={{
               ...(isVisible ? { animationDelay: '0.3s' } : { opacity: 0 }),
               fontFamily: 'var(--font-unbounded), system-ui, sans-serif',
-              fontWeight: 300,
+              fontWeight: 400,
             }}
           >
             {hero.description ??
@@ -146,6 +146,12 @@ export function HeroSection({ locale }: HeroSectionProps) {
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
       />
+      
+      <style jsx>{`
+        section#home p {
+          font-weight: 400 !important;
+        }
+      `}</style>
     </section>
   );
 }

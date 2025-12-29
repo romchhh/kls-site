@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Locale, getTranslations } from "../lib/translations";
-import { ArrowRight, ChevronLeft, ChevronRight, Clock, Globe, Package, HandCoins, Warehouse, DollarSign, MapPin, Scale, Home, Users } from "lucide-react";
+import { ArrowRight, Clock, Globe, Package, HandCoins, Warehouse, DollarSign, MapPin, Scale, Home, Users } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -21,7 +21,6 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
     return null;
   }
   const [isVisible, setIsVisible] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
@@ -55,48 +54,13 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const cards = container.querySelectorAll("a");
-    
     const updateScrollState = () => {
       const { scrollLeft, scrollWidth, clientWidth } = container;
       setCanScrollLeft(scrollLeft > 10);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-      
-      // Find the card that is most visible in the viewport
-      let maxVisible = 0;
-      let maxIndex = 0;
-      
-      cards.forEach((card, index) => {
-        const rect = card.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        
-        // Calculate how much of the card is visible
-        const cardLeft = rect.left;
-        const cardRight = rect.right;
-        const containerLeft = containerRect.left;
-        const containerRight = containerRect.right;
-        
-        const visibleLeft = Math.max(0, cardLeft - containerLeft);
-        const visibleRight = Math.max(0, containerRight - cardRight);
-        const visibleWidth = Math.min(rect.width, containerRect.width) - visibleLeft - visibleRight;
-        
-        if (visibleWidth > maxVisible) {
-          maxVisible = visibleWidth;
-          maxIndex = index;
-        }
-      });
-      
-      setCurrentIndex(maxIndex);
     };
 
-    // Use requestAnimationFrame for smoother updates
-    let rafId: number;
-    const handleScroll = () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(updateScrollState);
-    };
-
-    container.addEventListener("scroll", handleScroll, { passive: true });
+    container.addEventListener("scroll", updateScrollState, { passive: true });
     updateScrollState(); // Initial check
 
     // Update on resize
@@ -106,11 +70,11 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
     window.addEventListener("resize", handleResize);
 
     return () => {
-      container.removeEventListener("scroll", handleScroll);
+      container.removeEventListener("scroll", updateScrollState);
       window.removeEventListener("resize", handleResize);
-      if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [content.types.length]);
+  }, [content?.types?.length]);
+
 
   // Мапа іконок для типів доставки
   const iconMap: Record<string, string> = {
@@ -177,43 +141,24 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
           </p>
         </div>
 
-        {/* Cards Container with Navigation */}
+        {/* Cards Container */}
         <div className="relative overflow-visible" style={{ overflow: 'visible', overflowY: 'visible' }}>
-          {/* Left Arrow - Mobile only - Hidden */}
-          <button
-            onClick={() => scrollTo("left")}
-            disabled={!canScrollLeft}
-            className="hidden absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed md:hidden"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft size={24} className="text-teal-600" />
-          </button>
-
-          {/* Right Arrow - Mobile only - Hidden */}
-          <button
-            onClick={() => scrollTo("right")}
-            disabled={!canScrollRight}
-            className="hidden absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/90 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed md:hidden"
-            aria-label="Scroll right"
-          >
-            <ChevronRight size={24} className="text-teal-600" />
-          </button>
-
-          {/* Cards Grid - Horizontal scroll on all devices */}
+          {/* Cards - Scroll on mobile, Grid on desktop */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto overflow-y-visible pb-4 pt-20 sm:pt-24 scroll-smooth snap-x snap-mandatory scrollbar-hide"
+            className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 pt-20 sm:pt-24 scroll-smooth snap-x snap-mandatory scrollbar-hide"
             style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
               scrollPaddingLeft: '1rem',
               scrollPaddingRight: '1rem',
-              overflowY: 'visible',
             }}
           >
             {content.types.map((type, index) => (
               <Link
                 key={type.key}
                 href={getTypeHref(type.key)}
-                className={`group relative flex min-h-[380px] sm:min-h-[420px] w-[calc(100%-1rem)] sm:w-[450px] flex-shrink-0 snap-center flex-col overflow-visible rounded-2xl sm:rounded-3xl border border-gray-200 bg-white transition-all duration-300 hover:scale-[1.01] hover:shadow-lg first:ml-2 last:mr-2 ${
+                className={`group relative flex min-h-[380px] sm:min-h-[420px] w-[280px] sm:w-auto flex-shrink-0 sm:flex-shrink flex-col overflow-visible rounded-2xl sm:rounded-3xl border border-gray-200 bg-white transition-all duration-300 hover:scale-[1.01] hover:shadow-lg snap-center first:ml-4 last:mr-4 sm:first:ml-0 sm:last:mr-0 ${
                   isVisible ? "animate-slide-in-bottom" : ""
                 }`}
                 style={
@@ -236,46 +181,53 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                 </div>
 
                 {/* Content */}
-                <div className="relative z-10 flex h-full flex-col justify-between p-6 sm:p-8 md:p-10 pt-44 sm:pt-52">
-                  <div className="flex flex-col mt-4 sm:mt-32">
+                <div className="relative z-10 flex h-full flex-col justify-between p-4 sm:p-6 md:p-8 pt-44 sm:pt-52">
+                  <div className="flex flex-col mt-4 sm:mt-32 flex-1 min-h-0">
 
                     {/* Title */}
-                    <h3 className="mb-3 sm:mb-4 text-center text-2xl sm:text-xl font-bold leading-tight text-gray-900 md:text-2xl">
+                    <h3 className="mb-3 sm:mb-4 text-center text-xl sm:text-lg md:text-xl font-bold leading-tight text-gray-900 break-words hyphens-auto">
                       {type.title}
                     </h3>
 
                     {/* Features - only first and last (2 items) */}
-                    <div className="flex items-start justify-between gap-2 sm:gap-3 md:gap-4">
+                    <div className="flex items-start justify-between gap-2 sm:gap-3 md:gap-4 relative">
                       {type.features.filter((_, idx) => idx === 0 || idx === type.features.length - 1).map((feature, featureIndex) => {
                         const FeatureIcon = featureIconMap[feature.icon] || Package;
                         
                         return (
                           <div 
                             key={featureIndex} 
-                            className="relative flex flex-1 flex-col items-center justify-start"
+                            className="relative flex flex-1 flex-col items-center justify-start min-w-0"
                           >
-                            <div className="flex flex-1 flex-col items-center px-1 sm:px-2 md:px-4">
+                            <div className="flex flex-1 flex-col items-center px-1 sm:px-2 md:px-4 w-full">
                               {/* Icon */}
-                              <div className="mb-2 sm:mb-3 flex h-12 w-12 sm:h-10 sm:w-10 items-center justify-center text-teal-600 md:h-12 md:w-12">
+                              <div className="mb-2 sm:mb-3 flex h-12 w-12 sm:h-10 sm:w-10 items-center justify-center text-teal-600 md:h-12 md:w-12 flex-shrink-0">
                                 <FeatureIcon className="h-7 w-7 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                               </div>
                               
                               {/* Text */}
-                              <p className="text-center text-sm sm:text-xs font-normal leading-tight text-slate-700 md:text-sm">
+                              <p className="text-center text-xs sm:text-[11px] md:text-xs font-normal leading-relaxed text-slate-700 break-words hyphens-auto w-full" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                                 {feature.text}
                               </p>
                             </div>
                           </div>
                         );
                       })}
+                      {/* Vertical divider between features - dashed */}
+                      <div 
+                        className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2"
+                        style={{
+                          borderLeft: '1px dashed rgb(209, 213, 219)',
+                        }}
+                      />
                     </div>
                   </div>
 
                   {/* Learn More Button */}
-                  <div className="mt-3 sm:mt-4 flex justify-center">
-                    <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2 sm:px-4 sm:py-2 text-base sm:text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800 md:px-5 md:py-2.5">
+                  <div className="mt-auto sm:mt-4 md:mt-6">
+                    <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
                       <span>{content.learnMore}</span>
-                      <ArrowRight className="h-5 w-5 sm:h-4 sm:w-4" />
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </div>
                   </div>
                 </div>
@@ -283,58 +235,33 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
             ))}
           </div>
 
-          {/* Indicators (Dots) - Mobile only */}
-          <div className="mt-6 flex justify-center gap-2 md:hidden">
-            {content.types.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  const container = scrollContainerRef.current;
-                  if (!container) return;
-                  const firstCard = container.querySelector("a") as HTMLElement;
-                  if (!firstCard) return;
-                  
-                  const cardWidth = firstCard.offsetWidth;
-                  const gap = 16; // gap-4 = 16px
-                  const scrollPosition = index * (cardWidth + gap);
-                  
-                  container.scrollTo({
-                    left: scrollPosition,
-                    behavior: "smooth",
-                  });
-                }}
-                className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
-                  index === currentIndex
-                    ? "bg-teal-600 scale-125"
-                    : "bg-slate-300 hover:bg-slate-400"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Bottom Navigation Arrows - Desktop and Mobile */}
-          <div className="mt-8 flex items-center justify-center gap-4">
+          {/* Navigation buttons під елементами скролу - Mobile only */}
+          <div className="sm:hidden mt-6 flex items-center justify-center gap-3">
             <button
               onClick={() => scrollTo("left")}
               disabled={!canScrollLeft}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white border-2 border-teal-200 text-teal-600 shadow-md transition-all duration-300 hover:bg-teal-50 hover:border-teal-300 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-              aria-label="Scroll left"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-teal-200 bg-white text-teal-600 shadow-sm transition-all duration-300 ease-out hover:bg-teal-50 hover:border-teal-300 hover:shadow-md hover:-translate-x-0.5 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:translate-x-0"
+              aria-label="Попередні види доставки"
             >
-              <ChevronLeft size={20} />
+              <ArrowRight className="h-5 w-5 rotate-180" />
             </button>
-            
             <button
               onClick={() => scrollTo("right")}
               disabled={!canScrollRight}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white border-2 border-teal-200 text-teal-600 shadow-md transition-all duration-300 hover:bg-teal-50 hover:border-teal-300 hover:scale-110 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-              aria-label="Scroll right"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-teal-200 bg-white text-teal-600 shadow-sm transition-all duration-300 ease-out hover:bg-teal-50 hover:border-teal-300 hover:shadow-md hover:translate-x-0.5 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:translate-x-0"
+              aria-label="Наступні види доставки"
             >
-              <ChevronRight size={20} />
+              <ArrowRight className="h-5 w-5" />
             </button>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </section>
   );
 }

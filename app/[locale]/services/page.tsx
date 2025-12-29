@@ -122,13 +122,13 @@ export default async function ServicesPage({
                 >
                   <div className="flex h-full flex-col min-h-[280px] sm:min-h-[320px]">
                     {/* Icon */}
-                    <div className="mb-4 sm:mb-6 flex justify-center transition-transform duration-500 group-hover:scale-110">
-                      <div className="relative h-24 w-24 sm:h-28 sm:w-28">
+                    <div className="mb-4 sm:mb-6 flex justify-center transition-transform duration-300 group-hover:scale-105">
+                      <div className="relative h-24 w-24">
                         <Image
                           src={iconMap[service.key] || "/money-transfers.svg"}
                           alt={service.title}
                           fill
-                          className="object-contain"
+                          className="object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
                         />
                       </div>
                     </div>
@@ -145,9 +145,9 @@ export default async function ServicesPage({
 
                     {/* Кнопка «Детальніше» у стилі інших CTA */}
                     <div className="mt-auto">
-                      <div className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-white px-5 py-2.5 text-sm md:text-base font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
+                      <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
                         <span>{t.services.readMore}</span>
-                        <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
+                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                       </div>
                     </div>
                   </div>

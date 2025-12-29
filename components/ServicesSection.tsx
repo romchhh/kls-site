@@ -219,19 +219,17 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div
-          className={`mb-10 flex flex-col items-center text-center gap-4 ${
+          className={`relative mx-auto mb-16 max-w-3xl text-center ${
             isVisible ? "animate-slide-in-top" : ""
           }`}
           style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
         >
-          <div className="max-w-3xl">
-            <h2 className="mb-3 text-3xl md:text-5xl font-bold text-gray-900">
-              {servicesContent.mainTitle}
-            </h2>
-            <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-              {servicesContent.mainDescription}
-            </p>
-          </div>
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+            {servicesContent.mainTitle}
+          </h2>
+          <p className="mx-auto max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
+            {servicesContent.mainDescription}
+          </p>
         </div>
 
         {/* Services Scroll Container */}
@@ -248,24 +246,21 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
           {/* All Services Card */}
           <Link
             href={`/${locale}/services`}
-            className={`group relative flex-shrink-0 w-[calc(100%-2rem)] sm:w-[380px] rounded-3xl bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-6 sm:p-9 text-white shadow-none transition-all duration-500 hover:scale-105 snap-center first:ml-4 last:mr-4 sm:first:ml-0 sm:last:mr-0 ${
+            className={`group relative flex-shrink-0 w-[320px] rounded-3xl bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-9 text-white shadow-none transition-all duration-500 hover:scale-105 snap-center first:ml-4 last:mr-4 sm:first:ml-0 sm:last:mr-0 ${
               isVisible ? 'animate-slide-in-bottom' : ''
             }`}
             style={isVisible ? { animationDelay: '0.2s' } : { opacity: 0 }}
           >
-            <div className="flex h-full flex-col justify-between min-h-[280px] sm:min-h-[320px]">
+            <div className="flex h-full flex-col justify-between min-h-[320px]">
               <div>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mb-3">
+                <h3 className="text-3xl md:text-4xl font-bold leading-tight mb-3">
                   {locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}
                 </h3>
-                <p className="text-white/90 text-sm sm:text-base mb-6">
-                  {locale === "ua" ? "Переглянути всі наші послуги" : locale === "ru" ? "Посмотреть все наши услуги" : "View all our services"}
-                </p>
                 {/* Білі іконки послуг */}
                 <div className="grid grid-cols-4 gap-3 mb-6">
                   {services.slice(0, 7).map((service) => (
                     <div key={service.key} className="flex justify-center">
-                      <div className="relative h-16 w-16 sm:h-20 sm:w-20">
+                      <div className="relative h-20 w-20">
                         <Image
                           src={whiteIconMap[service.key] || "/money-transfers-white.svg"}
                           alt={service.title}
@@ -277,9 +272,10 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
                   ))}
                 </div>
               </div>
-              <div className="mt-auto flex items-center justify-end">
-                <div className="rounded-xl bg-white/20 p-3 backdrop-blur-sm transition-all duration-300 group-hover:bg-white/30 group-hover:scale-110 group-hover:rotate-3">
-                  <ArrowRight className="h-7 w-7 text-white" />
+              <div className="mt-auto">
+                <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
+                  <span>{locale === "ua" ? "Всі послуги" : locale === "ru" ? "Все услуги" : "All services"}</span>
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </div>
             </div>
@@ -298,13 +294,13 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
               >
                 <div className="flex h-full flex-col min-h-[280px] sm:min-h-[320px]">
                   {/* Icon */}
-                  <div className="mb-4 sm:mb-6 flex justify-center transition-transform duration-500 group-hover:scale-110">
-                    <div className="relative h-24 w-24 sm:h-28 sm:w-28">
+                  <div className="mb-4 sm:mb-6 flex justify-center transition-transform duration-300 group-hover:scale-105">
+                    <div className="relative h-24 w-24">
                       <Image
                         src={iconMap[service.key] || "/money-transfers.svg"}
                         alt={service.title}
                         fill
-                        className="object-contain"
+                        className="object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
                       />
                     </div>
                   </div>
@@ -321,9 +317,9 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
 
                   {/* Кнопка «Детальніше» у стилі інших CTA */}
                   <div className="mt-auto">
-                    <div className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-white px-5 py-2.5 text-sm md:text-base font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
+                    <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 transition-all duration-200 ease-out group-hover:bg-teal-50 group-hover:border-teal-300 group-hover:text-teal-800">
                       <span>{servicesContent.readMore}</span>
-                      <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </div>
                   </div>
                 </div>

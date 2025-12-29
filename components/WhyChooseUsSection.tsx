@@ -112,7 +112,7 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
           }`}
           style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
         >
-          <h2 className="mb-4 text-3xl md:text-5xl font-bold text-gray-900">
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
             {content.title}
           </h2>
         </div>
@@ -129,29 +129,26 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
               {/* Content overlay */}
               <div className="relative z-10 flex h-full flex-col justify-between p-10 md:p-12">
                 <div>
-                  <div className="mb-4 flex w-full items-center justify-center rounded-full border border-gray-200 bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-gray-700">
-                    KLS Logistics
-                  </div>
                   <h3 className="mb-3 text-4xl font-black tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
-                    {content.imageLabels?.international || "Міжнародні перевезення"}
+                    KLS Logistics
                   </h3>
                   <p className="text-lg font-normal leading-relaxed text-gray-700 md:text-xl">
                     {content.cardText || "Швидко та легко керувати своїми логістичними операціями щодня"}
                   </p>
                 </div>
                 
-                {/* Contact button larger and centered */}
-                <div className="mt-6 flex justify-center">
+                {/* Contact button full width */}
+                <div className="mt-auto">
                   <button
                     onClick={() => setIsContactModalOpen(true)}
-                    className="group/btn relative inline-flex w-full max-w-xs items-center justify-center overflow-hidden rounded-2xl bg-[#006D77] px-10 py-4 text-base font-semibold text-white shadow-xl transition-all duration-300 hover:bg-[#005a63] hover:scale-[1.02] hover:shadow-2xl md:max-w-sm md:px-12 md:py-5"
+                    className="group/btn relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-[#006D77] px-10 py-4 text-base font-semibold text-white shadow-xl transition-all duration-300 hover:bg-[#005a63] hover:scale-[1.02] hover:shadow-2xl md:px-12 md:py-5"
                   >
-                    <span className="relative z-10 flex items-center gap-2">
+                    <span className="relative z-10">
                       {content.contactButton || "Зв'язатися з нами"}
-                      <svg className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
                     </span>
+                    <svg className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -204,7 +201,7 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
                       key={currentIndex}
                       className="animate-slide-up"
                     >
-                      <h3 className="mb-4 text-2xl font-black tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-teal-700 md:text-3xl">
+                      <h3 className="mb-4 text-2xl font-semibold tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-teal-700 md:text-3xl">
                         {currentFeature.title}
                       </h3>
                       <p className="text-base font-normal leading-relaxed text-slate-600 transition-colors duration-300 group-hover:text-slate-700 md:text-lg">

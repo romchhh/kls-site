@@ -372,7 +372,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
           {/* Крок 2: Деталі доставки */}
           {currentStep === 2 && (
             <div className="space-y-4 sm:space-y-6">
-              <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+              <div className="grid gap-4 sm:gap-6 md:grid-cols-2 mb-0">
                 {/* Звідки */}
                 <div>
                   <label className="mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-700">
@@ -459,7 +459,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500 -mt-6 sm:-mt-8">
                 <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-600" />
                 {costCalc.requiredFields}
               </div>

@@ -48,7 +48,7 @@ export function CTASection({ locale }: CTASectionProps) {
       <div className="relative mx-auto max-w-7xl px-4 lg:px-6">
         <div className="mx-auto max-w-5xl text-center">
           <h2
-            className={`mb-6 text-4xl font-black tracking-tight text-gray-900 md:text-5xl lg:text-6xl ${
+            className={`mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl ${
               isVisible ? "animate-slide-in-top" : ""
             }`}
             style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}

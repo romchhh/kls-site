@@ -13,9 +13,40 @@ import { Locale, getTranslations } from "../../lib/translations";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import React from "react";
 
 // Дозволяємо динамічний рендеринг для правильної роботи відео
 export const dynamic = 'force-dynamic';
+
+// Helper function to format delivery titles with line breaks
+function formatDeliveryTitle(key: string, locale: Locale, title: string): React.ReactNode {
+  if (key === "ukraineTurnkey") {
+    if (locale === "ua") {
+      return <>Доставка в Україну<br />під ключ</>;
+    } else if (locale === "ru") {
+      return <>Доставка в Украину<br />под ключ</>;
+    } else {
+      return <>Delivery to Ukraine<br />turnkey</>;
+    }
+  } else if (key === "euWorld") {
+    if (locale === "ua") {
+      return <>Доставка в країни ЄС<br />та світу</>;
+    } else if (locale === "ru") {
+      return <>Доставка в страны ЕС<br />и мира</>;
+    } else {
+      return <>Delivery to EU countries<br />and the world</>;
+    }
+  } else if (key === "international") {
+    if (locale === "ua") {
+      return <>Міжнародне перевезення<br />та експедирування</>;
+    } else if (locale === "ru") {
+      return <>Международные перевозки<br />и экспедирование</>;
+    } else {
+      return <>International transportation<br />and forwarding</>;
+    }
+  }
+  return title;
+}
 
 export default async function HomePage({
   params,
@@ -104,8 +135,8 @@ export default async function HomePage({
         </div>
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <div className="relative mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
               {nav.delivery || "Доставка"}
             </h2>
           </div>
@@ -115,32 +146,27 @@ export default async function HomePage({
               return (
                 <div
                   key={link.key}
-                  className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200/60 bg-gradient-to-br from-white via-white to-slate-50/50 shadow-lg backdrop-blur-sm transition-all duration-500 hover:border-teal-200/60 hover:shadow-2xl hover:-translate-y-1"
+                  className="group relative flex flex-col overflow-hidden rounded-3xl border-2 border-gray-200 bg-gray-50 transition-all duration-300 hover:border-teal-300 hover:bg-[#E8FDF8] hover:shadow-md"
                 >
-                  {/* Animated gradient accent on left */}
-                  <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-teal-500 via-teal-400 to-teal-600 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:shadow-[0_0_20px_rgba(20,184,166,0.5)]" />
-                  
-                  {/* Decorative corner element */}
-                  <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 bg-gradient-to-br from-teal-50/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   
                   {/* Контент */}
                   <div className="relative z-10 flex flex-col h-full p-8">
                     {/* Іконка */}
-                    <div className="mb-6 flex justify-center transition-transform duration-500 group-hover:scale-110">
-                      <div className="relative h-20 w-20 sm:h-24 sm:w-24">
+                    <div className="mb-6 flex justify-center transition-transform duration-300 group-hover:scale-105">
+                      <div className="relative h-24 w-24">
                         <Image
                           src={link.image}
                           alt={link.title}
                           fill
-                          className="object-contain"
+                          className="object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
                         />
                       </div>
                     </div>
                     
                     {/* Заголовок */}
                     <Link href={link.href}>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 transition-colors duration-300 group-hover:text-teal-700 cursor-pointer">
-                        {link.title}
+                      <h3 className="text-xl font-bold text-gray-700 mb-3 transition-colors duration-300 group-hover:text-teal-600 cursor-pointer">
+                        {formatDeliveryTitle(link.key, locale, link.title)}
                       </h3>
                     </Link>
                     
@@ -177,8 +203,6 @@ export default async function HomePage({
                     </Link>
                   </div>
                   
-                  {/* Subtle glow effect on hover */}
-                  <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-teal-500/0 via-teal-500/0 to-teal-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-5" />
                 </div>
               );
             })}
