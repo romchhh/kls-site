@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, FormEvent, useEffect } from "react";
-import { X, MessageCircle, Phone, CheckCircle2 } from "lucide-react";
+import { X, Phone, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 import { Locale, getTranslations } from "../lib/translations";
 
 type ContactQuickModalProps = {
@@ -133,28 +134,28 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
                   onClick={() => handleMessengerClick("telegram")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
                 >
-                  <MessageCircle size={16} className="text-blue-500" />
+                  <Image src="/TelegramLogo.svg" alt="Telegram" width={16} height={16} className="object-contain" />
                   Telegram
                 </button>
                 <button
                   onClick={() => handleMessengerClick("whatsapp")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-600"
                 >
-                  <MessageCircle size={16} className="text-green-500" />
+                  <Image src="/WhatsAppLogo.svg" alt="WhatsApp" width={16} height={16} className="object-contain" />
                   WhatsApp
                 </button>
                 <button
                   onClick={() => handleMessengerClick("viber")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:border-purple-300 hover:bg-purple-50 hover:text-purple-600"
                 >
-                  <MessageCircle size={16} className="text-purple-500" />
+                  <Image src="/ViberLogo.svg" alt="Viber" width={16} height={16} className="object-contain" />
                   Viber
                 </button>
                 <button
                   onClick={() => handleMessengerClick("wechat")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:border-green-400 hover:bg-green-50 hover:text-green-700"
                 >
-                  <MessageCircle size={16} className="text-green-600" />
+                  <Image src="/WeChatLogo.svg" alt="WeChat" width={16} height={16} className="object-contain" />
                   WeChat
                 </button>
               </div>

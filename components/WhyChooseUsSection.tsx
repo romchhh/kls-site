@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { Shield, Eye, Zap, DollarSign, FileText, User, Headphones, Globe, Award, Clock, CheckCircle, TrendingUp } from "lucide-react";
+import { Zap } from "lucide-react";
 import { Locale, getTranslations } from "../lib/translations";
 import { ContactQuickModal } from "./ContactQuickModal";
 
@@ -10,21 +10,49 @@ type WhyChooseUsSectionProps = {
   locale: Locale;
 };
 
-// Icon mapping for features (expanded)
-const featureIcons = [
-  Shield,      // Надійність
-  Eye,         // Прозорість
-  Zap,         // Швидка доставка
-  DollarSign,  // Доступні ціни
-  FileText,    // Митне оформлення
-  User,        // Персональний підхід
-  Headphones,  // 24/7 Підтримка
-  Globe,       // Глобальна мережа
-  Award,       // Якість
-  Clock,       // Пунктуальність
-  CheckCircle, // Гарантії
-  TrendingUp,  // Ефективність
-];
+// Icon mapping for features - using SVG files from why-choose-us folder
+// Supports multiple languages
+const featureIconMap: Record<string, string> = {
+  // Ukrainian
+  "Надійність": "/why-choose-us/reliability.svg",
+  "Прозорість": "/why-choose-us/transparency.svg",
+  "Швидка доставка": "/why-choose-us/fast-delivery.svg",
+  "Доступні ціни": "/why-choose-us/affordable-prices.svg",
+  "Митне оформлення": "/why-choose-us/customs-clearance.svg",
+  "Персональний підхід": "/why-choose-us/personal-approach.svg",
+  "24/7 Підтримка": "/why-choose-us/support-24-7.svg",
+  "Глобальна мережа": "/why-choose-us/global-network.svg",
+  "Гарантія найкращої ціни": "/why-choose-us/best-price-guarantee.svg",
+  "Персональний менеджер": "/why-choose-us/personal-manager.svg",
+  "Швидкий розрахунок": "/why-choose-us/quick-calculation.svg",
+  "Якість": "/why-choose-us/quality.svg",
+  // Russian
+  "Надежность": "/why-choose-us/reliability.svg",
+  "Прозрачность": "/why-choose-us/transparency.svg",
+  "Быстрая доставка": "/why-choose-us/fast-delivery.svg",
+  "Доступные цены": "/why-choose-us/affordable-prices.svg",
+  "Таможенное оформление": "/why-choose-us/customs-clearance.svg",
+  "Персональный подход": "/why-choose-us/personal-approach.svg",
+  "Поддержка 24/7": "/why-choose-us/support-24-7.svg",
+  "Глобальная сеть": "/why-choose-us/global-network.svg",
+  "Гарантия лучшей цены": "/why-choose-us/best-price-guarantee.svg",
+  "Персональный менеджер": "/why-choose-us/personal-manager.svg",
+  "Быстрый расчет": "/why-choose-us/quick-calculation.svg",
+  "Качество": "/why-choose-us/quality.svg",
+  // English
+  "Reliability": "/why-choose-us/reliability.svg",
+  "Transparency": "/why-choose-us/transparency.svg",
+  "Fast Delivery": "/why-choose-us/fast-delivery.svg",
+  "Affordable Prices": "/why-choose-us/affordable-prices.svg",
+  "Customs Clearance": "/why-choose-us/customs-clearance.svg",
+  "Personal Approach": "/why-choose-us/personal-approach.svg",
+  "24/7 Support": "/why-choose-us/support-24-7.svg",
+  "Global Network": "/why-choose-us/global-network.svg",
+  "Best Price Guarantee": "/why-choose-us/best-price-guarantee.svg",
+  "Personal Manager": "/why-choose-us/personal-manager.svg",
+  "Quick Calculation": "/why-choose-us/quick-calculation.svg",
+  "Quality": "/why-choose-us/quality.svg",
+};
 
 
 export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
@@ -37,7 +65,12 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
 
   const features = content.features;
   const [isVisible, setIsVisible] = useState(false);
-  const [currentFeatureIndexes, setCurrentFeatureIndexes] = useState<number[]>([0, 1, 2]);
+  // Initialize with 3 different indexes
+  const getInitialIndexes = () => {
+    if (features.length < 3) return [0, 0, 0];
+    return [0, 1, 2];
+  };
+  const [currentFeatureIndexes, setCurrentFeatureIndexes] = useState<number[]>(getInitialIndexes());
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const intervalRefs = useRef<(NodeJS.Timeout | null)[]>([null, null, null]);
@@ -71,7 +104,14 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
     const slideFeature = (blockIdx: number) => {
       setCurrentFeatureIndexes((prev) => {
         const newIndexes = [...prev];
-        newIndexes[blockIdx] = (prev[blockIdx] + 1) % features.length;
+        // Find next index that is different from other two cards
+        let nextIndex = (prev[blockIdx] + 1) % features.length;
+        let attempts = 0;
+        while ((nextIndex === prev[0] || nextIndex === prev[1] || nextIndex === prev[2]) && attempts < features.length) {
+          nextIndex = (nextIndex + 1) % features.length;
+          attempts++;
+        }
+        newIndexes[blockIdx] = nextIndex;
         return newIndexes;
       });
     };
@@ -187,10 +227,23 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
                   
                   {/* Icon in top left */}
                   <div className="absolute top-6 left-6">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100/50 text-teal-600 shadow-md transition-all duration-300 group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-teal-100 group-hover:to-teal-200/50 group-hover:text-teal-700 group-hover:shadow-lg">
+                    <div className="flex h-20 w-20 items-center justify-center transition-all duration-300 group-hover:scale-110">
                       {(() => {
-                        const CurrentIcon = featureIcons[currentIndex % featureIcons.length];
-                        return <CurrentIcon size={40} strokeWidth={2.5} />;
+                        const iconPath = featureIconMap[currentFeature.title];
+                        if (iconPath) {
+                          return (
+                            <Image
+                              src={iconPath}
+                              alt={currentFeature.title}
+                              width={48}
+                              height={48}
+                              className="object-contain"
+                            />
+                          );
+                        } else {
+                          // Fallback to lucide icon if icon not found
+                          return <Zap size={48} strokeWidth={2.5} />;
+                        }
                       })()}
                     </div>
                   </div>

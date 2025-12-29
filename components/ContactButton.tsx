@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MessageCircle } from "lucide-react";
+import Image from "next/image";
 import { ContactQuickModal } from "./ContactQuickModal";
 import { Locale } from "../lib/translations";
 
@@ -63,7 +63,7 @@ export function ContactButton({ locale }: ContactButtonProps) {
         }}
         aria-label="Contact us"
       >
-        <MessageCircle size={24} className="drop-shadow-lg" />
+        <Image src="/chat-icon.svg" alt="Contact us" width={24} height={24} className="drop-shadow-lg object-contain" />
       </button>
 
       {/* Contact Quick Modal */}

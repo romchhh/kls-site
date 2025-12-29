@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Locale, getTranslations } from "../lib/translations";
-import { ArrowRight, Clock, Globe, Package, HandCoins, Warehouse, DollarSign, MapPin, Scale, Home, Users } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -84,17 +84,17 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
     multimodal: "/Group-3.png",
   };
 
-  // Мапа іконок для features
-  const featureIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-    clock: Clock,
-    mapPin: MapPin,
-    package: Package,
-    handCoins: HandCoins,
-    warehouse: Warehouse,
-    dollar: DollarSign,
-    scale: Scale,
-    home: Home,
-    users: Users,
+  // Мапа іконок для features - using SVG files
+  const featureIconMap: Record<string, string> = {
+    clock: "/delivery_types/fast-delivery.svg",
+    mapPin: "/why-choose-us/global-network.svg",
+    package: "/delivery_types/luggage.svg",
+    handCoins: "/why-choose-us/affordable-prices.svg",
+    warehouse: "/why-choose-us/reliability.svg", // Using reliability as warehouse alternative
+    dollar: "/why-choose-us/affordable-prices.svg",
+    scale: "/why-choose-us/quality.svg", // Using quality as scale alternative
+    home: "/why-choose-us/personal-approach.svg", // Using personal approach as home alternative
+    users: "/why-choose-us/personal-manager.svg",
   };
 
   const getTypeHref = (key: string) => {
@@ -198,8 +198,6 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                     {/* Features - only first and last (2 items) */}
                     <div className="flex items-start justify-between gap-2 sm:gap-3 md:gap-4 relative">
                       {type.features.filter((_, idx) => idx === 0 || idx === type.features.length - 1).map((feature, featureIndex) => {
-                        const FeatureIcon = featureIconMap[feature.icon] || Package;
-                        
                         return (
                           <div 
                             key={featureIndex} 
@@ -207,8 +205,18 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                           >
                             <div className="flex flex-1 flex-col items-center px-1 sm:px-2 md:px-4 w-full">
                               {/* Icon */}
-                              <div className="mb-2 sm:mb-3 flex h-12 w-12 sm:h-10 sm:w-10 items-center justify-center text-teal-600 md:h-12 md:w-12 flex-shrink-0">
-                                <FeatureIcon className="h-7 w-7 sm:h-6 sm:w-6 md:h-7 md:w-7" />
+                              <div className="mb-2 sm:mb-3 flex h-12 w-12 sm:h-10 sm:w-10 items-center justify-center md:h-12 md:w-12 flex-shrink-0">
+                                {featureIconMap[feature.icon] ? (
+                                  <Image
+                                    src={featureIconMap[feature.icon]}
+                                    alt={feature.text}
+                                    width={28}
+                                    height={28}
+                                    className="object-contain h-7 w-7 sm:h-6 sm:w-6 md:h-7 md:w-7"
+                                  />
+                                ) : (
+                                  <div className="h-7 w-7 sm:h-6 sm:w-6 md:h-7 md:w-7" />
+                                )}
                               </div>
                               
                               {/* Text */}

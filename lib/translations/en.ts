@@ -141,6 +141,22 @@ export const en = {
         title: "Global Network",
         description: "Wide delivery geography worldwide",
       },
+      {
+        title: "Best Price Guarantee",
+        description: "We guarantee the best prices in the logistics services market",
+      },
+      {
+        title: "Personal Manager",
+        description: "Each client gets a personal manager for quick issue resolution",
+      },
+      {
+        title: "Quick Calculation",
+        description: "Instant calculation of delivery cost for your cargo",
+      },
+      {
+        title: "Quality",
+        description: "High standards of service quality and delivery reliability",
+      },
     ],
     imageLabels: {
       international: "International Shipping",

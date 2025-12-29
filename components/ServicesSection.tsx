@@ -225,11 +225,11 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
           style={isVisible ? { animationDelay: "0.1s" } : { opacity: 0 }}
         >
           <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
-            {servicesContent.mainTitle}
-          </h2>
+              {servicesContent.mainTitle}
+            </h2>
           <p className="mx-auto max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
-            {servicesContent.mainDescription}
-          </p>
+              {servicesContent.mainDescription}
+            </p>
         </div>
 
         {/* Services Scroll Container */}
