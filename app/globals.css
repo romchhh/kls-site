@@ -542,3 +542,10 @@ html {
   }
 }
 
+/* Правильний перенос слів для hero заголовків - підтримує переноси рядків у тексті */
+.hero-title-break {
+  white-space: pre-line;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+

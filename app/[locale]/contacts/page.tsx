@@ -1,7 +1,10 @@
 import { Navigation } from "../../../components/Navigation";
 import { SiteFooter } from "../../../components/SiteFooter";
 import { ContactFormFull } from "../../../components/ContactFormFull";
+import { StructuredData } from "../../../components/StructuredData";
 import { Locale, getTranslations } from "../../../lib/translations";
+import { generateMetadata as genMeta } from "../../../lib/metadata";
+import { Metadata } from "next";
 
 const contactsContent = {
   ua: {
@@ -54,6 +57,27 @@ const contactsContent = {
   },
 };
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const content = contactsContent[locale];
+  const baseMetadata = genMeta(locale, "/contacts");
+  return {
+    ...baseMetadata,
+    title: `${content.title} | KLS Logistics`,
+    description: `${content.description} ${locale === "ua" ? "Наші офіси в Україні та Китаї. Телефон, email, адреса." : locale === "ru" ? "Наши офисы в Украине и Китае. Телефон, email, адрес." : "Our offices in Ukraine and China. Phone, email, address."}`,
+    keywords: `${baseMetadata.keywords}, контакти, зв'язок, адреса, телефон, email, офіс KLS Logistics`,
+    openGraph: {
+      ...baseMetadata.openGraph,
+      title: `${content.title} | KLS Logistics`,
+      description: content.description,
+    },
+  };
+}
+
 export default async function ContactsPage({
   params,
 }: {
@@ -64,6 +88,14 @@ export default async function ContactsPage({
 
   return (
     <div className="min-h-screen bg-white">
+      <StructuredData 
+        locale={locale} 
+        type="LocalBusiness"
+        breadcrumbs={[
+          { name: locale === "ua" ? "Головна" : locale === "ru" ? "Главная" : "Home", url: `/${locale}` },
+          { name: content.title, url: `/${locale}/contacts` },
+        ]}
+      />
       <Navigation locale={locale} />
       <main className="pt-32 pb-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">

@@ -28,6 +28,7 @@ export default async function LocaleLayout({
     <>
       <StructuredData locale={validLocale} type="Organization" />
       <StructuredData locale={validLocale} type="WebSite" />
+      <StructuredData locale={validLocale} type="LocalBusiness" />
       {children}
     </>
   );

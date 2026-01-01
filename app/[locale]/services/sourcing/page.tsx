@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const content = {
   ua: {
-    title: "Сервіс пошуку та закупівлі в Китаї та Кореї",
+    title: "Сервіс пошуку\nта закупівлі\nв Китаї та Кореї",
     subtitle: "Пошук постачальників / Перевірка фабрик / Ведення переговорів / Закупівля під ключ",
     intro: "Ми надаємо комплексний сервіс з пошуку товарів та виробників у Китаї та Південній Кореї, допомагаючи бізнесу отримати надійних постачальників, вигідні умови та повний супровід у процесі закупівлі.",
     ourServices: "Наші послуги",
@@ -74,7 +74,7 @@ const content = {
     ],
   },
   ru: {
-    title: "Сервис поиска и закупки в Китае и Корее",
+    title: "Сервис поиска\nи закупки\nв Китае и Корее",
     subtitle: "Поиск поставщиков / Проверка фабрик / Ведение переговоров / Закупка под ключ",
     intro: "Мы предоставляем комплексный сервис по поиску товаров и производителей в Китае и Южной Корее, помогая бизнесу получить надежных поставщиков, выгодные условия и полное сопровождение в процессе закупки.",
     ourServices: "Наши услуги",
@@ -142,7 +142,7 @@ const content = {
     ],
   },
   en: {
-    title: "Search and Procurement Service in China and Korea",
+    title: "Search and Procurement\nService\nin China and Korea",
     subtitle: "Supplier Search / Factory Verification / Negotiations / Turnkey Procurement",
     intro: "We provide a comprehensive service for finding goods and manufacturers in China and South Korea, helping businesses get reliable suppliers, favorable terms and full support in the procurement process.",
     ourServices: "Our services",
@@ -238,11 +238,11 @@ export default async function SourcingPage({
               </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-20">
+        <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 pt-32 pb-20 md:py-20">
           <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
             {/* Left - Text Content */}
             <div className="text-white">
-              <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+              <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
                 {data.title}
               </h1>
               <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">

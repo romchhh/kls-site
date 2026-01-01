@@ -8,7 +8,10 @@ import { CostCalculationSection } from "../../components/CostCalculationSection"
 import { SiteFooter } from "../../components/SiteFooter";
 import { ScrollToTop } from "../../components/ScrollToTop";
 import { ContactButton } from "../../components/ContactButton";
+import { StructuredData } from "../../components/StructuredData";
 import { Locale, getTranslations } from "../../lib/translations";
+import { Metadata } from "next";
+import { generateMetadata as genMeta } from "../../lib/metadata";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -16,6 +19,15 @@ import React from "react";
 
 // Дозволяємо динамічний рендеринг для правильної роботи відео
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return genMeta(locale);
+}
 
 // Helper function to format delivery titles with line breaks
 function formatDeliveryTitle(key: string, locale: Locale, title: string): React.ReactNode {
@@ -37,11 +49,11 @@ function formatDeliveryTitle(key: string, locale: Locale, title: string): React.
     }
   } else if (key === "international") {
     if (locale === "ua") {
-      return <>Міжнародне перевезення<br />та експедирування</>;
+      return <>Міжнародне перевезення та<br /> експедирування</>;
     } else if (locale === "ru") {
-      return <>Международные перевозки<br />и экспедирование</>;
+      return <>Международные перевозки и<br /> экспедирование</>;
     } else {
-      return <>International transportation<br />and forwarding</>;
+      return <>International transportation and<br /> forwarding</>;
     }
   }
   return title;
@@ -122,6 +134,13 @@ export default async function HomePage({
 
   return (
     <div className="min-h-screen bg-white">
+      <StructuredData 
+        locale={locale} 
+        type="WebSite"
+        breadcrumbs={[
+          { name: locale === "ua" ? "Головна" : locale === "ru" ? "Главная" : "Home", url: `/${locale}` }
+        ]}
+      />
       <Navigation locale={locale} />
       <HeroSection locale={locale} />
       

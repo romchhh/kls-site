@@ -533,9 +533,9 @@ export const en = {
   delivery: {
     title: "Delivery",
     // Delivery categories
-    ukraineTurnkey: "Turnkey Delivery to Ukraine",
-    euWorld: "Delivery to EU Countries and the World",
-    international: "International Transportation and Forwarding",
+    ukraineTurnkey: "Turnkey\nDelivery\nto Ukraine",
+    euWorld: "Delivery\nto EU Countries\nand the World",
+    international: "International Transportation\nand Forwarding",
     // Turnkey Delivery to Ukraine
     sea: "Sea Transportation",
     air: "Air Transportation",

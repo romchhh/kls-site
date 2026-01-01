@@ -534,11 +534,11 @@ export default async function EuWorldPage({
           </div>
 
           {/* Content */}
-          <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-20">
+          <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 pt-32 pb-20 md:py-20">
             <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
               {/* Left - Text Content */}
               <div className="text-white">
-                <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+                <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
                   {t.delivery.euWorld}
                 </h1>
                 <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">

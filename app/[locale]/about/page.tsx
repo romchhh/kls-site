@@ -1,7 +1,10 @@
 import Image from "next/image";
 import { Navigation } from "../../../components/Navigation";
 import { SiteFooter } from "../../../components/SiteFooter";
+import { StructuredData } from "../../../components/StructuredData";
 import { Locale, getTranslations } from "../../../lib/translations";
+import { generateMetadata as genMeta } from "../../../lib/metadata";
+import { Metadata } from "next";
 
 const aboutContent = {
   ua: {
@@ -21,6 +24,22 @@ const aboutContent = {
   },
 };
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const content = aboutContent[locale];
+  const baseMetadata = genMeta(locale, "/about");
+  return {
+    ...baseMetadata,
+    title: `${content.title} | KLS Logistics`,
+    description: content.description,
+    keywords: `${baseMetadata.keywords}, про компанію, про нас, історія компанії, команда KLS Logistics`,
+  };
+}
+
 export default async function AboutPage({
   params,
 }: {
@@ -32,6 +51,14 @@ export default async function AboutPage({
 
   return (
     <div className="min-h-screen bg-white">
+      <StructuredData 
+        locale={locale} 
+        type="Organization"
+        breadcrumbs={[
+          { name: locale === "ua" ? "Головна" : locale === "ru" ? "Главная" : "Home", url: `/${locale}` },
+          { name: content.title, url: `/${locale}/about` },
+        ]}
+      />
       <Navigation locale={locale} />
       <main className="pt-32 pb-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">

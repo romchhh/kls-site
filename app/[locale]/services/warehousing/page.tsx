@@ -12,10 +12,10 @@ export default async function WarehousingPage({
   const { locale } = await params;
   const t = getTranslations(locale);
 
-  const consolidation = (t.services as any).pages.consolidation;
-  const storage = (t.services as any).pages.storage;
-  const inspection = (t.services as any).pages.inspection;
-  const packaging = (t.services as any).pages.packaging;
+  const consolidation = (t.services as any)?.pages?.consolidation;
+  const storage = (t.services as any)?.pages?.storage;
+  const inspection = (t.services as any)?.pages?.inspection;
+  const packaging = (t.services as any)?.pages?.packaging;
 
   const title = t.services.warehousing;
   const subtitle = locale === "ua"
@@ -31,28 +31,28 @@ export default async function WarehousingPage({
 
   const services = [
     {
-      title: consolidation.title,
+      title: consolidation?.title || (locale === "ua" ? "Консолідація вантажів" : locale === "ru" ? "Консолидация грузов" : "Cargo Consolidation"),
       icon: "/services/warehousing.svg",
-      intro: consolidation.intro,
-      items: consolidation.advantagesList,
+      intro: consolidation?.intro || (locale === "ua" ? "Ми приймаємо відправлення від різних постачальників, об'єднуємо їх у єдину партію та готуємо до оптимізованої доставки." : locale === "ru" ? "Мы принимаем отправления от разных поставщиков, объединяем их в единую партию и готовим к оптимизированной доставке." : "We receive shipments from different suppliers, combine them into a single batch and prepare for optimized delivery."),
+      items: consolidation?.advantagesList || [],
     },
     {
-      title: storage.title,
+      title: storage?.title || (locale === "ua" ? "Зберігання вантажів" : locale === "ru" ? "Хранение грузов" : "Cargo Storage"),
       icon: "/why-choose-us/quality.svg",
-      intro: storage.intro,
-      items: storage.advantagesList,
+      intro: storage?.intro || (locale === "ua" ? "Пропонуємо короткострокове та довгострокове зберігання з контрольованими умовами." : locale === "ru" ? "Предлагаем краткосрочное и долгосрочное хранение с контролируемыми условиями." : "We offer short-term and long-term storage with controlled conditions."),
+      items: storage?.advantagesList || [],
     },
     {
-      title: inspection.title,
+      title: inspection?.title || (locale === "ua" ? "Інспекція та перевірка" : locale === "ru" ? "Инспекция и проверка" : "Inspection and Verification"),
       icon: "/why-choose-us/reliability.svg",
-      intro: inspection.intro,
-      items: inspection.services || inspection.servicesList || [],
+      intro: inspection?.intro || (locale === "ua" ? "Проводимо контроль якості та відповідності товару перед відправкою або після отримання." : locale === "ru" ? "Проводим контроль качества и соответствия товара перед отправкой или после получения." : "We conduct quality control and product compliance checks before shipment or after receipt."),
+      items: inspection?.services || inspection?.servicesList || [],
     },
     {
-      title: packaging.title,
+      title: packaging?.title || (locale === "ua" ? "Пакування вантажів" : locale === "ru" ? "Упаковка грузов" : "Cargo Packaging"),
       icon: "/why-choose-us/transparency.svg",
-      intro: packaging.intro,
-      items: packaging.servicesList || [],
+      intro: packaging?.intro || (locale === "ua" ? "Професійне пакування для захисту вантажу під час транспортування." : locale === "ru" ? "Профессиональная упаковка для защиты груза во время транспортировки." : "Professional packaging to protect cargo during transportation."),
+      items: packaging?.servicesList || [],
     },
   ];
 
@@ -90,11 +90,11 @@ export default async function WarehousingPage({
         </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-20">
+        <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 pt-32 pb-20 md:py-20">
           <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
             {/* Left - Text Content */}
             <div className="text-white">
-              <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+              <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
                 {title}
               </h1>
               <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">

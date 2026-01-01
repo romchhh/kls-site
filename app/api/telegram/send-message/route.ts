@@ -93,6 +93,15 @@ export async function POST(req: NextRequest) {
         break;
 
       case "contact_quick":
+        const messengerLabels: Record<string, string> = {
+          telegram: "📱 Telegram",
+          whatsapp: "💚 WhatsApp",
+          viber: "💜 Viber",
+          wechat: "💬 WeChat",
+          phone: "📞 Телефон",
+        };
+        const messengerLabel = messengerLabels[data.messenger] || data.messenger || "Не вказано";
+        message += `💬 <b>Месенджер:</b> ${messengerLabel}\n`;
         message += `📞 <b>Телефон:</b> ${data.phone || "Не вказано"}\n`;
         break;
 

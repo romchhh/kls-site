@@ -1,7 +1,10 @@
 import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
+import { StructuredData } from "../../../../components/StructuredData";
 import { Locale } from "../../../../lib/translations";
+import { generateServiceMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import Image from "next/image";
 
 const content = {
@@ -148,6 +151,25 @@ const content = {
   },
 };
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const serviceNames = {
+    ua: "Грошові перекази в Китай - Alipay, WeChat, Банківські картки",
+    ru: "Денежные переводы в Китай - Alipay, WeChat, Банковские карты",
+    en: "Money Transfers to China - Alipay, WeChat, Bank Cards",
+  };
+  const serviceDescriptions = {
+    ua: "Швидкі та безпечні грошові перекази в Китай. Робота з Alipay, WeChat, банківськими картками CNY. Оплата постачальникам, фабрикам та виробникам. Вигідний курс, низькі комісії, підтвердження оплати.",
+    ru: "Быстрые и безопасные денежные переводы в Китай. Работа с Alipay, WeChat, банковскими картами CNY. Оплата поставщикам, фабрикам и производителям. Выгодный курс, низкие комиссии, подтверждение оплаты.",
+    en: "Fast and secure money transfers to China. Working with Alipay, WeChat, CNY bank cards. Payment to suppliers, factories and manufacturers. Favorable rate, low commissions, payment confirmation.",
+  };
+  return generateServiceMetadata(locale, "payments", serviceNames, serviceDescriptions);
+}
+
 export default async function PaymentsPage({
   params,
 }: {
@@ -158,6 +180,17 @@ export default async function PaymentsPage({
 
   return (
     <div className="min-h-screen bg-white">
+      <StructuredData 
+        locale={locale} 
+        type="Service"
+        serviceName={data.title}
+        serviceDescription={data.intro}
+        breadcrumbs={[
+          { name: locale === "ua" ? "Головна" : locale === "ru" ? "Главная" : "Home", url: `/${locale}` },
+          { name: locale === "ua" ? "Послуги" : locale === "ru" ? "Услуги" : "Services", url: `/${locale}/services` },
+          { name: data.title, url: `/${locale}/services/payments` },
+        ]}
+      />
       <Navigation locale={locale} />
       
       {/* Hero Section with Background Image */}
@@ -175,11 +208,11 @@ export default async function PaymentsPage({
         </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-20">
+        <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 pt-32 pb-20 md:py-20">
           <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
             {/* Left - Text Content */}
             <div className="text-white">
-              <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+              <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
                 {data.title}
               </h1>
               <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">

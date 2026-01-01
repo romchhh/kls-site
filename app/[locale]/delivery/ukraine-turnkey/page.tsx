@@ -1,7 +1,10 @@
 import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
+import { StructuredData } from "../../../../components/StructuredData";
 import { Locale, getTranslations } from "../../../../lib/translations";
+import { generateDeliveryMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import DeliverySidebarNav from "../../../../components/DeliverySidebarNav";
 import Image from "next/image";
 
@@ -347,6 +350,25 @@ const multimodalContent = {
   },
 };
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const deliveryNames = {
+    ua: "Доставка в Україну під ключ з Китаю | Морські, авіа та залізничні перевезення",
+    ru: "Доставка в Украину под ключ из Китая | Морские, авиа и железнодорожные перевозки",
+    en: "Turnkey Delivery to Ukraine from China | Sea, Air and Rail Transportation",
+  };
+  const deliveryDescriptions = {
+    ua: "Комплексна доставка вантажів з Китаю в Україну під ключ. Ми беремо на себе всі етапи логістичного процесу: морські перевезення (FCL/LCL), авіадоставка, залізничні перевезення. Митне оформлення, складські послуги, відстеження вантажу. Швидко, надійно, під ключ.",
+    ru: "Комплексная доставка грузов из Китая в Украину под ключ. Мы берем на себя все этапы логистического процесса: морские перевозки (FCL/LCL), авиадоставка, железнодорожные перевозки. Таможенное оформление, складские услуги, отслеживание груза. Быстро, надежно, под ключ.",
+    en: "Comprehensive turnkey cargo delivery from China to Ukraine. We handle all stages of the logistics process: sea transportation (FCL/LCL), air delivery, rail transport. Customs clearance, warehousing services, cargo tracking. Fast, reliable, turnkey.",
+  };
+  return generateDeliveryMetadata(locale, "ukraine-turnkey", deliveryNames, deliveryDescriptions);
+}
+
 export default async function UkraineTurnkeyPage({
   params,
 }: {
@@ -369,6 +391,17 @@ export default async function UkraineTurnkeyPage({
 
   return (
     <div className="min-h-screen bg-white">
+      <StructuredData 
+        locale={locale} 
+        type="Service"
+        serviceName={locale === "ua" ? "Доставка в Україну під ключ" : locale === "ru" ? "Доставка в Украину под ключ" : "Turnkey Delivery to Ukraine"}
+        serviceDescription={locale === "ua" ? "Комплексна доставка вантажів з Китаю в Україну під ключ" : locale === "ru" ? "Комплексная доставка грузов из Китая в Украину под ключ" : "Comprehensive turnkey cargo delivery from China to Ukraine"}
+        breadcrumbs={[
+          { name: locale === "ua" ? "Головна" : locale === "ru" ? "Главная" : "Home", url: `/${locale}` },
+          { name: locale === "ua" ? "Доставка" : locale === "ru" ? "Доставка" : "Delivery", url: `/${locale}/delivery` },
+          { name: locale === "ua" ? "Доставка в Україну під ключ" : locale === "ru" ? "Доставка в Украину под ключ" : "Turnkey Delivery to Ukraine", url: `/${locale}/delivery/ukraine-turnkey` },
+        ]}
+      />
       <Navigation locale={locale} />
       {/* Hero Section */}
         <section className="relative min-h-[600px] flex items-center overflow-hidden">
@@ -385,11 +418,11 @@ export default async function UkraineTurnkeyPage({
           </div>
 
           {/* Content */}
-          <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-20">
+          <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 pt-32 pb-20 md:py-20">
             <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
               {/* Left - Text Content */}
               <div className="text-white">
-                <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+                <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
                   {t.delivery.ukraineTurnkey}
                 </h1>
                 <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">
