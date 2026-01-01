@@ -862,7 +862,7 @@ export const ua = {
     namePlaceholder: "Як до вас звертатися?",
     emailPlaceholder: "Ваш Email",
     getInTouch: "Зв'язатися",
-    copyright: "© 2025 KLS. Всі права захищені.",
+    copyright: "© 2026 KLS. Всі права захищені.",
     tagline: "Рухаємось відстанями, об'єднуємо доставкою.",
     developedBy: "Розроблено",
     china: "Китай",

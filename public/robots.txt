@@ -1,3 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /api/
+Disallow: /cabinet/
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://kls.international/sitemap.xml

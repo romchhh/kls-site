@@ -75,15 +75,18 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
       {/* Logo */}
       <Link
         href={`/${locale}`}
-        className="fixed left-4 top-4 z-20 inline-flex items-center justify-center rounded-full bg-white/90 px-3 py-1 shadow-md backdrop-blur-sm md:left-8 md:top-6"
+        className="fixed left-6 top-4 z-20 inline-flex items-center justify-center rounded-full bg-white/90 px-4 py-2 shadow-md backdrop-blur-sm md:left-8 md:top-6 md:px-5 md:py-2.5"
       >
+        <div className="relative h-7 w-auto md:h-8">
         <Image
-          src="/turquoise-transparent-2x.png"
+          src="/logos/ЛОГО(1).png"
           alt="KLS Logistics"
-          width={192}
-          height={192}
-          className="h-auto w-28 md:w-36"
+          width={120}
+          height={36}
+          className="h-7 w-auto md:h-8 object-contain"
+          priority
         />
+        </div>
       </Link>
 
       {/* Help icon in top-right corner */}
@@ -100,7 +103,7 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
         {/* Left image panel */}
         <div className="relative hidden w-full overflow-hidden rounded-3xl bg-black md:block md:w-1/2 md:mx-4 md:my-4">
           <Image
-            src="/pramo-nad-kommerceskim-dokom 1.png"
+            src="/images/pramo-nad-kommerceskim-dokom 1.png"
             alt="KLS Logistics"
             fill
             priority
@@ -296,7 +299,7 @@ export default function CabinetLoginPage({ params }: CabinetLoginPageProps) {
         }}
         aria-label="Написати в підтримку"
       >
-        <Image src="/Чат-кіл.svg" alt="Contact us" width={24} height={24} className="drop-shadow-lg object-contain" />
+        <Image src="/icons/misc/Чат-кіл.svg" alt="Contact us" width={24} height={24} className="drop-shadow-lg object-contain" />
       </button>
 
       {/* Contact Quick Modal */}

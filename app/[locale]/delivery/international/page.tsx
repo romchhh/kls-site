@@ -2,8 +2,9 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale, getTranslations } from "../../../../lib/translations";
-import { Ship, Plane, Train, Truck, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import DeliverySidebarNav from "../../../../components/DeliverySidebarNav";
+import Image from "next/image";
 
 const seaContainerContent = {
   ua: {
@@ -437,29 +438,38 @@ export default async function InternationalPage({
   return (
     <div className="min-h-screen bg-white">
       <Navigation locale={locale} />
-      <main className="pt-32 pb-20">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-indigo-50 via-purple-50 to-white py-12 sm:py-16 md:py-20 overflow-hidden mb-12 sm:mb-16 md:mb-20">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-400 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full blur-3xl" />
+      {/* Hero Section */}
+        <section className="relative min-h-[600px] flex items-center overflow-hidden">
+          {/* Background Image */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+              alt="Delivery"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/60 z-[1]" />
           </div>
-          
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-8 lg:grid-cols-3">
-              {/* Left column - Title and Description */}
-              <div className="lg:col-span-2">
-                <h1 className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 break-words">
+
+          {/* Content */}
+          <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-20">
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+              {/* Left - Text Content */}
+              <div className="text-white">
+                <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
                   {t.delivery.international}
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed break-words">
+                <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">
                   {data.intro}
                 </p>
               </div>
 
-              {/* Right column - Contact Form */}
-              <div className="lg:col-span-1">
-                <ContactForm locale={locale} />
+              {/* Right - Contact Form */}
+              <div className="flex justify-end">
+                <div className="mt-12 max-w-md w-full shadow-2xl">
+                  <ContactForm locale={locale} />
+                </div>
               </div>
             </div>
           </div>
@@ -480,15 +490,15 @@ export default async function InternationalPage({
               <div className="lg:col-span-3 space-y-20">
                 {/* Main Info Section */}
                 <section>
-                  <h2 className="mb-8 text-2xl sm:text-3xl font-bold text-gray-900 break-words">{data.whatIncludes}</h2>
+                  <h2 className="mb-8 text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 break-words">{data.whatIncludes}</h2>
                   <div className="grid gap-4 md:grid-cols-2">
                     {data.services.map((service, index) => (
                       <div
                         key={index}
-                        className="flex items-start gap-3 sm:gap-4 rounded-xl border border-gray-200 bg-white p-4 sm:p-6 transition-all hover:border-teal-300 hover:shadow-md"
+                        className="group flex items-start gap-3 sm:gap-4 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]"
                       >
-                        <CheckCircle2 className="mt-0.5 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                        <span className="text-sm sm:text-base text-gray-700 break-words">{service}</span>
+                        <CheckCircle2 className="mt-0.5 h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600 transition-colors duration-300 group-hover:text-teal-700" />
+                        <span className="text-sm sm:text-base text-gray-700 break-words transition-colors duration-300 group-hover:text-slate-800">{service}</span>
                       </div>
                     ))}
                   </div>
@@ -496,24 +506,24 @@ export default async function InternationalPage({
 
                 {/* Advantages & For Whom */}
                 <section className="grid gap-6 sm:gap-8 md:grid-cols-2">
-                  <div className="rounded-2xl border-2 border-gray-200 bg-gradient-to-br from-teal-50 to-cyan-50 p-4 sm:p-6 md:p-8">
+                  <div className="group rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h2 className="mb-6 text-xl sm:text-2xl font-bold text-gray-900 break-words">{data.advantages}</h2>
                     <ul className="space-y-3 sm:space-y-4">
                       {data.advantagesList.map((advantage, index) => (
                         <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-teal-600" />
-                          <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-teal-600 transition-colors duration-300 group-hover:text-teal-700" />
+                          <span className="text-sm sm:text-base text-gray-700 break-words transition-colors duration-300 group-hover:text-slate-800">{advantage}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <div className="rounded-2xl border-2 border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 md:p-8">
+                  <div className="group rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h2 className="mb-6 text-xl sm:text-2xl font-bold text-gray-900 break-words">{data.forWhom}</h2>
                     <ul className="space-y-3 sm:space-y-4">
                       {data.clients.map((client, index) => (
                         <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <div className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 rounded-full bg-blue-500" />
-                          <span className="text-sm sm:text-base text-gray-700 break-words">{client}</span>
+                          <span className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 rounded-full bg-slate-900 transition-colors duration-300 group-hover:bg-teal-700" />
+                          <span className="text-sm sm:text-base text-gray-700 break-words transition-colors duration-300 group-hover:text-slate-800">{client}</span>
                         </li>
                       ))}
                     </ul>
@@ -522,19 +532,28 @@ export default async function InternationalPage({
 
                 {/* Sea Container Transportation */}
                 <section id="sea-container" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3">
-                      <Ship className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{seaContainerData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                      <p className="text-base sm:text-lg text-gray-700 break-words">{seaContainerData.intro}</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{seaContainerData.title}</h2>
-                  </div>
-                  
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg text-gray-700 break-words">{seaContainerData.intro}</p>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/sea.svg"
+                          alt="Sea"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mb-8 space-y-8 sm:space-y-12">
-                    <div className="rounded-xl border-2 border-blue-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{seaContainerData.fclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{seaContainerData.fclDescription}</p>
                       <div className="mb-4">
@@ -551,7 +570,7 @@ export default async function InternationalPage({
                       <p className="text-sm sm:text-base text-gray-600 italic break-words">{seaContainerData.fclForWhom}</p>
                     </div>
 
-                    <div className="rounded-xl border-2 border-teal-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{seaContainerData.lclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{seaContainerData.lclDescription}</p>
                       <div className="mb-4">
@@ -569,7 +588,7 @@ export default async function InternationalPage({
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                  <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{seaContainerData.whatWeOffer}</h3>
                     <ul className="space-y-2 sm:space-y-3">
                       {seaContainerData.services.map((service, index) => (
@@ -584,19 +603,28 @@ export default async function InternationalPage({
 
                 {/* Air Cargo Transportation */}
                 <section id="air-cargo" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 p-3">
-                      <Plane className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{airCargoData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                      <p className="text-base sm:text-lg text-gray-700 break-words">{airCargoData.intro}</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{airCargoData.title}</h2>
-                  </div>
-                  
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg text-gray-700 break-words">{airCargoData.intro}</p>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/air.svg"
+                          alt="Air"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mb-8 space-y-8 sm:space-y-12">
-                    <div className="rounded-xl border-2 border-blue-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{airCargoData.fclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{airCargoData.fclDescription}</p>
                       <div>
@@ -612,7 +640,7 @@ export default async function InternationalPage({
                       </div>
                     </div>
 
-                    <div className="rounded-xl border-2 border-sky-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{airCargoData.lclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{airCargoData.lclDescription}</p>
                       <div>
@@ -629,7 +657,7 @@ export default async function InternationalPage({
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                  <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{airCargoData.whatWeProvide}</h3>
                     <ul className="space-y-2 sm:space-y-3">
                       {airCargoData.services.map((service, index) => (
@@ -644,19 +672,28 @@ export default async function InternationalPage({
 
                 {/* Rail Cargo Transportation */}
                 <section id="rail-cargo" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-3">
-                      <Train className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{railCargoData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                      <p className="text-base sm:text-lg text-gray-700 break-words">{railCargoData.intro}</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{railCargoData.title}</h2>
-                  </div>
-                  
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg text-gray-700 break-words">{railCargoData.intro}</p>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/rail.svg"
+                          alt="Rail"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railCargoData.advantages}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {railCargoData.advantagesList.map((advantage, index) => (
@@ -667,7 +704,7 @@ export default async function InternationalPage({
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railCargoData.ourCapabilities}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {railCargoData.services.map((service, index) => (
@@ -683,19 +720,28 @@ export default async function InternationalPage({
 
                 {/* Road Cargo Transportation */}
                 <section id="road-cargo" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-orange-500 to-red-500 p-3">
-                      <Truck className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{roadCargoData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                      <p className="text-base sm:text-lg text-gray-700 break-words">{roadCargoData.intro}</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{roadCargoData.title}</h2>
-                  </div>
-                  
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg text-gray-700 break-words">{roadCargoData.intro}</p>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/multimodal.svg"
+                          alt="Road"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-xl border-2 border-indigo-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{roadCargoData.ftlTitle}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {roadCargoData.ftlFeatures.map((feature, index) => (
@@ -706,7 +752,7 @@ export default async function InternationalPage({
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-xl border-2 border-purple-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{roadCargoData.ltlTitle}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {roadCargoData.ltlFeatures.map((feature, index) => (
@@ -719,7 +765,7 @@ export default async function InternationalPage({
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                  <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{roadCargoData.whatWeOffer}</h3>
                     <ul className="space-y-2 sm:space-y-3">
                       {roadCargoData.services.map((service, index) => (
@@ -735,7 +781,6 @@ export default async function InternationalPage({
             </div>
           </div>
         </section>
-      </main>
       <SiteFooter locale={locale} />
     </div>
   );

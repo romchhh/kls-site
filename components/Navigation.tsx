@@ -166,7 +166,7 @@ export function Navigation({ locale }: NavigationProps) {
   };
 
   // Логотип - завжди використовуємо ЛОГО(1).png
-  const logoSrc = "/ЛОГО(1).png";
+  const logoSrc = "/logos/ЛОГО(1).png";
 
   return (
     <nav className="fixed z-50 w-full transition-all duration-300 pt-4 px-4">

@@ -69,8 +69,8 @@ export default async function ContactsPage({
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="relative mx-auto mb-16 max-w-3xl text-center">
             <h1 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
-              {content.title}
-            </h1>
+            {content.title}
+          </h1>
             <p className="mx-auto mb-12 max-w-2xl text-base font-normal leading-relaxed text-slate-600 md:text-lg">
               {content.description}
             </p>

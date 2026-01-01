@@ -2,8 +2,8 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale, getTranslations } from "../../../../lib/translations";
-import { Package, FileText, Zap, Anchor, Globe2 } from "lucide-react";
 import DeliverySidebarNav from "../../../../components/DeliverySidebarNav";
+import Image from "next/image";
 
 const fbaContent = {
   ua: {
@@ -519,22 +519,29 @@ export default async function EuWorldPage({
   return (
     <div className="min-h-screen bg-white">
       <Navigation locale={locale} />
-      <main className="pt-32 pb-20">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-teal-50 via-cyan-50 to-white py-12 sm:py-16 md:py-20 overflow-hidden">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-400 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-400 rounded-full blur-3xl" />
+      {/* Hero Section */}
+        <section className="relative min-h-[600px] flex items-center overflow-hidden">
+          {/* Background Image */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+              alt="Delivery"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/60 z-[1]" />
           </div>
-          
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-8 lg:grid-cols-3">
-              {/* Left column - Title and Description */}
-              <div className="lg:col-span-2">
-                <h1 className="mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 break-words">
+
+          {/* Content */}
+          <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-20">
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+              {/* Left - Text Content */}
+              <div className="text-white">
+                <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
                   {t.delivery.euWorld}
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed break-words">
+                <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">
                   {locale === "ua" &&
                     "Доставка вантажів в країни Європейського Союзу та інші країни світу. Широкий спектр логістичних рішень для міжнародної торгівлі."}
                   {locale === "ru" &&
@@ -544,9 +551,11 @@ export default async function EuWorldPage({
                 </p>
               </div>
 
-              {/* Right column - Contact Form */}
-              <div className="lg:col-span-1">
-                <ContactForm locale={locale} />
+              {/* Right - Contact Form */}
+              <div className="flex justify-end">
+                <div className="mt-12 max-w-md w-full shadow-2xl">
+                  <ContactForm locale={locale} />
+                </div>
               </div>
             </div>
           </div>
@@ -567,20 +576,31 @@ export default async function EuWorldPage({
               <div className="lg:col-span-3 space-y-20">
                 {/* FBA Delivery */}
                 <section id="fba" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-orange-500 to-red-500 p-3">
-                      <Package className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{fbaData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div>
+                      <p className="text-lg sm:text-xl text-gray-600 break-words mb-6">{fbaData.subtitle}</p>
+                      <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                        <p className="text-base sm:text-lg text-gray-700 break-words">{fbaData.intro}</p>
+                      </div>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{fbaData.title}</h2>
-                  </div>
-                  <p className="mb-6 text-lg sm:text-xl text-gray-600 break-words">{fbaData.subtitle}</p>
-                  
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-orange-50 to-red-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg text-gray-700 break-words">{fbaData.intro}</p>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/multimodal.svg"
+                          alt="FBA"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{fbaData.whatIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {fbaData.services.map((service, index) => (
@@ -591,7 +611,7 @@ export default async function EuWorldPage({
                         ))}
                       </ul>
                     </div>
-                    <div>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{fbaData.advantages}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {fbaData.advantagesList.map((advantage, index) => (
@@ -604,7 +624,7 @@ export default async function EuWorldPage({
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{fbaData.deliveryTypes}</h3>
                     <ul className="space-y-2">
                       {fbaData.deliveryOptions.map((option, index) => (
@@ -620,15 +640,32 @@ export default async function EuWorldPage({
 
                 {/* DDP/DDU Delivery */}
                 <section id="ddp" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3">
-                      <FileText className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{ddpData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                      <p className="text-base sm:text-lg text-gray-700 break-words">
+                        {locale === "ua" && "Комплексна доставка з повним супроводом та оформленням всієї документації."}
+                        {locale === "ru" && "Комплексная доставка с полным сопровождением и оформлением всей документации."}
+                        {locale === "en" && "Comprehensive delivery with full support and processing of all documentation."}
+                      </p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{ddpData.title}</h2>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/multimodal.svg"
+                          alt="DDP/DDU"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
                   
                   {/* DDU Section */}
-                  <div className="mb-12 rounded-2xl border-2 border-gray-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm">
+                  <div className="mb-12 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words">{ddpData.dduTitle}</h3>
                     <p className="mb-8 text-base sm:text-lg text-gray-600 break-words">{ddpData.dduIntro}</p>
                     
@@ -671,7 +708,7 @@ export default async function EuWorldPage({
                   </div>
 
                   {/* DDP Section */}
-                  <div className="mb-8 rounded-2xl border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-blue-50 p-4 sm:p-6 md:p-8 shadow-sm">
+                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-[#E8FDF8] p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77]">
                     <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words">{ddpData.ddpTitle}</h3>
                     <p className="mb-8 text-base sm:text-lg text-gray-600 break-words">{ddpData.ddpIntro}</p>
                     
@@ -707,22 +744,33 @@ export default async function EuWorldPage({
 
                 {/* Express Delivery */}
                 <section id="express" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 p-3">
-                      <Zap className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{expressData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div>
+                      <p className="mb-2 text-lg sm:text-xl text-gray-600 break-words">{expressData.subtitle}</p>
+                      <p className="mb-6 text-base sm:text-lg text-gray-500 break-words">{expressData.intro}</p>
+                      <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                        <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.whatIs}</h3>
+                        <p className="text-base sm:text-lg text-gray-700 break-words">{expressData.description}</p>
+                      </div>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{expressData.title}</h2>
-                  </div>
-                  <p className="mb-2 text-lg sm:text-xl text-gray-600 break-words">{expressData.subtitle}</p>
-                  <p className="mb-8 text-base sm:text-lg text-gray-500 break-words">{expressData.intro}</p>
-                  
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-yellow-50 to-orange-50 p-4 sm:p-6 md:p-8">
-                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.whatIs}</h3>
-                    <p className="text-base sm:text-lg text-gray-700 break-words">{expressData.description}</p>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/air.svg"
+                          alt="Express"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.advantages}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {expressData.advantagesList.map((advantage, index) => (
@@ -733,7 +781,7 @@ export default async function EuWorldPage({
                         ))}
                       </ul>
                     </div>
-                    <div>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.whatWeDo}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {expressData.services.map((service, index) => (
@@ -746,7 +794,7 @@ export default async function EuWorldPage({
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.forWhom}</h3>
                     <ul className="space-y-2">
                       {expressData.clients.map((client, index) => (
@@ -765,19 +813,28 @@ export default async function EuWorldPage({
 
                 {/* Port-to-Port */}
                 <section id="port-to-port" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3">
-                      <Anchor className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{portToPortData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                      <p className="text-base sm:text-lg text-gray-700 break-words">{portToPortData.intro}</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{portToPortData.title}</h2>
-                  </div>
-                  
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-cyan-50 to-blue-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg text-gray-700 break-words">{portToPortData.intro}</p>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/sea.svg"
+                          alt="Port to Port"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{portToPortData.whatIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {portToPortData.services.map((service, index) => (
@@ -788,7 +845,7 @@ export default async function EuWorldPage({
                         ))}
                       </ul>
                     </div>
-                    <div>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{portToPortData.whatNotIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {portToPortData.notIncluded.map((item, index) => (
@@ -801,7 +858,7 @@ export default async function EuWorldPage({
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{portToPortData.forWhom}</h3>
                     <ul className="space-y-2 mb-6">
                       {portToPortData.clients.map((client, index) => (
@@ -831,18 +888,27 @@ export default async function EuWorldPage({
 
                 {/* Cross-Border */}
                 <section id="cross-border" className="scroll-mt-32">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 p-3">
-                      <Globe2 className="h-6 w-6 text-white" />
+                  {/* Title */}
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{crossBorderData.title}</h2>
+
+                  {/* Intro with Large Icon */}
+                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                      <p className="text-base sm:text-lg text-gray-700 break-words">{crossBorderData.intro}</p>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">{crossBorderData.title}</h2>
-                  </div>
-                  
-                  <div className="mb-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg text-gray-700 break-words">{crossBorderData.intro}</p>
+                    <div className="flex justify-end">
+                      <div className="relative w-full max-w-sm h-64">
+                        <Image
+                          src="/delivery_types/icons/multimodal.svg"
+                          alt="Cross-Border"
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="mb-8">
+                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-6 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{crossBorderData.howItWorks}</h3>
                     <ol className="space-y-3 sm:space-y-4">
                       {crossBorderData.steps.map((step, index) => (
@@ -857,7 +923,7 @@ export default async function EuWorldPage({
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{crossBorderData.advantages}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {crossBorderData.advantagesList.map((advantage, index) => (
@@ -868,7 +934,7 @@ export default async function EuWorldPage({
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{crossBorderData.forWhom}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {crossBorderData.clients.map((client, index) => (
@@ -889,7 +955,6 @@ export default async function EuWorldPage({
             </div>
           </div>
         </section>
-      </main>
       <SiteFooter locale={locale} />
     </div>
   );

@@ -45,7 +45,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
       <video
         ref={videoRef}
         className="absolute inset-0 z-0 h-full w-full object-cover"
-        src="/hero-background.webm"
+        src="/1628622_Container_Vessel_3840x2160.webm"
         autoPlay
         muted
         loop
@@ -132,11 +132,11 @@ export function HeroSection({ locale }: HeroSectionProps) {
                   element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
               }}
-              className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl border border-white/30 bg-white/10 px-6 text-sm font-semibold text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/40 hover:bg-white/20 sm:h-14 sm:w-[230px] sm:text-base"
+              className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl border border-white/30 px-6 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:border-white/40 sm:h-14 sm:w-[230px] sm:text-base"
               style={{
                 background: "rgba(255, 255, 255, 0.14)",
-                backdropFilter: "blur(30px) saturate(200%)",
-                WebkitBackdropFilter: "blur(30px) saturate(200%)",
+                backdropFilter: "blur(20px) saturate(180%)",
+                WebkitBackdropFilter: "blur(20px) saturate(180%)",
                 boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.3)",
               }}
             >

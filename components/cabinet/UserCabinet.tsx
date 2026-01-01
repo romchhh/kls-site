@@ -135,12 +135,13 @@ export function UserCabinet({ locale }: UserCabinetProps) {
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               {/* Logo */}
-              <div className="relative h-16 w-16 flex-shrink-0 lg:h-20 lg:w-20">
+              <div className="relative h-7 w-auto flex-shrink-0 md:h-8">
                 <Image
-                  src="/turquoise-transparent-2x.png"
+                  src="/logos/ЛОГО(1).png"
                   alt="KLS Logo"
-                  fill
-                  className="object-contain"
+                  width={120}
+                  height={36}
+                  className="h-7 w-auto md:h-8 object-contain"
                   priority
                 />
               </div>

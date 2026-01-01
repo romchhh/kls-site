@@ -44,7 +44,7 @@ export default async function AboutPage({
             </div>
             <div className="relative h-96 rounded-lg overflow-hidden">
               <Image
-                src="/hero-image-2.jpg"
+                src="/images/hero-image-2.jpg"
                 alt="About KLS"
                 fill
                 className="object-cover"

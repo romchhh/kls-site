@@ -63,7 +63,7 @@ export function ContactButton({ locale }: ContactButtonProps) {
         }}
         aria-label="Contact us"
       >
-        <Image src="/Чат-кіл.svg" alt="Contact us" width={24} height={24} className="drop-shadow-lg object-contain" />
+        <Image src="/icons/misc/Чат-кіл.svg" alt="Contact us" width={24} height={24} className="drop-shadow-lg object-contain" />
       </button>
 
       {/* Contact Quick Modal */}

@@ -18,7 +18,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
       : locale === "ru"
       ? "KLS Logistics — ведущая логистическая компания, предоставляющая комплексные решения для международной доставки и логистики."
       : "KLS Logistics is a leading logistics company providing comprehensive solutions for international shipping and logistics.",
-    copyright: "© 2025 KLS. Всі права захищені.",
+    copyright: "© 2026 KLS. Всі права захищені.",
     navigation: "Навігація",
     services: "Послуги",
     support: "Підтримка",
@@ -95,7 +95,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
           >
             <Link href={`/${locale}`} className="flex items-center" aria-label="KLS home">
               <Image
-                src="/ЛОГО(1).png"
+                src="/logos/ЛОГО(1).png"
                 alt="KLS Logistics"
                 width={120}
                 height={36}
@@ -108,10 +108,10 @@ export function SiteFooter({ locale }: SiteFooterProps) {
             </p>
             <p className="text-xs text-white/60">
               {locale === "ua"
-                ? "© 2025 KLS. Всі права захищені."
+                ? "© 2026 KLS. Всі права захищені."
                 : locale === "ru"
-                ? "© 2025 KLS. Все права защищены."
-                : "© 2025 KLS. All rights reserved."}
+                ? "© 2026 KLS. Все права защищены."
+                : "© 2026 KLS. All rights reserved."}
             </p>
           </div>
 
@@ -149,7 +149,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                 aria-label="Instagram"
               >
                 <Image
-                  src="/InstagramLogo.svg"
+                  src="/icons/social/InstagramLogo.svg"
                   alt="Instagram"
                   width={32}
                   height={32}
@@ -164,7 +164,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                 aria-label="TikTok"
               >
                 <Image
-                  src="/TiktokLogo.svg"
+                  src="/icons/social/TiktokLogo.svg"
                   alt="TikTok"
                   width={32}
                   height={32}
@@ -179,7 +179,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                 aria-label="Telegram"
               >
                 <Image
-                  src="/TelegramLogo.svg"
+                  src="/icons/social/TelegramLogo.svg"
                   alt="Telegram"
                   width={32}
                   height={32}
@@ -194,7 +194,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                 aria-label="Facebook"
               >
                 <Image
-                  src="/FacebookLogo.svg"
+                  src="/icons/social/FacebookLogo.svg"
                   alt="Facebook"
                   width={32}
                   height={32}
@@ -216,7 +216,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 text-white text-sm font-medium"
                 >
                   <Image
-                    src="/TelegramLogo.svg"
+                    src="/icons/social/TelegramLogo.svg"
                     alt="Telegram"
                     width={20}
                     height={20}

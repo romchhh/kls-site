@@ -504,7 +504,7 @@ export const en = {
     namePlaceholder: "How to address you?",
     emailPlaceholder: "Your Email",
     getInTouch: "Get in Touch",
-    copyright: "© 2025 KLS. All rights reserved.",
+    copyright: "© 2026 KLS. All rights reserved.",
     tagline: "Driven by Distance, United by Delivery.",
     developedBy: "Developed by",
     china: "China",

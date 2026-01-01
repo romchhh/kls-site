@@ -1,11 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { 
-  Ship, Plane, Train, Globe, 
-  Package, FileText, Zap, Anchor, Globe2, Truck,
-  LucideIcon 
-} from "lucide-react";
 
 interface DeliveryType {
   id: string;
@@ -19,20 +14,6 @@ interface DeliverySidebarNavProps {
   locale: string;
   title?: string;
 }
-
-// Об'єднуємо всі можливі іконки в один мап
-const iconMap: Record<string, LucideIcon> = {
-  ship: Ship,
-  plane: Plane,
-  train: Train,
-  globe: Globe,
-  package: Package,
-  filetext: FileText,
-  zap: Zap,
-  anchor: Anchor,
-  globe2: Globe2,
-  truck: Truck,
-};
 
 export default function DeliverySidebarNav({ 
   deliveryTypes, 
@@ -140,20 +121,18 @@ export default function DeliverySidebarNav({
             : {}
         }
       >
-        <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
-          <h3 className="mb-4 text-lg font-semibold text-gray-900">
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <h3 className="mb-4 text-lg font-semibold text-slate-900">
             {sidebarTitle}
           </h3>
           <nav className="space-y-2">
             {deliveryTypes.map((type) => {
-              const Icon = iconMap[type.iconId] || Package;
               return (
                 <a
                   key={type.id}
                   href={`#${type.id}`}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-teal-50 hover:text-teal-700 transition-colors"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-[#E8FDF8] hover:text-teal-700 transition-all duration-300"
                 >
-                  <Icon className="h-4 w-4 flex-shrink-0" />
                   <span>{type.title}</span>
                 </a>
               );

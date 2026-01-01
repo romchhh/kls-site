@@ -504,7 +504,7 @@ export const ru = {
     namePlaceholder: "Как к вам обращаться?",
     emailPlaceholder: "Ваш Email",
     getInTouch: "Связаться",
-    copyright: "© 2025 KLS. Все права защищены.",
+    copyright: "© 2026 KLS. Все права защищены.",
     tagline: "Движемся расстояниями, объединяем доставкой.",
     developedBy: "Разработано",
     china: "Китай",

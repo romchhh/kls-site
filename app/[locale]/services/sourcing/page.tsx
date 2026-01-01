@@ -2,6 +2,7 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale } from "../../../../lib/translations";
+import Image from "next/image";
 
 const content = {
   ua: {
@@ -9,37 +10,54 @@ const content = {
     subtitle: "Пошук постачальників / Перевірка фабрик / Ведення переговорів / Закупівля під ключ",
     intro: "Ми надаємо комплексний сервіс з пошуку товарів та виробників у Китаї та Південній Кореї, допомагаючи бізнесу отримати надійних постачальників, вигідні умови та повний супровід у процесі закупівлі.",
     ourServices: "Наші послуги",
-    search: "Пошук постачальників і фабрик",
-    searchServices: [
+    services: [
+      {
+        title: "Пошук постачальників і фабрик",
+        icon: "/services/sourcing.svg",
+        items: [
       "підбір виробників за вашим технічним завданням",
       "пошук товарів на 1688, Taobao, Alibaba, китайських і корейських B2B-платформах",
       "аналіз ринку та порівняння цін",
     ],
-    verification: "Перевірка постачальників (Factory Check)",
-    verificationServices: [
+      },
+      {
+        title: "Перевірка постачальників (Factory Check)",
+        icon: "/why-choose-us/reliability.svg",
+        items: [
       "перевірка документів та легальності компанії",
       "аналіз відгуків, рейтингу, виробничих потужностей",
       "запит сертифікації та підтверджуючих матеріалів",
     ],
-    negotiations: "Переговори з постачальниками",
-    negotiationsServices: [
+      },
+      {
+        title: "Переговори з постачальниками",
+        icon: "/why-choose-us/personal-approach.svg",
+        items: [
       "узгодження цін, умов виробництва та поставки",
       "контроль специфікацій і відповідності вимогам",
       "погодження умов Incoterms, термінів та оплати",
     ],
-    purchasing: "Закупівля та оформлення замовлень",
-    purchasingServices: [
+      },
+      {
+        title: "Закупівля та оформлення замовлень",
+        icon: "/why-choose-us/transparency.svg",
+        items: [
       "оформлення замовлення \"під ключ\"",
       "оплата постачальнику або фабриці",
       "контроль виробництва (за потреби – фото/відео звіти)",
     ],
-    quality: "Контроль якості та інспекція",
-    qualityServices: [
+      },
+      {
+        title: "Контроль якості та інспекція",
+        icon: "/why-choose-us/quality.svg",
+        items: [
       "перевірка товару перед відправкою",
       "перевірка кількості, маркування, пакування",
       "тестування (якщо потрібно)",
     ],
-    whyEffective: "Чому наш сервіс ефективний",
+      },
+    ],
+    advantages: "Чому наш сервіс ефективний",
     advantagesList: [
       "великий досвід роботи з китайськими та корейськими виробниками",
       "реальна перевірка постачальників — мінімізація ризиків",
@@ -60,37 +78,54 @@ const content = {
     subtitle: "Поиск поставщиков / Проверка фабрик / Ведение переговоров / Закупка под ключ",
     intro: "Мы предоставляем комплексный сервис по поиску товаров и производителей в Китае и Южной Корее, помогая бизнесу получить надежных поставщиков, выгодные условия и полное сопровождение в процессе закупки.",
     ourServices: "Наши услуги",
-    search: "Поиск поставщиков и фабрик",
-    searchServices: [
+    services: [
+      {
+        title: "Поиск поставщиков и фабрик",
+        icon: "/services/sourcing.svg",
+        items: [
       "подбор производителей по вашему техническому заданию",
       "поиск товаров на 1688, Taobao, Alibaba, китайских и корейских B2B-платформах",
       "анализ рынка и сравнение цен",
     ],
-    verification: "Проверка поставщиков (Factory Check)",
-    verificationServices: [
+      },
+      {
+        title: "Проверка поставщиков (Factory Check)",
+        icon: "/why-choose-us/reliability.svg",
+        items: [
       "проверка документов и легальности компании",
       "анализ отзывов, рейтинга, производственных мощностей",
       "запрос сертификации и подтверждающих материалов",
     ],
-    negotiations: "Переговоры с поставщиками",
-    negotiationsServices: [
+      },
+      {
+        title: "Переговоры с поставщиками",
+        icon: "/why-choose-us/personal-approach.svg",
+        items: [
       "согласование цен, условий производства и поставки",
       "контроль спецификаций и соответствия требованиям",
       "согласование условий Incoterms, сроков и оплаты",
     ],
-    purchasing: "Закупка и оформление заказов",
-    purchasingServices: [
+      },
+      {
+        title: "Закупка и оформление заказов",
+        icon: "/why-choose-us/transparency.svg",
+        items: [
       "оформление заказа \"под ключ\"",
       "оплата поставщику или фабрике",
       "контроль производства (при необходимости – фото/видео отчеты)",
     ],
-    quality: "Контроль качества и инспекция",
-    qualityServices: [
+      },
+      {
+        title: "Контроль качества и инспекция",
+        icon: "/why-choose-us/quality.svg",
+        items: [
       "проверка товара перед отправкой",
       "проверка количества, маркировки, упаковки",
       "тестирование (если нужно)",
     ],
-    whyEffective: "Почему наш сервис эффективен",
+      },
+    ],
+    advantages: "Почему наш сервис эффективен",
     advantagesList: [
       "большой опыт работы с китайскими и корейскими производителями",
       "реальная проверка поставщиков — минимизация рисков",
@@ -111,37 +146,54 @@ const content = {
     subtitle: "Supplier Search / Factory Verification / Negotiations / Turnkey Procurement",
     intro: "We provide a comprehensive service for finding goods and manufacturers in China and South Korea, helping businesses get reliable suppliers, favorable terms and full support in the procurement process.",
     ourServices: "Our services",
-    search: "Supplier and Factory Search",
-    searchServices: [
+    services: [
+      {
+        title: "Supplier and Factory Search",
+        icon: "/services/sourcing.svg",
+        items: [
       "selection of manufacturers according to your technical specification",
       "product search on 1688, Taobao, Alibaba, Chinese and Korean B2B platforms",
       "market analysis and price comparison",
     ],
-    verification: "Supplier Verification (Factory Check)",
-    verificationServices: [
+      },
+      {
+        title: "Supplier Verification (Factory Check)",
+        icon: "/why-choose-us/reliability.svg",
+        items: [
       "verification of documents and company legality",
       "analysis of reviews, ratings, production capacity",
       "request for certification and supporting materials",
     ],
-    negotiations: "Negotiations with Suppliers",
-    negotiationsServices: [
+      },
+      {
+        title: "Negotiations with Suppliers",
+        icon: "/why-choose-us/personal-approach.svg",
+        items: [
       "coordination of prices, production and delivery terms",
       "control of specifications and compliance with requirements",
       "coordination of Incoterms, terms and payment",
     ],
-    purchasing: "Procurement and Order Processing",
-    purchasingServices: [
+      },
+      {
+        title: "Procurement and Order Processing",
+        icon: "/why-choose-us/transparency.svg",
+        items: [
       "turnkey order processing",
       "payment to supplier or factory",
       "production control (if needed – photo/video reports)",
     ],
-    quality: "Quality Control and Inspection",
-    qualityServices: [
+      },
+      {
+        title: "Quality Control and Inspection",
+        icon: "/why-choose-us/quality.svg",
+        items: [
       "product verification before shipment",
       "verification of quantity, labeling, packaging",
       "testing (if needed)",
     ],
-    whyEffective: "Why our service is effective",
+      },
+    ],
+    advantages: "Why our service is effective",
     advantagesList: [
       "extensive experience working with Chinese and Korean manufacturers",
       "real supplier verification — risk minimization",
@@ -170,120 +222,152 @@ export default async function SourcingPage({
   return (
     <div className="min-h-screen bg-white">
       <Navigation locale={locale} />
-      <main className="pt-32 pb-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-3">
-            {/* Left column - Content */}
-            <div className="lg:col-span-2">
-              <h1 className="mb-4 text-4xl font-bold text-gray-900">{data.title}</h1>
-              <p className="mb-8 text-xl text-gray-600">{data.subtitle}</p>
-              
-              <div className="mb-12 rounded-2xl bg-gradient-to-br from-pink-50 to-rose-50 p-8">
-                <p className="text-lg text-gray-700">{data.intro}</p>
+      
+      {/* Hero Section with Background Image */}
+      <section className="relative min-h-[600px] flex items-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+            alt="KLS Logistics"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/60 z-[1]" />
               </div>
 
-              <div className="mb-12">
-            <h2 className="mb-6 text-2xl font-semibold text-gray-900">{data.ourServices}</h2>
-            <div className="space-y-6">
-              <div className="rounded-xl border border-gray-200 bg-white p-6">
-                <h3 className="mb-3 text-xl font-semibold text-gray-900">{data.search}</h3>
-                <ul className="space-y-2">
-                  {data.searchServices.map((service, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <span className="mt-1 text-pink-600">•</span>
-                      <span className="text-gray-600">{service}</span>
-                    </li>
-                  ))}
-                </ul>
+        {/* Content */}
+        <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 py-20">
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+            {/* Left - Text Content */}
+            <div className="text-white">
+              <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+                {data.title}
+              </h1>
+              <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">
+                {data.subtitle}
+              </p>
               </div>
 
-              <div className="rounded-xl border border-gray-200 bg-white p-6">
-                <h3 className="mb-3 text-xl font-semibold text-gray-900">{data.verification}</h3>
-                <ul className="space-y-2">
-                  {data.verificationServices.map((service, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <span className="mt-1 text-pink-600">•</span>
-                      <span className="text-gray-600">{service}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-xl border border-gray-200 bg-white p-6">
-                <h3 className="mb-3 text-xl font-semibold text-gray-900">{data.negotiations}</h3>
-                <ul className="space-y-2">
-                  {data.negotiationsServices.map((service, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <span className="mt-1 text-pink-600">•</span>
-                      <span className="text-gray-600">{service}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-xl border border-gray-200 bg-white p-6">
-                <h3 className="mb-3 text-xl font-semibold text-gray-900">{data.purchasing}</h3>
-                <ul className="space-y-2">
-                  {data.purchasingServices.map((service, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <span className="mt-1 text-pink-600">•</span>
-                      <span className="text-gray-600">{service}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-xl border border-gray-200 bg-white p-6">
-                <h3 className="mb-3 text-xl font-semibold text-gray-900">{data.quality}</h3>
-                <ul className="space-y-2">
-                  {data.qualityServices.map((service, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <span className="mt-1 text-pink-600">•</span>
-                      <span className="text-gray-600">{service}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-12 grid gap-8 md:grid-cols-2">
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
-              <h2 className="mb-4 text-2xl font-semibold text-gray-900">{data.whyEffective}</h2>
-              <ul className="space-y-3">
-                {data.advantagesList.map((advantage, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <span className="mt-1 text-green-600 font-bold">✔</span>
-                    <span className="text-gray-700">{advantage}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
-              <h2 className="mb-4 text-2xl font-semibold text-gray-900">{data.forWhom}</h2>
-              <ul className="space-y-3">
-                {data.clients.map((client, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <span className="mt-1 text-pink-600">•</span>
-                    <span className="text-gray-600">{client}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-            </div>
-
-            {/* Right column - Contact Form */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-32">
+            {/* Right - Contact Form */}
+            <div className="flex justify-end">
+              <div className="mt-12 max-w-md w-full shadow-2xl">
                 <ContactForm locale={locale} />
               </div>
             </div>
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* Info Section */}
+      <section className="py-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="rounded-2xl bg-[#E8FDF8] p-8">
+            <p className="text-base font-normal leading-relaxed text-gray-700 md:text-lg">
+              {data.intro}
+            </p>
+          </div>
+              </div>
+      </section>
+
+      {/* Our Services Section */}
+      <section className="py-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="relative mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+              {data.ourServices}
+            </h2>
+              </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {data.services.map((service, index) => (
+              <div key={index} className="group relative flex flex-col overflow-hidden rounded-2xl border-2 border-[#006D77] bg-white p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] hover:shadow-md">
+                <div className="mb-4 flex items-start gap-4">
+                  <div className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+                    <Image
+                      src={service.icon}
+                      alt={service.title}
+                      width={48}
+                      height={48}
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="mb-2 text-2xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-teal-600">
+                      {service.title}
+                    </h3>
+                <ul className="space-y-2">
+                      {service.items.map((item, itemIndex) => (
+                        <li key={itemIndex} className="flex items-start gap-2">
+                          <span className="mt-1.5 text-teal-600">•</span>
+                          <span className="text-base text-gray-600 leading-relaxed transition-colors duration-300 group-hover:text-slate-700">
+                            {item}
+                          </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Advantages Section */}
+      <section className="relative bg-slate-900 py-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="relative mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+              {data.advantages}
+            </h2>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6">
+                {data.advantagesList.map((advantage, index) => (
+              <div key={index} className="flex w-full flex-col items-center text-center md:w-[calc(33.333%-1rem)]">
+                <div className="mb-4 flex-shrink-0">
+                  <Image
+                    src="/icons/misc/Group 7.svg"
+                    alt="Check"
+                    width={43}
+                    height={43}
+                    className="object-contain"
+                  />
+                </div>
+                <p className="text-base font-normal leading-relaxed text-white md:text-lg">
+                  {advantage}
+                </p>
+            </div>
+            ))}
+          </div>
+            </div>
+      </section>
+
+      {/* For Whom Section */}
+      <section className="pt-12 pb-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="relative mx-auto mb-16 max-w-3xl text-center">
+            <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+              {data.forWhom}
+            </h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {data.clients.map((client, index) => (
+              <div
+                key={index}
+                className="group rounded-2xl border-2 border-[#006D77] bg-white px-6 py-4 text-center transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] hover:shadow-sm"
+              >
+                <p className="text-base font-semibold text-slate-900 transition-colors duration-300 group-hover:text-teal-700 [&::first-letter]:uppercase">
+                  {client}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <SiteFooter locale={locale} />
     </div>
   );
 }
-

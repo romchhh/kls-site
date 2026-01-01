@@ -134,28 +134,36 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
                   onClick={() => handleMessengerClick("telegram")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
                 >
-                  <Image src="/TelegramLogo.svg" alt="Telegram" width={16} height={16} className="object-contain" />
+                  <div className="flex h-4 w-4 items-center justify-center flex-shrink-0">
+                    <Image src="/icons/social/TelegramLogo.svg" alt="Telegram" width={16} height={16} className="object-contain h-full w-full" />
+                  </div>
                   Telegram
                 </button>
                 <button
                   onClick={() => handleMessengerClick("whatsapp")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-600"
                 >
-                  <Image src="/WhatsAppLogo.svg" alt="WhatsApp" width={16} height={16} className="object-contain" />
+                  <div className="flex h-4 w-4 items-center justify-center flex-shrink-0">
+                    <Image src="/icons/social/WhatsAppLogo.svg" alt="WhatsApp" width={16} height={16} className="object-contain h-full w-full" />
+                  </div>
                   WhatsApp
                 </button>
                 <button
                   onClick={() => handleMessengerClick("viber")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:border-purple-300 hover:bg-purple-50 hover:text-purple-600"
                 >
-                  <Image src="/ViberLogo.svg" alt="Viber" width={16} height={16} className="object-contain" />
+                  <div className="flex h-4 w-4 items-center justify-center flex-shrink-0">
+                    <Image src="/icons/social/viber-color-svgrepo-com.svg" alt="Viber" width={16} height={16} className="object-contain h-full w-full" />
+                  </div>
                   Viber
                 </button>
                 <button
                   onClick={() => handleMessengerClick("wechat")}
                   className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs font-medium text-slate-700 transition-colors hover:border-green-400 hover:bg-green-50 hover:text-green-700"
                 >
-                  <Image src="/WeChatLogo.svg" alt="WeChat" width={16} height={16} className="object-contain" />
+                  <div className="flex h-4 w-4 items-center justify-center flex-shrink-0">
+                    <Image src="/icons/social/wechat-communication-interaction-connection-internet-svgrepo-com.svg" alt="WeChat" width={16} height={16} className="object-contain h-full w-full" />
+                  </div>
                   WeChat
                 </button>
               </div>
