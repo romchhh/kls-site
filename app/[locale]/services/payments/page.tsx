@@ -267,19 +267,19 @@ export default async function PaymentsPage({
                   <h3 className="mb-2 text-2xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-teal-600">
                     {data.alipay}
                   </h3>
-                  <ul className="space-y-2">
-                    {data.alipayServices.map((service, index) => (
+                <ul className="space-y-2">
+                  {data.alipayServices.map((service, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <span className="mt-1.5 text-teal-600">•</span>
                         <span className="text-base text-gray-600 leading-relaxed transition-colors duration-300 group-hover:text-slate-700">
                           {service}
                         </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
+              </div>
+              </div>
 
             {/* Bank Cards Card */}
             <div className="group relative flex flex-col overflow-hidden rounded-2xl border-2 border-[#006D77] bg-white p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] hover:shadow-md">
@@ -297,19 +297,19 @@ export default async function PaymentsPage({
                   <h3 className="mb-2 text-2xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-teal-600">
                     {data.bankCards}
                   </h3>
-                  <ul className="space-y-2">
+                <ul className="space-y-2">
                     {data.bankServices.map((service, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <span className="mt-1.5 text-teal-600">•</span>
                         <span className="text-base text-gray-600 leading-relaxed transition-colors duration-300 group-hover:text-slate-700">
                           {service}
                         </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
+          </div>
 
             {/* Invoices Card */}
             <div className="group relative flex flex-col overflow-hidden rounded-2xl border-2 border-[#006D77] bg-white p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] hover:shadow-md">
@@ -322,7 +322,7 @@ export default async function PaymentsPage({
                     height={48}
                     className="object-contain"
                   />
-                </div>
+            </div>
                 <div className="flex-1">
                   <h3 className="mb-2 text-2xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-teal-600">
                     {data.invoices}
@@ -334,11 +334,11 @@ export default async function PaymentsPage({
                         <span className="text-base text-gray-600 leading-relaxed transition-colors duration-300 group-hover:text-slate-700">
                           {service}
                         </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
             </div>
 
             {/* Factories Card */}

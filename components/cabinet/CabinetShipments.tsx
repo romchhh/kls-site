@@ -275,42 +275,151 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
         )}
 
         {haveShipments && (
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
-            <div className="overflow-x-auto">
-              <table className="w-full">
+          <>
+            {/* Mobile Card View */}
+            <div className="space-y-3 sm:hidden">
+              {allShipments.map((s) => {
+                const latestStatus = s.statusHistory[0];
+                const statusColor = getStatusColorClass(s.status);
+                
+                const pieces = s.items?.length || 0;
+                const totalWeight = s.items?.reduce((sum, item) => {
+                  const weight = typeof item.weightKg === 'string' ? parseFloat(item.weightKg) : (item.weightKg ? Number(item.weightKg) : 0);
+                  return sum + (isNaN(weight) ? 0 : weight);
+                }, 0) || 0;
+                const totalVolume = s.items?.reduce((sum, item) => {
+                  const volume = typeof item.volumeM3 === 'string' ? parseFloat(item.volumeM3) : (item.volumeM3 ? Number(item.volumeM3) : 0);
+                  return sum + (isNaN(volume) ? 0 : volume);
+                }, 0) || 0;
+                const totalCost = s.totalCost ? (typeof s.totalCost === 'string' ? parseFloat(s.totalCost) : Number(s.totalCost)) : null;
+                const density = totalWeight > 0 && totalVolume > 0 ? (totalWeight / totalVolume).toFixed(2) : "-";
+                
+                const route = s.routeFrom && s.routeTo ? `${s.routeFrom} → ${s.routeTo}` : 
+                             s.routeFrom || s.routeTo || "-";
+                
+                const deliveryTypeLabel = s.deliveryType === "AIR" ? "Авіа" :
+                                       s.deliveryType === "SEA" ? "Море" :
+                                       s.deliveryType === "RAIL" ? "Залізниця" :
+                                       s.deliveryType === "MULTIMODAL" ? "Мультимодал" :
+                                       s.deliveryType || "-";
+                
+                const isArchivedOrDelivered = s.status === "DELIVERED" || s.status === "ARCHIVED";
+                const location = s.location || latestStatus?.location;
+                
+                let LocationIcon = MapPin;
+                if (location) {
+                  if (location.includes("Китай") || location.includes("China")) {
+                    LocationIcon = Warehouse;
+                  } else if (location.includes("Україна") || location.includes("Ukraine") || location.includes("Украина")) {
+                    LocationIcon = Warehouse;
+                  } else if (location.includes("Дорога") || location.includes("дорозі")) {
+                    LocationIcon = Plane;
+                  } else if (s.status === "DELIVERED") {
+                    LocationIcon = CheckCircle;
+                  }
+                }
+                
+                return (
+                  <div
+                    key={s.id}
+                    onClick={() => setSelectedShipment(s)}
+                    className={`rounded-xl border p-4 transition-all duration-200 ${
+                      isArchivedOrDelivered
+                        ? "border-slate-200 bg-slate-50 opacity-75"
+                        : "border-slate-200 bg-white shadow-sm active:bg-teal-50"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <div className="text-sm font-black text-slate-900 mb-1">
+                          {formatTrackNumber(s.internalTrack)}
+                        </div>
+                        <div className="text-xs text-slate-600 mb-2">{route}</div>
+                        <span className={`inline-flex items-center rounded-full bg-gradient-to-r ${statusColor} px-2 py-1 text-[10px] font-bold text-white shadow-md`}>
+                          {getShipmentStatusTranslation(s.status, locale)}
+                        </span>
+                      </div>
+                      {totalCost && (
+                        <div className="text-right">
+                          <div className="text-sm font-black text-teal-600">
+                            {totalCost.toFixed(2)} $
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 mt-3 pt-3 border-t border-slate-100">
+                      <div>
+                        <span className="text-slate-400">Тип:</span>{" "}
+                        <span className="font-semibold text-slate-700">{deliveryTypeLabel}</span>
+                      </div>
+                      {location && (
+                        <div className="flex items-center gap-1">
+                          <LocationIcon className="h-3 w-3 text-slate-400" />
+                          <span className="text-slate-600 truncate">{location}</span>
+                        </div>
+                      )}
+                      {pieces > 0 && (
+                        <div>
+                          <span className="text-slate-400">Місць:</span>{" "}
+                          <span className="font-semibold text-slate-700">{pieces}</span>
+                        </div>
+                      )}
+                      {totalWeight > 0 && (
+                        <div>
+                          <span className="text-slate-400">Вага:</span>{" "}
+                          <span className="font-semibold text-slate-700">{totalWeight.toFixed(2)} кг</span>
+                        </div>
+                      )}
+                      {s.eta && (
+                        <div className="col-span-2">
+                          <span className="text-slate-400">Прибуття:</span>{" "}
+                          <span className="font-semibold text-slate-700">{formatDate(s.eta)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg sm:block">
+              <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+                <table className="w-full min-w-[1000px] sm:min-w-0">
                 <thead>
                   <tr className="border-b-2 border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100">
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.trackNumber || "Трек номер"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.direction || "Напрям"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.type || "Тип"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.status || "Статус"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.location || "Місцезнаходження"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.places || "Місць"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.weightKg || "кг"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.volumeM3 || "M³"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.density || "Щільність"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.cost || "Вартість"}
                     </th>
-                    <th className="px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-700 lg:px-4">
+                    <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
                       {t.cabinet?.estimatedArrivalDate || "Орієнтована дата прибуття"}
                     </th>
                   </tr>
@@ -358,30 +467,30 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                             : "bg-white hover:bg-gradient-to-r hover:from-teal-50 hover:to-emerald-50 hover:shadow-md"
                         }`}
                       >
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-sm font-black text-slate-900 lg:text-base">
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-xs font-black text-slate-900 sm:text-sm lg:text-base">
                             {formatTrackNumber(s.internalTrack)}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-xs font-medium text-slate-700 lg:text-sm">
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-[10px] font-medium text-slate-700 sm:text-xs lg:text-sm">
                             {route}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-xs font-semibold text-slate-700 lg:text-sm">
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-[10px] font-semibold text-slate-700 sm:text-xs lg:text-sm">
                             {deliveryTypeLabel}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className={`inline-flex items-center rounded-full bg-gradient-to-r ${statusColor} px-2 py-1 text-[10px] font-bold text-white shadow-md lg:px-3 lg:py-1.5 lg:text-xs`}>
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className={`inline-flex items-center rounded-full bg-gradient-to-r ${statusColor} px-1.5 py-0.5 text-[9px] font-bold text-white shadow-md sm:px-2 sm:py-1 sm:text-[10px] lg:px-3 lg:py-1.5 lg:text-xs`}>
                             {getShipmentStatusTranslation(s.status, locale)}
                           </span>
                         </td>
-                        <td className="px-3 py-4 lg:px-4">
+                        <td className="px-2 py-3 sm:px-3 lg:px-4">
                           {(() => {
                             const location = s.location || latestStatus?.location;
-                            if (!location) return <span className="text-xs text-slate-400 lg:text-sm">-</span>;
+                            if (!location) return <span className="text-[10px] text-slate-400 sm:text-xs lg:text-sm">-</span>;
                             
                             // Визначаємо іконку на основі місцезнаходження та статусу
                             let LocationIcon = MapPin;
@@ -396,41 +505,41 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                             }
                             
                             return (
-                              <div className="flex items-center gap-1.5">
-                                <LocationIcon className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />
-                          <span className="text-xs font-medium text-slate-900 lg:text-sm">
+                              <div className="flex items-center gap-1">
+                                <LocationIcon className="h-3 w-3 text-slate-400 flex-shrink-0 sm:h-3.5 sm:w-3.5" />
+                          <span className="text-[10px] font-medium text-slate-900 sm:text-xs lg:text-sm">
                                   {location}
                           </span>
                               </div>
                             );
                           })()}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-xs font-semibold text-slate-700 lg:text-sm">{pieces}</span>
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-[10px] font-semibold text-slate-700 sm:text-xs lg:text-sm">{pieces}</span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-xs text-slate-700 lg:text-sm">
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-[10px] text-slate-700 sm:text-xs lg:text-sm">
                             {totalWeight > 0 ? totalWeight.toFixed(2) : "-"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-xs text-slate-700 lg:text-sm">
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-[10px] text-slate-700 sm:text-xs lg:text-sm">
                             {totalVolume > 0 ? totalVolume.toFixed(4) : "-"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-xs text-slate-700 lg:text-sm">
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-[10px] text-slate-700 sm:text-xs lg:text-sm">
                             {density}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-sm font-black text-slate-900 lg:text-base">
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-xs font-black text-slate-900 sm:text-sm lg:text-base">
                             {totalCost ? `${totalCost.toFixed(2)} $` : "-"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 lg:px-4">
-                          <span className="text-xs font-medium text-slate-700 lg:text-sm">
-                            {formatDate(s.eta as Date | null)}
+                        <td className="whitespace-nowrap px-2 py-3 sm:px-3 lg:px-4">
+                          <span className="text-[10px] font-medium text-slate-700 sm:text-xs lg:text-sm">
+                            {formatDate(s.eta)}
                           </span>
                         </td>
                       </tr>
@@ -440,6 +549,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
               </table>
             </div>
           </div>
+          </>
         )}
       </div>
 
@@ -458,66 +568,6 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                {/* Invoice download buttons - show if invoice exists for this shipment */}
-                {(() => {
-                  // Find invoice for this shipment
-                  const invoice = invoices.find((inv: any) => inv.shipmentId === selectedShipment.id);
-                  if (!invoice) return null;
-                  
-                  return (
-                    <>
-                      <button
-                        onClick={async () => {
-                          try {
-                            const response = await fetch(`/api/invoices/${invoice.id}/generate`);
-                            if (!response.ok) {
-                              throw new Error("Failed to generate invoice");
-                            }
-                            const blob = await response.blob();
-                            const url = window.URL.createObjectURL(blob);
-                            const a = document.createElement("a");
-                            a.href = url;
-                            a.download = `invoice_${invoice.invoiceNumber}_${new Date().toISOString().split("T")[0]}.xlsx`;
-                            document.body.appendChild(a);
-                            a.click();
-                            window.URL.revokeObjectURL(url);
-                            document.body.removeChild(a);
-                          } catch (error) {
-                            console.error("Error downloading invoice:", error);
-                            alert("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
-                          }
-                        }}
-                        className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
-                      >
-                        <FileText className="h-4 w-4" />
-                        <span>Інвойс Excel</span>
-                      </button>
-                      <button
-                        onClick={async () => {
-                          try {
-                            const response = await fetch(`/api/invoices/${invoice.id}/generate-pdf`);
-                            if (!response.ok) {
-                              throw new Error("Failed to generate PDF invoice");
-                            }
-                            // Open PDF in new window for printing/saving
-                            const blob = await response.blob();
-                            const url = window.URL.createObjectURL(blob);
-                            window.open(url, "_blank");
-                            // Clean up after a delay
-                            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-                          } catch (error) {
-                            console.error("Error downloading PDF invoice:", error);
-                            alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
-                          }
-                        }}
-                        className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
-                      >
-                        <FileText className="h-4 w-4" />
-                        <span>Інвойс PDF</span>
-                      </button>
-                    </>
-                  );
-                })()}
                 <button
                   onClick={() => setSelectedShipment(null)}
                   className="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600"
@@ -851,25 +901,25 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                     <div className="flex justify-between">
                       <span className="text-xs text-slate-600">{t.cabinet?.receivedAtWarehouseLabel || (t.cabinet as any)?.shipmentModal?.receivedAtWarehouse || "Отримано на складі:"}</span>
                       <span className="text-sm font-bold text-slate-900">
-                        {formatDate(selectedShipment.receivedAtWarehouse as Date | null)}
+                        {formatDate(selectedShipment.receivedAtWarehouse)}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-xs text-slate-600">{t.cabinet?.sentLabel || (t.cabinet as any)?.shipmentModal?.sent || "Відправлено:"}</span>
                       <span className="text-sm font-bold text-slate-900">
-                    {formatDate(selectedShipment.sentAt as Date | null)}
+                    {formatDate(selectedShipment.sentAt)}
                       </span>
                 </div>
                     <div className="flex justify-between">
                       <span className="text-xs text-slate-600">{t.cabinet?.deliveredLabel || (t.cabinet as any)?.shipmentModal?.delivered || "Доставлено:"}</span>
                       <span className="text-sm font-bold text-slate-900">
-                    {formatDate(selectedShipment.deliveredAt as Date | null)}
+                    {formatDate(selectedShipment.deliveredAt)}
                       </span>
                 </div>
                     <div className="flex justify-between">
                       <span className="text-xs text-slate-600">{t.cabinet?.expectedDateLabel || (t.cabinet as any)?.shipmentModal?.expectedDate || "Очікувана дата:"}</span>
                       <span className="text-sm font-bold text-slate-900">
-                    {formatDate(selectedShipment.eta as Date | null)}
+                    {formatDate(selectedShipment.eta)}
                       </span>
                 </div>
                   </div>

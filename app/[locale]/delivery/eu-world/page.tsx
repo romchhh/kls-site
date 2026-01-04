@@ -4,6 +4,7 @@ import { ContactForm } from "../../../../components/ContactForm";
 import { Locale, getTranslations } from "../../../../lib/translations";
 import DeliverySidebarNav from "../../../../components/DeliverySidebarNav";
 import Image from "next/image";
+import { CheckCircle2 } from "lucide-react";
 
 const fbaContent = {
   ua: {
@@ -587,7 +588,7 @@ export default async function EuWorldPage({
                         <p className="text-base sm:text-lg text-gray-700 break-words">{fbaData.intro}</p>
                       </div>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/multimodal.svg"
@@ -600,23 +601,23 @@ export default async function EuWorldPage({
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{fbaData.whatIncludes}</h3>
+                    <div className="rounded-2xl bg-white p-4 sm:p-6">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{fbaData.whatIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {fbaData.services.map((service, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-orange-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{fbaData.advantages}</h3>
+                    <div className="rounded-2xl bg-white p-4 sm:p-6">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{fbaData.advantages}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {fbaData.advantagesList.map((advantage, index) => (
                           <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-green-600 font-bold flex-shrink-0">✔</span>
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                           </li>
                         ))}
@@ -633,8 +634,15 @@ export default async function EuWorldPage({
                     </ul>
                   </div>
 
-                  <div className="rounded-2xl bg-gray-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg font-semibold text-gray-900 break-words">{fbaData.cta}</p>
+                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
+                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                      {fbaData.cta.includes('?') ? fbaData.cta.split('?')[0] + '?' : fbaData.cta}
+                    </p>
+                    {fbaData.cta.includes('?') && (
+                      <p className="text-lg sm:text-xl text-slate-900 break-words">
+                        {fbaData.cta.split('?')[1]?.trim()}
+                      </p>
+                    )}
                   </div>
                 </section>
 
@@ -652,7 +660,7 @@ export default async function EuWorldPage({
                         {locale === "en" && "Comprehensive delivery with full support and processing of all documentation."}
                       </p>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/multimodal.svg"
@@ -674,8 +682,8 @@ export default async function EuWorldPage({
                         <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words">{ddpData.dduWhatIncludes}</h4>
                         <ul className="space-y-2">
                           {ddpData.dduServices.map((service, index) => (
-                            <li key={index} className="flex items-start gap-2 sm:gap-3">
-                              <span className="mt-1 text-blue-600 flex-shrink-0">•</span>
+                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                             </li>
                           ))}
@@ -685,8 +693,8 @@ export default async function EuWorldPage({
                         <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words">{ddpData.dduPays}</h4>
                         <ul className="space-y-2">
                           {ddpData.dduPaysList.map((item, index) => (
-                            <li key={index} className="flex items-start gap-2 sm:gap-3">
-                              <span className="mt-1 text-blue-600 flex-shrink-0">•</span>
+                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{item}</span>
                             </li>
                           ))}
@@ -698,8 +706,8 @@ export default async function EuWorldPage({
                       <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words">{ddpData.dduForWhom}</h4>
                       <ul className="space-y-2">
                         {ddpData.dduClients.map((client, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-blue-600 flex-shrink-0">-</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
                           </li>
                         ))}
@@ -708,16 +716,16 @@ export default async function EuWorldPage({
                   </div>
 
                   {/* DDP Section */}
-                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-[#E8FDF8] p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77]">
-                    <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words">{ddpData.ddpTitle}</h3>
+                  <div className="group mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpTitle}</h3>
                     <p className="mb-8 text-base sm:text-lg text-gray-600 break-words">{ddpData.ddpIntro}</p>
                     
                     <div className="mb-8">
-                      <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words">{ddpData.ddpWhatIncludes}</h4>
+                      <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpWhatIncludes}</h4>
                       <ul className="space-y-2">
                         {ddpData.ddpServices.map((service, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-teal-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
@@ -725,11 +733,11 @@ export default async function EuWorldPage({
                     </div>
                     
                     <div>
-                      <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words">{ddpData.ddpAdvantages}</h4>
+                      <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpAdvantages}</h4>
                       <ul className="space-y-2">
                         {ddpData.ddpAdvantagesList.map((advantage, index) => (
                           <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-green-600 font-bold flex-shrink-0">✔</span>
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
                           </li>
                         ))}
@@ -737,8 +745,15 @@ export default async function EuWorldPage({
                     </div>
                   </div>
 
-                  <div className="rounded-2xl bg-gray-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg font-semibold text-gray-900 break-words">{ddpData.cta}</p>
+                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
+                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                      {ddpData.cta.includes('?') ? ddpData.cta.split('?')[0] + '?' : ddpData.cta}
+                    </p>
+                    {ddpData.cta.includes('?') && (
+                      <p className="text-lg sm:text-xl text-slate-900 break-words">
+                        {ddpData.cta.split('?')[1]?.trim()}
+                      </p>
+                    )}
                   </div>
                 </section>
 
@@ -757,7 +772,7 @@ export default async function EuWorldPage({
                         <p className="text-base sm:text-lg text-gray-700 break-words">{expressData.description}</p>
                       </div>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/air.svg"
@@ -770,23 +785,23 @@ export default async function EuWorldPage({
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.advantages}</h3>
+                    <div className="rounded-2xl bg-white p-4 sm:p-6">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{expressData.advantages}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {expressData.advantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-yellow-600 font-bold flex-shrink-0">✓</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.whatWeDo}</h3>
+                    <div className="rounded-2xl bg-white p-4 sm:p-6">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{expressData.whatWeDo}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {expressData.services.map((service, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-yellow-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
@@ -798,16 +813,23 @@ export default async function EuWorldPage({
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.forWhom}</h3>
                     <ul className="space-y-2">
                       {expressData.clients.map((client, index) => (
-                        <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <span className="mt-1 text-yellow-600 flex-shrink-0">•</span>
-                          <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
+                        <li key={index} className="flex items-center gap-2 sm:gap-3">
+                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                          <span className="text-sm sm:text-base text-gray-900 break-words">{client}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="rounded-2xl bg-gray-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg font-semibold text-gray-900 break-words">{expressData.cta}</p>
+                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
+                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                      {expressData.cta.includes('?') ? expressData.cta.split('?')[0] + '?' : expressData.cta}
+                    </p>
+                    {expressData.cta.includes('?') && (
+                      <p className="text-lg sm:text-xl text-slate-900 break-words">
+                        {expressData.cta.split('?')[1]?.trim()}
+                      </p>
+                    )}
                   </div>
                 </section>
 
@@ -821,7 +843,7 @@ export default async function EuWorldPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{portToPortData.intro}</p>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/sea.svg"
@@ -838,8 +860,8 @@ export default async function EuWorldPage({
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{portToPortData.whatIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {portToPortData.services.map((service, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-cyan-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
@@ -862,8 +884,8 @@ export default async function EuWorldPage({
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{portToPortData.forWhom}</h3>
                     <ul className="space-y-2 mb-6">
                       {portToPortData.clients.map((client, index) => (
-                        <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <span className="mt-1 text-cyan-600 flex-shrink-0">•</span>
+                        <li key={index} className="flex items-center gap-2 sm:gap-3">
+                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                           <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
                         </li>
                       ))}
@@ -873,7 +895,7 @@ export default async function EuWorldPage({
                       <ul className="space-y-2">
                         {portToPortData.advantagesList.map((advantage, index) => (
                           <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-green-600 font-bold flex-shrink-0">✔</span>
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
                           </li>
                         ))}
@@ -881,8 +903,15 @@ export default async function EuWorldPage({
                     </div>
                   </div>
 
-                  <div className="rounded-2xl bg-gray-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg font-semibold text-gray-900 break-words">{portToPortData.cta}</p>
+                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
+                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                      {portToPortData.cta.includes('?') ? portToPortData.cta.split('?')[0] + '?' : portToPortData.cta}
+                    </p>
+                    {portToPortData.cta.includes('?') && (
+                      <p className="text-lg sm:text-xl text-slate-900 break-words">
+                        {portToPortData.cta.split('?')[1]?.trim()}
+                      </p>
+                    )}
                   </div>
                 </section>
 
@@ -896,7 +925,7 @@ export default async function EuWorldPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{crossBorderData.intro}</p>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/multimodal.svg"
@@ -908,12 +937,37 @@ export default async function EuWorldPage({
                     </div>
                   </div>
 
+                  <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
+                    <div className="rounded-2xl bg-white p-4 sm:p-6">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{crossBorderData.advantages}</h3>
+                      <ul className="space-y-2 sm:space-y-3">
+                        {crossBorderData.advantagesList.map((advantage, index) => (
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                            <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="rounded-2xl bg-white p-4 sm:p-6">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{crossBorderData.forWhom}</h3>
+                      <ul className="space-y-2 sm:space-y-3">
+                        {crossBorderData.clients.map((client, index) => (
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                            <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
                   <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                     <h3 className="mb-6 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{crossBorderData.howItWorks}</h3>
                     <ol className="space-y-3 sm:space-y-4">
                       {crossBorderData.steps.map((step, index) => (
                         <li key={index} className="flex items-start gap-3 sm:gap-4">
-                          <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-green-600 text-white text-sm sm:text-base font-semibold flex-shrink-0">
+                          <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-teal-500 text-white text-sm sm:text-base font-semibold flex-shrink-0">
                             {index + 1}
                           </span>
                           <span className="pt-1 text-sm sm:text-base text-gray-600 break-words">{step}</span>
@@ -922,33 +976,15 @@ export default async function EuWorldPage({
                     </ol>
                   </div>
 
-                  <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{crossBorderData.advantages}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {crossBorderData.advantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-green-600 font-bold flex-shrink-0">✔</span>
-                            <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{crossBorderData.forWhom}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {crossBorderData.clients.map((client, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-green-600 flex-shrink-0">•</span>
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl bg-gray-50 p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg font-semibold text-gray-900 break-words">{crossBorderData.cta}</p>
+                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
+                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                      {crossBorderData.cta.includes('?') ? crossBorderData.cta.split('?')[0] + '?' : crossBorderData.cta}
+                    </p>
+                    {crossBorderData.cta.includes('?') && (
+                      <p className="text-lg sm:text-xl text-slate-900 break-words">
+                        {crossBorderData.cta.split('?')[1]?.trim()}
+                      </p>
+                    )}
                   </div>
                 </section>
               </div>

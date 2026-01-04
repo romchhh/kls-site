@@ -170,7 +170,7 @@ export default async function HomePage({
                   {/* Контент */}
                   <div className="relative z-10 flex flex-col h-full p-8">
                     {/* Іконка */}
-                    <div className="mb-6 flex justify-center transition-transform duration-300 group-hover:scale-105">
+                    <div className="mb-6 flex justify-start transition-transform duration-300 group-hover:scale-105">
                       <div className="flex items-center justify-center h-24 w-24">
                         <Image
                           src={link.image}

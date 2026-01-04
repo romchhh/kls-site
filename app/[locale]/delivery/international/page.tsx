@@ -506,24 +506,24 @@ export default async function InternationalPage({
 
                 {/* Advantages & For Whom */}
                 <section className="grid gap-6 sm:gap-8 md:grid-cols-2">
-                  <div className="group rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-gray-900 break-words">{data.advantages}</h2>
+                  <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
+                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-teal-600 break-words">{data.advantages}</h2>
                     <ul className="space-y-3 sm:space-y-4">
                       {data.advantagesList.map((advantage, index) => (
                         <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-teal-600 transition-colors duration-300 group-hover:text-teal-700" />
-                          <span className="text-sm sm:text-base text-gray-700 break-words transition-colors duration-300 group-hover:text-slate-800">{advantage}</span>
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-teal-600" />
+                          <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <div className="group rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-gray-900 break-words">{data.forWhom}</h2>
+                  <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
+                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-teal-600 break-words">{data.forWhom}</h2>
                     <ul className="space-y-3 sm:space-y-4">
                       {data.clients.map((client, index) => (
-                        <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <span className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 rounded-full bg-slate-900 transition-colors duration-300 group-hover:bg-teal-700" />
-                          <span className="text-sm sm:text-base text-gray-700 break-words transition-colors duration-300 group-hover:text-slate-800">{client}</span>
+                        <li key={index} className="flex items-center gap-2 sm:gap-3">
+                          <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-teal-600" />
+                          <span className="text-sm sm:text-base text-gray-700 break-words">{client}</span>
                         </li>
                       ))}
                     </ul>
@@ -540,7 +540,7 @@ export default async function InternationalPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{seaContainerData.intro}</p>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/sea.svg"
@@ -560,8 +560,8 @@ export default async function InternationalPage({
                         <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{seaContainerData.fclAdvantages}</h4>
                         <ul className="space-y-2">
                           {seaContainerData.fclAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-start gap-2 sm:gap-3">
-                              <span className="mt-1 text-blue-600 flex-shrink-0">•</span>
+                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -577,8 +577,8 @@ export default async function InternationalPage({
                         <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{seaContainerData.lclAdvantages}</h4>
                         <ul className="space-y-2">
                           {seaContainerData.lclAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-start gap-2 sm:gap-3">
-                              <span className="mt-1 text-teal-600 flex-shrink-0">•</span>
+                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -592,8 +592,8 @@ export default async function InternationalPage({
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{seaContainerData.whatWeOffer}</h3>
                     <ul className="space-y-2 sm:space-y-3">
                       {seaContainerData.services.map((service, index) => (
-                        <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <span className="mt-1 text-blue-600 flex-shrink-0">•</span>
+                        <li key={index} className="flex items-center gap-2 sm:gap-3">
+                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                           <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                         </li>
                       ))}
@@ -611,7 +611,7 @@ export default async function InternationalPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{airCargoData.intro}</p>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/air.svg"
@@ -631,8 +631,8 @@ export default async function InternationalPage({
                         <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{airCargoData.fclAdvantages}</h4>
                         <ul className="space-y-2">
                           {airCargoData.fclAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-start gap-2 sm:gap-3">
-                              <span className="mt-1 text-blue-600 flex-shrink-0">•</span>
+                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -647,8 +647,8 @@ export default async function InternationalPage({
                         <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{airCargoData.lclAdvantages}</h4>
                         <ul className="space-y-2">
                           {airCargoData.lclAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-start gap-2 sm:gap-3">
-                              <span className="mt-1 text-sky-600 flex-shrink-0">•</span>
+                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -661,8 +661,8 @@ export default async function InternationalPage({
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{airCargoData.whatWeProvide}</h3>
                     <ul className="space-y-2 sm:space-y-3">
                       {airCargoData.services.map((service, index) => (
-                        <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <span className="mt-1 text-blue-600 flex-shrink-0">•</span>
+                        <li key={index} className="flex items-center gap-2 sm:gap-3">
+                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                           <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                         </li>
                       ))}
@@ -680,7 +680,7 @@ export default async function InternationalPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{railCargoData.intro}</p>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/rail.svg"
@@ -697,8 +697,8 @@ export default async function InternationalPage({
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railCargoData.advantages}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {railCargoData.advantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-amber-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                           </li>
                         ))}
@@ -708,8 +708,8 @@ export default async function InternationalPage({
                       <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railCargoData.ourCapabilities}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {railCargoData.services.map((service, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-amber-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
@@ -728,7 +728,7 @@ export default async function InternationalPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{roadCargoData.intro}</p>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/multimodal.svg"
@@ -741,23 +741,23 @@ export default async function InternationalPage({
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{roadCargoData.ftlTitle}</h3>
+                    <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-teal-600 break-words">{roadCargoData.ftlTitle}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {roadCargoData.ftlFeatures.map((feature, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-indigo-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{feature}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{roadCargoData.ltlTitle}</h3>
+                    <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-teal-600 break-words">{roadCargoData.ltlTitle}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {roadCargoData.ltlFeatures.map((feature, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-purple-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{feature}</span>
                           </li>
                         ))}
@@ -769,8 +769,8 @@ export default async function InternationalPage({
                     <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{roadCargoData.whatWeOffer}</h3>
                     <ul className="space-y-2 sm:space-y-3">
                       {roadCargoData.services.map((service, index) => (
-                        <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <span className="mt-1 text-indigo-600 flex-shrink-0">•</span>
+                        <li key={index} className="flex items-center gap-2 sm:gap-3">
+                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                           <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                         </li>
                       ))}

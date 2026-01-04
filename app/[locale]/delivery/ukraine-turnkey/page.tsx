@@ -7,6 +7,7 @@ import { generateDeliveryMetadata } from "../../../../lib/metadata";
 import { Metadata } from "next";
 import DeliverySidebarNav from "../../../../components/DeliverySidebarNav";
 import Image from "next/image";
+import { CheckCircle2 } from "lucide-react";
 
 const seaContent = {
   ua: {
@@ -249,7 +250,7 @@ const multimodalContent = {
   ua: {
     title: "Мультимодальна доставка",
     subtitle: "МУЛЬТИМОДАЛЬНА ДОСТАВКА (ЖД + АВТО + МОРЕ + АВІА)",
-    intro: "Гнучкий маршрут під ваш бюджет. \"Під ключ\".",
+    intro: "(ЖД + АВТО + МОРЕ + АВІА) Гнучкий маршрут під ваш бюджет. \"Під ключ\".",
     description: "Ми комбінуємо різні види транспорту, щоб забезпечити найкращий баланс швидкості, ціни та безпеки. Один контракт, одна відповідальність, один оператор.",
     whatIncludes: "Що може входити у послугу",
     services: [
@@ -283,7 +284,7 @@ const multimodalContent = {
   ru: {
     title: "Мультимодальная доставка",
     subtitle: "МУЛЬТИМОДАЛЬНАЯ ДОСТАВКА (ЖД + АВТО + МОРЕ + АВИА)",
-    intro: "Гибкий маршрут под ваш бюджет. \"Под ключ\".",
+    intro: "(ЖД + АВТО + МОРЕ + АВИА) Гибкий маршрут под ваш бюджет. \"Под ключ\".",
     description: "Мы комбинируем разные виды транспорта, чтобы обеспечить лучший баланс скорости, цены и безопасности. Один контракт, одна ответственность, один оператор.",
     whatIncludes: "Что может входить в услугу",
     services: [
@@ -317,7 +318,7 @@ const multimodalContent = {
   en: {
     title: "Multimodal Delivery",
     subtitle: "MULTIMODAL DELIVERY (RAIL + AUTO + SEA + AIR)",
-    intro: "Flexible route for your budget. \"Turnkey\".",
+    intro: "(RAIL + AUTO + SEA + AIR) Flexible route for your budget. \"Turnkey\".",
     description: "We combine different types of transport to ensure the best balance of speed, price and safety. One contract, one responsibility, one operator.",
     whatIncludes: "What may be included in the service",
     services: [
@@ -457,7 +458,7 @@ export default async function UkraineTurnkeyPage({
                 {/* Sea Transportation */}
                 <section id="sea" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{seaData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{seaData.title}</h2>
 
                   {/* Intro with Large Icon */}
                   <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
@@ -467,7 +468,7 @@ export default async function UkraineTurnkeyPage({
                         <p className="text-base sm:text-lg text-gray-700 break-words">{seaData.intro}</p>
                       </div>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/sea.svg"
@@ -490,9 +491,9 @@ export default async function UkraineTurnkeyPage({
                         </div>
                       ))}
                     </div>
-                    {/* Third card below, with teal background */}
+                    {/* Third card below, with animation and matching styles */}
                     {seaData.sections[2] && (
-                      <div className="rounded-2xl border-2 border-[#006D77] bg-[#E8FDF8] p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77]">
+                      <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] animate-slide-in-bottom">
                         <h3 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{seaData.sections[2].title}</h3>
                         <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words">{seaData.sections[2].text}</p>
                       </div>
@@ -500,23 +501,23 @@ export default async function UkraineTurnkeyPage({
                   </div>
 
                   {/* CTA Block - Question and Answer */}
-                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8">
-                    <p className="mb-2 text-xl sm:text-2xl font-bold text-slate-900 break-words">
+                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
+                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
                       {seaData.cta.split('?')[0]}?
                     </p>
-                    <p className="text-base sm:text-lg text-gray-600 break-words">
+                    <p className="text-lg sm:text-xl text-slate-900 break-words">
                       {seaData.cta.split('?')[1]?.trim()}
                     </p>
                   </div>
 
                   {/* Rate and Terms Cards */}
                   <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] text-center">
                       <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{seaData.tariffs}</h3>
                       <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">{seaData.tariffFrom}</p>
                       <p className="text-xs sm:text-sm text-gray-600 break-words">{seaData.tariffFcl}</p>
                     </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] text-center">
                       <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{seaData.terms}</h3>
                       <p className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600 break-words">{seaData.termsValue}</p>
                     </div>
@@ -526,7 +527,7 @@ export default async function UkraineTurnkeyPage({
                 {/* Air Transportation */}
                 <section id="air" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{airData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{airData.title}</h2>
 
                   {/* Intro with Large Icon */}
                   <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
@@ -536,7 +537,7 @@ export default async function UkraineTurnkeyPage({
                         <p className="text-base sm:text-lg text-gray-700 break-words">{airData.intro}</p>
                       </div>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/air.svg"
@@ -548,27 +549,47 @@ export default async function UkraineTurnkeyPage({
                     </div>
                   </div>
 
-                  <div className="space-y-6 sm:space-y-8 mb-8">
-                    {airData.sections.map((section, index) => (
-                      <div key={index} className="border-l-4 border-blue-500 pl-4 sm:pl-6">
-                        <h3 className="mb-3 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{section.title}</h3>
-                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words">{section.text}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8">
-                    <p className="text-base sm:text-lg font-semibold text-gray-900 break-words">{airData.cta}</p>
-                  </div>
-
-                  <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{airData.tariffs}</h3>
-                      <p className="text-xl sm:text-2xl font-bold text-blue-600 break-words">{airData.tariffFrom}</p>
+                  {/* Feature Cards - 2 in top row, 2 below */}
+                  <div className="space-y-4 sm:space-y-6 mb-8">
+                    {/* First two cards in a row */}
+                    <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+                      {airData.sections.slice(0, 2).map((section, index) => (
+                        <div key={index} className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                          <h3 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{section.title}</h3>
+                          <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words">{section.text}</p>
+                        </div>
+                      ))}
                     </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    {/* Second row with 2 cards */}
+                    <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+                      {airData.sections.slice(2, 4).map((section, index) => (
+                        <div key={index + 2} className={`rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] ${index === 1 ? 'animate-slide-in-bottom' : ''}`}>
+                          <h3 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{section.title}</h3>
+                          <p className="text-sm sm:text-base text-gray-600 leading-relaxed break-words">{section.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CTA Block - Question and Answer */}
+                  <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
+                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                      {airData.cta.split('?')[0]}?
+                    </p>
+                    <p className="text-lg sm:text-xl text-slate-900 break-words">
+                      {airData.cta.split('?')[1]?.trim()}
+                    </p>
+                  </div>
+
+                  {/* Rate and Terms Cards */}
+                  <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] text-center">
+                      <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{airData.tariffs}</h3>
+                      <p className="text-xl sm:text-2xl font-bold text-teal-600 break-words">{airData.tariffFrom}</p>
+                    </div>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] text-center">
                       <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{airData.terms}</h3>
-                      <p className="text-base sm:text-lg font-bold text-blue-600 break-words">{airData.termsValue}</p>
+                      <p className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600 break-words">{airData.termsValue}</p>
                     </div>
                   </div>
                 </section>
@@ -583,7 +604,7 @@ export default async function UkraineTurnkeyPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{railData.intro}</p>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/rail.svg"
@@ -598,18 +619,18 @@ export default async function UkraineTurnkeyPage({
                   {/* What We Do and For Whom - 2 columns */}
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
                     <div>
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railData.whatWeDo}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{railData.whatWeDo}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {railData.services.map((service, index) => (
                           <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-green-600 font-bold flex-shrink-0 text-lg">✔</span>
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-700 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railData.forWhom}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{railData.forWhom}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {railData.clients.map((client, index) => (
                           <li key={index} className="flex items-start gap-2 sm:gap-3">
@@ -623,11 +644,11 @@ export default async function UkraineTurnkeyPage({
 
                   {/* Rate and Terms Cards */}
                   <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] text-center">
                       <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{railData.tariffs}</h3>
                       <p className="text-xl sm:text-2xl font-bold text-teal-600 break-words">{railData.tariffFrom}</p>
                     </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] text-center">
                       <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{railData.terms}</h3>
                       <p className="text-base sm:text-lg font-bold text-teal-600 break-words">{railData.termsValue}</p>
                     </div>
@@ -642,13 +663,12 @@ export default async function UkraineTurnkeyPage({
                   {/* Intro with Large Icon */}
                   <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
                     <div>
-                      <p className="mb-2 text-lg sm:text-xl font-semibold text-gray-700 break-words">{multimodalData.subtitle}</p>
                       <p className="mb-6 text-base sm:text-lg text-gray-600 break-words">{multimodalData.intro}</p>
                       <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                         <p className="text-base sm:text-lg text-gray-700 break-words">{multimodalData.description}</p>
                       </div>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <div className="relative w-full max-w-sm h-64">
                         <Image
                           src="/delivery_types/icons/multimodal.svg"
@@ -662,18 +682,18 @@ export default async function UkraineTurnkeyPage({
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
                     <div>
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{multimodalData.whatIncludes}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{multimodalData.whatIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {multimodalData.services.map((service, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-1 text-purple-600 flex-shrink-0">•</span>
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
+                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{multimodalData.combinations}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{multimodalData.combinations}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {multimodalData.comboList.map((combo, index) => (
                           <li key={index} className="flex items-start gap-2 sm:gap-3">
@@ -685,12 +705,12 @@ export default async function UkraineTurnkeyPage({
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
-                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{multimodalData.advantages}</h3>
-                    <ul className="space-y-2">
+                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{multimodalData.advantages}</h3>
+                    <ul className="space-y-2 sm:space-y-3">
                       {multimodalData.advantagesList.map((advantage, index) => (
                         <li key={index} className="flex items-center gap-2 sm:gap-3">
-                          <span className="text-green-600 font-bold flex-shrink-0">✔</span>
+                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
                           <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
                         </li>
                       ))}
@@ -698,13 +718,13 @@ export default async function UkraineTurnkeyPage({
                   </div>
 
                   <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] text-center">
                       <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{multimodalData.tariffs}</h3>
-                      <p className="text-xl sm:text-2xl font-bold text-purple-600 break-words">{multimodalData.tariffFrom}</p>
+                      <p className="text-xl sm:text-2xl font-bold text-teal-600 break-words">{multimodalData.tariffFrom}</p>
                     </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] text-center">
                       <h3 className="mb-3 text-base sm:text-lg font-semibold text-gray-900">{multimodalData.terms}</h3>
-                      <p className="text-base sm:text-lg font-bold text-purple-600 break-words">{multimodalData.termsValue}</p>
+                      <p className="text-base sm:text-lg font-bold text-teal-600 break-words">{multimodalData.termsValue}</p>
                     </div>
                   </div>
                 </section>

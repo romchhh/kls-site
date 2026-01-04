@@ -19,7 +19,7 @@ export const en = {
   },
   deliveryTypes: {
     title: "Types of Delivery",
-    subtitle: "Choose the most convenient delivery method for yourself, or ask us. We will definitely advise you on the best one.",
+    subtitle: "Choose a convenient delivery method for yourself, or we will select the best option by terms and budget",
     learnMore: "Learn More",
     types: [
       {

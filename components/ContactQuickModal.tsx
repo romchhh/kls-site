@@ -219,39 +219,39 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
 
             {/* Phone Input */}
             <div className="mb-5">
-              <label htmlFor="phone" className="mb-1.5 block text-xs font-medium text-slate-600">
-                {modalT.phoneLabel}
-              </label>
-              <div className="relative">
-                <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="tel"
-                  id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder={modalT.phonePlaceholder}
-                  className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500/20"
-                  required
-                  disabled={isSubmitting}
-                />
+                <label htmlFor="phone" className="mb-1.5 block text-xs font-medium text-slate-600">
+                  {modalT.phoneLabel}
+                </label>
+                <div className="relative">
+                  <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="tel"
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder={modalT.phonePlaceholder}
+                    className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500/20"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
               </div>
-            </div>
             
-            <button
-              type="submit"
+              <button
+                type="submit"
               disabled={isSubmitting || !phone.trim() || !selectedMessenger || showSuccess}
-              className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isSubmitting ? (
-                <span className="flex items-center justify-center gap-2">
-                  <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
-                  {modalT.submitting}
-                </span>
-              ) : (
-                modalT.submit
-              )}
-            </button>
-          </form>
+                className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
+                    {modalT.submitting}
+                  </span>
+                ) : (
+                  modalT.submit
+                )}
+              </button>
+            </form>
         </div>
       </div>
     </>

@@ -145,8 +145,130 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl">
-            <table className="min-w-full border-separate border-spacing-y-3 text-sm">
+          <>
+            {/* Mobile Card View */}
+            <div className="space-y-3 sm:hidden">
+              {invoices.map((inv) => (
+                <div
+                  key={inv.id}
+                  className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-slate-900 mb-1">
+                        {inv.invoiceNumber || "-"}
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {formatDate(inv.createdAt)}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-slate-900 mb-1">
+                        {parseFloat(inv.amount).toFixed(2)} USD
+                      </div>
+                      <span
+                        className={`inline-flex items-center rounded-full border px-2 py-1 text-[10px] font-bold ${getStatusColor(
+                          inv.status,
+                        )}`}
+                      >
+                        {getStatusLabel(inv.status)}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {inv.shipment && (
+                    <div className="mb-3 pt-3 border-t border-slate-100">
+                      <button
+                        onClick={() => {
+                          const url = new URL(window.location.href);
+                          url.searchParams.set("tab", "shipments");
+                          window.location.href = url.toString();
+                          setTimeout(() => {
+                            const shipmentElement = document.getElementById(
+                              `shipment-${inv.shipmentId}`,
+                            );
+                            if (shipmentElement) {
+                              shipmentElement.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center",
+                              });
+                              shipmentElement.classList.add(
+                                "ring-2",
+                                "ring-teal-500",
+                              );
+                              setTimeout(() => {
+                                shipmentElement.classList.remove(
+                                  "ring-2",
+                                  "ring-teal-500",
+                                );
+                              }, 2000);
+                            }
+                          }, 300);
+                        }}
+                        className="inline-flex items-center gap-1.5 text-teal-600 hover:text-teal-700 font-semibold text-xs"
+                      >
+                        <Package className="h-3.5 w-3.5" />
+                        {formatTrackNumber(inv.shipment.internalTrack)}
+                      </button>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/invoices/${inv.id}/generate`);
+                          if (!response.ok) {
+                            throw new Error("Failed to generate invoice");
+                          }
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = `invoice_${inv.invoiceNumber}_${new Date().toISOString().split("T")[0]}.xlsx`;
+                          document.body.appendChild(a);
+                          a.click();
+                          window.URL.revokeObjectURL(url);
+                          document.body.removeChild(a);
+                        } catch (error) {
+                          console.error("Error downloading invoice:", error);
+                          alert("Помилка при завантаженні інвойсу. Спробуйте пізніше.");
+                        }
+                      }}
+                      className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-teal-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-teal-700"
+                    >
+                      <FileText className="h-3.5 w-3.5" />
+                      <span>Excel</span>
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/invoices/${inv.id}/generate-pdf`);
+                          if (!response.ok) {
+                            throw new Error("Failed to generate PDF invoice");
+                          }
+                          const blob = await response.blob();
+                          const url = window.URL.createObjectURL(blob);
+                          window.open(url, "_blank");
+                          setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                        } catch (error) {
+                          console.error("Error downloading PDF invoice:", error);
+                          alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
+                        }
+                      }}
+                      className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-red-700"
+                    >
+                      <FileText className="h-3.5 w-3.5" />
+                      <span>PDF</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden overflow-x-auto rounded-xl sm:block">
+              <table className="min-w-full border-separate border-spacing-y-3 text-sm">
               <thead>
                 <tr className="text-xs uppercase tracking-wider text-slate-600 bg-gradient-to-r from-slate-50 to-slate-100">
                   <th className="px-4 py-3.5 text-left font-bold rounded-tl-xl">
@@ -291,6 +413,7 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </div>
     </div>

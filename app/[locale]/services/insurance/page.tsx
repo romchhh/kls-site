@@ -410,8 +410,8 @@ export default async function InsurancePage({
             <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
               {data.whatWeInsure}
             </h2>
-          </div>
-          
+              </div>
+
           <div className="grid gap-8 lg:grid-cols-2 lg:items-stretch">
             {/* Left - Image */}
             <div className="relative h-full min-h-[400px] rounded-2xl overflow-hidden">
@@ -486,7 +486,7 @@ export default async function InsurancePage({
             <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
               {data.advantages}
             </h2>
-          </div>
+                </div>
           <div className="flex flex-wrap justify-center gap-6">
             {data.advantagesList.map((advantage, index) => (
               <div key={index} className="flex w-full flex-col items-center text-center md:w-[calc(33.333%-1rem)]">
@@ -504,8 +504,8 @@ export default async function InsurancePage({
                 </p>
               </div>
             ))}
-          </div>
-        </div>
+              </div>
+            </div>
       </section>
 
       {/* How It Works Section */}
@@ -516,7 +516,7 @@ export default async function InsurancePage({
               {data.howItWorks}
             </h2>
           </div>
-          
+
           {/* Process Timeline */}
           <div className="relative">
             {/* Horizontal Line Container */}
@@ -548,7 +548,7 @@ export default async function InsurancePage({
             
             {/* Steps Content */}
             <div className="grid gap-6 md:grid-cols-5">
-              {data.steps.map((step, index) => (
+                {data.steps.map((step, index) => (
                 <div key={index} className="relative flex flex-col items-center text-center">
                   {/* Step Number Label */}
                   <div className="mb-3">
@@ -564,7 +564,7 @@ export default async function InsurancePage({
                     </h3>
                   </div>
                 </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>

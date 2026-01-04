@@ -178,9 +178,9 @@ export function CabinetInfo({ locale }: CabinetInfoProps) {
               {content.markingInstruction}
             </p>
             
-            <p className="text-sm text-slate-700 leading-relaxed">
+          <p className="text-sm text-slate-700 leading-relaxed">
               {content.trackingInstruction}
-            </p>
+          </p>
 
             <div className="rounded-xl bg-slate-50 p-4">
               <div className="space-y-2.5 text-sm text-slate-700">

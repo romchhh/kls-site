@@ -353,7 +353,7 @@ export default async function LocalPage({
               {data.cargoTypes}
             </h2>
           </div>
-          
+
           <div className="grid gap-8 lg:grid-cols-2 lg:items-stretch">
             {/* Left - Image */}
             <div className="relative h-full min-h-[400px] rounded-2xl overflow-hidden">
@@ -379,7 +379,7 @@ export default async function LocalPage({
               ))}
             </div>
           </div>
-        </div>
+            </div>
       </section>
 
       {/* Advantages Section */}
@@ -407,7 +407,7 @@ export default async function LocalPage({
                 </p>
               </div>
               ))}
-          </div>
+              </div>
             </div>
       </section>
 

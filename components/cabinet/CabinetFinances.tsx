@@ -175,60 +175,114 @@ export function CabinetFinances({ locale }: CabinetFinancesProps) {
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl">
-            <table className="min-w-full border-separate border-spacing-y-3 text-sm">
-              <thead>
-                <tr className="text-xs uppercase tracking-wider text-slate-600 bg-gradient-to-r from-slate-50 to-slate-100">
-                  <th className="px-4 py-3.5 text-left font-bold rounded-tl-xl">
-                    {labels.txDate || "Дата"}
-                  </th>
-                  <th className="px-4 py-3.5 text-left font-bold">
-                    {labels.txType || "Тип"}
-                  </th>
-                  <th className="px-4 py-3.5 text-left font-bold">
-                    {labels.txDescription || "Опис"}
-                  </th>
-                  <th className="px-4 py-3.5 text-right font-bold">
-                    {labels.txAmount || "Сума, USD"}
-                  </th>
-                  <th className="px-4 py-3.5 text-right font-bold rounded-tr-xl">
-                    {labels.txBalance || "Баланс, USD"}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((tx) => (
-                  <tr
-                    key={tx.id}
-                    className="rounded-xl bg-white align-middle text-slate-800 shadow-md border border-slate-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:shadow-lg hover:border-blue-200 hover:scale-[1.01]"
-                  >
-                    <td className="px-4 py-4">
-                      {new Date(tx.createdAt).toLocaleDateString("uk-UA", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-4 py-4">
-                      {tx.type === "income"
-                        ? labels.txIncome || "Поповнення"
-                        : labels.txExpense || "Списання"}
-                    </td>
-                    <td className="px-4 py-4">{tx.description || "—"}</td>
-                    <td className="px-4 py-4 text-right font-bold text-slate-900">
-                      <span className={tx.type === "income" ? "text-emerald-600" : "text-red-600"}>
+          <>
+            {/* Mobile Card View */}
+            <div className="space-y-3 sm:hidden">
+              {rows.map((tx) => (
+                <div
+                  key={tx.id}
+                  className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <div className="text-xs text-slate-500 mb-1">
+                        {new Date(tx.createdAt).toLocaleDateString("uk-UA", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                      </div>
+                      <div className="text-sm font-semibold text-slate-900 mb-1">
+                        {tx.type === "income"
+                          ? labels.txIncome || "Поповнення"
+                          : labels.txExpense || "Списання"}
+                      </div>
+                      {tx.description && (
+                        <div className="text-xs text-slate-600">
+                          {tx.description}
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      <div className={`text-sm font-bold mb-1 ${
+                        tx.type === "income" ? "text-emerald-600" : "text-red-600"
+                      }`}>
                         {tx.type === "income" ? "+" : "-"}
                         {Number(tx.amount).toFixed(2)} USD
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-3 border-t border-slate-100">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-500">
+                        {labels.txBalance || "Баланс"}:
                       </span>
-                    </td>
-                    <td className="px-4 py-4 text-right font-semibold text-slate-800">
-                      {tx.runningBalance.toFixed(2)} USD
-                    </td>
+                      <span className="font-semibold text-slate-800">
+                        {tx.runningBalance.toFixed(2)} USD
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden overflow-x-auto rounded-xl sm:block">
+              <table className="min-w-full border-separate border-spacing-y-3 text-sm">
+                <thead>
+                  <tr className="text-xs uppercase tracking-wider text-slate-600 bg-gradient-to-r from-slate-50 to-slate-100">
+                    <th className="px-4 py-3.5 text-left font-bold rounded-tl-xl">
+                      {labels.txDate || "Дата"}
+                    </th>
+                    <th className="px-4 py-3.5 text-left font-bold">
+                      {labels.txType || "Тип"}
+                    </th>
+                    <th className="px-4 py-3.5 text-left font-bold">
+                      {labels.txDescription || "Опис"}
+                    </th>
+                    <th className="px-4 py-3.5 text-right font-bold">
+                      {labels.txAmount || "Сума, USD"}
+                    </th>
+                    <th className="px-4 py-3.5 text-right font-bold rounded-tr-xl">
+                      {labels.txBalance || "Баланс, USD"}
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {rows.map((tx) => (
+                    <tr
+                      key={tx.id}
+                      className="rounded-xl bg-white align-middle text-slate-800 shadow-md border border-slate-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:shadow-lg hover:border-blue-200 hover:scale-[1.01]"
+                    >
+                      <td className="px-4 py-4">
+                        {new Date(tx.createdAt).toLocaleDateString("uk-UA", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td className="px-4 py-4">
+                        {tx.type === "income"
+                          ? labels.txIncome || "Поповнення"
+                          : labels.txExpense || "Списання"}
+                      </td>
+                      <td className="px-4 py-4">{tx.description || "—"}</td>
+                      <td className="px-4 py-4 text-right font-bold text-slate-900">
+                        <span className={tx.type === "income" ? "text-emerald-600" : "text-red-600"}>
+                          {tx.type === "income" ? "+" : "-"}
+                          {Number(tx.amount).toFixed(2)} USD
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-right font-semibold text-slate-800">
+                        {tx.runningBalance.toFixed(2)} USD
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>
