@@ -490,7 +490,7 @@ export default async function InternationalPage({
               <div className="lg:col-span-3 space-y-20">
                 {/* Main Info Section */}
                 <section>
-                  <h2 className="mb-8 text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 break-words">{data.whatIncludes}</h2>
+                  <h2 className="mb-8 text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 break-words text-center">{data.whatIncludes}</h2>
                   <div className="grid gap-4 md:grid-cols-2">
                     {data.services.map((service, index) => (
                       <div
@@ -507,7 +507,7 @@ export default async function InternationalPage({
                 {/* Advantages & For Whom */}
                 <section className="grid gap-6 sm:gap-8 md:grid-cols-2">
                   <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
-                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-teal-600 break-words">{data.advantages}</h2>
+                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-[#006D77] break-words">{data.advantages}</h2>
                     <ul className="space-y-3 sm:space-y-4">
                       {data.advantagesList.map((advantage, index) => (
                         <li key={index} className="flex items-start gap-2 sm:gap-3">
@@ -518,7 +518,7 @@ export default async function InternationalPage({
                     </ul>
                   </div>
                   <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
-                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-teal-600 break-words">{data.forWhom}</h2>
+                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-[#006D77] break-words">{data.forWhom}</h2>
                     <ul className="space-y-3 sm:space-y-4">
                       {data.clients.map((client, index) => (
                         <li key={index} className="flex items-center gap-2 sm:gap-3">
@@ -533,35 +533,25 @@ export default async function InternationalPage({
                 {/* Sea Container Transportation */}
                 <section id="sea-container" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{seaContainerData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{seaContainerData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                  {/* Intro */}
+                  <div className="mb-8">
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{seaContainerData.intro}</p>
-                    </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/sea.svg"
-                          alt="Sea"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
                     </div>
                   </div>
 
                   <div className="mb-8 space-y-8 sm:space-y-12">
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{seaContainerData.fclTitle}</h3>
+                      <h3 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{seaContainerData.fclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{seaContainerData.fclDescription}</p>
                       <div className="mb-4">
-                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{seaContainerData.fclAdvantages}</h4>
+                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{seaContainerData.fclAdvantages}</h4>
                         <ul className="space-y-2">
                           {seaContainerData.fclAdvantagesList.map((advantage, index) => (
                             <li key={index} className="flex items-center gap-2 sm:gap-3">
-                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -571,14 +561,14 @@ export default async function InternationalPage({
                     </div>
 
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{seaContainerData.lclTitle}</h3>
+                      <h3 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{seaContainerData.lclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{seaContainerData.lclDescription}</p>
                       <div className="mb-4">
-                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{seaContainerData.lclAdvantages}</h4>
+                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{seaContainerData.lclAdvantages}</h4>
                         <ul className="space-y-2">
                           {seaContainerData.lclAdvantagesList.map((advantage, index) => (
                             <li key={index} className="flex items-center gap-2 sm:gap-3">
-                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -588,51 +578,59 @@ export default async function InternationalPage({
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{seaContainerData.whatWeOffer}</h3>
-                    <ul className="space-y-2 sm:space-y-3">
-                      {seaContainerData.services.map((service, index) => (
-                        <li key={index} className="flex items-center gap-2 sm:gap-3">
-                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                          <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="rounded-2xl bg-white p-4 sm:p-6">
+                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{seaContainerData.whatWeOffer}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {seaContainerData.services.slice(0, 2).map((service, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {seaContainerData.services.slice(2, 4).map((service, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {seaContainerData.services.slice(4).map((service, index) => (
+                          <li key={index + 4} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </section>
 
                 {/* Air Cargo Transportation */}
                 <section id="air-cargo" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{airCargoData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{airCargoData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                  {/* Intro */}
+                  <div className="mb-8">
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{airCargoData.intro}</p>
-                    </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/air.svg"
-                          alt="Air"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
                     </div>
                   </div>
 
                   <div className="mb-8 space-y-8 sm:space-y-12">
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{airCargoData.fclTitle}</h3>
+                      <h3 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{airCargoData.fclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{airCargoData.fclDescription}</p>
                       <div>
-                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{airCargoData.fclAdvantages}</h4>
+                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{airCargoData.fclAdvantages}</h4>
                         <ul className="space-y-2">
                           {airCargoData.fclAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-center gap-2 sm:gap-3">
-                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                            <li key={index} className="flex items-start gap-2 sm:gap-3">
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -641,14 +639,14 @@ export default async function InternationalPage({
                     </div>
 
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words">{airCargoData.lclTitle}</h3>
+                      <h3 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{airCargoData.lclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{airCargoData.lclDescription}</p>
                       <div>
-                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{airCargoData.lclAdvantages}</h4>
+                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{airCargoData.lclAdvantages}</h4>
                         <ul className="space-y-2">
                           {airCargoData.lclAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-center gap-2 sm:gap-3">
-                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                            <li key={index} className="flex items-start gap-2 sm:gap-3">
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -657,60 +655,105 @@ export default async function InternationalPage({
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{airCargoData.whatWeProvide}</h3>
-                    <ul className="space-y-2 sm:space-y-3">
-                      {airCargoData.services.map((service, index) => (
-                        <li key={index} className="flex items-center gap-2 sm:gap-3">
-                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                          <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="rounded-2xl bg-white p-4 sm:p-6">
+                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{airCargoData.whatWeProvide}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {airCargoData.services.slice(0, 2).map((service, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {airCargoData.services.slice(2, 3).map((service, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {airCargoData.services.slice(3).map((service, index) => (
+                          <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </section>
 
                 {/* Rail Cargo Transportation */}
                 <section id="rail-cargo" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{railCargoData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{railCargoData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                  {/* Intro */}
+                  <div className="mb-8">
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{railCargoData.intro}</p>
                     </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/rail.svg"
-                          alt="Rail"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    </div>
                   </div>
 
-                  <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railCargoData.advantages}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {railCargoData.advantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
+                  {/* Переваги залізничної доставки */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{railCargoData.advantages}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {railCargoData.advantagesList.slice(0, 2).map((advantage, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {railCargoData.advantagesList.slice(2, 4).map((advantage, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {railCargoData.advantagesList.slice(4).map((advantage, index) => (
+                          <li key={index + 4} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{advantage}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{railCargoData.ourCapabilities}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {railCargoData.services.map((service, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
+                  </div>
+
+                  {/* Наші можливості */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{railCargoData.ourCapabilities}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {railCargoData.services.slice(0, 2).map((service, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0 mt-1" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {railCargoData.services.slice(2, 4).map((service, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0 mt-1" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {railCargoData.services.slice(4).map((service, index) => (
+                          <li key={index + 4} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0 mt-1" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
@@ -721,43 +764,33 @@ export default async function InternationalPage({
                 {/* Road Cargo Transportation */}
                 <section id="road-cargo" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{roadCargoData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{roadCargoData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                  {/* Intro */}
+                  <div className="mb-8">
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{roadCargoData.intro}</p>
-                    </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/multimodal.svg"
-                          alt="Road"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
                     </div>
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-teal-600 break-words">{roadCargoData.ftlTitle}</h3>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{roadCargoData.ftlTitle}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {roadCargoData.ftlFeatures.map((feature, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                          <li key={index} className="flex items-start gap-2 sm:gap-3">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{feature}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-teal-600 break-words">{roadCargoData.ltlTitle}</h3>
+                    <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
+                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{roadCargoData.ltlTitle}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {roadCargoData.ltlFeatures.map((feature, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                          <li key={index} className="flex items-start gap-2 sm:gap-3">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1" />
                             <span className="text-sm sm:text-base text-gray-600 break-words">{feature}</span>
                           </li>
                         ))}
@@ -765,16 +798,34 @@ export default async function InternationalPage({
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{roadCargoData.whatWeOffer}</h3>
-                    <ul className="space-y-2 sm:space-y-3">
-                      {roadCargoData.services.map((service, index) => (
-                        <li key={index} className="flex items-center gap-2 sm:gap-3">
-                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                          <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="rounded-2xl bg-white p-4 sm:p-6">
+                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{roadCargoData.whatWeOffer}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {roadCargoData.services.slice(0, 2).map((service, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {roadCargoData.services.slice(2, 3).map((service, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {roadCargoData.services.slice(3).map((service, index) => (
+                          <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </section>
               </div>

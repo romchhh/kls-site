@@ -268,7 +268,7 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
 
             {/* Desktop Table View */}
             <div className="hidden overflow-x-auto rounded-xl sm:block">
-              <table className="min-w-full border-separate border-spacing-y-3 text-sm">
+            <table className="min-w-full border-separate border-spacing-y-3 text-sm">
               <thead>
                 <tr className="text-xs uppercase tracking-wider text-slate-600 bg-gradient-to-r from-slate-50 to-slate-100">
                   <th className="px-4 py-3.5 text-left font-bold rounded-tl-xl">

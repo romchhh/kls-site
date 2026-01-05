@@ -198,7 +198,7 @@ export default async function PaymentsPage({
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+            src="/images/services/money-transfers.jpg"
             alt="KLS Logistics"
             fill
             className="object-cover"
@@ -256,7 +256,7 @@ export default async function PaymentsPage({
               <div className="mb-4 flex items-start gap-4">
                 <div className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
                   <Image
-                    src="/payments-icons/alipay.svg"
+                    src="/services/payments-icons/money-transfers.svg"
                     alt="Alipay"
                     width={48}
                     height={48}
@@ -286,7 +286,7 @@ export default async function PaymentsPage({
               <div className="mb-4 flex items-start gap-4">
                 <div className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
                   <Image
-                    src="/payments-icons/bank-cards.svg"
+                    src="/services/payments-icons/card.svg"
                     alt="Bank Cards"
                     width={48}
                     height={48}
@@ -316,7 +316,7 @@ export default async function PaymentsPage({
               <div className="mb-4 flex items-start gap-4">
                 <div className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
                   <Image
-                    src="/payments-icons/invoices.svg"
+                    src="/services/payments-icons/customs-clearance.svg"
                     alt="Invoices"
                     width={48}
                     height={48}
@@ -346,7 +346,7 @@ export default async function PaymentsPage({
               <div className="mb-4 flex items-start gap-4">
                 <div className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
                   <Image
-                    src="/payments-icons/factories.svg"
+                    src="/services/payments-icons/best-price-guarantee.svg"
                     alt="Factories"
                     width={48}
                     height={48}

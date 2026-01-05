@@ -32,25 +32,25 @@ export default async function WarehousingPage({
   const services = [
     {
       title: consolidation?.title || (locale === "ua" ? "Консолідація вантажів" : locale === "ru" ? "Консолидация грузов" : "Cargo Consolidation"),
-      icon: "/services/warehousing.svg",
+      icon: "/services/warehousing-icons/warehousing-services.svg",
       intro: consolidation?.intro || (locale === "ua" ? "Ми приймаємо відправлення від різних постачальників, об'єднуємо їх у єдину партію та готуємо до оптимізованої доставки." : locale === "ru" ? "Мы принимаем отправления от разных поставщиков, объединяем их в единую партию и готовим к оптимизированной доставке." : "We receive shipments from different suppliers, combine them into a single batch and prepare for optimized delivery."),
       items: consolidation?.advantagesList || [],
     },
     {
       title: storage?.title || (locale === "ua" ? "Зберігання вантажів" : locale === "ru" ? "Хранение грузов" : "Cargo Storage"),
-      icon: "/why-choose-us/quality.svg",
+      icon: "/services/warehousing-icons/all-cargo-types.svg",
       intro: storage?.intro || (locale === "ua" ? "Пропонуємо короткострокове та довгострокове зберігання з контрольованими умовами." : locale === "ru" ? "Предлагаем краткосрочное и долгосрочное хранение с контролируемыми условиями." : "We offer short-term and long-term storage with controlled conditions."),
       items: storage?.advantagesList || [],
     },
     {
       title: inspection?.title || (locale === "ua" ? "Інспекція та перевірка" : locale === "ru" ? "Инспекция и проверка" : "Inspection and Verification"),
-      icon: "/why-choose-us/reliability.svg",
+      icon: "/services/warehousing-icons/sourcing-services.svg",
       intro: inspection?.intro || (locale === "ua" ? "Проводимо контроль якості та відповідності товару перед відправкою або після отримання." : locale === "ru" ? "Проводим контроль качества и соответствия товара перед отправкой или после получения." : "We conduct quality control and product compliance checks before shipment or after receipt."),
       items: inspection?.services || inspection?.servicesList || [],
     },
     {
       title: packaging?.title || (locale === "ua" ? "Пакування вантажів" : locale === "ru" ? "Упаковка грузов" : "Cargo Packaging"),
-      icon: "/why-choose-us/transparency.svg",
+      icon: "/services/warehousing-icons/luggage.svg",
       intro: packaging?.intro || (locale === "ua" ? "Професійне пакування для захисту вантажу під час транспортування." : locale === "ru" ? "Профессиональная упаковка для защиты груза во время транспортировки." : "Professional packaging to protect cargo during transportation."),
       items: packaging?.servicesList || [],
     },
@@ -80,7 +80,7 @@ export default async function WarehousingPage({
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+            src="/images/services/warehouse-services.jpg"
             alt="KLS Logistics"
             fill
             className="object-cover"

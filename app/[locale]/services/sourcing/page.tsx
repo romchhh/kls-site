@@ -13,7 +13,7 @@ const content = {
     services: [
       {
         title: "Пошук постачальників і фабрик",
-        icon: "/services/sourcing.svg",
+        icon: "/services/sourcing-icons/sourcing-service.svg",
         items: [
       "підбір виробників за вашим технічним завданням",
       "пошук товарів на 1688, Taobao, Alibaba, китайських і корейських B2B-платформах",
@@ -22,7 +22,7 @@ const content = {
       },
       {
         title: "Перевірка постачальників (Factory Check)",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/sourcing-icons/reliability.svg",
         items: [
       "перевірка документів та легальності компанії",
       "аналіз відгуків, рейтингу, виробничих потужностей",
@@ -31,7 +31,7 @@ const content = {
       },
       {
         title: "Переговори з постачальниками",
-        icon: "/why-choose-us/personal-approach.svg",
+        icon: "/services/sourcing-icons/personal-approach.svg",
         items: [
       "узгодження цін, умов виробництва та поставки",
       "контроль специфікацій і відповідності вимогам",
@@ -40,7 +40,7 @@ const content = {
       },
       {
         title: "Закупівля та оформлення замовлень",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/sourcing-icons/advantages.svg",
         items: [
       "оформлення замовлення \"під ключ\"",
       "оплата постачальнику або фабриці",
@@ -49,7 +49,7 @@ const content = {
       },
       {
         title: "Контроль якості та інспекція",
-        icon: "/why-choose-us/quality.svg",
+        icon: "/services/sourcing-icons/advantages-21.svg",
         items: [
       "перевірка товару перед відправкою",
       "перевірка кількості, маркування, пакування",
@@ -81,7 +81,7 @@ const content = {
     services: [
       {
         title: "Поиск поставщиков и фабрик",
-        icon: "/services/sourcing.svg",
+        icon: "/services/sourcing-icons/sourcing-service.svg",
         items: [
       "подбор производителей по вашему техническому заданию",
       "поиск товаров на 1688, Taobao, Alibaba, китайских и корейских B2B-платформах",
@@ -90,7 +90,7 @@ const content = {
       },
       {
         title: "Проверка поставщиков (Factory Check)",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/sourcing-icons/reliability.svg",
         items: [
       "проверка документов и легальности компании",
       "анализ отзывов, рейтинга, производственных мощностей",
@@ -99,7 +99,7 @@ const content = {
       },
       {
         title: "Переговоры с поставщиками",
-        icon: "/why-choose-us/personal-approach.svg",
+        icon: "/services/sourcing-icons/personal-approach.svg",
         items: [
       "согласование цен, условий производства и поставки",
       "контроль спецификаций и соответствия требованиям",
@@ -108,7 +108,7 @@ const content = {
       },
       {
         title: "Закупка и оформление заказов",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/sourcing-icons/advantages.svg",
         items: [
       "оформление заказа \"под ключ\"",
       "оплата поставщику или фабрике",
@@ -117,7 +117,7 @@ const content = {
       },
       {
         title: "Контроль качества и инспекция",
-        icon: "/why-choose-us/quality.svg",
+        icon: "/services/sourcing-icons/advantages-21.svg",
         items: [
       "проверка товара перед отправкой",
       "проверка количества, маркировки, упаковки",
@@ -149,7 +149,7 @@ const content = {
     services: [
       {
         title: "Supplier and Factory Search",
-        icon: "/services/sourcing.svg",
+        icon: "/services/sourcing-icons/sourcing-service.svg",
         items: [
       "selection of manufacturers according to your technical specification",
       "product search on 1688, Taobao, Alibaba, Chinese and Korean B2B platforms",
@@ -158,7 +158,7 @@ const content = {
       },
       {
         title: "Supplier Verification (Factory Check)",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/sourcing-icons/reliability.svg",
         items: [
       "verification of documents and company legality",
       "analysis of reviews, ratings, production capacity",
@@ -167,7 +167,7 @@ const content = {
       },
       {
         title: "Negotiations with Suppliers",
-        icon: "/why-choose-us/personal-approach.svg",
+        icon: "/services/sourcing-icons/personal-approach.svg",
         items: [
       "coordination of prices, production and delivery terms",
       "control of specifications and compliance with requirements",
@@ -176,7 +176,7 @@ const content = {
       },
       {
         title: "Procurement and Order Processing",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/sourcing-icons/advantages.svg",
         items: [
       "turnkey order processing",
       "payment to supplier or factory",
@@ -185,7 +185,7 @@ const content = {
       },
       {
         title: "Quality Control and Inspection",
-        icon: "/why-choose-us/quality.svg",
+        icon: "/services/sourcing-icons/advantages-21.svg",
         items: [
       "product verification before shipment",
       "verification of quantity, labeling, packaging",

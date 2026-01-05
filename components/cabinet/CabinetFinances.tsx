@@ -229,59 +229,59 @@ export function CabinetFinances({ locale }: CabinetFinancesProps) {
 
             {/* Desktop Table View */}
             <div className="hidden overflow-x-auto rounded-xl sm:block">
-              <table className="min-w-full border-separate border-spacing-y-3 text-sm">
-                <thead>
-                  <tr className="text-xs uppercase tracking-wider text-slate-600 bg-gradient-to-r from-slate-50 to-slate-100">
-                    <th className="px-4 py-3.5 text-left font-bold rounded-tl-xl">
-                      {labels.txDate || "Дата"}
-                    </th>
-                    <th className="px-4 py-3.5 text-left font-bold">
-                      {labels.txType || "Тип"}
-                    </th>
-                    <th className="px-4 py-3.5 text-left font-bold">
-                      {labels.txDescription || "Опис"}
-                    </th>
-                    <th className="px-4 py-3.5 text-right font-bold">
-                      {labels.txAmount || "Сума, USD"}
-                    </th>
-                    <th className="px-4 py-3.5 text-right font-bold rounded-tr-xl">
-                      {labels.txBalance || "Баланс, USD"}
-                    </th>
+            <table className="min-w-full border-separate border-spacing-y-3 text-sm">
+              <thead>
+                <tr className="text-xs uppercase tracking-wider text-slate-600 bg-gradient-to-r from-slate-50 to-slate-100">
+                  <th className="px-4 py-3.5 text-left font-bold rounded-tl-xl">
+                    {labels.txDate || "Дата"}
+                  </th>
+                  <th className="px-4 py-3.5 text-left font-bold">
+                    {labels.txType || "Тип"}
+                  </th>
+                  <th className="px-4 py-3.5 text-left font-bold">
+                    {labels.txDescription || "Опис"}
+                  </th>
+                  <th className="px-4 py-3.5 text-right font-bold">
+                    {labels.txAmount || "Сума, USD"}
+                  </th>
+                  <th className="px-4 py-3.5 text-right font-bold rounded-tr-xl">
+                    {labels.txBalance || "Баланс, USD"}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((tx) => (
+                  <tr
+                    key={tx.id}
+                    className="rounded-xl bg-white align-middle text-slate-800 shadow-md border border-slate-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:shadow-lg hover:border-blue-200 hover:scale-[1.01]"
+                  >
+                    <td className="px-4 py-4">
+                      {new Date(tx.createdAt).toLocaleDateString("uk-UA", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="px-4 py-4">
+                      {tx.type === "income"
+                        ? labels.txIncome || "Поповнення"
+                        : labels.txExpense || "Списання"}
+                    </td>
+                    <td className="px-4 py-4">{tx.description || "—"}</td>
+                    <td className="px-4 py-4 text-right font-bold text-slate-900">
+                      <span className={tx.type === "income" ? "text-emerald-600" : "text-red-600"}>
+                        {tx.type === "income" ? "+" : "-"}
+                        {Number(tx.amount).toFixed(2)} USD
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-right font-semibold text-slate-800">
+                      {tx.runningBalance.toFixed(2)} USD
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {rows.map((tx) => (
-                    <tr
-                      key={tx.id}
-                      className="rounded-xl bg-white align-middle text-slate-800 shadow-md border border-slate-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:shadow-lg hover:border-blue-200 hover:scale-[1.01]"
-                    >
-                      <td className="px-4 py-4">
-                        {new Date(tx.createdAt).toLocaleDateString("uk-UA", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })}
-                      </td>
-                      <td className="px-4 py-4">
-                        {tx.type === "income"
-                          ? labels.txIncome || "Поповнення"
-                          : labels.txExpense || "Списання"}
-                      </td>
-                      <td className="px-4 py-4">{tx.description || "—"}</td>
-                      <td className="px-4 py-4 text-right font-bold text-slate-900">
-                        <span className={tx.type === "income" ? "text-emerald-600" : "text-red-600"}>
-                          {tx.type === "income" ? "+" : "-"}
-                          {Number(tx.amount).toFixed(2)} USD
-                        </span>
-                      </td>
-                      <td className="px-4 py-4 text-right font-semibold text-slate-800">
-                        {tx.runningBalance.toFixed(2)} USD
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
           </>
         )}
       </div>

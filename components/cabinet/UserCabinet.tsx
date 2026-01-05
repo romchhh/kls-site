@@ -157,44 +157,44 @@ export function UserCabinet({ locale }: UserCabinetProps) {
               <Menu className="h-5 w-5" />
             </button>
             <div className="relative h-7 w-auto">
-              <Image
-                src="/logos/ЛОГО(1).png"
-                alt="KLS Logo"
-                width={120}
-                height={36}
+                <Image
+                  src="/logos/ЛОГО(1).png"
+                  alt="KLS Logo"
+                  width={120}
+                  height={36}
                 className="h-7 w-auto object-contain"
-                priority
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setIsLangOpen((prev) => !prev)}
-                className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-white"
-              >
-                <Globe className="h-3.5 w-3.5" />
-                <span>{locale.toUpperCase()}</span>
-              </button>
-              {isLangOpen && (
-                <div className="absolute right-0 z-20 mt-2 w-28 rounded-2xl border border-slate-200 bg-white py-2 shadow-lg">
-                  {locales.map((loc) => (
-                    <button
-                      key={loc}
-                      type="button"
-                      onClick={() => handleLocaleChange(loc)}
-                      className={`block w-full px-3 py-2 text-left text-xs transition ${
-                        loc === locale
-                          ? "font-semibold text-teal-700"
-                          : "text-slate-700 hover:bg-teal-50 hover:text-teal-700"
-                      }`}
-                    >
-                      {loc === "ua" ? "UA" : loc === "ru" ? "RU" : "EN"}
-                    </button>
-                  ))}
+                  priority
+                />
+              </div>
                 </div>
-              )}
+          <div className="flex items-center gap-2">
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsLangOpen((prev) => !prev)}
+                className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-2.5 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-white"
+                >
+                <Globe className="h-3.5 w-3.5" />
+                  <span>{locale.toUpperCase()}</span>
+                </button>
+                {isLangOpen && (
+                <div className="absolute right-0 z-20 mt-2 w-28 rounded-2xl border border-slate-200 bg-white py-2 shadow-lg">
+                    {locales.map((loc) => (
+                      <button
+                        key={loc}
+                        type="button"
+                        onClick={() => handleLocaleChange(loc)}
+                      className={`block w-full px-3 py-2 text-left text-xs transition ${
+                          loc === locale
+                            ? "font-semibold text-teal-700"
+                            : "text-slate-700 hover:bg-teal-50 hover:text-teal-700"
+                        }`}
+                      >
+                        {loc === "ua" ? "UA" : loc === "ru" ? "RU" : "EN"}
+                      </button>
+                    ))}
+                  </div>
+                )}
             </div>
             <button
               onClick={handleLogout}
@@ -203,7 +203,7 @@ export function UserCabinet({ locale }: UserCabinetProps) {
               <LogOut className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">{t.cabinet?.logout || "Вийти"}</span>
             </button>
-          </div>
+            </div>
         </div>
 
         {/* Mobile Welcome Header */}

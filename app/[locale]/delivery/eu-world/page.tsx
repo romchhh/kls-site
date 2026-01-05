@@ -30,9 +30,9 @@ const fbaContent = {
     ],
     deliveryTypes: "Види доставки",
     deliveryOptions: [
-      "Авіа – 8–15 днів",
-      "Море – 55–65 днів",
-      "Потяг (ЄС) – 30–35 днів",
+      { type: "Авіа", days: "8–15 днів", icon: "/calculator/air-delivery.svg" },
+      { type: "Море", days: "55–65 днів", icon: "/calculator/sea-delivery.svg" },
+      { type: "Потяг (ЄС)", days: "30–35 днів", icon: "/calculator/rail-delivery.svg" },
     ],
     cta: "Готові доставити ваш товар на FBA? Зв'яжіться з нами — зробимо точний розрахунок під вашу партію.",
   },
@@ -59,9 +59,9 @@ const fbaContent = {
     ],
     deliveryTypes: "Виды доставки",
     deliveryOptions: [
-      "Авиа – 8–15 дней",
-      "Море – 55–65 дней",
-      "Поезд (ЕС) – 30–35 дней",
+      { type: "Авиа", days: "8–15 дней", icon: "/calculator/air-delivery.svg" },
+      { type: "Море", days: "55–65 дней", icon: "/calculator/sea-delivery.svg" },
+      { type: "Поезд (ЕС)", days: "30–35 дней", icon: "/calculator/rail-delivery.svg" },
     ],
     cta: "Готовы доставить ваш товар на FBA? Свяжитесь с нами — сделаем точный расчет под вашу партию.",
   },
@@ -88,9 +88,9 @@ const fbaContent = {
     ],
     deliveryTypes: "Delivery types",
     deliveryOptions: [
-      "Air – 8–15 days",
-      "Sea – 55–65 days",
-      "Train (EU) – 30–35 days",
+      { type: "Air", days: "8–15 days", icon: "/calculator/air-delivery.svg" },
+      { type: "Sea", days: "55–65 days", icon: "/calculator/sea-delivery.svg" },
+      { type: "Train (EU)", days: "30–35 days", icon: "/calculator/rail-delivery.svg" },
     ],
     cta: "Ready to deliver your goods to FBA? Contact us — we'll make an accurate calculation for your batch.",
   },
@@ -578,64 +578,103 @@ export default async function EuWorldPage({
                 {/* FBA Delivery */}
                 <section id="fba" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{fbaData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{fbaData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
-                    <div>
-                      <p className="text-lg sm:text-xl text-gray-600 break-words mb-6">{fbaData.subtitle}</p>
-                      <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
-                        <p className="text-base sm:text-lg text-gray-700 break-words">{fbaData.intro}</p>
-                      </div>
-                    </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/multimodal.svg"
-                          alt="FBA"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
+                  {/* Intro */}
+                  <div className="mb-8">
+                    <p className="text-lg sm:text-xl text-gray-600 break-words mb-6 text-center">{fbaData.subtitle}</p>
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                      <p className="text-base sm:text-lg text-gray-700 break-words">{fbaData.intro}</p>
                     </div>
                   </div>
 
-                  <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl bg-white p-4 sm:p-6">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{fbaData.whatIncludes}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {fbaData.services.map((service, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
+                  {/* Що може входити у нашу послугу */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{fbaData.whatIncludes}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {fbaData.services.slice(0, 2).map((service, index) => (
+                          <li key={index} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
-                    </div>
-                    <div className="rounded-2xl bg-white p-4 sm:p-6">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{fbaData.advantages}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {fbaData.advantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {fbaData.services.slice(2, 4).map((service, index) => (
+                          <li key={index + 2} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {fbaData.services.slice(4).map((service, index) => (
+                          <li key={index + 4} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{fbaData.deliveryTypes}</h3>
-                    <ul className="space-y-2">
+                  {/* Наші переваги */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{fbaData.advantages}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {fbaData.advantagesList.slice(0, 2).map((advantage, index) => (
+                          <li key={index} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {fbaData.advantagesList.slice(2, 4).map((advantage, index) => (
+                          <li key={index + 2} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {fbaData.advantagesList.slice(4).map((advantage, index) => (
+                          <li key={index + 4} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Види доставки */}
+                  <div className="mb-8">
+                    <h3 className="mb-8 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{fbaData.deliveryTypes}</h3>
+                    <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
                       {fbaData.deliveryOptions.map((option, index) => (
-                        <li key={index} className="text-sm sm:text-base text-gray-700 break-words">{option}</li>
+                        <div key={index} className="flex items-center gap-1.5 sm:gap-3 md:gap-4">
+                          <div className="relative w-6 h-6 sm:w-10 sm:h-10 md:w-12 md:h-12 flex-shrink-0">
+                            <Image
+                              src={option.icon}
+                              alt={option.type}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-xs sm:text-base md:text-lg font-semibold text-gray-900 mb-0.5 sm:mb-1">{option.type}</p>
+                            <p className="text-[10px] sm:text-sm md:text-base text-gray-600">{option.days}</p>
+                          </div>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
 
                   <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
-                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                    <p className="mb-2 text-2xl sm:text-3xl font-bold text-[#006D77] break-words" style={{ fontFamily: 'Unbounded' }}>
                       {fbaData.cta.includes('?') ? fbaData.cta.split('?')[0] + '?' : fbaData.cta}
                     </p>
                     {fbaData.cta.includes('?') && (
@@ -649,10 +688,10 @@ export default async function EuWorldPage({
                 {/* DDP/DDU Delivery */}
                 <section id="ddp" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{ddpData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{ddpData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                  {/* Intro */}
+                  <div className="mb-8">
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">
                         {locale === "ua" && "Комплексна доставка з повним супроводом та оформленням всієї документації."}
@@ -660,23 +699,15 @@ export default async function EuWorldPage({
                         {locale === "en" && "Comprehensive delivery with full support and processing of all documentation."}
                       </p>
                     </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/multimodal.svg"
-                          alt="DDP/DDU"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    </div>
                   </div>
                   
                   {/* DDU Section */}
+                  <div className="mb-8">
+                    <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words text-center">{ddpData.dduTitle}</h3>
+                    <p className="mb-8 text-base sm:text-lg text-gray-600 break-words text-center">{ddpData.dduIntro}</p>
+                  </div>
+                  
                   <div className="mb-12 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words">{ddpData.dduTitle}</h3>
-                    <p className="mb-8 text-base sm:text-lg text-gray-600 break-words">{ddpData.dduIntro}</p>
-                    
                     <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
                       <div>
                         <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words">{ddpData.dduWhatIncludes}</h4>
@@ -716,37 +747,41 @@ export default async function EuWorldPage({
                   </div>
 
                   {/* DDP Section */}
+                  <div className="mb-8">
+                    <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words text-center">{ddpData.ddpTitle}</h3>
+                    <p className="mb-8 text-base sm:text-lg text-gray-600 break-words text-center">{ddpData.ddpIntro}</p>
+                  </div>
+                  
                   <div className="group mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpTitle}</h3>
-                    <p className="mb-8 text-base sm:text-lg text-gray-600 break-words">{ddpData.ddpIntro}</p>
-                    
-                    <div className="mb-8">
-                      <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpWhatIncludes}</h4>
-                      <ul className="space-y-2">
-                        {ddpData.ddpServices.map((service, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div>
-                      <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpAdvantages}</h4>
-                      <ul className="space-y-2">
-                        {ddpData.ddpAdvantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
+                      <div>
+                        <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpWhatIncludes}</h4>
+                        <ul className="space-y-2">
+                          {ddpData.ddpServices.map((service, index) => (
+                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                              <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      <div>
+                        <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpAdvantages}</h4>
+                        <ul className="space-y-2">
+                          {ddpData.ddpAdvantagesList.map((advantage, index) => (
+                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                              <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                   </div>
 
                   <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
-                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                    <p className="mb-2 text-2xl sm:text-3xl font-bold text-[#006D77] break-words" style={{ fontFamily: 'Unbounded' }}>
                       {ddpData.cta.includes('?') ? ddpData.cta.split('?')[0] + '?' : ddpData.cta}
                     </p>
                     {ddpData.cta.includes('?') && (
@@ -760,69 +795,113 @@ export default async function EuWorldPage({
                 {/* Express Delivery */}
                 <section id="express" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{expressData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{expressData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
-                    <div>
-                      <p className="mb-2 text-lg sm:text-xl text-gray-600 break-words">{expressData.subtitle}</p>
-                      <p className="mb-6 text-base sm:text-lg text-gray-500 break-words">{expressData.intro}</p>
-                      <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
-                        <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.whatIs}</h3>
-                        <p className="text-base sm:text-lg text-gray-700 break-words">{expressData.description}</p>
-                      </div>
-                    </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/air.svg"
-                          alt="Express"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
+                  {/* Intro */}
+                  <div className="mb-8">
+                    <p className="mb-2 text-lg sm:text-xl text-gray-600 break-words text-center">{expressData.subtitle}</p>
+                    <p className="mb-6 text-base sm:text-lg text-gray-500 break-words">{expressData.intro}</p>
+                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                        <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{expressData.whatIs}</h3>
+                      <p className="text-base sm:text-lg text-gray-700 break-words">{expressData.description}</p>
                     </div>
                   </div>
 
-                  <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl bg-white p-4 sm:p-6">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{expressData.advantages}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {expressData.advantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
+                  {/* Переваги Express Air */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{expressData.advantages}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.advantagesList.slice(0, 2).map((advantage, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
                           </li>
                         ))}
                       </ul>
-                    </div>
-                    <div className="rounded-2xl bg-white p-4 sm:p-6">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{expressData.whatWeDo}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {expressData.services.map((service, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.advantagesList.slice(2, 4).map((advantage, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.advantagesList.slice(4).map((advantage, index) => (
+                          <li key={index + 4} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{expressData.forWhom}</h3>
-                    <ul className="space-y-2">
-                      {expressData.clients.map((client, index) => (
-                        <li key={index} className="flex items-center gap-2 sm:gap-3">
-                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                          <span className="text-sm sm:text-base text-gray-900 break-words">{client}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  {/* Що ми робимо */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{expressData.whatWeDo}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.services.slice(0, 1).map((service, index) => (
+                          <li key={index} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.services.slice(1, 2).map((service, index) => (
+                          <li key={index + 1} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.services.slice(2).map((service, index) => (
+                          <li key={index + 2} className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Для кого підходить */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{expressData.forWhom}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.clients.slice(0, 2).map((client, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.clients.slice(2, 3).map((client, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {expressData.clients.slice(3).map((client, index) => (
+                          <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
 
                   <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
-                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                    <p className="mb-2 text-2xl sm:text-3xl font-bold text-[#006D77] break-words" style={{ fontFamily: 'Unbounded' }}>
                       {expressData.cta.includes('?') ? expressData.cta.split('?')[0] + '?' : expressData.cta}
                     </p>
                     {expressData.cta.includes('?') && (
@@ -836,28 +915,18 @@ export default async function EuWorldPage({
                 {/* Port-to-Port */}
                 <section id="port-to-port" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{portToPortData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{portToPortData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                  {/* Intro */}
+                  <div className="mb-8">
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{portToPortData.intro}</p>
-                    </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/sea.svg"
-                          alt="Port to Port"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
                     </div>
                   </div>
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{portToPortData.whatIncludes}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{portToPortData.whatIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {portToPortData.services.map((service, index) => (
                           <li key={index} className="flex items-center gap-2 sm:gap-3">
@@ -868,7 +937,7 @@ export default async function EuWorldPage({
                       </ul>
                     </div>
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{portToPortData.whatNotIncludes}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{portToPortData.whatNotIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {portToPortData.notIncluded.map((item, index) => (
                           <li key={index} className="flex items-start gap-2 sm:gap-3">
@@ -880,23 +949,62 @@ export default async function EuWorldPage({
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{portToPortData.forWhom}</h3>
-                    <ul className="space-y-2 mb-6">
-                      {portToPortData.clients.map((client, index) => (
-                        <li key={index} className="flex items-center gap-2 sm:gap-3">
-                          <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                          <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div>
-                      <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words">{portToPortData.advantages}</h4>
-                      <ul className="space-y-2">
-                        {portToPortData.advantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
+                  {/* Кому підходить */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{portToPortData.forWhom}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {portToPortData.clients.slice(0, 1).map((client, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {portToPortData.clients.slice(1, 2).map((client, index) => (
+                          <li key={index + 1} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {portToPortData.clients.slice(2).map((client, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Переваги */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{portToPortData.advantages}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {portToPortData.advantagesList.slice(0, 1).map((advantage, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {portToPortData.advantagesList.slice(1, 2).map((advantage, index) => (
+                          <li key={index + 1} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {portToPortData.advantagesList.slice(2).map((advantage, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
                           </li>
                         ))}
                       </ul>
@@ -904,7 +1012,7 @@ export default async function EuWorldPage({
                   </div>
 
                   <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
-                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                    <p className="mb-2 text-2xl sm:text-3xl font-bold text-[#006D77] break-words" style={{ fontFamily: 'Unbounded' }}>
                       {portToPortData.cta.includes('?') ? portToPortData.cta.split('?')[0] + '?' : portToPortData.cta}
                     </p>
                     {portToPortData.cta.includes('?') && (
@@ -918,66 +1026,166 @@ export default async function EuWorldPage({
                 {/* Cross-Border */}
                 <section id="cross-border" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{crossBorderData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{crossBorderData.title}</h2>
 
-                  {/* Intro with Large Icon */}
-                  <div className="grid gap-6 md:grid-cols-2 items-center mb-8">
+                  {/* Intro */}
+                  <div className="mb-8">
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{crossBorderData.intro}</p>
                     </div>
-                    <div className="flex justify-start">
-                      <div className="relative w-full max-w-sm h-64">
-                        <Image
-                          src="/delivery_types/icons/multimodal.svg"
-                          alt="Cross-Border"
-                          fill
-                          className="object-contain"
-                        />
+                  </div>
+
+                  <div className="mb-8">
+                    <h3 className="mb-8 sm:mb-12 text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-gray-900 text-center break-words">{crossBorderData.howItWorks}</h3>
+                    
+                    {/* Process Timeline */}
+                    <div className="relative">
+                      {/* Mobile Version - Vertical Timeline */}
+                      <div className="relative md:hidden">
+                        <div className="relative pl-6">
+                          {/* Vertical Line - positioned to go through circle centers */}
+                          <div className="absolute left-[25px] top-0 bottom-0 w-0.5 bg-slate-300" />
+                          
+                          {/* Steps with Circles */}
+                          {crossBorderData.steps.map((step, index) => (
+                            <div key={index} className="relative pb-6 last:pb-0">
+                              {/* Circle on Line */}
+                              <div className="absolute left-[2px] top-0 -translate-x-1/2 z-10">
+                                <div className="h-5 w-5 rounded-full border-2 border-slate-900 bg-white flex items-center justify-center">
+                                  <div className="h-2 w-2 rounded-full bg-slate-900" />
+                                </div>
+                              </div>
+                              
+                              {/* Step Content */}
+                              <div className="pl-4">
+                                <div className="mb-1">
+                                  <span className="text-xs font-semibold text-slate-900">
+                                    {locale === "ua" ? "Крок" : locale === "ru" ? "Шаг" : "Step"} {index + 1}
+                                  </span>
+                                </div>
+                                <h4 className="text-sm font-semibold text-slate-900 leading-relaxed break-words">
+                                  {step}
+                                </h4>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Desktop Version - Horizontal Timeline */}
+                      <div className="relative hidden md:block mb-12">
+                        {/* Main Horizontal Line */}
+                        <div className="absolute top-6 left-0 right-0 h-0.5 bg-slate-300" />
+                        
+                        {/* Steps with Circles on Line */}
+                        <div className="relative grid grid-cols-5">
+                          {crossBorderData.steps.map((step, index) => (
+                            <div key={index} className="relative flex flex-col items-center">
+                              {/* Empty Circle on Line */}
+                              <div className="absolute top-6 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                                <div className="h-4 w-4 rounded-full border-2 border-slate-900 bg-white" />
+                              </div>
+                            </div>
+                          ))}
+                          
+                          {/* Arrow at the end */}
+                          <div className="absolute top-6 right-0 -translate-y-1/2 z-10">
+                            <div className="h-4 w-4 rounded-full border-2 border-slate-900 bg-white flex items-center justify-center">
+                              <svg className="h-2.5 w-2.5 text-slate-900" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Steps Content - Desktop only */}
+                      <div className="hidden md:grid gap-6 md:grid-cols-5">
+                        {crossBorderData.steps.map((step, index) => (
+                          <div key={index} className="relative flex flex-col items-center text-center">
+                            {/* Step Number Label */}
+                            <div className="mb-3">
+                              <span className="text-sm font-semibold text-slate-900">
+                                {locale === "ua" ? "Крок" : locale === "ru" ? "Шаг" : "Step"} {index + 1}
+                              </span>
+                            </div>
+                            
+                            {/* Step Content */}
+                            <div>
+                              <h4 className="text-base font-semibold text-slate-900 leading-relaxed break-words">
+                                {step}
+                              </h4>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
 
-                  <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
-                    <div className="rounded-2xl bg-white p-4 sm:p-6">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{crossBorderData.advantages}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {crossBorderData.advantagesList.map((advantage, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
+                  {/* Переваги Cross-Border */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{crossBorderData.advantages}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {crossBorderData.advantagesList.slice(0, 2).map((advantage, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
                           </li>
                         ))}
                       </ul>
-                    </div>
-                    <div className="rounded-2xl bg-white p-4 sm:p-6">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-teal-600 break-words">{crossBorderData.forWhom}</h3>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {crossBorderData.clients.map((client, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                            <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {crossBorderData.advantagesList.slice(2, 3).map((advantage, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {crossBorderData.advantagesList.slice(3).map((advantage, index) => (
+                          <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 md:h-7 md:w-7 flex-shrink-0 text-teal-600 mt-0.5" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{advantage}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
 
-                  <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-6 text-xl sm:text-2xl font-semibold text-gray-900 break-words">{crossBorderData.howItWorks}</h3>
-                    <ol className="space-y-3 sm:space-y-4">
-                      {crossBorderData.steps.map((step, index) => (
-                        <li key={index} className="flex items-start gap-3 sm:gap-4">
-                          <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-teal-500 text-white text-sm sm:text-base font-semibold flex-shrink-0">
-                            {index + 1}
-                          </span>
-                          <span className="pt-1 text-sm sm:text-base text-gray-600 break-words">{step}</span>
-                        </li>
-                      ))}
-                    </ol>
+                  {/* Кому підходить */}
+                  <div className="mb-12">
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{crossBorderData.forWhom}</h3>
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {crossBorderData.clients.slice(0, 2).map((client, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {crossBorderData.clients.slice(2, 3).map((client, index) => (
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="space-y-2 sm:space-y-3 md:space-y-4">
+                        {crossBorderData.clients.slice(3).map((client, index) => (
+                          <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
 
                   <div className="mb-8 rounded-2xl bg-white p-4 sm:p-6 md:p-8 text-center">
-                    <p className="mb-2 text-xl sm:text-2xl font-bold text-teal-600 break-words">
+                    <p className="mb-2 text-2xl sm:text-3xl font-bold text-[#006D77] break-words" style={{ fontFamily: 'Unbounded' }}>
                       {crossBorderData.cta.includes('?') ? crossBorderData.cta.split('?')[0] + '?' : crossBorderData.cta}
                     </p>
                     {crossBorderData.cta.includes('?') && (

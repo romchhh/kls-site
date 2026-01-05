@@ -28,7 +28,7 @@ const content = {
       },
       {
         title: "Дрібні та великогабаритні поставки",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/insurance-icons/luggage.svg",
         items: ["малі пакунки", "великогабаритні вантажі", "спеціальні умови транспортування"],
       },
     ],
@@ -61,17 +61,17 @@ const content = {
       {
         title: "Втрата або недостача",
         text: "Компенсація у разі часткової чи повної втрати.",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/insurance-icons/loss.svg",
       },
       {
         title: "Крадіжка або шахрайські дії",
         text: "Захист у випадку інцидентів на всіх етапах маршруту.",
-        icon: "/why-choose-us/quality.svg",
+        icon: "/services/insurance-icons/theft.svg",
       },
       {
         title: "Ризики форс-мажору",
         text: "Пожежа, повінь, аварія транспорту, стихійні явища.",
-        icon: "/why-choose-us/support-24-7.svg",
+        icon: "/services/insurance-icons/force-majeure.svg",
       },
     ],
     advantages: "Переваги нашого страхування",
@@ -140,7 +140,7 @@ const content = {
       },
       {
         title: "Мелкие и крупногабаритные поставки",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/insurance-icons/luggage.svg",
         items: ["малые пакеты", "крупногабаритные грузы", "специальные условия транспортировки"],
       },
     ],
@@ -173,17 +173,17 @@ const content = {
       {
         title: "Потеря или недостача",
         text: "Компенсация в случае частичной или полной потери.",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/insurance-icons/loss.svg",
       },
       {
         title: "Кража или мошеннические действия",
         text: "Защита в случае инцидентов на всех этапах маршрута.",
-        icon: "/why-choose-us/quality.svg",
+        icon: "/services/insurance-icons/theft.svg",
       },
       {
         title: "Риски форс-мажора",
         text: "Пожар, наводнение, авария транспорта, стихийные явления.",
-        icon: "/why-choose-us/support-24-7.svg",
+        icon: "/services/insurance-icons/force-majeure.svg",
       },
     ],
     advantages: "Преимущества нашего страхования",
@@ -252,7 +252,7 @@ const content = {
       },
       {
         title: "Small and oversized shipments",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/insurance-icons/luggage.svg",
         items: ["small packages", "oversized cargo", "special transportation conditions"],
       },
     ],
@@ -285,17 +285,17 @@ const content = {
       {
         title: "Loss or Shortage",
         text: "Compensation in case of partial or complete loss.",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/insurance-icons/loss.svg",
       },
       {
         title: "Theft or Fraud",
         text: "Protection in case of incidents at all stages of the route.",
-        icon: "/why-choose-us/quality.svg",
+        icon: "/services/insurance-icons/theft.svg",
       },
       {
         title: "Force Majeure Risks",
         text: "Fire, flood, transport accident, natural disasters.",
-        icon: "/why-choose-us/support-24-7.svg",
+        icon: "/services/insurance-icons/force-majeure.svg",
       },
     ],
     advantages: "Advantages of our insurance",
@@ -360,7 +360,7 @@ export default async function InsurancePage({
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+            src="/images/services/insurance.jpg"
             alt="KLS Logistics"
             fill
             className="object-cover"

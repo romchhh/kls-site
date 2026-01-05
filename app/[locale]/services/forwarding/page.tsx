@@ -13,7 +13,7 @@ const content = {
     services: [
       {
         title: "Організація перевезень будь-якими видами транспорту",
-        icon: "/services/forwarding.svg",
+        icon: "/services/forwarding-icons/advantages.svg",
         items: [
       "морські (FCL / LCL)",
       "авіа",
@@ -23,7 +23,7 @@ const content = {
       },
       {
         title: "Забір та передача вантажу",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/forwarding-icons/door-to-door.svg",
         items: [
       "координація транспорту для забору",
       "доставка на склади консолідації та термінали",
@@ -32,7 +32,7 @@ const content = {
       },
       {
         title: "Контроль документів та оформлення",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/forwarding-icons/reliability.svg",
         items: [
       "перевірка комерційних документів",
       "координація із митними брокерами",
@@ -41,7 +41,7 @@ const content = {
       },
       {
         title: "Моніторинг та відстеження",
-        icon: "/why-choose-us/support-24-7.svg",
+        icon: "/services/forwarding-icons/monitoring.svg",
         items: [
       "повне відстеження маршруту",
       "інформування клієнта про всі статуси",
@@ -50,7 +50,7 @@ const content = {
       },
       {
         title: "Супровід на митних процедурах",
-        icon: "/services/customs.svg",
+        icon: "/services/forwarding-icons/customs-brokerage-services.svg",
         items: [
       "організація оглядів",
       "обробка запитів від митниці",
@@ -59,7 +59,7 @@ const content = {
       },
       {
         title: "Організація складських операцій",
-        icon: "/services/warehousing.svg",
+        icon: "/services/forwarding-icons/luggage.svg",
         items: [
       "консолідація",
       "пакування й перепакування",
@@ -91,7 +91,7 @@ const content = {
     services: [
       {
         title: "Организация перевозок любыми видами транспорта",
-        icon: "/services/forwarding.svg",
+        icon: "/services/forwarding-icons/advantages.svg",
         items: [
       "морские (FCL / LCL)",
       "авиа",
@@ -101,7 +101,7 @@ const content = {
       },
       {
         title: "Забор и передача груза",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/forwarding-icons/door-to-door.svg",
         items: [
       "координация транспорта для забора",
       "доставка на склады консолидации и терминалы",
@@ -110,7 +110,7 @@ const content = {
       },
       {
         title: "Контроль документов и оформление",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/forwarding-icons/reliability.svg",
         items: [
       "проверка коммерческих документов",
       "координация с таможенными брокерами",
@@ -119,7 +119,7 @@ const content = {
       },
       {
         title: "Мониторинг и отслеживание",
-        icon: "/why-choose-us/support-24-7.svg",
+        icon: "/services/forwarding-icons/monitoring.svg",
         items: [
       "полное отслеживание маршрута",
       "информирование клиента о всех статусах",
@@ -128,7 +128,7 @@ const content = {
       },
       {
         title: "Сопровождение на таможенных процедурах",
-        icon: "/services/customs.svg",
+        icon: "/services/forwarding-icons/customs-brokerage-services.svg",
         items: [
       "организация осмотров",
       "обработка запросов от таможни",
@@ -137,7 +137,7 @@ const content = {
       },
       {
         title: "Организация складских операций",
-        icon: "/services/warehousing.svg",
+        icon: "/services/forwarding-icons/luggage.svg",
         items: [
       "консолидация",
       "упаковка и переупаковка",
@@ -169,7 +169,7 @@ const content = {
     services: [
       {
         title: "Organization of Transportation by Any Type of Transport",
-        icon: "/services/forwarding.svg",
+        icon: "/services/forwarding-icons/advantages.svg",
         items: [
       "sea (FCL / LCL)",
       "air",
@@ -179,7 +179,7 @@ const content = {
       },
       {
         title: "Cargo Pickup and Transfer",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/forwarding-icons/door-to-door.svg",
         items: [
       "transport coordination for pickup",
       "delivery to consolidation warehouses and terminals",
@@ -188,7 +188,7 @@ const content = {
       },
       {
         title: "Document Control and Processing",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/forwarding-icons/reliability.svg",
         items: [
       "verification of commercial documents",
       "coordination with customs brokers",
@@ -197,7 +197,7 @@ const content = {
       },
       {
         title: "Monitoring and Tracking",
-        icon: "/why-choose-us/support-24-7.svg",
+        icon: "/services/forwarding-icons/monitoring.svg",
         items: [
       "full route tracking",
       "informing client about all statuses",
@@ -206,7 +206,7 @@ const content = {
       },
       {
         title: "Support at Customs Procedures",
-        icon: "/services/customs.svg",
+        icon: "/services/forwarding-icons/customs-brokerage-services.svg",
         items: [
       "organization of inspections",
       "processing of customs requests",
@@ -215,7 +215,7 @@ const content = {
       },
       {
         title: "Organization of Warehouse Operations",
-        icon: "/services/warehousing.svg",
+        icon: "/services/forwarding-icons/luggage.svg",
         items: [
       "consolidation",
       "packaging and repackaging",
@@ -258,7 +258,7 @@ export default async function ForwardingPage({
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+            src="/images/services/expediting.jpg"
             alt="KLS Logistics"
             fill
             className="object-cover"

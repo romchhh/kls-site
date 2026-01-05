@@ -13,7 +13,7 @@ const content = {
     services: [
       {
         title: "Оформлення митних декларацій",
-        icon: "/services/customs.svg",
+        icon: "/services/customs-icons/customs-brokerage-services.svg",
         items: [
       "імпортні та експортні декларації",
       "попередні декларації",
@@ -22,7 +22,7 @@ const content = {
       },
       {
         title: "Сертифікати та дозвільні документи",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/customs-icons/transparency.svg",
         items: [
       "сертифікати відповідності",
       "фітосанітарні та ветеринарні сертифікати",
@@ -31,7 +31,7 @@ const content = {
       },
       {
         title: "Підготовка та перевірка документів",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/customs-icons/customs-clearance.svg",
         items: [
       "інвойси, пакувальні листи, контракти",
       "сертифікати відповідності, CO, дозвільні документи",
@@ -40,7 +40,7 @@ const content = {
       },
       {
         title: "Визначення кодів УКТЗЕД",
-        icon: "/why-choose-us/quick-calculation.svg",
+        icon: "/services/customs-icons/customs-clearance.svg",
         items: [
       "коректний підбір коду товару",
       "мінімізація ризиків штрафів та затримок",
@@ -49,7 +49,7 @@ const content = {
       },
       {
         title: "Розрахунок митних платежів",
-        icon: "/why-choose-us/affordable-prices.svg",
+        icon: "/services/customs-icons/affordable-prices.svg",
         items: [
       "мито, ПДВ, акциз",
       "передача точних розрахунків перед оформленням",
@@ -58,7 +58,7 @@ const content = {
       },
       {
         title: "Супровід вантажу на митниці",
-        icon: "/why-choose-us/personal-manager.svg",
+        icon: "/services/customs-icons/luggage.svg",
         items: [
       "координація з митними органами",
       "термінове вирішення питань",
@@ -90,7 +90,7 @@ const content = {
     services: [
       {
         title: "Оформление таможенных деклараций",
-        icon: "/services/customs.svg",
+        icon: "/services/customs-icons/customs-brokerage-services.svg",
         items: [
       "импортные и экспортные декларации",
       "предварительные декларации",
@@ -99,7 +99,7 @@ const content = {
       },
       {
         title: "Сертификаты и разрешительные документы",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/customs-icons/transparency.svg",
         items: [
       "сертификаты соответствия",
       "фитосанитарные и ветеринарные сертификаты",
@@ -108,7 +108,7 @@ const content = {
       },
       {
         title: "Подготовка и проверка документов",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/customs-icons/customs-clearance.svg",
         items: [
       "инвойсы, упаковочные листы, контракты",
       "сертификаты соответствия, CO, разрешительные документы",
@@ -117,7 +117,7 @@ const content = {
       },
       {
         title: "Определение кодов УКТЗЕД",
-        icon: "/why-choose-us/quick-calculation.svg",
+        icon: "/services/customs-icons/customs-clearance.svg",
         items: [
       "корректный подбор кода товара",
       "минимизация рисков штрафов и задержек",
@@ -126,7 +126,7 @@ const content = {
       },
       {
         title: "Расчет таможенных платежей",
-        icon: "/why-choose-us/affordable-prices.svg",
+        icon: "/services/customs-icons/affordable-prices.svg",
         items: [
       "пошлина, НДС, акциз",
       "передача точных расчетов перед оформлением",
@@ -135,7 +135,7 @@ const content = {
       },
       {
         title: "Сопровождение груза на таможне",
-        icon: "/why-choose-us/personal-manager.svg",
+        icon: "/services/customs-icons/luggage.svg",
         items: [
       "координация с таможенными органами",
       "срочное решение вопросов",
@@ -167,7 +167,7 @@ const content = {
     services: [
       {
         title: "Customs Declaration Processing",
-        icon: "/services/customs.svg",
+        icon: "/services/customs-icons/customs-brokerage-services.svg",
         items: [
       "import and export declarations",
       "preliminary declarations",
@@ -176,7 +176,7 @@ const content = {
       },
       {
         title: "Certificates and Permits",
-        icon: "/why-choose-us/transparency.svg",
+        icon: "/services/customs-icons/transparency.svg",
         items: [
       "certificates of conformity",
       "phytosanitary and veterinary certificates",
@@ -185,7 +185,7 @@ const content = {
       },
       {
         title: "Document Preparation and Verification",
-        icon: "/why-choose-us/reliability.svg",
+        icon: "/services/customs-icons/customs-clearance.svg",
         items: [
       "invoices, packing lists, contracts",
       "certificates of conformity, CO, permits",
@@ -194,7 +194,7 @@ const content = {
       },
       {
         title: "HS Code Determination",
-        icon: "/why-choose-us/quick-calculation.svg",
+        icon: "/services/customs-icons/customs-clearance.svg",
         items: [
       "correct product code selection",
       "minimization of fine and delay risks",
@@ -203,7 +203,7 @@ const content = {
       },
       {
         title: "Customs Payment Calculation",
-        icon: "/why-choose-us/affordable-prices.svg",
+        icon: "/services/customs-icons/affordable-prices.svg",
         items: [
       "duty, VAT, excise",
           "accurate calculation transfer before clearance",
@@ -212,7 +212,7 @@ const content = {
       },
       {
         title: "Cargo Support at Customs",
-        icon: "/why-choose-us/personal-manager.svg",
+        icon: "/services/customs-icons/luggage.svg",
         items: [
       "coordination with customs authorities",
       "urgent issue resolution",
@@ -255,7 +255,7 @@ export default async function CustomsPage({
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+            src="/images/services/customs-brokerage.jpg"
             alt="KLS Logistics"
             fill
             className="object-cover"

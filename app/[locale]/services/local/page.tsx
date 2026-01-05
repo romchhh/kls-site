@@ -13,7 +13,7 @@ const content = {
     services: [
       {
         title: "Забір товару від виробників та постачальників",
-        icon: "/services/local.svg",
+        icon: "/services/local-icons/cargo-forwarding.svg",
         items: [
       "виїзд на фабрики, заводи та склади",
       "перевірка вантажу під час забору (за потреби)",
@@ -22,7 +22,7 @@ const content = {
       },
       {
         title: "Доставка до консолідаційних складів",
-        icon: "/services/warehousing.svg",
+        icon: "/services/local-icons/luggage.svg",
         items: [
       "переміщення товарів між складами",
       "підготовка до міжнародної відправки",
@@ -31,7 +31,7 @@ const content = {
       },
       {
         title: "Міська та міжміська доставка",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/local-icons/direct-route.svg",
         items: [
       "оперативна доставка в межах одного міста",
       "міжнародні хаби: Гуанчжоу, Іу, Шеньчжень, Шанхай, Нінбо, Пекін",
@@ -40,7 +40,7 @@ const content = {
       },
       {
         title: "Доставка на морські, авіа та ж/д термінали",
-        icon: "/why-choose-us/global-network.svg",
+        icon: "/services/local-icons/multimodal-transportation.svg",
         items: [
       "доставка в порти та аеропорти для експорту",
       "доставка до ж/д станцій для відправок у Європу",
@@ -91,7 +91,7 @@ const content = {
     services: [
       {
         title: "Забор товара от производителей и поставщиков",
-        icon: "/services/local.svg",
+        icon: "/services/local-icons/cargo-forwarding.svg",
         items: [
       "выезд на фабрики, заводы и склады",
       "проверка груза при заборе (при необходимости)",
@@ -100,7 +100,7 @@ const content = {
       },
       {
         title: "Доставка до консолидационных складов",
-        icon: "/services/warehousing.svg",
+        icon: "/services/local-icons/luggage.svg",
         items: [
       "перемещение товаров между складами",
       "подготовка к международной отправке",
@@ -109,7 +109,7 @@ const content = {
       },
       {
         title: "Городская и междугородняя доставка",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/local-icons/direct-route.svg",
         items: [
       "оперативная доставка в пределах одного города",
       "международные хабы: Гуанчжоу, Иу, Шэньчжэнь, Шанхай, Нинбо, Пекин",
@@ -118,7 +118,7 @@ const content = {
       },
       {
         title: "Доставка на морские, авиа и ж/д терминалы",
-        icon: "/why-choose-us/global-network.svg",
+        icon: "/services/local-icons/multimodal-transportation.svg",
         items: [
       "доставка в порты и аэропорты для экспорта",
       "доставка до ж/д станций для отправок в Европу",
@@ -169,7 +169,7 @@ const content = {
     services: [
       {
         title: "Product Pickup from Manufacturers and Suppliers",
-        icon: "/services/local.svg",
+        icon: "/services/local-icons/cargo-forwarding.svg",
         items: [
       "visits to factories, plants and warehouses",
       "cargo verification during pickup (if needed)",
@@ -178,7 +178,7 @@ const content = {
       },
       {
         title: "Delivery to Consolidation Warehouses",
-        icon: "/services/warehousing.svg",
+        icon: "/services/local-icons/luggage.svg",
         items: [
       "movement of goods between warehouses",
       "preparation for international shipment",
@@ -187,7 +187,7 @@ const content = {
       },
       {
         title: "City and Intercity Delivery",
-        icon: "/why-choose-us/fast-delivery.svg",
+        icon: "/services/local-icons/direct-route.svg",
         items: [
       "operational delivery within one city",
       "international hubs: Guangzhou, Yiwu, Shenzhen, Shanghai, Ningbo, Beijing",
@@ -196,7 +196,7 @@ const content = {
       },
       {
         title: "Delivery to Sea, Air and Rail Terminals",
-        icon: "/why-choose-us/global-network.svg",
+        icon: "/services/local-icons/multimodal-transportation.svg",
         items: [
       "delivery to ports and airports for export",
       "delivery to rail stations for shipments to Europe",
@@ -258,7 +258,7 @@ export default async function LocalPage({
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
+            src="/images/services/local-delivery.jpg"
             alt="KLS Logistics"
             fill
             className="object-cover"
