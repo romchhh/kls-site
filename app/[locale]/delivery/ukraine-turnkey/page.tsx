@@ -468,7 +468,7 @@ export default async function UkraineTurnkeyPage({
                         <p className="text-sm sm:text-base md:text-lg text-gray-700 break-words">{seaData.intro}</p>
                       </div>
                     </div>
-                    <div className="flex justify-start">
+                    <div className="flex justify-center md:justify-start">
                       <div className="relative w-full max-w-sm h-48 sm:h-56 md:h-64">
                         <Image
                           src="/delivery_types/icons/sea.svg"
@@ -535,7 +535,7 @@ export default async function UkraineTurnkeyPage({
                         <p className="text-sm sm:text-base md:text-lg text-gray-700 break-words">{airData.intro}</p>
                       </div>
                     </div>
-                    <div className="flex justify-start">
+                    <div className="flex justify-center md:justify-start">
                       <div className="relative w-full max-w-sm h-48 sm:h-56 md:h-64">
                         <Image
                           src="/delivery_types/icons/air.svg"
@@ -602,7 +602,7 @@ export default async function UkraineTurnkeyPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-3 sm:p-4 md:p-6 lg:p-8">
                       <p className="text-sm sm:text-base md:text-lg text-gray-700 break-words">{railData.intro}</p>
                     </div>
-                    <div className="flex justify-start">
+                    <div className="flex justify-center md:justify-start">
                       <div className="relative w-full max-w-sm h-48 sm:h-56 md:h-64">
                         <Image
                           src="/delivery_types/icons/rail.svg"
@@ -666,7 +666,7 @@ export default async function UkraineTurnkeyPage({
                         <p className="text-sm sm:text-base md:text-lg text-gray-700 break-words">{multimodalData.description}</p>
                       </div>
                     </div>
-                    <div className="flex justify-start">
+                    <div className="flex justify-center md:justify-start">
                       <div className="relative w-full max-w-sm h-48 sm:h-56 md:h-64">
                         <Image
                           src="/delivery_types/icons/multimodal.svg"
