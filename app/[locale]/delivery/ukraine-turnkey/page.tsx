@@ -595,7 +595,7 @@ export default async function UkraineTurnkeyPage({
                 {/* Rail Transportation */}
                 <section id="rail" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{railData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{railData.title}</h2>
                   
                   {/* Green Info Block with Large Icon */}
                   <div className="grid gap-4 sm:gap-6 md:grid-cols-2 items-center mb-6 sm:mb-8">
@@ -617,7 +617,7 @@ export default async function UkraineTurnkeyPage({
                   {/* What We Do and For Whom - 2 columns */}
                   <div className="mb-8 grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 md:grid-cols-2">
                     <div>
-                      <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-[#006D77] break-words">{railData.whatWeDo}</h3>
+                      <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 break-words">{railData.whatWeDo}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {railData.services.map((service, index) => (
                           <li key={index} className="flex items-center gap-2 sm:gap-3">
@@ -628,11 +628,11 @@ export default async function UkraineTurnkeyPage({
                       </ul>
                     </div>
                     <div>
-                      <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-[#006D77] break-words">{railData.forWhom}</h3>
+                      <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 break-words">{railData.forWhom}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {railData.clients.map((client, index) => (
                           <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-0.5 sm:mt-1 text-slate-900 flex-shrink-0 font-bold text-sm sm:text-base">•</span>
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1.5 sm:mt-2" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{client}</span>
                           </li>
                         ))}
@@ -656,7 +656,7 @@ export default async function UkraineTurnkeyPage({
                 {/* Multimodal Transportation */}
                 <section id="multimodal" className="scroll-mt-32">
                   {/* Title */}
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words">{multimodalData.title}</h2>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-8 break-words text-center">{multimodalData.title}</h2>
 
                   {/* Intro with Large Icon */}
                   <div className="grid gap-4 sm:gap-6 md:grid-cols-2 items-center mb-6 sm:mb-8">
@@ -680,22 +680,22 @@ export default async function UkraineTurnkeyPage({
 
                   <div className="mb-8 grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 md:grid-cols-2">
                     <div>
-                      <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-[#006D77] break-words">{multimodalData.whatIncludes}</h3>
+                      <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 break-words">{multimodalData.whatIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {multimodalData.services.map((service, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3">
-                            <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-[#006D77]" />
+                          <li key={index} className="flex items-start gap-2 sm:gap-3">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1.5 sm:mt-2" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-[#006D77] break-words">{multimodalData.combinations}</h3>
+                      <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 break-words">{multimodalData.combinations}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {multimodalData.comboList.map((combo, index) => (
                           <li key={index} className="flex items-start gap-2 sm:gap-3">
-                            <span className="mt-0.5 sm:mt-1 text-purple-600 flex-shrink-0 text-sm sm:text-base">•</span>
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1.5 sm:mt-2" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{combo}</span>
                           </li>
                         ))}
@@ -704,7 +704,7 @@ export default async function UkraineTurnkeyPage({
                   </div>
 
                   <div className="mb-8 rounded-2xl border-2 border-[#006D77] bg-white p-3 sm:p-4 md:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                    <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl font-semibold text-[#006D77] break-words">{multimodalData.advantages}</h3>
+                    <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{multimodalData.advantages}</h3>
                     <ul className="space-y-2 sm:space-y-3">
                       {multimodalData.advantagesList.map((advantage, index) => (
                         <li key={index} className="flex items-center gap-2 sm:gap-3">

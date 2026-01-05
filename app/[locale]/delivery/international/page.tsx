@@ -5,6 +5,8 @@ import { Locale, getTranslations } from "../../../../lib/translations";
 import { CheckCircle2 } from "lucide-react";
 import DeliverySidebarNav from "../../../../components/DeliverySidebarNav";
 import Image from "next/image";
+import { Metadata } from "next";
+import { generateDeliveryMetadata } from "../../../../lib/metadata";
 
 const seaContainerContent = {
   ua: {
@@ -414,6 +416,25 @@ const mainContent = {
   },
 };
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const deliveryNames = {
+    ua: "Міжнародні вантажні перевезення | Морські, авіаційні, залізничні та автомобільні перевезення",
+    ru: "Международные грузовые перевозки | Морские, авиационные, железнодорожные и автомобильные перевозки",
+    en: "International Freight Transportation | Sea, Air, Rail and Road Freight",
+  };
+  const deliveryDescriptions = {
+    ua: "Комплексні міжнародні вантажні перевезення: морські контейнерні перевезення (FCL/LCL), авіаційні перевезення, залізничні перевезення FCL/LCL, автомобільні перевезення FTL/LTL. Організація міжнародних перевезень, підбір оптимального маршруту, митне оформлення, повний супровід. KLS Logistics - надійний партнер для міжнародної логістики.",
+    ru: "Комплексные международные грузовые перевозки: морские контейнерные перевозки (FCL/LCL), авиационные перевозки, железнодорожные перевозки FCL/LCL, автомобильные перевозки FTL/LTL. Организация международных перевозок, подбор оптимального маршрута, таможенное оформление, полное сопровождение. KLS Logistics - надежный партнер для международной логистики.",
+    en: "Comprehensive international freight transportation: sea container shipping (FCL/LCL), air cargo transportation, rail freight FCL/LCL, road freight FTL/LTL. International shipping organization, optimal route selection, customs clearance, full support. KLS Logistics - reliable partner for international logistics.",
+  };
+  return generateDeliveryMetadata(locale, "international", deliveryNames, deliveryDescriptions);
+}
+
 export default async function InternationalPage({
   params,
 }: {
@@ -444,7 +465,7 @@ export default async function InternationalPage({
           <div className="absolute inset-0 z-0">
             <Image
               src="/images/vygruzka-gruzovikov-v-logisticeskom-centre-s-vozduha 1.jpg"
-              alt="Delivery"
+              alt={locale === "ua" ? "Міжнародні вантажні перевезення - морські, авіаційні, залізничні та автомобільні перевезення" : locale === "ru" ? "Международные грузовые перевозки - морские, авиационные, железнодорожные и автомобильные перевозки" : "International freight transportation - sea, air, rail and road freight"}
               fill
               className="object-cover"
               priority
@@ -487,9 +508,9 @@ export default async function InternationalPage({
               />
 
               {/* Main Content */}
-              <div className="lg:col-span-3 space-y-20">
+              <div className="lg:col-span-3 space-y-6">
                 {/* Main Info Section */}
-                <section>
+                <section className="mb-8">
                   <h2 className="mb-8 text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 break-words text-center">{data.whatIncludes}</h2>
                   <div className="grid gap-4 md:grid-cols-2">
                     {data.services.map((service, index) => (
@@ -507,23 +528,23 @@ export default async function InternationalPage({
                 {/* Advantages & For Whom */}
                 <section className="grid gap-6 sm:gap-8 md:grid-cols-2">
                   <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
-                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-[#006D77] break-words">{data.advantages}</h2>
+                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-gray-900 break-words">{data.advantages}</h2>
                     <ul className="space-y-3 sm:space-y-4">
                       {data.advantagesList.map((advantage, index) => (
                         <li key={index} className="flex items-start gap-2 sm:gap-3">
                           <CheckCircle2 className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-teal-600" />
-                          <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
+                          <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div className="rounded-2xl bg-white p-4 sm:p-6 md:p-8">
-                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-[#006D77] break-words">{data.forWhom}</h2>
+                    <h2 className="mb-6 text-xl sm:text-2xl font-bold text-gray-900 break-words">{data.forWhom}</h2>
                     <ul className="space-y-3 sm:space-y-4">
                       {data.clients.map((client, index) => (
                         <li key={index} className="flex items-center gap-2 sm:gap-3">
                           <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-teal-600" />
-                          <span className="text-sm sm:text-base text-gray-700 break-words">{client}</span>
+                          <span className="text-sm sm:text-base text-gray-600 break-words">{client}</span>
                         </li>
                       ))}
                     </ul>
@@ -547,7 +568,7 @@ export default async function InternationalPage({
                       <h3 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{seaContainerData.fclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{seaContainerData.fclDescription}</p>
                       <div className="mb-4">
-                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{seaContainerData.fclAdvantages}</h4>
+                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-left">{seaContainerData.fclAdvantages}</h4>
                         <ul className="space-y-2">
                           {seaContainerData.fclAdvantagesList.map((advantage, index) => (
                             <li key={index} className="flex items-center gap-2 sm:gap-3">
@@ -564,7 +585,7 @@ export default async function InternationalPage({
                       <h3 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{seaContainerData.lclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{seaContainerData.lclDescription}</p>
                       <div className="mb-4">
-                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{seaContainerData.lclAdvantages}</h4>
+                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-left">{seaContainerData.lclAdvantages}</h4>
                         <ul className="space-y-2">
                           {seaContainerData.lclAdvantagesList.map((advantage, index) => (
                             <li key={index} className="flex items-center gap-2 sm:gap-3">
@@ -629,8 +650,8 @@ export default async function InternationalPage({
                         <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{airCargoData.fclAdvantages}</h4>
                         <ul className="space-y-2">
                           {airCargoData.fclAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-start gap-2 sm:gap-3">
-                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1" />
+                            <li key={index} className="flex items-baseline gap-2 sm:gap-3">
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -645,8 +666,8 @@ export default async function InternationalPage({
                         <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{airCargoData.lclAdvantages}</h4>
                         <ul className="space-y-2">
                           {airCargoData.lclAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-start gap-2 sm:gap-3">
-                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1" />
+                            <li key={index} className="flex items-baseline gap-2 sm:gap-3">
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{advantage}</span>
                             </li>
                           ))}
@@ -732,27 +753,27 @@ export default async function InternationalPage({
                   {/* Наші можливості */}
                   <div className="mb-12">
                     <h3 className="mb-6 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{railCargoData.ourCapabilities}</h3>
-                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3">
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {railCargoData.services.slice(0, 2).map((service, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0 mt-1" />
+                          <li key={index} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {railCargoData.services.slice(2, 4).map((service, index) => (
-                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0 mt-1" />
+                          <li key={index + 2} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {railCargoData.services.slice(4).map((service, index) => (
-                          <li key={index + 4} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0 mt-1" />
+                          <li key={index + 4} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-sm bg-teal-600 flex-shrink-0" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
                           </li>
                         ))}
@@ -775,7 +796,7 @@ export default async function InternationalPage({
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{roadCargoData.ftlTitle}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words text-left">{roadCargoData.ftlTitle}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {roadCargoData.ftlFeatures.map((feature, index) => (
                           <li key={index} className="flex items-start gap-2 sm:gap-3">
@@ -786,7 +807,7 @@ export default async function InternationalPage({
                       </ul>
                     </div>
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{roadCargoData.ltlTitle}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 break-words text-left">{roadCargoData.ltlTitle}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {roadCargoData.ltlFeatures.map((feature, index) => (
                           <li key={index} className="flex items-start gap-2 sm:gap-3">

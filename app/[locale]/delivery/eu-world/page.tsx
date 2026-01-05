@@ -13,7 +13,7 @@ const fbaContent = {
     intro: "Пропонуємо комплексну логістичну послугу DDP (Delivered Duty Paid) — найзручніший та найпопулярніший спосіб доставки товарів з Китаю на склади Amazon FBA. Ми беремо на себе весь процес: від забору товару у виробника до передачі на склад Amazon. Ви отримуєте доставку «під ключ» без зайвої бюрократії, ризиків і непередбачених витрат.",
     whatIncludes: "Що може входити у нашу послугу",
     services: [
-      "Забір товару з фабрики",
+      "Забір товару з фабрики виробника",
       "Підготовка та маркування під стандарти Amazon FBA",
       "Доставка авіа / морем / залізницею",
       "Митне оформлення та сплата податків",
@@ -583,10 +583,10 @@ export default async function EuWorldPage({
                   {/* Intro */}
                   <div className="mb-8">
                     <p className="text-lg sm:text-xl text-gray-600 break-words mb-6 text-center">{fbaData.subtitle}</p>
-                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
-                      <p className="text-base sm:text-lg text-gray-700 break-words">{fbaData.intro}</p>
+                      <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                        <p className="text-base sm:text-lg text-gray-700 break-words">{fbaData.intro}</p>
+                      </div>
                     </div>
-                  </div>
 
                   {/* Що може входити у нашу послугу */}
                   <div className="mb-12">
@@ -594,25 +594,25 @@ export default async function EuWorldPage({
                     <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3">
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {fbaData.services.slice(0, 2).map((service, index) => (
-                          <li key={index} className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
-                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
+                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1 sm:mt-1.5 md:mt-2" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words leading-relaxed">{service}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {fbaData.services.slice(2, 4).map((service, index) => (
-                          <li key={index + 2} className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
-                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
+                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1 sm:mt-1.5 md:mt-2" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words leading-relaxed">{service}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {fbaData.services.slice(4).map((service, index) => (
-                          <li key={index + 4} className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
-                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{service}</span>
+                          <li key={index + 4} className="flex items-start gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1 sm:mt-1.5 md:mt-2" />
+                            <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words leading-relaxed">{service}</span>
                           </li>
                         ))}
                       </ul>
@@ -713,8 +713,8 @@ export default async function EuWorldPage({
                         <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words">{ddpData.dduWhatIncludes}</h4>
                         <ul className="space-y-2">
                           {ddpData.dduServices.map((service, index) => (
-                            <li key={index} className="flex items-center gap-2 sm:gap-3">
-                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                            <li key={index} className="flex items-start gap-2 sm:gap-3">
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1.5 sm:mt-2" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
                             </li>
                           ))}
@@ -724,8 +724,8 @@ export default async function EuWorldPage({
                         <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words">{ddpData.dduPays}</h4>
                         <ul className="space-y-2">
                           {ddpData.dduPaysList.map((item, index) => (
-                            <li key={index} className="flex items-center gap-2 sm:gap-3">
-                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
+                            <li key={index} className="flex items-start gap-2 sm:gap-3">
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1.5 sm:mt-2" />
                               <span className="text-sm sm:text-base text-gray-600 break-words">{item}</span>
                             </li>
                           ))}
@@ -747,7 +747,7 @@ export default async function EuWorldPage({
                   </div>
 
                   {/* DDP Section */}
-                  <div className="mb-8">
+                    <div className="mb-8">
                     <h3 className="mb-4 text-2xl sm:text-3xl font-bold text-gray-900 break-words text-center">{ddpData.ddpTitle}</h3>
                     <p className="mb-8 text-base sm:text-lg text-gray-600 break-words text-center">{ddpData.ddpIntro}</p>
                   </div>
@@ -756,26 +756,26 @@ export default async function EuWorldPage({
                     <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
                       <div>
                         <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpWhatIncludes}</h4>
-                        <ul className="space-y-2">
-                          {ddpData.ddpServices.map((service, index) => (
-                            <li key={index} className="flex items-center gap-2 sm:gap-3">
-                              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                              <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      
-                      <div>
+                      <ul className="space-y-2">
+                        {ddpData.ddpServices.map((service, index) => (
+                          <li key={index} className="flex items-start gap-2 sm:gap-3">
+                              <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-teal-600 flex-shrink-0 mt-1.5 sm:mt-2" />
+                            <span className="text-sm sm:text-base text-gray-600 break-words">{service}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div>
                         <h4 className="mb-4 text-lg sm:text-xl font-semibold text-gray-900 break-words transition-colors duration-300 group-hover:text-teal-600">{ddpData.ddpAdvantages}</h4>
-                        <ul className="space-y-2">
-                          {ddpData.ddpAdvantagesList.map((advantage, index) => (
-                            <li key={index} className="flex items-center gap-2 sm:gap-3">
+                      <ul className="space-y-2">
+                        {ddpData.ddpAdvantagesList.map((advantage, index) => (
+                          <li key={index} className="flex items-center gap-2 sm:gap-3">
                               <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 text-teal-600" />
-                              <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
-                            </li>
-                          ))}
-                        </ul>
+                            <span className="text-sm sm:text-base text-gray-700 break-words">{advantage}</span>
+                          </li>
+                        ))}
+                      </ul>
                       </div>
                     </div>
                   </div>
@@ -800,12 +800,11 @@ export default async function EuWorldPage({
                   {/* Intro */}
                   <div className="mb-8">
                     <p className="mb-2 text-lg sm:text-xl text-gray-600 break-words text-center">{expressData.subtitle}</p>
-                    <p className="mb-6 text-base sm:text-lg text-gray-500 break-words">{expressData.intro}</p>
-                    <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
-                        <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{expressData.whatIs}</h3>
-                      <p className="text-base sm:text-lg text-gray-700 break-words">{expressData.description}</p>
+                      <p className="mb-6 text-base sm:text-lg text-gray-500 break-words">{expressData.intro}</p>
+                      <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
+                        <p className="text-base sm:text-lg text-gray-700 break-words">{expressData.description}</p>
+                      </div>
                     </div>
-                  </div>
 
                   {/* Переваги Express Air */}
                   <div className="mb-12">
@@ -872,27 +871,27 @@ export default async function EuWorldPage({
                   {/* Для кого підходить */}
                   <div className="mb-12">
                     <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{expressData.forWhom}</h3>
-                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3">
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {expressData.clients.slice(0, 2).map((client, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {expressData.clients.slice(2, 3).map((client, index) => (
-                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index + 2} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {expressData.clients.slice(3).map((client, index) => (
-                          <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index + 3} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
                           </li>
                         ))}
@@ -926,7 +925,7 @@ export default async function EuWorldPage({
 
                   <div className="mb-8 grid gap-6 sm:gap-8 md:grid-cols-2">
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{portToPortData.whatIncludes}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-left">{portToPortData.whatIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {portToPortData.services.map((service, index) => (
                           <li key={index} className="flex items-center gap-2 sm:gap-3">
@@ -937,7 +936,7 @@ export default async function EuWorldPage({
                       </ul>
                     </div>
                     <div className="rounded-2xl border-2 border-[#006D77] bg-white p-4 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
-                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-center">{portToPortData.whatNotIncludes}</h3>
+                      <h3 className="mb-4 text-xl sm:text-2xl font-semibold text-gray-900 break-words text-left">{portToPortData.whatNotIncludes}</h3>
                       <ul className="space-y-2 sm:space-y-3">
                         {portToPortData.notIncluded.map((item, index) => (
                           <li key={index} className="flex items-start gap-2 sm:gap-3">
@@ -952,27 +951,27 @@ export default async function EuWorldPage({
                   {/* Кому підходить */}
                   <div className="mb-12">
                     <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{portToPortData.forWhom}</h3>
-                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3">
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {portToPortData.clients.slice(0, 1).map((client, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
-                          </li>
-                        ))}
-                      </ul>
+                        </li>
+                      ))}
+                    </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {portToPortData.clients.slice(1, 2).map((client, index) => (
-                          <li key={index + 1} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index + 1} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {portToPortData.clients.slice(2).map((client, index) => (
-                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index + 2} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
                           </li>
                         ))}
@@ -1033,7 +1032,7 @@ export default async function EuWorldPage({
                     <div className="rounded-2xl bg-[#E8FDF8] p-4 sm:p-6 md:p-8">
                       <p className="text-base sm:text-lg text-gray-700 break-words">{crossBorderData.intro}</p>
                     </div>
-                  </div>
+                      </div>
 
                   <div className="mb-8">
                     <h3 className="mb-8 sm:mb-12 text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-gray-900 text-center break-words">{crossBorderData.howItWorks}</h3>
@@ -1053,19 +1052,19 @@ export default async function EuWorldPage({
                               <div className="absolute left-[2px] top-0 -translate-x-1/2 z-10">
                                 <div className="h-5 w-5 rounded-full border-2 border-slate-900 bg-white flex items-center justify-center">
                                   <div className="h-2 w-2 rounded-full bg-slate-900" />
-                                </div>
-                              </div>
-                              
+                    </div>
+                  </div>
+
                               {/* Step Content */}
                               <div className="pl-4">
                                 <div className="mb-1">
-                                  <span className="text-xs font-semibold text-slate-900">
+                                  <span className="text-xs font-normal text-slate-900">
                                     {locale === "ua" ? "Крок" : locale === "ru" ? "Шаг" : "Step"} {index + 1}
                                   </span>
                                 </div>
-                                <h4 className="text-sm font-semibold text-slate-900 leading-relaxed break-words">
+                                <p className="text-sm font-normal text-slate-900 leading-relaxed break-words">
                                   {step}
-                                </h4>
+                                </p>
                               </div>
                             </div>
                           ))}
@@ -1079,7 +1078,7 @@ export default async function EuWorldPage({
                         
                         {/* Steps with Circles on Line */}
                         <div className="relative grid grid-cols-5">
-                          {crossBorderData.steps.map((step, index) => (
+                      {crossBorderData.steps.map((step, index) => (
                             <div key={index} className="relative flex flex-col items-center">
                               {/* Empty Circle on Line */}
                               <div className="absolute top-6 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
@@ -1105,16 +1104,16 @@ export default async function EuWorldPage({
                           <div key={index} className="relative flex flex-col items-center text-center">
                             {/* Step Number Label */}
                             <div className="mb-3">
-                              <span className="text-sm font-semibold text-slate-900">
+                              <span className="text-sm font-normal text-slate-900">
                                 {locale === "ua" ? "Крок" : locale === "ru" ? "Шаг" : "Step"} {index + 1}
-                              </span>
+                          </span>
                             </div>
                             
                             {/* Step Content */}
                             <div>
-                              <h4 className="text-base font-semibold text-slate-900 leading-relaxed break-words">
+                              <p className="text-base font-normal text-slate-900 leading-relaxed break-words">
                                 {step}
-                              </h4>
+                              </p>
                             </div>
                           </div>
                         ))}
@@ -1156,27 +1155,27 @@ export default async function EuWorldPage({
                   {/* Кому підходить */}
                   <div className="mb-12">
                     <h3 className="mb-6 text-2xl sm:text-3xl font-bold text-gray-900 text-center break-words">{crossBorderData.forWhom}</h3>
-                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3 items-start">
+                    <div className="grid gap-2 sm:gap-6 md:gap-8 grid-cols-3">
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {crossBorderData.clients.slice(0, 2).map((client, index) => (
-                          <li key={index} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {crossBorderData.clients.slice(2, 3).map((client, index) => (
-                          <li key={index + 2} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index + 2} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
                           </li>
                         ))}
                       </ul>
                       <ul className="space-y-2 sm:space-y-3 md:space-y-4">
                         {crossBorderData.clients.slice(3).map((client, index) => (
-                          <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
-                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm mt-1" />
+                          <li key={index + 3} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
+                            <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
                           </li>
                         ))}
