@@ -647,7 +647,7 @@ export default async function InternationalPage({
                       <h3 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{airCargoData.fclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{airCargoData.fclDescription}</p>
                       <div>
-                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{airCargoData.fclAdvantages}</h4>
+                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-left">{airCargoData.fclAdvantages}</h4>
                         <ul className="space-y-2">
                           {airCargoData.fclAdvantagesList.map((advantage, index) => (
                             <li key={index} className="flex items-baseline gap-2 sm:gap-3">
@@ -663,7 +663,7 @@ export default async function InternationalPage({
                       <h3 className="mb-2 text-xl sm:text-2xl font-bold text-gray-900 break-words text-center">{airCargoData.lclTitle}</h3>
                       <p className="mb-6 text-sm sm:text-base text-gray-600 break-words">{airCargoData.lclDescription}</p>
                       <div>
-                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-center">{airCargoData.lclAdvantages}</h4>
+                        <h4 className="mb-3 text-lg sm:text-xl font-semibold text-gray-900 break-words text-left">{airCargoData.lclAdvantages}</h4>
                         <ul className="space-y-2">
                           {airCargoData.lclAdvantagesList.map((advantage, index) => (
                             <li key={index} className="flex items-baseline gap-2 sm:gap-3">
