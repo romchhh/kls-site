@@ -483,12 +483,12 @@ export default async function UkraineTurnkeyPage({
                   {/* Feature Cards - 2 in top row, 1 below left */}
                   <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 mb-8">
                     {/* First two cards in top row */}
-                    {seaData.sections.slice(0, 2).map((section, index) => (
+                      {seaData.sections.slice(0, 2).map((section, index) => (
                       <div key={index} className="rounded-2xl border-2 border-[#006D77] bg-white p-3 sm:p-4 md:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8]">
                         <h3 className="mb-2 sm:mb-3 text-base sm:text-lg md:text-xl font-semibold text-gray-900 break-words">{section.title}</h3>
                         <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed break-words">{section.text}</p>
-                      </div>
-                    ))}
+                        </div>
+                      ))}
                     {/* Third card below left, with animation and matching styles */}
                     {seaData.sections[2] && (
                       <div className="rounded-2xl border-2 border-[#006D77] bg-white p-3 sm:p-4 md:p-6 shadow-sm transition-all duration-300 hover:border-[#006D77] hover:bg-[#E8FDF8] animate-slide-in-bottom">

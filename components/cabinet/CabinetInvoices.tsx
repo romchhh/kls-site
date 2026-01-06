@@ -396,10 +396,14 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
                               const a = document.createElement("a");
                               a.href = url;
                               a.download = `invoice_${inv.invoiceNumber}_${new Date().toISOString().split("T")[0]}.pdf`;
+                              a.style.display = "none";
                               document.body.appendChild(a);
                               a.click();
-                              window.URL.revokeObjectURL(url);
-                              document.body.removeChild(a);
+                              // Clean up after a delay to ensure download starts
+                              setTimeout(() => {
+                                window.URL.revokeObjectURL(url);
+                                document.body.removeChild(a);
+                              }, 100);
                             } catch (error) {
                               console.error("Error downloading PDF invoice:", error);
                               alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");

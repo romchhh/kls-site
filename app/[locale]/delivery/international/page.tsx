@@ -623,9 +623,9 @@ export default async function InternationalPage({
                           <li key={index + 4} className="flex items-start gap-2 sm:gap-3 md:gap-4">
                             <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
-                          </li>
-                        ))}
-                      </ul>
+                        </li>
+                      ))}
+                    </ul>
                     </div>
                   </div>
                 </section>
@@ -700,9 +700,9 @@ export default async function InternationalPage({
                           <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
                             <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
-                          </li>
-                        ))}
-                      </ul>
+                        </li>
+                      ))}
+                    </ul>
                     </div>
                   </div>
                 </section>
@@ -843,9 +843,9 @@ export default async function InternationalPage({
                           <li key={index + 3} className="flex items-start gap-2 sm:gap-3 md:gap-4">
                             <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0 text-teal-600 mt-0.5" />
                             <span className="text-xs sm:text-sm md:text-base text-gray-600 break-words">{service}</span>
-                          </li>
-                        ))}
-                      </ul>
+                        </li>
+                      ))}
+                    </ul>
                     </div>
                   </div>
                 </section>

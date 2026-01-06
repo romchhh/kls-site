@@ -893,9 +893,9 @@ export default async function EuWorldPage({
                           <li key={index + 3} className="flex items-baseline gap-2 sm:gap-3 md:gap-4">
                             <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 flex-shrink-0 bg-teal-600 rounded-sm" />
                             <span className="text-xs sm:text-base md:text-lg text-gray-700 break-words">{client}</span>
-                          </li>
-                        ))}
-                      </ul>
+                        </li>
+                      ))}
+                    </ul>
                     </div>
                   </div>
 
@@ -1116,7 +1116,7 @@ export default async function EuWorldPage({
                               </p>
                             </div>
                           </div>
-                        ))}
+                      ))}
                       </div>
                     </div>
                   </div>
