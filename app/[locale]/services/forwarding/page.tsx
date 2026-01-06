@@ -254,7 +254,7 @@ export default async function ForwardingPage({
       <Navigation locale={locale} />
       
       {/* Hero Section with Background Image */}
-      <section className="relative min-h-[600px] flex items-center overflow-hidden">
+      <section className="relative min-h-[500px] sm:min-h-[600px] flex items-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -265,24 +265,24 @@ export default async function ForwardingPage({
             priority
           />
           <div className="absolute inset-0 bg-black/60 z-[1]" />
-              </div>
+        </div>
 
         {/* Content */}
         <div className="relative z-10 w-full mx-auto max-w-7xl px-6 lg:px-8 pt-32 pb-20 md:py-20">
           <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
             {/* Left - Text Content */}
             <div className="text-white">
-              <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
+              <h1 className="mb-4 text-3xl sm:text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
                 {data.title}
               </h1>
               <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">
                 {data.subtitle}
               </p>
-              </div>
+            </div>
 
             {/* Right - Contact Form */}
-            <div className="flex justify-end">
-              <div className="mt-12 max-w-md w-full shadow-2xl">
+            <div className="flex justify-center lg:justify-end">
+              <div className="mt-0 md:mt-12 max-w-md w-full shadow-2xl">
                 <ContactForm locale={locale} />
               </div>
             </div>

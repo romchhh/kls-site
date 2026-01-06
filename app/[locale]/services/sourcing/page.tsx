@@ -294,7 +294,7 @@ export default async function SourcingPage({
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="mb-2 text-2xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-teal-600">
+                    <h3 className="mb-2 text-lg sm:text-xl md:text-2xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-teal-600">
                       {service.title}
                     </h3>
                 <ul className="space-y-2">

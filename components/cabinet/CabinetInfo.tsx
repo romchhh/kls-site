@@ -168,44 +168,44 @@ export function CabinetInfo({ locale }: CabinetInfoProps) {
       
       <div className="space-y-6">
         {/* Marking Instructions */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h3 className="mb-4 text-lg font-bold text-slate-900">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm">
+          <h3 className="mb-4 text-base sm:text-lg font-bold text-slate-900">
             {content.markingTitle}
           </h3>
           
           <div className="space-y-4">
-            <p className="text-sm text-slate-700 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
               {content.markingInstruction}
             </p>
             
-          <p className="text-sm text-slate-700 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
               {content.trackingInstruction}
           </p>
 
-            <div className="rounded-xl bg-slate-50 p-4">
-              <div className="space-y-2.5 text-sm text-slate-700">
-                <div className="flex items-center gap-2">
+            <div className="rounded-xl bg-slate-50 p-3 sm:p-4">
+              <div className="space-y-2.5 text-xs sm:text-sm text-slate-700">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{content.packingCodes.air} -</span>
                   <code className="rounded bg-white px-2 py-1 font-mono text-teal-700">
                     A{clientCode}
                   </code>
                   <CopyButton text={`A${clientCode}`} copyKey="code-air" />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{content.packingCodes.sea} -</span>
                   <code className="rounded bg-white px-2 py-1 font-mono text-teal-700">
                     S{clientCode}
                   </code>
                   <CopyButton text={`S${clientCode}`} copyKey="code-sea" />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{content.packingCodes.rail} -</span>
                   <code className="rounded bg-white px-2 py-1 font-mono text-teal-700">
                     R{clientCode}
                   </code>
                   <CopyButton text={`R${clientCode}`} copyKey="code-rail" />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{content.packingCodes.multimodal} -</span>
                   <code className="rounded bg-white px-2 py-1 font-mono text-teal-700">
                     M{clientCode}
@@ -215,28 +215,28 @@ export function CabinetInfo({ locale }: CabinetInfoProps) {
               </div>
             </div>
 
-            <p className="text-sm font-medium text-teal-700">
+            <p className="text-xs sm:text-sm font-medium text-teal-700">
               {content.thankYou}
             </p>
           </div>
         </div>
 
         {/* Sections */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
           {content.sections.map((section, index) => (
             <div
               key={index}
-              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+              className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow"
             >
-              <div className="mb-3 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-600">
-                  <Info className="h-5 w-5" />
+              <div className="mb-3 flex items-center gap-2 sm:gap-3">
+                <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-teal-100 text-teal-600 flex-shrink-0">
+                  <Info className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">
+                <h3 className="text-base sm:text-lg font-bold text-slate-900">
                   {section.title}
                 </h3>
               </div>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 {section.content}
               </p>
             </div>

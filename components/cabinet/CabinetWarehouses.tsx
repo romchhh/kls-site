@@ -115,74 +115,78 @@ export function CabinetWarehouses({ locale }: CabinetWarehousesProps) {
         {t.cabinet?.warehouses || content.title}
       </h2>
       
-      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-            <div className="mb-4 flex items-start gap-4">
-              <div className="rounded-2xl bg-teal-500 p-3 text-white shadow-md">
-                <Warehouse className="h-6 w-6" />
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
+            <div className="mb-4 flex items-start gap-3 sm:gap-4">
+              <div className="flex-shrink-0 rounded-2xl bg-teal-500 p-2.5 sm:p-3 text-white shadow-md">
+                <Warehouse className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
-              <div className="flex-1">
-            <h3 className="mb-4 text-lg font-semibold text-slate-900">
+              <div className="flex-1 min-w-0">
+            <h3 className="mb-4 text-base sm:text-lg font-semibold text-slate-900">
               {content.location}
                 </h3>
             
             {/* Адреса китайською */}
             <div className="mb-4 space-y-2">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                <div className="flex-1 min-w-0">
                   <p className="mb-1 text-xs font-semibold text-slate-700">
                     {locale === "ua" ? "Адреса китайською:" : locale === "ru" ? "Адрес на китайском:" : "Address in Chinese:"}
                   </p>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-slate-600 break-words">
                     {content.addressChinese}
                   </p>
                 </div>
-                <CopyButton text={content.addressChinese} copyKey="address-chinese" />
+                <div className="flex-shrink-0">
+                  <CopyButton text={content.addressChinese} copyKey="address-chinese" />
+                </div>
               </div>
             </div>
 
             {/* Адреса англійською */}
             <div className="mb-6 space-y-2">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                <div className="flex-1 min-w-0">
                   <p className="mb-1 text-xs font-semibold text-slate-700">
                     {locale === "ua" ? "Адреса англійською:" : locale === "ru" ? "Адрес на английском:" : "Address in English:"}
                   </p>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-slate-600 break-words">
                     {content.addressEnglish}
                   </p>
                 </div>
-                <CopyButton text={content.addressEnglish} copyKey="address-english" />
+                <div className="flex-shrink-0">
+                  <CopyButton text={content.addressEnglish} copyKey="address-english" />
+                </div>
               </div>
             </div>
 
             {/* Умови упаковки */}
-            <div className="mb-6 rounded-xl bg-white p-4">
-              <h4 className="mb-3 text-sm font-semibold text-slate-900">
+            <div className="mb-6 rounded-xl bg-white p-3 sm:p-4">
+              <h4 className="mb-3 text-xs sm:text-sm font-semibold text-slate-900">
                 {content.packingConditionsTitle}
               </h4>
-                <div className="space-y-2 text-sm text-slate-600">
-                  <div className="flex items-center gap-2">
+                <div className="space-y-2 text-xs sm:text-sm text-slate-600">
+                  <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{content.packingConditions.air} -</span>
                   <code className="rounded bg-slate-100 px-2 py-1 font-mono text-teal-700">
                     A{clientCode}
                   </code>
                   <CopyButton text={`A${clientCode}`} copyKey="code-air" />
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{content.packingConditions.sea} -</span>
                   <code className="rounded bg-slate-100 px-2 py-1 font-mono text-teal-700">
                     S{clientCode}
                   </code>
                   <CopyButton text={`S${clientCode}`} copyKey="code-sea" />
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{content.packingConditions.rail} -</span>
                   <code className="rounded bg-slate-100 px-2 py-1 font-mono text-teal-700">
                     R{clientCode}
                   </code>
                   <CopyButton text={`R${clientCode}`} copyKey="code-rail" />
                   </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{content.packingConditions.multimodal} -</span>
                   <code className="rounded bg-slate-100 px-2 py-1 font-mono text-teal-700">
                     M{clientCode}
@@ -193,7 +197,7 @@ export function CabinetWarehouses({ locale }: CabinetWarehousesProps) {
             </div>
 
             {/* Інструкційний текст */}
-            <div className="space-y-2 rounded-xl bg-blue-50 p-4 text-sm text-slate-700">
+            <div className="space-y-2 rounded-xl bg-blue-50 p-3 sm:p-4 text-xs sm:text-sm text-slate-700">
               <p>{content.instruction}</p>
               <p>{content.instruction2}</p>
               <p className="font-medium text-teal-700">{content.instruction3}</p>

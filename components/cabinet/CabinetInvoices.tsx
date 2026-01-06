@@ -393,8 +393,13 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
                               }
                               const blob = await response.blob();
                               const url = window.URL.createObjectURL(blob);
-                              window.open(url, "_blank");
-                              setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                              const a = document.createElement("a");
+                              a.href = url;
+                              a.download = `invoice_${inv.invoiceNumber}_${new Date().toISOString().split("T")[0]}.pdf`;
+                              document.body.appendChild(a);
+                              a.click();
+                              window.URL.revokeObjectURL(url);
+                              document.body.removeChild(a);
                             } catch (error) {
                               console.error("Error downloading PDF invoice:", error);
                               alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");

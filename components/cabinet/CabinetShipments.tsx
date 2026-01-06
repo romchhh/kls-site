@@ -207,21 +207,21 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
         </div>
 
         {/* Statistics Card */}
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-teal-50 via-white to-emerald-50 p-6 shadow-lg lg:col-span-3">
-          <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-teal-50 via-white to-emerald-50 p-4 sm:p-6 shadow-lg lg:col-span-3">
+          <div className="mb-4 sm:mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wider">
             {t.cabinet?.shipmentsSummary || "Статистика вантажів"}
           </h3>
             {summary && summary.total > 0 && (
-              <div className="flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 shadow-sm border border-slate-200/50">
-                <Package className="h-3.5 w-3.5 text-slate-600" />
-                <span className="text-xs font-bold text-slate-700">
+              <div className="flex items-center gap-2 rounded-full bg-white/80 px-2.5 sm:px-3 py-1 sm:py-1.5 shadow-sm border border-slate-200/50">
+                <Package className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-slate-600" />
+                <span className="text-[10px] sm:text-xs font-bold text-slate-700">
                   {summary.total} {summary.total === 1 ? ((t.cabinet as any)?.shipmentSingular || "вантаж") : summary.total < 5 ? ((t.cabinet as any)?.shipmentPlural2 || "вантажі") : ((t.cabinet as any)?.shipmentPlural5 || "вантажів")}
                 </span>
               </div>
             )}
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4">
             <SummaryItem
               label={t.cabinet?.received || "Отримано"}
               value={summary?.received ?? 0}
@@ -277,7 +277,7 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
         {haveShipments && (
           <>
             {/* Mobile Card View */}
-            <div className="space-y-3 sm:hidden">
+            <div className="space-y-3 md:hidden">
               {allShipments.map((s) => {
                 const latestStatus = s.statusHistory[0];
                 const statusColor = getStatusColorClass(s.status);
@@ -323,39 +323,39 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                   <div
                     key={s.id}
                     onClick={() => setSelectedShipment(s)}
-                    className={`rounded-xl border p-4 transition-all duration-200 ${
+                    className={`rounded-xl border p-3 sm:p-4 transition-all duration-200 ${
                       isArchivedOrDelivered
                         ? "border-slate-200 bg-slate-50 opacity-75"
                         : "border-slate-200 bg-white shadow-sm active:bg-teal-50"
                     }`}
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="text-sm font-black text-slate-900 mb-1">
+                    <div className="flex items-start justify-between mb-2.5 sm:mb-3 gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs sm:text-sm font-black text-slate-900 mb-1 break-words">
                           {formatTrackNumber(s.internalTrack)}
                         </div>
-                        <div className="text-xs text-slate-600 mb-2">{route}</div>
-                        <span className={`inline-flex items-center rounded-full bg-gradient-to-r ${statusColor} px-2 py-1 text-[10px] font-bold text-white shadow-md`}>
+                        <div className="text-[10px] sm:text-xs text-slate-600 mb-1.5 sm:mb-2 break-words">{route}</div>
+                        <span className={`inline-flex items-center rounded-full bg-gradient-to-r ${statusColor} px-1 sm:px-1.5 md:px-2 py-0.5 sm:py-0.5 md:py-1 text-[8px] sm:text-[9px] md:text-[10px] font-bold text-white shadow-md leading-tight`}>
                           {getShipmentStatusTranslation(s.status, locale)}
                         </span>
                       </div>
                       {totalCost && (
-                        <div className="text-right">
-                          <div className="text-sm font-black text-teal-600">
+                        <div className="text-right flex-shrink-0">
+                          <div className="text-xs sm:text-sm font-black text-teal-600">
                             {totalCost.toFixed(2)} $
                           </div>
                         </div>
                       )}
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 mt-3 pt-3 border-t border-slate-100">
-                      <div>
+                    <div className="grid grid-cols-2 gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-slate-600 mt-2.5 sm:mt-3 pt-2.5 sm:pt-3 border-t border-slate-100">
+                      <div className="min-w-0">
                         <span className="text-slate-400">Тип:</span>{" "}
-                        <span className="font-semibold text-slate-700">{deliveryTypeLabel}</span>
+                        <span className="font-semibold text-slate-700 break-words">{deliveryTypeLabel}</span>
                       </div>
                       {location && (
-                        <div className="flex items-center gap-1">
-                          <LocationIcon className="h-3 w-3 text-slate-400" />
+                        <div className="flex items-center gap-1 min-w-0">
+                          <LocationIcon className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-slate-400 flex-shrink-0" />
                           <span className="text-slate-600 truncate">{location}</span>
                         </div>
                       )}
@@ -384,9 +384,9 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
             </div>
 
             {/* Desktop Table View */}
-            <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg sm:block">
-              <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
-                <table className="w-full min-w-[1000px] sm:min-w-0">
+            <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg md:block">
+              <div className="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+                <table className="w-full min-w-[1000px] md:min-w-0">
                 <thead>
                   <tr className="border-b-2 border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100">
                     <th className="px-2 py-2.5 text-left text-[10px] font-bold uppercase tracking-wider text-slate-700 sm:px-3 sm:py-3 sm:text-xs lg:px-4">
@@ -577,8 +577,8 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
               </div>
             </div>
 
-            {/* Status Timeline Visualization */}
-            <div className="border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50 px-4 sm:px-8 py-14">
+            {/* Status Timeline Visualization - Desktop */}
+            <div className="hidden md:block border-b border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50 px-4 sm:px-8 py-14">
               <div className="flex items-start relative w-full">
                 {[
                   { status: "RECEIVED_CN", label: (t.cabinet as any)?.timelineStatuses?.RECEIVED_CN || "Отримано на складі (Китай)" },
@@ -1267,6 +1267,179 @@ export function CabinetShipments({ locale }: CabinetShipmentsProps) {
                   })()}
 
             </div>
+
+            {/* Status Timeline Visualization - Mobile (Vertical) */}
+            <div className="block md:hidden border-t border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50 px-4 py-8">
+              <h4 className="mb-6 text-base font-bold text-slate-900 text-center">
+                {(t.cabinet as any)?.timelineTitle || "Статус доставки"}
+              </h4>
+              <div className="flex flex-col items-start relative w-full max-w-md mx-auto">
+                {[
+                  { status: "RECEIVED_CN", label: (t.cabinet as any)?.timelineStatuses?.RECEIVED_CN || "Отримано на складі (Китай)" },
+                  { status: "CONSOLIDATION", label: (t.cabinet as any)?.timelineStatuses?.CONSOLIDATION || "Готується до відправлення" },
+                  { status: "IN_TRANSIT", label: (t.cabinet as any)?.timelineStatuses?.IN_TRANSIT || "В дорозі" },
+                  { status: "ARRIVED_UA", label: (t.cabinet as any)?.timelineStatuses?.ARRIVED_UA || "Доставлено на склад (Україна)" },
+                  { status: "ON_UA_WAREHOUSE", label: (t.cabinet as any)?.timelineStatuses?.ON_UA_WAREHOUSE || "Готово до видачі" },
+                  { status: "DELIVERED", label: (t.cabinet as any)?.timelineStatuses?.DELIVERED || "Завершено" },
+                ].map((item, idx, arr) => {
+                  // Determine order of statuses
+                  const statusOrder = [
+                    "CREATED",
+                    "RECEIVED_CN",
+                    "CONSOLIDATION",
+                    "IN_TRANSIT",
+                    "ARRIVED_UA",
+                    "ON_UA_WAREHOUSE",
+                    "DELIVERED",
+                    "ARCHIVED",
+                  ];
+                  
+                  const currentStatusIndex = statusOrder.indexOf(selectedShipment.status);
+                  const itemStatusIndex = statusOrder.indexOf(item.status);
+                  
+                  const isCompleted = itemStatusIndex < currentStatusIndex || 
+                    (selectedShipment.status === "ARCHIVED") ||
+                    (selectedShipment.status === "DELIVERED" && item.status === "DELIVERED");
+                  const isActive = item.status === selectedShipment.status;
+                  const showLine = idx < arr.length - 1;
+
+                  return (
+                    <div key={item.status} className="flex items-start w-full relative pb-6 last:pb-0">
+                      <div className="flex items-start gap-3 w-full relative z-20">
+                        <div className="flex-shrink-0">
+                          <div
+                            className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 shadow-xl relative ${
+                              isCompleted || isActive
+                                ? `${getStatusColor(item.status)} text-white scale-100 shadow-2xl ring-2 ring-white`
+                                : "bg-slate-200 text-slate-400 scale-95"
+                            } ${isActive ? "ring-4 ring-offset-2 ring-offset-slate-50 ring-teal-400 animate-pulse" : ""}`}
+                          >
+                            {getStatusEmoji(item.status)}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0 pt-1">
+                          <span className={`block text-xs font-bold leading-tight mb-1 ${
+                            isCompleted || isActive ? "text-slate-900" : "text-slate-500"
+                          }`}>
+                            {item.label}
+                          </span>
+                          {(() => {
+                            const statusHistoryItem = selectedShipment.statusHistory.find(
+                              (h) => h.status === item.status
+                            );
+                            if (statusHistoryItem) {
+                              return (
+                                  <>
+                                    {statusHistoryItem.location && (() => {
+                                      const location = statusHistoryItem.location;
+                                      let LocationIcon = MapPin;
+                                      if (location.includes("Китай") || location.includes("China")) {
+                                        LocationIcon = Warehouse;
+                                      } else if (location.includes("Україна") || location.includes("Ukraine") || location.includes("Украина")) {
+                                        LocationIcon = Warehouse;
+                                      } else if (location.includes("Дорога") || location.includes("дорозі") || location.includes("Дорога")) {
+                                        LocationIcon = Plane;
+                                      } else if (item.status === "DELIVERED") {
+                                        LocationIcon = CheckCircle;
+                                      }
+                                      
+                                      return (
+                                        <div className="mt-1 flex items-center gap-1 mb-1">
+                                          <LocationIcon className="h-3 w-3 text-slate-400 flex-shrink-0" />
+                                          <span className="text-[10px] font-medium text-slate-600 truncate">
+                                            {location}
+                                          </span>
+                                        </div>
+                                      );
+                                    })()}
+                                    <span className="block text-[10px] text-slate-500">
+                                  {formatDate(statusHistoryItem.createdAt)}
+                                </span>
+                                  </>
+                              );
+                            }
+                            if (item.status === "DELIVERED") {
+                              if (selectedShipment.status === "DELIVERED" && selectedShipment.deliveredAt) {
+                              return (
+                                    <span className="block text-[10px] text-slate-500">
+                                    {formatDate(selectedShipment.deliveredAt)}
+                                </span>
+                              );
+                            }
+                              return null;
+                            }
+                              if (item.status === "CREATED" && selectedShipment.receivedAtWarehouse) {
+                                return (
+                                  <>
+                                    {selectedShipment.location && (() => {
+                                      const location = selectedShipment.location;
+                                      let LocationIcon = MapPin;
+                                      if (location.includes("Китай") || location.includes("China")) {
+                                        LocationIcon = Warehouse;
+                                      } else if (location.includes("Україна") || location.includes("Ukraine") || location.includes("Украина")) {
+                                        LocationIcon = Warehouse;
+                                      } else if (location.includes("Дорога") || location.includes("дорозі") || location.includes("Дорога")) {
+                                        LocationIcon = Plane;
+                                      } else if (selectedShipment.status === "DELIVERED") {
+                                        LocationIcon = CheckCircle;
+                                      }
+                                      
+                                      return (
+                                        <div className="mt-1 flex items-center gap-1 mb-1">
+                                          <LocationIcon className="h-3 w-3 text-slate-400 flex-shrink-0" />
+                                          <span className="text-[10px] font-medium text-slate-600 truncate">
+                                            {location}
+                                          </span>
+                                        </div>
+                                      );
+                            })()}
+                                    <span className="block text-[10px] text-slate-500">
+                                      {formatDate(selectedShipment.receivedAtWarehouse)}
+                                    </span>
+                                  </>
+                                );
+                              }
+                              if (item.status === "ON_UA_WAREHOUSE" && selectedShipment.location) {
+                                return (
+                                  <div className="mt-1 flex items-center gap-1">
+                                    <MapPin className="h-3 w-3 text-slate-400 flex-shrink-0" />
+                                    <span className="text-[10px] font-medium text-slate-600 truncate">
+                                      {selectedShipment.location}
+                                    </span>
+                                  </div>
+                                );
+                              }
+                            return null;
+                          })()}
+                        </div>
+                      </div>
+                      {showLine && (
+                        <div 
+                          className="absolute left-5 top-10 bottom-0 w-0.5 z-10"
+                        >
+                          {/* Vertical line connecting statuses */}
+                          {!isCompleted ? (
+                            <div 
+                              className="w-full h-full"
+                              style={{
+                                borderLeft: '2px dashed #cbd5e1',
+                              }}
+                            />
+                          ) : (
+                            <div 
+                              className="w-full h-full bg-teal-500 rounded-full"
+                              style={{
+                                boxShadow: '0 1px 3px rgba(20, 184, 166, 0.4)',
+                              }}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -1506,24 +1679,24 @@ function SummaryItem({ label, value, total, color = "blue", icon: Icon }: Summar
   const colors = colorClasses[color];
 
   return (
-    <div className={`group relative overflow-hidden rounded-xl border-2 ${colors.border} ${colors.bg} px-4 py-5 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-100`}>
+    <div className={`group relative overflow-hidden rounded-xl border-2 ${colors.border} ${colors.bg} px-2 sm:px-3 md:px-4 py-3 sm:py-4 md:py-5 text-center shadow-sm transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-100`}>
       <div className="relative z-10">
         {/* Icon */}
         {Icon && (
-          <div className={`mb-3 flex justify-center`}>
-            <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${colors.iconBg} transition-transform duration-300 group-hover:scale-110`}>
-              <Icon className={`h-5 w-5 ${colors.iconColor}`} />
+          <div className={`mb-2 sm:mb-3 flex justify-center`}>
+            <div className={`flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 items-center justify-center rounded-xl ${colors.iconBg} transition-transform duration-300 group-hover:scale-110`}>
+              <Icon className={`h-4 w-4 sm:h-4 sm:w-4 md:h-5 md:w-5 ${colors.iconColor}`} />
             </div>
           </div>
         )}
         
         {/* Label */}
-        <div className={`mb-2 text-[10px] font-bold ${colors.text} uppercase tracking-wider`}>
+        <div className={`mb-1.5 sm:mb-2 text-[9px] sm:text-[10px] font-bold ${colors.text} uppercase tracking-wider`}>
           {label}
         </div>
         
         {/* Value */}
-        <div className={`text-3xl font-black ${colors.number} leading-none`}>
+        <div className={`text-xl sm:text-2xl md:text-3xl font-black ${colors.number} leading-none`}>
           {value}
         </div>
       </div>

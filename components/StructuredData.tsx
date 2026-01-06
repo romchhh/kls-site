@@ -28,8 +28,10 @@ export function StructuredData({
     logo: {
       "@type": "ImageObject",
       url: `${siteUrl}/logos/ЛОГО(1).png`,
+      contentUrl: `${siteUrl}/logos/ЛОГО(1).png`,
       width: 600,
       height: 200,
+      encodingFormat: "image/png",
     },
     contactPoint: {
       "@type": "ContactPoint",
