@@ -72,13 +72,19 @@ export async function GET(
     const contentType = contentTypes[ext] || "application/octet-stream";
     const fileName = path.basename(fullPath);
 
+    // For PDF files, use attachment to force download, especially on mobile
+    const isPDF = ext === ".pdf";
+    const contentDisposition = isPDF 
+      ? `attachment; filename="${fileName}"` 
+      : `inline; filename="${fileName}"`;
+
     // Return file with proper headers
     // Use no-cache for newly uploaded files to ensure they're visible immediately
     // After first load, browser can cache them
     return new NextResponse(fileBuffer, {
       headers: {
         "Content-Type": contentType,
-        "Content-Disposition": `inline; filename="${fileName}"`,
+        "Content-Disposition": contentDisposition,
         "Cache-Control": "public, max-age=3600, must-revalidate",
         "X-Content-Type-Options": "nosniff",
       },

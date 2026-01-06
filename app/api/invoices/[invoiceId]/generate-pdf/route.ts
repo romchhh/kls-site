@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { verifyApiToken } from "@/lib/api-auth";
 import fs from "fs";
+import { promises as fsPromises } from "fs";
 import path from "path";
 
 export async function GET(
@@ -569,6 +570,27 @@ export async function GET(
       const dateStr = new Date().toISOString().split("T")[0];
       const filename = `invoice_${sanitizedInvoiceNumber}_${dateStr}.pdf`;
       
+      // Check if we should save file and return URL (for mobile devices)
+      const saveFile = req.nextUrl.searchParams.get("save") === "true";
+      
+      if (saveFile) {
+        // Save PDF file to uploads/invoices directory
+        const invoicesDir = path.join(process.cwd(), "public", "uploads", "invoices");
+        await fsPromises.mkdir(invoicesDir, { recursive: true });
+        
+        // Generate unique filename with timestamp
+        const timestamp = Date.now();
+        const savedFilename = `invoice_${sanitizedInvoiceNumber}_${dateStr}_${timestamp}.pdf`;
+        const filePath = path.join(invoicesDir, savedFilename);
+        
+        // Write file
+        await fsPromises.writeFile(filePath, buffer);
+        
+        // Return URL for download
+        const fileUrl = `/api/files/uploads/invoices/${savedFilename}`;
+        return NextResponse.json({ url: fileUrl, filename: filename }, { status: 200 });
+      }
+
       // Use RFC 5987 encoding for filename with non-ASCII characters
       const encodedFilename = encodeURIComponent(filename);
       const asciiFilename = filename; // ASCII-only version
@@ -640,10 +662,22 @@ export async function GET(
 // Helper function to get banner as base64
 async function getBannerBase64(): Promise<string> {
   try {
-    const bannerPath = path.join(process.cwd(), "public", "banner.png");
-    if (fs.existsSync(bannerPath)) {
+    // Try images/banner.png first, then fallback to banner.png
+    const bannerPath1 = path.join(process.cwd(), "public", "images", "banner.png");
+    const bannerPath2 = path.join(process.cwd(), "public", "banner.png");
+    
+    let bannerPath = null;
+    if (fs.existsSync(bannerPath1)) {
+      bannerPath = bannerPath1;
+    } else if (fs.existsSync(bannerPath2)) {
+      bannerPath = bannerPath2;
+    }
+    
+    if (bannerPath) {
       const bannerBuffer = fs.readFileSync(bannerPath);
       return bannerBuffer.toString("base64");
+    } else {
+      console.warn("Banner file not found at", bannerPath1, "or", bannerPath2);
     }
   } catch (error) {
     console.error("Error loading banner:", error);

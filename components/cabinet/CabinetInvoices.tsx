@@ -387,23 +387,38 @@ export function CabinetInvoices({ locale }: CabinetInvoicesProps) {
                         <button
                           onClick={async () => {
                             try {
-                              const response = await fetch(`/api/invoices/${inv.id}/generate-pdf`);
-                              if (!response.ok) {
-                                throw new Error("Failed to generate PDF invoice");
+                              // Check if mobile device
+                              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                              
+                              if (isMobile) {
+                                // For mobile: save file and redirect to URL
+                                const response = await fetch(`/api/invoices/${inv.id}/generate-pdf?save=true`);
+                                if (!response.ok) {
+                                  throw new Error("Failed to generate PDF invoice");
+                                }
+                                const data = await response.json();
+                                // Redirect to file URL for download
+                                window.location.href = data.url;
+                              } else {
+                                // For desktop: download directly
+                                const response = await fetch(`/api/invoices/${inv.id}/generate-pdf`);
+                                if (!response.ok) {
+                                  throw new Error("Failed to generate PDF invoice");
+                                }
+                                const blob = await response.blob();
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement("a");
+                                a.href = url;
+                                a.download = `invoice_${inv.invoiceNumber}_${new Date().toISOString().split("T")[0]}.pdf`;
+                                a.style.display = "none";
+                                document.body.appendChild(a);
+                                a.click();
+                                // Clean up after a delay to ensure download starts
+                                setTimeout(() => {
+                                  window.URL.revokeObjectURL(url);
+                                  document.body.removeChild(a);
+                                }, 100);
                               }
-                              const blob = await response.blob();
-                              const url = window.URL.createObjectURL(blob);
-                              const a = document.createElement("a");
-                              a.href = url;
-                              a.download = `invoice_${inv.invoiceNumber}_${new Date().toISOString().split("T")[0]}.pdf`;
-                              a.style.display = "none";
-                              document.body.appendChild(a);
-                              a.click();
-                              // Clean up after a delay to ensure download starts
-                              setTimeout(() => {
-                                window.URL.revokeObjectURL(url);
-                                document.body.removeChild(a);
-                              }, 100);
                             } catch (error) {
                               console.error("Error downloading PDF invoice:", error);
                               alert("Помилка при завантаженні PDF інвойсу. Спробуйте пізніше.");
