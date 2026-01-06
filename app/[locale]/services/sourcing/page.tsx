@@ -2,6 +2,8 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale } from "../../../../lib/translations";
+import { generateServiceMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import Image from "next/image";
 
 const content = {
@@ -210,6 +212,25 @@ const content = {
     ],
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const serviceNames = {
+    ua: "Сервіс пошуку та закупівлі в Китаї та Кореї",
+    ru: "Сервис поиска и закупки в Китае и Корее",
+    en: "Sourcing and Procurement Service in China and Korea",
+  };
+  const serviceDescriptions = {
+    ua: "Комплексний сервіс з пошуку товарів та виробників у Китаї та Південній Кореї. Пошук постачальників, перевірка фабрик, ведення переговорів, закупівля під ключ. Надійні постачальники, вигідні умови та повний супровід.",
+    ru: "Комплексный сервис по поиску товаров и производителей в Китае и Южной Корее. Поиск поставщиков, проверка фабрик, ведение переговоров, закупка под ключ. Надежные поставщики, выгодные условия и полное сопровождение.",
+    en: "Comprehensive service for finding products and manufacturers in China and South Korea. Supplier search, factory verification, negotiations, turnkey procurement. Reliable suppliers, favorable terms and full support.",
+  };
+  return generateServiceMetadata(locale, "sourcing", serviceNames, serviceDescriptions);
+}
 
 export default async function SourcingPage({
   params,

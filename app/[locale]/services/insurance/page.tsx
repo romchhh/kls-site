@@ -2,6 +2,8 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale } from "../../../../lib/translations";
+import { generateServiceMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import Image from "next/image";
 
 const content = {
@@ -342,6 +344,25 @@ const content = {
     ],
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const serviceNames = {
+    ua: "Страхування вантажів",
+    ru: "Страхование грузов",
+    en: "Cargo Insurance",
+  };
+  const serviceDescriptions = {
+    ua: "Надійне страхування вантажів для всіх видів міжнародної логістики — морської, авіа, авто та залізничної. Повний захист від втрат, пошкоджень, крадіжок та форс-мажорних обставин. Гарантія компенсації у разі страхового випадку.",
+    ru: "Надежное страхование грузов для всех видов международной логистики — морской, авиа, авто и железнодорожной. Полная защита от потерь, повреждений, краж и форс-мажорных обстоятельств. Гарантия компенсации в случае страхового случая.",
+    en: "Reliable cargo insurance for all types of international logistics — sea, air, road and rail. Full protection against loss, damage, theft and force majeure. Guaranteed compensation in case of an insured event.",
+  };
+  return generateServiceMetadata(locale, "insurance", serviceNames, serviceDescriptions);
+}
 
 export default async function InsurancePage({
   params,

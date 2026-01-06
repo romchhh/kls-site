@@ -478,10 +478,10 @@ export default async function InternationalPage({
             <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
               {/* Left - Text Content */}
               <div className="text-white">
-                <h1 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
+                <h1 className="mb-4 text-3xl font-black tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl" style={{ whiteSpace: 'pre-line' }}>
                   {t.delivery.international}
                 </h1>
-                <p className="mb-6 text-base font-normal leading-relaxed text-white/95 md:text-lg">
+                <p className="mb-6 text-xs font-normal leading-relaxed text-white/95 sm:text-sm md:text-base lg:text-lg">
                   {data.intro}
                 </p>
               </div>

@@ -4,6 +4,18 @@ Allow: /
 Disallow: /api/
 Disallow: /cabinet/
 Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
+
+# Crawl-delay для пошукових систем
+User-agent: Googlebot
+Crawl-delay: 0
+
+User-agent: Bingbot
+Crawl-delay: 0
+
+User-agent: Yandex
+Crawl-delay: 1
 
 # Sitemap
 Sitemap: https://kls.international/sitemap.xml

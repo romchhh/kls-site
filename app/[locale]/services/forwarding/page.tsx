@@ -2,6 +2,8 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale } from "../../../../lib/translations";
+import { generateServiceMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import Image from "next/image";
 
 const content = {
@@ -240,6 +242,25 @@ const content = {
     ],
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const serviceNames = {
+    ua: "Експедирування вантажів",
+    ru: "Экспедирование грузов",
+    en: "Freight Forwarding",
+  };
+  const serviceDescriptions = {
+    ua: "Професійне експедирування вантажів у міжнародній та внутрішній логістиці. Контроль на всіх етапах доставки — від забору вантажу до передачі отримувачу. Організація перевезень будь-якими видами транспорту, моніторинг та відстеження, супровід на митних процедурах.",
+    ru: "Профессиональное экспедирование грузов в международной и внутренней логистике. Контроль на всех этапах доставки — от забора груза до передачи получателю. Организация перевозок любыми видами транспорта, мониторинг и отслеживание, сопровождение на таможенных процедурах.",
+    en: "Professional freight forwarding in international and domestic logistics. Control at all stages of delivery — from cargo pickup to recipient transfer. Organization of transportation by any means, monitoring and tracking, support at customs procedures.",
+  };
+  return generateServiceMetadata(locale, "forwarding", serviceNames, serviceDescriptions);
+}
 
 export default async function ForwardingPage({
   params,

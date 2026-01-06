@@ -2,7 +2,28 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale, getTranslations } from "../../../../lib/translations";
+import { generateServiceMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import Image from "next/image";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const serviceNames = {
+    ua: "Складські послуги",
+    ru: "Складские услуги",
+    en: "Warehousing Services",
+  };
+  const serviceDescriptions = {
+    ua: "Професійні складські послуги в Китаї та Україні. Консолідація вантажів, зберігання, пакування та перепакування, інспекція та контроль якості. Оптимізація логістичних витрат та прискорення процесу доставки.",
+    ru: "Профессиональные складские услуги в Китае и Украине. Консолидация грузов, хранение, упаковка и переупаковка, инспекция и контроль качества. Оптимизация логистических расходов и ускорение процесса доставки.",
+    en: "Professional warehousing services in China and Ukraine. Cargo consolidation, storage, packaging and repackaging, inspection and quality control. Optimization of logistics costs and acceleration of delivery process.",
+  };
+  return generateServiceMetadata(locale, "warehousing", serviceNames, serviceDescriptions);
+}
 
 export default async function WarehousingPage({
   params,

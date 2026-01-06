@@ -114,7 +114,7 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          <div className="mt-8 text-center">
+          {/* <div className="mt-8 text-center">
             <p className="text-xs text-slate-500">
               Розроблено{" "}
               <a
@@ -126,7 +126,7 @@ export default function AdminLoginPage() {
                 TeleBots
               </a>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

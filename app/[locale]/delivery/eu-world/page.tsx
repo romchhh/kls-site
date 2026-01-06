@@ -2,6 +2,8 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale, getTranslations } from "../../../../lib/translations";
+import { generateDeliveryMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import DeliverySidebarNav from "../../../../components/DeliverySidebarNav";
 import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
@@ -494,6 +496,25 @@ const crossBorderContent = {
     cta: "Need Cross-Border delivery? Contact us — we'll select the fastest and most profitable route.",
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const deliveryNames = {
+    ua: "Доставка в ЄС та по всьому світу",
+    ru: "Доставка в ЕС и по всему миру",
+    en: "Delivery to EU and Worldwide",
+  };
+  const deliveryDescriptions = {
+    ua: "Комплексна доставка з Китаю в країни ЄС та по всьому світу. Cross-Border доставка, Port-to-Port, Express Delivery, DDP/DDU послуги, доставка на склади FBA. Швидкі терміни, вигідні ціни, повний супровід.",
+    ru: "Комплексная доставка из Китая в страны ЕС и по всему миру. Cross-Border доставка, Port-to-Port, Express Delivery, DDP/DDU услуги, доставка на склады FBA. Быстрые сроки, выгодные цены, полное сопровождение.",
+    en: "Comprehensive delivery from China to EU countries and worldwide. Cross-Border delivery, Port-to-Port, Express Delivery, DDP/DDU services, FBA warehouse delivery. Fast terms, favorable prices, full support.",
+  };
+  return generateDeliveryMetadata(locale, "eu-world", deliveryNames, deliveryDescriptions);
+}
 
 export default async function EuWorldPage({
   params,

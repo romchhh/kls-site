@@ -2,6 +2,8 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale } from "../../../../lib/translations";
+import { generateServiceMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import Image from "next/image";
 
 const content = {
@@ -240,6 +242,25 @@ const content = {
     ],
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const serviceNames = {
+    ua: "Локальна доставка в Китаї",
+    ru: "Локальная доставка в Китае",
+    en: "Local Delivery in China",
+  };
+  const serviceDescriptions = {
+    ua: "Швидка та надійна локальна доставка по всьому Китаю. Забір товарів від виробників, доставка по місту, міжміські перевезення, доставка до складів та терміналів. Працюємо з будь-якими видами вантажів — від дрібних пакунків до контейнерів.",
+    ru: "Быстрая и надежная локальная доставка по всему Китаю. Забор товаров от производителей, доставка по городу, междугородние перевозки, доставка до складов и терминалов. Работаем с любыми видами грузов — от мелких посылок до контейнеров.",
+    en: "Fast and reliable local delivery throughout China. Pickup from manufacturers, city delivery, intercity transportation, delivery to warehouses and terminals. We work with any type of cargo — from small packages to containers.",
+  };
+  return generateServiceMetadata(locale, "local", serviceNames, serviceDescriptions);
+}
 
 export default async function LocalPage({
   params,

@@ -2,6 +2,8 @@ import { Navigation } from "../../../../components/Navigation";
 import { SiteFooter } from "../../../../components/SiteFooter";
 import { ContactForm } from "../../../../components/ContactForm";
 import { Locale } from "../../../../lib/translations";
+import { generateServiceMetadata } from "../../../../lib/metadata";
+import { Metadata } from "next";
 import Image from "next/image";
 
 const content = {
@@ -237,6 +239,25 @@ const content = {
     ],
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const serviceNames = {
+    ua: "Митно-брокерські послуги",
+    ru: "Таможенно-брокерские услуги",
+    en: "Customs Brokerage Services",
+  };
+  const serviceDescriptions = {
+    ua: "Повний комплекс митно-брокерських послуг для імпортних та експортних вантажів. Оформлення митних декларацій, підготовка документів, визначення кодів УКТЗЕД, розрахунок митних платежів. Швидке та коректне оформлення на всіх етапах.",
+    ru: "Полный комплекс таможенно-брокерских услуг для импортных и экспортных грузов. Оформление таможенных деклараций, подготовка документов, определение кодов УКТЗЕД, расчет таможенных платежей. Быстрое и корректное оформление на всех этапах.",
+    en: "Full range of customs brokerage services for import and export cargo. Customs declaration processing, document preparation, HS code determination, customs payment calculation. Fast and correct processing at all stages.",
+  };
+  return generateServiceMetadata(locale, "customs", serviceNames, serviceDescriptions);
+}
 
 export default async function CustomsPage({
   params,

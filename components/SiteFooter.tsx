@@ -242,7 +242,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
         style={isVisible ? { animationDelay: '0.6s' } : { opacity: 0 }}
         >
           <p className="mb-4 text-sm text-white/70">{content.tagline}</p>
-          <div className="flex flex-col items-center gap-2">
+          {/* <div className="flex flex-col items-center gap-2">
             <span className="text-xs uppercase tracking-[0.25em] text-white/50">
               {content.developedBy}
             </span>
@@ -255,7 +255,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
               <span>TELEBOTS</span>
               <ArrowUpRight size={14} />
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>
