@@ -167,9 +167,9 @@ export const en = {
   },
   services: {
     title: "Services",
-    mainTitle: "Logistics Solutions for Every Step",
+    mainTitle: "Services",
     mainDescription:
-      "Whether you're scaling an e-commerce business or managing complex freight routes, our services ensure speed, reliability, and full transparency across every step of the journey.",
+      "Solution for every step.",
     readMore: "Read More",
     // Warehousing services category
     warehousing: "Warehousing Services",

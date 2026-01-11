@@ -326,7 +326,7 @@ export default async function ForwardingPage({
       <section className="py-12">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="relative mx-auto mb-16 max-w-3xl text-center">
-            <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+            <h2 className="mb-4 text-4xl font-black tracking-tight text-slate-900 text-center md:text-5xl lg:text-6xl">
               {data.ourServices}
             </h2>
               </div>
