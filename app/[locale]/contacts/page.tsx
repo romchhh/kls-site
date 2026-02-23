@@ -20,11 +20,11 @@ const contactsContent = {
     yiwuAddress: "中国(浙江)自由贸易试验区金华市义乌市稠江街道宏迪路92号10楼1009室",
     yiwuAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     yiwuPhone: "+86 21 5555 1234",
-    yiwuEmail: "support@kls.international",
+    yiwuEmail: "yiwu@kls.international",
     guangzhouAddress: "中国(浙江)自由贸易试验区金华市义乌市稠江街道宏迪路92号10楼1009室",
     guangzhouAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     guangzhouPhone: "+86 21 5555 1234",
-    guangzhouEmail: "support@kls.international",
+    guangzhouEmail: "guangzhou@kls.international",
     ukrainePhone: "+380990800222",
     socialMedia: "Соціальні мережі",
     telegram: "Telegram",
@@ -45,11 +45,11 @@ const contactsContent = {
     yiwuAddress: "中国(浙江)自由贸易试验区金华市义乌市稠江街道宏迪路92号10楼1009室",
     yiwuAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     yiwuPhone: "+86 21 5555 1234",
-    yiwuEmail: "support@kls.international",
+    yiwuEmail: "yiwu@kls.international",
     guangzhouAddress: "中国(浙江)自由贸易试验区金华市义乌市稠江街道宏迪路92号10楼1009室",
     guangzhouAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     guangzhouPhone: "+86 21 5555 1234",
-    guangzhouEmail: "support@kls.international",
+    guangzhouEmail: "guangzhou@kls.international",
     ukrainePhone: "+380990800222",
     socialMedia: "Социальные сети",
     telegram: "Telegram",
@@ -70,11 +70,11 @@ const contactsContent = {
     yiwuAddress: "中国(浙江)自由贸易试验区金华市义乌市稠江街道宏迪路92号10楼1009室",
     yiwuAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     yiwuPhone: "+86 21 5555 1234",
-    yiwuEmail: "support@kls.international",
+    yiwuEmail: "yiwu@kls.international",
     guangzhouAddress: "中国(浙江)自由贸易试验区金华市义乌市稠江街道宏迪路92号10楼1009室",
     guangzhouAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     guangzhouPhone: "+86 21 5555 1234",
-    guangzhouEmail: "support@kls.international",
+    guangzhouEmail: "guangzhou@kls.international",
     ukrainePhone: "+380990800222",
     socialMedia: "Social Media",
     telegram: "Telegram",
@@ -190,20 +190,26 @@ export default async function ContactsPage({
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
                   {locale === "ua" ? "Україна" : locale === "ru" ? "Украина" : "Ukraine"}
                 </h3>
-                <div className="space-y-1">
-                  <a
-                    href={`tel:${content.ukrainePhone}`}
-                    className="block text-[#006D77] hover:text-[#005a63] font-medium"
-                  >
-                    {content.ukrainePhone}
-                  </a>
-                  <a
-                    href="mailto:support@kls.international"
-                    className="block text-sm text-[#006D77] hover:text-[#005a63]"
-                  >
-                    support@kls.international
-                  </a>
-                </div>
+                <a
+                  href={`tel:${content.ukrainePhone}`}
+                  className="text-[#006D77] hover:text-[#005a63] font-medium"
+                >
+                  {content.ukrainePhone}
+                </a>
+              </div>
+
+              {/* Global Support Email */}
+              <div className="rounded-2xl border border-gray-200 p-6 text-center">
+                <Mail className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                  {content.email}
+                </h3>
+                <a
+                  href="mailto:support@kls.international"
+                  className="text-[#006D77] hover:text-[#005a63] font-medium break-all"
+                >
+                  support@kls.international
+                </a>
               </div>
 
               {/* Telegram */}
