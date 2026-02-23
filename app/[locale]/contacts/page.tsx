@@ -142,25 +142,7 @@ export default async function ContactsPage({
               <h2 className="mb-6 text-2xl font-semibold text-gray-900">
                 {content.yiwu}
               </h2>
-              <div className="space-y-4">
-                <div>
-                  <p className="mb-1 text-sm font-medium text-gray-500">
-                    {content.address}
-                  </p>
-                  <p className="text-gray-900 mb-2">{content.yiwuAddress}</p>
-                  <p className="text-gray-600 text-sm">{content.yiwuAddressEn}</p>
-                </div>
-                <div>
-                  <p className="mb-1 text-sm font-medium text-gray-500">
-                    {content.phone}
-                  </p>
-                  <a
-                    href={`tel:${content.yiwuPhone}`}
-                    className="text-[#006D77] hover:text-[#005a63]"
-                  >
-                    {content.yiwuPhone}
-                  </a>
-                </div>
+              <div className="space-y-2">
                 <div>
                   <p className="mb-1 text-sm font-medium text-gray-500">
                     {content.email}
@@ -180,25 +162,7 @@ export default async function ContactsPage({
               <h2 className="mb-6 text-2xl font-semibold text-gray-900">
                 {content.guangzhou}
               </h2>
-              <div className="space-y-4">
-                <div>
-                  <p className="mb-1 text-sm font-medium text-gray-500">
-                    {content.address}
-                  </p>
-                  <p className="text-gray-900 mb-2">{content.guangzhouAddress}</p>
-                  <p className="text-gray-600 text-sm">{content.guangzhouAddressEn}</p>
-                </div>
-                <div>
-                  <p className="mb-1 text-sm font-medium text-gray-500">
-                    {content.phone}
-                  </p>
-                  <a
-                    href={`tel:${content.guangzhouPhone}`}
-                    className="text-[#006D77] hover:text-[#005a63]"
-                  >
-                    {content.guangzhouPhone}
-                  </a>
-                </div>
+              <div className="space-y-2">
                 <div>
                   <p className="mb-1 text-sm font-medium text-gray-500">
                     {content.email}
@@ -226,12 +190,20 @@ export default async function ContactsPage({
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
                   {locale === "ua" ? "Україна" : locale === "ru" ? "Украина" : "Ukraine"}
                 </h3>
-                <a
-                  href={`tel:${content.ukrainePhone}`}
-                  className="text-[#006D77] hover:text-[#005a63] font-medium"
-                >
-                  {content.ukrainePhone}
-                </a>
+                <div className="space-y-1">
+                  <a
+                    href={`tel:${content.ukrainePhone}`}
+                    className="block text-[#006D77] hover:text-[#005a63] font-medium"
+                  >
+                    {content.ukrainePhone}
+                  </a>
+                  <a
+                    href="mailto:support@kls.international"
+                    className="block text-sm text-[#006D77] hover:text-[#005a63]"
+                  >
+                    support@kls.international
+                  </a>
+                </div>
               </div>
 
               {/* Telegram */}
