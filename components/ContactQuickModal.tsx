@@ -13,7 +13,9 @@ type ContactQuickModalProps = {
 
 export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModalProps) {
   const [phone, setPhone] = useState("");
-  const [selectedMessenger, setSelectedMessenger] = useState<"telegram" | "whatsapp" | "viber" | "wechat" | "phone" | null>(null);
+  const [selectedMessenger, setSelectedMessenger] = useState<
+    "telegram" | "whatsapp" | "wechat" | "phone" | null
+  >(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   
@@ -165,25 +167,6 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
                     <Image src="/icons/social/WhatsAppLogo.svg" alt="WhatsApp" width={16} height={16} className="object-contain h-full w-full" />
                   </div>
                   WhatsApp
-                </label>
-                <label className={`group relative flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 px-3 py-2.5 text-xs font-medium transition-all ${
-                  selectedMessenger === "viber"
-                    ? "border-purple-500 bg-purple-50 text-purple-700"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-600"
-                }`}>
-                  <input
-                    type="radio"
-                    name="messenger"
-                    value="viber"
-                    checked={selectedMessenger === "viber"}
-                    onChange={(e) => setSelectedMessenger(e.target.value as "viber")}
-                    className="sr-only"
-                    disabled={isSubmitting}
-                  />
-                  <div className="flex h-4 w-4 items-center justify-center flex-shrink-0">
-                    <Image src="/icons/social/viber-color-svgrepo-com.svg" alt="Viber" width={16} height={16} className="object-contain h-full w-full" />
-                  </div>
-                  Viber
                 </label>
                 <label className={`group relative flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 px-3 py-2.5 text-xs font-medium transition-all ${
                   selectedMessenger === "wechat"

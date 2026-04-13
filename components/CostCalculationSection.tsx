@@ -529,7 +529,7 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
                   <label className="mb-1.5 sm:mb-2 text-xs sm:text-sm font-medium text-gray-700">
                     {costCalc.contactFormat}
                   </label>
-                  <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3">
                     {Object.entries(costCalc.contactFormats)
                       .filter(([key]) => key !== "py") // Виключаємо PY
                       .map(([key, value]) => (

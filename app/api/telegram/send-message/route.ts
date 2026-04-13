@@ -96,7 +96,6 @@ export async function POST(req: NextRequest) {
         const messengerLabels: Record<string, string> = {
           telegram: "📱 Telegram",
           whatsapp: "💚 WhatsApp",
-          viber: "💜 Viber",
           wechat: "💬 WeChat",
           phone: "📞 Телефон",
         };

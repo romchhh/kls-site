@@ -435,7 +435,6 @@ export const ru = {
     contactFormat: "Формат связи",
     contactFormats: {
       telegram: "Telegram",
-      viber: "Viber",
       whatsapp: "WhatsApp",
       call: "Звонок",
     },

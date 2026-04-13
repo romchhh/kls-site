@@ -2,10 +2,18 @@ import { Navigation } from "../../../components/Navigation";
 import { SiteFooter } from "../../../components/SiteFooter";
 import { ContactFormFull } from "../../../components/ContactFormFull";
 import { StructuredData } from "../../../components/StructuredData";
-import { Locale, getTranslations } from "../../../lib/translations";
+import { Locale } from "../../../lib/translations";
 import { generateMetadata as genMeta } from "../../../lib/metadata";
 import { Metadata } from "next";
-import { MessageCircle, Phone, Mail, Send, Instagram, Facebook, Twitter } from "lucide-react";
+import Image from "next/image";
+import { MessageCircle, Phone, Mail, Send, Instagram } from "lucide-react";
+
+const INSTAGRAM_URL =
+  "https://www.instagram.com/kls.delivery?igsh=MWVhb291ZXQ4dXY5NQ==";
+const CHINA_MESSENGER_PHONE_DISPLAY = "+86 191 2010 9094";
+const TELEGRAM_PHONE_LINK = "https://t.me/+8619120109094";
+const WHATSAPP_LINK = "https://wa.me/8619120109094";
+const WECHAT_ID = "kls_logistics";
 
 const contactsContent = {
   ua: {
@@ -25,13 +33,16 @@ const contactsContent = {
     guangzhouAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     guangzhouPhone: "+86 21 5555 1234",
     guangzhouEmail: "guangzhou@kls.international",
-    ukrainePhone: "+380990800222",
-    socialMedia: "Соціальні мережі",
+    ukrainePhone: "+380689701270",
+    ukrainePhoneNote:
+      "(Якщо не отримали відповіді, краще зверніться через один із месенджерів.)",
+    socialAndMessengers: "Соціальні мережі та месенджери",
+    instagram: "Instagram",
     telegram: "Telegram",
     telegramBot: "Telegram бот",
-    messengers: "Месенджери",
+    whatsapp: "WhatsApp",
     wechat: "WeChat",
-    wechatPhone: "Телефон додамо пізніше",
+    weixinId: "Weixin ID",
   },
   ru: {
     title: "Контакты",
@@ -50,13 +61,16 @@ const contactsContent = {
     guangzhouAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     guangzhouPhone: "+86 21 5555 1234",
     guangzhouEmail: "guangzhou@kls.international",
-    ukrainePhone: "+380990800222",
-    socialMedia: "Социальные сети",
+    ukrainePhone: "+380689701270",
+    ukrainePhoneNote:
+      "(Если не получили ответ, лучше обратитесь через один из мессенджеров.)",
+    socialAndMessengers: "Социальные сети и мессенджеры",
+    instagram: "Instagram",
     telegram: "Telegram",
     telegramBot: "Telegram бот",
-    messengers: "Мессенджеры",
+    whatsapp: "WhatsApp",
     wechat: "WeChat",
-    wechatPhone: "Телефон добавим позже",
+    weixinId: "Weixin ID",
   },
   en: {
     title: "Contacts",
@@ -75,13 +89,16 @@ const contactsContent = {
     guangzhouAddressEn: "China, Zhejiang Province, Jinhua City, Yiwu City, Choujiang Street, No. 92 Hongdi Road, 10th Floor, Room 1009",
     guangzhouPhone: "+86 21 5555 1234",
     guangzhouEmail: "guangzhou@kls.international",
-    ukrainePhone: "+380990800222",
-    socialMedia: "Social Media",
+    ukrainePhone: "+380689701270",
+    ukrainePhoneNote:
+      "(If you haven't received a reply, please reach out via one of the messengers.)",
+    socialAndMessengers: "Social media & messengers",
+    instagram: "Instagram",
     telegram: "Telegram",
     telegramBot: "Telegram Bot",
-    messengers: "Messengers",
+    whatsapp: "WhatsApp",
     wechat: "WeChat",
-    wechatPhone: "Phone will be added later",
+    weixinId: "Weixin ID",
   },
 };
 
@@ -181,20 +198,22 @@ export default async function ContactsPage({
           {/* Social Media and Messengers Section */}
           <div className="mb-12">
             <h2 className="mb-6 text-2xl font-semibold text-gray-900 text-center">
-              {content.socialMedia} та {content.messengers}
+              {content.socialAndMessengers}
             </h2>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {/* Ukraine Phone */}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {/* Instagram */}
               <div className="rounded-2xl border border-gray-200 p-6 text-center">
-                <Phone className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
+                <Instagram className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                  {locale === "ua" ? "Україна" : locale === "ru" ? "Украина" : "Ukraine"}
+                  {content.instagram}
                 </h3>
                 <a
-                  href={`tel:${content.ukrainePhone}`}
-                  className="text-[#006D77] hover:text-[#005a63] font-medium"
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#006D77] hover:text-[#005a63] font-medium break-all text-sm"
                 >
-                  {content.ukrainePhone}
+                  @kls.delivery
                 </a>
               </div>
 
@@ -212,19 +231,43 @@ export default async function ContactsPage({
                 </a>
               </div>
 
-              {/* Telegram */}
+              {/* Telegram (China number) */}
               <div className="rounded-2xl border border-gray-200 p-6 text-center">
                 <Send className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
                   {content.telegram}
                 </h3>
                 <a
-                  href="https://t.me/klslogistics"
+                  href={TELEGRAM_PHONE_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#006D77] hover:text-[#005a63] font-medium"
                 >
-                  @klslogistics
+                  {CHINA_MESSENGER_PHONE_DISPLAY}
+                </a>
+              </div>
+
+              {/* WhatsApp */}
+              <div className="rounded-2xl border border-gray-200 p-6 text-center">
+                <div className="mx-auto mb-4 flex h-8 w-8 items-center justify-center">
+                  <Image
+                    src="/icons/social/WhatsAppLogo.svg"
+                    alt="WhatsApp"
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 object-contain"
+                  />
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                  {content.whatsapp}
+                </h3>
+                <a
+                  href={WHATSAPP_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#006D77] hover:text-[#005a63] font-medium"
+                >
+                  {CHINA_MESSENGER_PHONE_DISPLAY}
                 </a>
               </div>
 
@@ -244,14 +287,40 @@ export default async function ContactsPage({
                 </a>
               </div>
 
-              {/* WeChat */}
+              {/* WeChat / Weixin */}
               <div className="rounded-2xl border border-gray-200 p-6 text-center">
-                <MessageCircle className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
+                <div className="mx-auto mb-4 flex h-8 w-8 items-center justify-center">
+                  <Image
+                    src="/icons/social/wechat-communication-interaction-connection-internet-svgrepo-com.svg"
+                    alt="WeChat"
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 object-contain"
+                  />
+                </div>
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
                   {content.wechat}
                 </h3>
-                <p className="text-gray-600 text-sm">
-                  {content.wechatPhone}
+                <p className="text-xs font-medium text-gray-500">{content.weixinId}</p>
+                <p className="mt-1 font-mono text-base font-semibold text-gray-900">
+                  {WECHAT_ID}
+                </p>
+              </div>
+
+              {/* Ukraine Phone — last in the list */}
+              <div className="rounded-2xl border border-gray-200 p-6 text-center sm:col-span-2 lg:col-span-3 lg:max-w-xl lg:mx-auto lg:w-full">
+                <Phone className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                  {locale === "ua" ? "Україна" : locale === "ru" ? "Украина" : "Ukraine"}
+                </h3>
+                <a
+                  href={`tel:${content.ukrainePhone.replace(/\s/g, "")}`}
+                  className="text-[#006D77] hover:text-[#005a63] font-medium"
+                >
+                  {content.ukrainePhone}
+                </a>
+                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-gray-600">
+                  {content.ukrainePhoneNote}
                 </p>
               </div>
             </div>

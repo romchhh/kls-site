@@ -126,7 +126,7 @@ export function UserCabinet({ locale }: UserCabinetProps) {
     if (managerLink) {
       window.open(managerLink, "_blank");
     } else {
-      window.open("https://t.me/klslogistics", "_blank");
+      window.open("https://t.me/+8619120109094", "_blank");
     }
   };
 

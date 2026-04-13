@@ -793,7 +793,6 @@ export const ua = {
     contactFormat: "Формат зв'язку",
     contactFormats: {
       telegram: "Telegram",
-      viber: "Viber",
       whatsapp: "WhatsApp",
       call: "Дзвінок",
     },

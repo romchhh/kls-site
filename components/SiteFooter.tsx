@@ -142,7 +142,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
             {/* Соціальні мережі зверху */}
             <div className="flex items-center gap-4">
               <a
-                href="https://www.instagram.com/klslogistics"
+                href="https://www.instagram.com/kls.delivery?igsh=MWVhb291ZXQ4dXY5NQ=="
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center justify-center transition-all duration-200 hover:opacity-80"
@@ -172,7 +172,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                 />
               </a>
               <a
-                href="https://t.me/klslogistics"
+                href="https://t.me/+8619120109094"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center justify-center transition-all duration-200 hover:opacity-80"

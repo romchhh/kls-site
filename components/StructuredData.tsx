@@ -35,16 +35,16 @@ export function StructuredData({
     },
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+380-32-229-4567",
+      telephone: "+380689701270",
       contactType: "customer service",
       areaServed: ["UA", "CN", "EU", "US"],
       availableLanguage: ["Ukrainian", "Russian", "English"],
       email: "info@kls.international",
     },
     sameAs: [
-      "https://www.instagram.com/klslogistics",
+      "https://www.instagram.com/kls.delivery?igsh=MWVhb291ZXQ4dXY5NQ==",
       "https://www.tiktok.com/@klslogistics",
-      "https://t.me/klslogistics",
+      "https://t.me/+8619120109094",
       "https://www.facebook.com/klslogistics",
     ],
     address: {
@@ -67,7 +67,7 @@ export function StructuredData({
     "@id": `${siteUrl}#organization`,
     name: "KLS Logistics",
     image: `${siteUrl}/logos/ЛОГО(1).png`,
-    telephone: "+380-32-229-4567",
+    telephone: "+380689701270",
     email: "info@kls.international",
     address: {
       "@type": "PostalAddress",
