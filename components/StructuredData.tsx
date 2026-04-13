@@ -44,7 +44,7 @@ export function StructuredData({
     sameAs: [
       "https://www.instagram.com/kls.delivery?igsh=MWVhb291ZXQ4dXY5NQ==",
       "https://www.tiktok.com/@klslogistics",
-      "https://t.me/+8619120109094",
+      "https://t.me/klslogistics",
       "https://www.facebook.com/klslogistics",
     ],
     address: {

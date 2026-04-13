@@ -172,7 +172,7 @@ export function SiteFooter({ locale }: SiteFooterProps) {
                 />
               </a>
               <a
-                href="https://t.me/+8619120109094"
+                href="https://t.me/klslogistics"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center justify-center transition-all duration-200 hover:opacity-80"

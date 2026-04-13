@@ -11,9 +11,11 @@ import { MessageCircle, Phone, Mail, Send, Instagram } from "lucide-react";
 const INSTAGRAM_URL =
   "https://www.instagram.com/kls.delivery?igsh=MWVhb291ZXQ4dXY5NQ==";
 const CHINA_MESSENGER_PHONE_DISPLAY = "+86 191 2010 9094";
-const TELEGRAM_PHONE_LINK = "https://t.me/+8619120109094";
+const TELEGRAM_LINK = "https://t.me/klslogistics";
 const WHATSAPP_LINK = "https://wa.me/8619120109094";
 const WECHAT_ID = "kls_logistics";
+/** На мобільних відкриває WeChat (додати контакт / пошук за Weixin ID), якщо встановлено додаток */
+const WECHAT_ADD_LINK = `weixin://dl/add?username=${WECHAT_ID}`;
 
 const contactsContent = {
   ua: {
@@ -231,19 +233,19 @@ export default async function ContactsPage({
                 </a>
               </div>
 
-              {/* Telegram (China number) */}
+              {/* Telegram — посилання на @klslogistics */}
               <div className="rounded-2xl border border-gray-200 p-6 text-center">
                 <Send className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
                   {content.telegram}
                 </h3>
                 <a
-                  href={TELEGRAM_PHONE_LINK}
+                  href={TELEGRAM_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#006D77] hover:text-[#005a63] font-medium"
                 >
-                  {CHINA_MESSENGER_PHONE_DISPLAY}
+                  @klslogistics
                 </a>
               </div>
 
@@ -302,9 +304,12 @@ export default async function ContactsPage({
                   {content.wechat}
                 </h3>
                 <p className="text-xs font-medium text-gray-500">{content.weixinId}</p>
-                <p className="mt-1 font-mono text-base font-semibold text-gray-900">
+                <a
+                  href={WECHAT_ADD_LINK}
+                  className="mt-1 inline-block font-mono text-base font-semibold text-[#006D77] underline-offset-2 hover:text-[#005a63] hover:underline"
+                >
                   {WECHAT_ID}
-                </p>
+                </a>
               </div>
 
               {/* Ukraine Phone — last in the list */}
