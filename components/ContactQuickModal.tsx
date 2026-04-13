@@ -4,6 +4,7 @@ import { useState, FormEvent, useEffect } from "react";
 import { X, Phone, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { Locale, getTranslations } from "../lib/translations";
+import { WeChatIdCopyButton } from "./WeChatIdCopyButton";
 
 type ContactQuickModalProps = {
   locale: Locale;
@@ -11,10 +12,17 @@ type ContactQuickModalProps = {
   onClose: () => void;
 };
 
+const MESSENGER_HREFS = {
+  telegram: "https://t.me/klslogistics",
+  whatsapp: "https://wa.me/8619120109094",
+} as const;
+
+const WECHAT_ID = "kls_logistics";
+
 export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModalProps) {
   const [phone, setPhone] = useState("");
   const [selectedMessenger, setSelectedMessenger] = useState<
-    "telegram" | "whatsapp" | "wechat" | "phone" | null
+    "telegram" | "whatsapp" | "wechat" | null
   >(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -32,6 +40,7 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
     submit: "Залишити заявку",
     submitting: "Відправка...",
     success: "Дякуємо! Ми зв'яжемося з вами найближчим часом.",
+    wechatCopied: "Скопійовано в буфер",
   };
 
   useEffect(() => {
@@ -129,64 +138,72 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
             {/* Messengers */}
             <div className="mb-5">
               <p className="mb-3 text-xs font-medium text-slate-500">{modalT.chooseMessenger}</p>
-              <div className="grid grid-cols-2 gap-2">
-                <label className={`group relative flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 px-3 py-2.5 text-xs font-medium transition-all ${
-                  selectedMessenger === "telegram"
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
-                }`}>
-                  <input
-                    type="radio"
-                    name="messenger"
-                    value="telegram"
-                    checked={selectedMessenger === "telegram"}
-                    onChange={(e) => setSelectedMessenger(e.target.value as "telegram")}
-                    className="sr-only"
-                    disabled={isSubmitting}
-                  />
-                  <div className="flex h-4 w-4 items-center justify-center flex-shrink-0">
-                    <Image src="/icons/social/TelegramLogo.svg" alt="Telegram" width={16} height={16} className="object-contain h-full w-full" />
-                  </div>
+              <div className="flex flex-col gap-2">
+                <a
+                  href={MESSENGER_HREFS.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setSelectedMessenger("telegram")}
+                  className={`flex w-full cursor-pointer items-center gap-3 rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-all ${
+                    selectedMessenger === "telegram"
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
+                  } ${isSubmitting ? "pointer-events-none opacity-50" : ""}`}
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                    <Image
+                      src="/icons/social/TelegramLogo.svg"
+                      alt="Telegram"
+                      width={20}
+                      height={20}
+                      className="h-5 w-5 object-contain"
+                    />
+                  </span>
                   Telegram
-                </label>
-                <label className={`group relative flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 px-3 py-2.5 text-xs font-medium transition-all ${
-                  selectedMessenger === "whatsapp"
-                    ? "border-green-500 bg-green-50 text-green-700"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-green-300 hover:bg-green-50 hover:text-green-600"
-                }`}>
-                  <input
-                    type="radio"
-                    name="messenger"
-                    value="whatsapp"
-                    checked={selectedMessenger === "whatsapp"}
-                    onChange={(e) => setSelectedMessenger(e.target.value as "whatsapp")}
-                    className="sr-only"
-                    disabled={isSubmitting}
-                  />
-                  <div className="flex h-4 w-4 items-center justify-center flex-shrink-0">
-                    <Image src="/icons/social/WhatsAppLogo.svg" alt="WhatsApp" width={16} height={16} className="object-contain h-full w-full" />
-                  </div>
+                </a>
+                <a
+                  href={MESSENGER_HREFS.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setSelectedMessenger("whatsapp")}
+                  className={`flex w-full cursor-pointer items-center gap-3 rounded-lg border-2 px-3 py-2.5 text-sm font-medium transition-all ${
+                    selectedMessenger === "whatsapp"
+                      ? "border-green-500 bg-green-50 text-green-700"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-green-300 hover:bg-green-50 hover:text-green-600"
+                  } ${isSubmitting ? "pointer-events-none opacity-50" : ""}`}
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                    <Image
+                      src="/icons/social/WhatsAppLogo.svg"
+                      alt="WhatsApp"
+                      width={20}
+                      height={20}
+                      className="h-5 w-5 object-contain"
+                    />
+                  </span>
                   WhatsApp
-                </label>
-                <label className={`group relative flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 px-3 py-2.5 text-xs font-medium transition-all ${
-                  selectedMessenger === "wechat"
-                    ? "border-green-600 bg-green-50 text-green-700"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-green-400 hover:bg-green-50 hover:text-green-700"
-                }`}>
-                  <input
-                    type="radio"
-                    name="messenger"
-                    value="wechat"
-                    checked={selectedMessenger === "wechat"}
-                    onChange={(e) => setSelectedMessenger(e.target.value as "wechat")}
-                    className="sr-only"
-                    disabled={isSubmitting}
-                  />
-                  <div className="flex h-4 w-4 items-center justify-center flex-shrink-0">
-                    <Image src="/icons/social/wechat-communication-interaction-connection-internet-svgrepo-com.svg" alt="WeChat" width={16} height={16} className="object-contain h-full w-full" />
-                  </div>
-                  WeChat
-                </label>
+                </a>
+                <WeChatIdCopyButton
+                  wechatId={WECHAT_ID}
+                  copiedLabel={modalT.wechatCopied}
+                  onPress={() => setSelectedMessenger("wechat")}
+                  className={`flex w-full flex-col rounded-lg border-2 px-3 py-2.5 text-left text-sm font-medium transition-all ${
+                    selectedMessenger === "wechat"
+                      ? "border-emerald-600 bg-emerald-50 text-emerald-800"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-emerald-400 hover:bg-emerald-50/80 hover:text-emerald-800"
+                  } ${isSubmitting ? "pointer-events-none opacity-50" : ""}`}
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                    <Image
+                      src="/icons/social/wechat.svg"
+                      alt="WeChat"
+                      width={20}
+                      height={20}
+                      className="h-5 w-5 object-contain"
+                    />
+                  </span>
+                  <span>WeChat</span>
+                </WeChatIdCopyButton>
               </div>
             </div>
 
@@ -202,39 +219,39 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
 
             {/* Phone Input */}
             <div className="mb-5">
-                <label htmlFor="phone" className="mb-1.5 block text-xs font-medium text-slate-600">
-                  {modalT.phoneLabel}
-                </label>
-                <div className="relative">
-                  <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type="tel"
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder={modalT.phonePlaceholder}
-                    className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500/20"
-                    required
-                    disabled={isSubmitting}
-                  />
-                </div>
+              <label htmlFor="phone" className="mb-1.5 block text-xs font-medium text-slate-600">
+                {modalT.phoneLabel}
+              </label>
+              <div className="relative">
+                <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="tel"
+                  id="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder={modalT.phonePlaceholder}
+                  className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder-slate-400 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500/20"
+                  required
+                  disabled={isSubmitting}
+                />
               </div>
-            
-              <button
-                type="submit"
+            </div>
+
+            <button
+              type="submit"
               disabled={isSubmitting || !phone.trim() || !selectedMessenger || showSuccess}
-                className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
-                    {modalT.submitting}
-                  </span>
-                ) : (
-                  modalT.submit
-                )}
-              </button>
-            </form>
+              className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
+                  {modalT.submitting}
+                </span>
+              ) : (
+                modalT.submit
+              )}
+            </button>
+          </form>
         </div>
       </div>
     </>

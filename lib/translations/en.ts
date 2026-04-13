@@ -382,6 +382,7 @@ export const en = {
     submit: "Submit request",
     submitting: "Submitting...",
     success: "Thank you! We will contact you soon.",
+    wechatCopied: "Copied to clipboard",
   },
   contactModal: {
     title: "Contact Us",

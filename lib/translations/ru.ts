@@ -382,6 +382,7 @@ export const ru = {
     submit: "Оставить заявку",
     submitting: "Отправка...",
     success: "Спасибо! Мы свяжемся с вами в ближайшее время.",
+    wechatCopied: "Скопировано в буфер",
   },
   contactModal: {
     title: "Свяжитесь с нами",

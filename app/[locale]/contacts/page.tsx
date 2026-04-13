@@ -2,6 +2,8 @@ import { Navigation } from "../../../components/Navigation";
 import { SiteFooter } from "../../../components/SiteFooter";
 import { ContactFormFull } from "../../../components/ContactFormFull";
 import { StructuredData } from "../../../components/StructuredData";
+import { WeChatIdCopyButton } from "../../../components/WeChatIdCopyButton";
+import { UkrainePhoneContact } from "../../../components/UkrainePhoneContact";
 import { Locale } from "../../../lib/translations";
 import { generateMetadata as genMeta } from "../../../lib/metadata";
 import { Metadata } from "next";
@@ -14,8 +16,6 @@ const CHINA_MESSENGER_PHONE_DISPLAY = "+86 191 2010 9094";
 const TELEGRAM_LINK = "https://t.me/klslogistics";
 const WHATSAPP_LINK = "https://wa.me/8619120109094";
 const WECHAT_ID = "kls_logistics";
-/** На мобільних відкриває WeChat (додати контакт / пошук за Weixin ID), якщо встановлено додаток */
-const WECHAT_ADD_LINK = `weixin://dl/add?username=${WECHAT_ID}`;
 
 const contactsContent = {
   ua: {
@@ -37,7 +37,9 @@ const contactsContent = {
     guangzhouEmail: "guangzhou@kls.international",
     ukrainePhone: "+380689701270",
     ukrainePhoneNote:
-      "(Якщо не отримали відповіді, краще зверніться через один із месенджерів.)",
+      "Якщо не отримали відповіді, краще зверніться через один із месенджерів.",
+    ukraineCopyLabel: "Копіювати номер",
+    ukraineCopied: "Скопійовано в буфер",
     socialAndMessengers: "Соціальні мережі та месенджери",
     instagram: "Instagram",
     telegram: "Telegram",
@@ -45,6 +47,9 @@ const contactsContent = {
     whatsapp: "WhatsApp",
     wechat: "WeChat",
     weixinId: "Weixin ID",
+    wechatCopyHint:
+      "Натисніть на ID, щоб скопіювати. У WeChat: «+» → «Додати друзів» → пошук за Weixin ID → вставити.",
+    wechatCopied: "Скопійовано в буфер",
   },
   ru: {
     title: "Контакты",
@@ -65,7 +70,9 @@ const contactsContent = {
     guangzhouEmail: "guangzhou@kls.international",
     ukrainePhone: "+380689701270",
     ukrainePhoneNote:
-      "(Если не получили ответ, лучше обратитесь через один из мессенджеров.)",
+      "Если не получили ответ, лучше обратитесь через один из мессенджеров.",
+    ukraineCopyLabel: "Скопировать номер",
+    ukraineCopied: "Скопировано в буфер",
     socialAndMessengers: "Социальные сети и мессенджеры",
     instagram: "Instagram",
     telegram: "Telegram",
@@ -73,6 +80,9 @@ const contactsContent = {
     whatsapp: "WhatsApp",
     wechat: "WeChat",
     weixinId: "Weixin ID",
+    wechatCopyHint:
+      "Нажмите на ID, чтобы скопировать. В WeChat: «+» → «Добавить друзей» → поиск по Weixin ID → вставить.",
+    wechatCopied: "Скопировано в буфер",
   },
   en: {
     title: "Contacts",
@@ -93,7 +103,9 @@ const contactsContent = {
     guangzhouEmail: "guangzhou@kls.international",
     ukrainePhone: "+380689701270",
     ukrainePhoneNote:
-      "(If you haven't received a reply, please reach out via one of the messengers.)",
+      "If you haven't received a reply, please reach out via one of the messengers.",
+    ukraineCopyLabel: "Copy number",
+    ukraineCopied: "Copied to clipboard",
     socialAndMessengers: "Social media & messengers",
     instagram: "Instagram",
     telegram: "Telegram",
@@ -101,6 +113,9 @@ const contactsContent = {
     whatsapp: "WhatsApp",
     wechat: "WeChat",
     weixinId: "Weixin ID",
+    wechatCopyHint:
+      "Tap the ID to copy. In WeChat: + → Add Contacts → search by Weixin ID → paste.",
+    wechatCopied: "Copied to clipboard",
   },
 };
 
@@ -293,7 +308,7 @@ export default async function ContactsPage({
               <div className="rounded-2xl border border-gray-200 p-6 text-center">
                 <div className="mx-auto mb-4 flex h-8 w-8 items-center justify-center">
                   <Image
-                    src="/icons/social/wechat-communication-interaction-connection-internet-svgrepo-com.svg"
+                    src="/icons/social/wechat.svg"
                     alt="WeChat"
                     width={32}
                     height={32}
@@ -304,29 +319,28 @@ export default async function ContactsPage({
                   {content.wechat}
                 </h3>
                 <p className="text-xs font-medium text-gray-500">{content.weixinId}</p>
-                <a
-                  href={WECHAT_ADD_LINK}
-                  className="mt-1 inline-block font-mono text-base font-semibold text-[#006D77] underline-offset-2 hover:text-[#005a63] hover:underline"
-                >
-                  {WECHAT_ID}
-                </a>
+                <p className="mx-auto mt-2 max-w-xs text-xs leading-relaxed text-gray-500">
+                  {content.wechatCopyHint}
+                </p>
+                <WeChatIdCopyButton
+                  wechatId={WECHAT_ID}
+                  copiedLabel={content.wechatCopied}
+                  className="mt-2 inline-flex flex-col items-center rounded-lg px-3 py-2 text-base font-semibold text-[#006D77] transition-colors hover:bg-teal-50 hover:text-[#005a63] focus:outline-none focus:ring-2 focus:ring-[#006D77]/25"
+                />
               </div>
 
               {/* Ukraine Phone — last in the list */}
-              <div className="rounded-2xl border border-gray-200 p-6 text-center sm:col-span-2 lg:col-span-3 lg:max-w-xl lg:mx-auto lg:w-full">
+              <div className="rounded-2xl border border-gray-200 p-6 text-center">
                 <Phone className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
                   {locale === "ua" ? "Україна" : locale === "ru" ? "Украина" : "Ukraine"}
                 </h3>
-                <a
-                  href={`tel:${content.ukrainePhone.replace(/\s/g, "")}`}
-                  className="text-[#006D77] hover:text-[#005a63] font-medium"
-                >
-                  {content.ukrainePhone}
-                </a>
-                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-gray-600">
-                  {content.ukrainePhoneNote}
-                </p>
+                <UkrainePhoneContact
+                  phoneE164={content.ukrainePhone}
+                  note={content.ukrainePhoneNote}
+                  copyLabel={content.ukraineCopyLabel}
+                  copiedLabel={content.ukraineCopied}
+                />
               </div>
             </div>
           </div>

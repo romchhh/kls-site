@@ -740,6 +740,7 @@ export const ua = {
     submit: "Залишити заявку",
     submitting: "Відправка...",
     success: "Дякуємо! Ми зв'яжемося з вами найближчим часом.",
+    wechatCopied: "Скопійовано в буфер",
   },
   contactModal: {
     title: "Зв'яжіться з нами",
