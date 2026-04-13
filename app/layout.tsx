@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import "./globals.css";
+import { MetaPixel } from "../components/MetaPixel";
 import { Unbounded, Roboto } from "next/font/google";
 
 const unbounded = Unbounded({
@@ -125,6 +126,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="uk" className={`${unbounded.variable} ${roboto.variable}`}>
       <body className="bg-white font-sans font-normal text-gray-900 antialiased">
         {children}
+        <MetaPixel />
       </body>
     </html>
   );

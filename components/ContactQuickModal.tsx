@@ -174,7 +174,7 @@ export function ContactQuickModal({ locale, isOpen, onClose }: ContactQuickModal
                 >
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center">
                     <Image
-                      src="/icons/social/WhatsAppLogo.svg"
+                      src="/icons/social/whats-up.svg"
                       alt="WhatsApp"
                       width={20}
                       height={20}

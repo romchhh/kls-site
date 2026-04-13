@@ -268,7 +268,7 @@ export default async function ContactsPage({
               <div className="rounded-2xl border border-gray-200 p-6 text-center">
                 <div className="mx-auto mb-4 flex h-8 w-8 items-center justify-center">
                   <Image
-                    src="/icons/social/WhatsAppLogo.svg"
+                    src="/icons/social/whats-up.svg"
                     alt="WhatsApp"
                     width={32}
                     height={32}
