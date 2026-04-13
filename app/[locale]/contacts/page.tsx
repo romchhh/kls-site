@@ -329,18 +329,20 @@ export default async function ContactsPage({
                 />
               </div>
 
-              {/* Ukraine Phone — last in the list */}
-              <div className="rounded-2xl border border-gray-200 p-6 text-center">
-                <Phone className="h-8 w-8 mx-auto mb-4 text-[#006D77]" />
-                <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                  {locale === "ua" ? "Україна" : locale === "ru" ? "Украина" : "Ukraine"}
-                </h3>
-                <UkrainePhoneContact
-                  phoneE164={content.ukrainePhone}
-                  note={content.ukrainePhoneNote}
-                  copyLabel={content.ukraineCopyLabel}
-                  copiedLabel={content.ukraineCopied}
-                />
+              {/* Ukraine Phone — last row, centred; width як у однієї колонки сітки (gap-6) */}
+              <div className="flex justify-center sm:col-span-2 lg:col-span-3">
+                <div className="w-full max-w-full rounded-2xl border border-gray-200 p-6 text-center sm:max-w-[calc((100%-1.5rem)/2)] lg:max-w-[calc((100%-3rem)/3)]">
+                  <Phone className="mx-auto mb-4 h-8 w-8 text-[#006D77]" />
+                  <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                    {locale === "ua" ? "Україна" : locale === "ru" ? "Украина" : "Ukraine"}
+                  </h3>
+                  <UkrainePhoneContact
+                    phoneE164={content.ukrainePhone}
+                    note={content.ukrainePhoneNote}
+                    copyLabel={content.ukraineCopyLabel}
+                    copiedLabel={content.ukraineCopied}
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -54,10 +54,10 @@ export function UkrainePhoneContact({
   }, [phoneE164]);
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 text-center">
       <a
         href={telHref}
-        className="text-lg font-semibold tracking-tight text-[#006D77] transition-colors hover:text-[#005a63] focus:outline-none focus:ring-2 focus:ring-[#006D77]/25 rounded-md px-1"
+        className="block text-lg font-semibold tracking-tight text-[#006D77] transition-colors hover:text-[#005a63] focus:outline-none focus:ring-2 focus:ring-[#006D77]/25 rounded-md px-1"
       >
         {formatted}
       </a>
@@ -68,7 +68,9 @@ export function UkrainePhoneContact({
       >
         {copied ? copiedLabel : copyLabel}
       </button>
-      <p className="mt-2 w-full text-balance text-sm leading-relaxed text-gray-600">{note}</p>
+      <p className="mt-2 w-full text-balance text-center text-sm leading-relaxed text-gray-600">
+        {note}
+      </p>
     </div>
   );
 }
