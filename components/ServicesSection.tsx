@@ -15,11 +15,6 @@ type ServicesSectionProps = {
 export function ServicesSection({ locale }: ServicesSectionProps) {
   const t = getTranslations(locale);
   const servicesContent = t?.services;
-  
-  if (!servicesContent) {
-    return null;
-  }
-
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -35,16 +30,21 @@ export function ServicesSection({ locale }: ServicesSectionProps) {
       { threshold: 0.1 }
     );
 
-    if (scrollContainerRef.current) {
-      observer.observe(scrollContainerRef.current);
-      }
+    const node = scrollContainerRef.current;
+    if (node) {
+      observer.observe(node);
+    }
 
     return () => {
-      if (scrollContainerRef.current) {
-        observer.unobserve(scrollContainerRef.current);
+      if (node) {
+        observer.unobserve(node);
       }
     };
   }, []);
+
+  if (!servicesContent) {
+    return null;
+  }
 
   const iconMap: Record<string, string> = {
     payments: "/services/payments.svg",

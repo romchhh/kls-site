@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Locale, getTranslations } from "../lib/translations";
 import { 
   MapPin,
@@ -24,11 +24,6 @@ type Step = 1 | 2 | 3;
 export function CostCalculationSection({ locale }: CostCalculationSectionProps) {
   const t = getTranslations(locale);
   const costCalc = t?.costCalculation;
-  
-  if (!costCalc) {
-    return null;
-  }
-
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [deliveryType, setDeliveryType] = useState<string>("");
   const [origin, setOrigin] = useState<string>("");
@@ -43,6 +38,10 @@ export function CostCalculationSection({ locale }: CostCalculationSectionProps) 
   const [recaptchaChecked, setRecaptchaChecked] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
+  if (!costCalc) {
+    return null;
+  }
 
   // Список країн для відправлення
   const originCountries = [

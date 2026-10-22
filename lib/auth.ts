@@ -4,34 +4,6 @@ import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 import { safeLoginCheck } from "./security";
 
-// Type declarations for NextAuth
-declare module "next-auth" {
-  interface User {
-    role: string;
-    clientCode?: string;
-    phone?: string;
-  }
-  interface Session {
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      role: string;
-      clientCode?: string;
-      phone?: string;
-    };
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    id?: string;
-    role: string;
-    clientCode?: string;
-    phone?: string;
-  }
-}
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({

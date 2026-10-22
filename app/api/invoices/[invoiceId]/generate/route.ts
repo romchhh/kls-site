@@ -133,7 +133,7 @@ export async function GET(
     }
 
     // Add logo in top right corner (rows 1-5, columns 1-3 for logo placement)
-    const logoPath = path.join(process.cwd(), "public", "білий на бірюзовому@2x.png");
+    const logoPath = path.join(process.cwd(), "public", "logos", "білий на бірюзовому@2x.png");
     if (fs.existsSync(logoPath)) {
       try {
         const logoImage = workbook.addImage({

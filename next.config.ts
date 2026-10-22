@@ -2,93 +2,20 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "dummyimage.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.amazon.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.aliexpress.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "graincomshipping.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.dhl.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.ups.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "logos-world.net",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "cdn.sanity.io",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.fedex.com",
-        pathname: "/**",
-      },
       {
         protocol: "https",
         hostname: "flagcdn.com",
         pathname: "/**",
       },
-      {
-        protocol: "https",
-        hostname: "www.cargosupport.com.ua",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "ukr-china.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "encrypted-tbn0.gstatic.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "fialan.ua",
-        pathname: "/**",
-      },
     ],
   },
-  // Дозволяємо обробку відео файлів
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.(webm|mp4)$/,
-      type: 'asset/resource',
-    });
-    return config;
+  // Keep heavy Node packages out of the client/server bundle graph
+  serverExternalPackages: ["puppeteer", "exceljs", "@prisma/client", "bcryptjs"],
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
   },
 };
 
 export default nextConfig;
-

@@ -11,15 +11,8 @@ type PartnersSectionProps = {
 export function PartnersSection({ locale }: PartnersSectionProps) {
   const t = getTranslations(locale);
   const content = t?.partners;
-  
-  if (!content || !content.partners) {
-    console.error(`Translations for partners not found for locale: ${locale}`);
-    return null; // Or render a fallback UI
-  }
-  
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const marqueePartners = [...content.partners, ...content.partners];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -33,16 +26,24 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const node = sectionRef.current;
+    if (node) {
+      observer.observe(node);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (node) {
+        observer.unobserve(node);
       }
     };
   }, []);
+
+  if (!content || !content.partners) {
+    console.error(`Translations for partners not found for locale: ${locale}`);
+    return null;
+  }
+
+  const marqueePartners = [...content.partners, ...content.partners];
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden bg-white pt-[160px] pb-20">
@@ -106,4 +107,3 @@ export function PartnersSection({ locale }: PartnersSectionProps) {
     </section>
   );
 }
-

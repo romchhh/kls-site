@@ -15,11 +15,6 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
   const safeLocale: Locale = locale && ["ua", "ru", "en"].includes(locale) ? locale : "ua";
   const t = getTranslations(safeLocale);
   const content = t?.deliveryTypes;
-  
-  // Якщо контент відсутній, не рендеримо компонент
-  if (!content || !content.types || content.types.length === 0) {
-    return null;
-  }
   const [isVisible, setIsVisible] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -75,6 +70,10 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
     };
   }, [content?.types?.length]);
 
+  // Якщо контент відсутній, не рендеримо компонент
+  if (!content || !content.types || content.types.length === 0) {
+    return null;
+  }
 
   // Мапа іконок для типів доставки
   const iconMap: Record<string, string> = {
@@ -203,7 +202,7 @@ export function DeliveryTypesSection({ locale }: DeliveryTypesSectionProps) {
                       : 'h-44 w-44 sm:h-48 sm:w-48'
                   }`}>
                     <Image
-                      src={iconMap[type.key] || "/Group.png"}
+                      src={iconMap[type.key] || "/delivery_types/icons/multimodal.svg"}
                       alt={type.title}
                       width={256}
                       height={256}

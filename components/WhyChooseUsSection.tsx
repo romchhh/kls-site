@@ -58,19 +58,9 @@ const featureIconMap: Record<string, string> = {
 export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
   const t = getTranslations(locale);
   const content = t?.whyChooseUs;
-  
-  if (!content || !content.features || content.features.length === 0) {
-    return null;
-  }
-
-  const features = content.features;
+  const features = content?.features ?? [];
   const [isVisible, setIsVisible] = useState(false);
-  // Initialize with 3 different indexes
-  const getInitialIndexes = () => {
-    if (features.length < 3) return [0, 0, 0];
-    return [0, 1, 2];
-  };
-  const [currentFeatureIndexes, setCurrentFeatureIndexes] = useState<number[]>(getInitialIndexes());
+  const [currentFeatureIndexes, setCurrentFeatureIndexes] = useState<number[]>([0, 1, 2]);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const intervalRefs = useRef<(NodeJS.Timeout | null)[]>([null, null, null]);
@@ -87,19 +77,20 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const node = sectionRef.current;
+    if (node) {
+      observer.observe(node);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (node) {
+        observer.unobserve(node);
       }
     };
   }, []);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || features.length === 0) return;
 
     const slideFeature = (blockIdx: number) => {
       setCurrentFeatureIndexes((prev) => {
@@ -137,6 +128,10 @@ export function WhyChooseUsSection({ locale }: WhyChooseUsSectionProps) {
       });
     };
   }, [isVisible, features.length]);
+
+  if (!content || features.length === 0) {
+    return null;
+  }
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/50 to-white pt-[160px] pb-32">

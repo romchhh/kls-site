@@ -487,7 +487,7 @@ export async function GET(
       const browser = await puppeteer.launch(launchOptions);
 
       const page = await browser.newPage();
-      await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+      await page.setContent(htmlContent, { waitUntil: "load" });
       
       // Generate PDF
       const pdfBuffer = await page.pdf({

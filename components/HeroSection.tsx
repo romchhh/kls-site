@@ -45,12 +45,12 @@ export function HeroSection({ locale }: HeroSectionProps) {
       <video
         ref={videoRef}
         className="absolute inset-0 z-0 h-full w-full object-cover"
-        src="/1628622_Container_Vessel_3840x2160.webm"
+        src="/hero-vessel.webm"
         autoPlay
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         aria-hidden="true"
         disablePictureInPicture
         disableRemotePlayback
