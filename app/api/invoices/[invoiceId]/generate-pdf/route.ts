@@ -431,40 +431,11 @@ export async function GET(
     try {
       const puppeteer = await import("puppeteer");
       
-      // Determine executable path
-      let executablePath: string | undefined;
-      const customPath = process.env.PUPPETEER_EXECUTABLE_PATH;
-      
-      if (customPath) {
-        // Check if custom path exists
-        if (fs.existsSync(customPath)) {
-          executablePath = customPath;
-        } else {
-          console.warn(`Custom Puppeteer executable path not found: ${customPath}, using bundled Chromium`);
-        }
-      } else {
-        // Try common paths
-        const commonPaths = [
-          '/usr/bin/chromium-browser',
-          '/usr/bin/chromium',
-          '/usr/bin/google-chrome',
-          '/usr/bin/google-chrome-stable',
-        ];
-        
-        for (const path of commonPaths) {
-          if (fs.existsSync(path)) {
-            executablePath = path;
-            break;
-          }
-        }
-        
-        // If no path found, use bundled Chromium (puppeteer will handle it)
-        if (!executablePath) {
-          console.log("No system Chromium found, using Puppeteer's bundled Chromium");
-        }
-      }
-      
-      const launchOptions: any = {
+      // Prefer system Chrome via env; otherwise Puppeteer bundled Chromium.
+      // Avoid dynamic fs.existsSync on absolute paths — Turbopack traces the whole project.
+      const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || undefined;
+
+      const launchOptions: Record<string, unknown> = {
         headless: true,
         args: [
           "--no-sandbox",
@@ -476,10 +447,9 @@ export async function GET(
           "--single-process",
           "--disable-gpu",
         ],
-        timeout: 60000, // 60 seconds timeout for server environments
+        timeout: 60000,
       };
-      
-      // Only set executablePath if we found one
+
       if (executablePath) {
         launchOptions.executablePath = executablePath;
       }

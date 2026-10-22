@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale } from './lib/translations';
-import { addSecurityHeaders, checkAdminIPWhitelist, logSecurityEvent, verifyCSRF } from './lib/security';
+import { addSecurityHeaders, checkAdminIPWhitelist, logSecurityEvent, verifyCSRF } from './lib/security-edge';
 import { apiRateLimit, authRateLimit, adminRateLimit } from './lib/rate-limit';
 
 export async function middleware(request: NextRequest) {
